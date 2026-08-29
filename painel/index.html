@@ -1,0 +1,770 @@
+<title>Painel Semanal Mia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+
+<style>
+:root{
+  --brand:#004AAD; --brand-ink:#004AAD;
+  --ground:#F4F7FB; --surface:#FFFFFF; --surface-2:#EBF0F8;
+  --ink:#0B1729; --ink-2:#3E4F67; --ink-3:#6D7E96;
+  --rule:#D7DFEC; --rule-2:#E9EEF6;
+  --up:#00703C; --down:#B3261E; --flat:#6D7E96;
+  --up-wash:#E3F3EA; --down-wash:#FBE9E7;
+  --c-meta:#2563EB; --c-google:#D14009; --c-openai:#00875A;
+  --shadow:0 1px 2px rgba(11,23,41,.05), 0 6px 20px rgba(11,23,41,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --brand:#7FA8F0; --brand-ink:#9CC0FF;
+    --ground:#080F1C; --surface:#101A2C; --surface-2:#18243A;
+    --ink:#E9EFF9; --ink-2:#B0BED3; --ink-3:#7F90A9;
+    --rule:#26344C; --rule-2:#1B2740;
+    --up:#4BC98A; --down:#F08A80; --flat:#7F90A9;
+    --up-wash:#0F2B20; --down-wash:#331A18;
+    --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --brand:#7FA8F0; --brand-ink:#9CC0FF;
+  --ground:#080F1C; --surface:#101A2C; --surface-2:#18243A;
+  --ink:#E9EFF9; --ink-2:#B0BED3; --ink-3:#7F90A9;
+  --rule:#26344C; --rule-2:#1B2740;
+  --up:#4BC98A; --down:#F08A80; --flat:#7F90A9;
+  --up-wash:#0F2B20; --down-wash:#331A18;
+  --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.num,.tnum{font-variant-numeric:tabular-nums}
+
+/* ------------------------------------------------------------- topo */
+.topbar{background:var(--brand);color:#fff;padding:18px 0}
+:root[data-theme="dark"] .topbar{background:#0D2244}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .topbar{background:#0D2244}}
+.bar-in{
+  max-width:1180px;margin:0 auto;padding:0 22px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.brand{font-family:"Montserrat",sans-serif;font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:600;font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:2px}
+.periodo{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-family:"Montserrat",sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.fld input{
+  font:inherit;font-size:13px;font-variant-numeric:tabular-nums;
+  padding:6px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.12);color:#fff;color-scheme:dark;
+}
+.fld input:focus{outline:2px solid #fff;outline-offset:1px}
+.vs{font-size:12px;color:rgba(255,255,255,.75);padding-bottom:7px;font-variant-numeric:tabular-nums}
+
+/* ------------------------------------------------------------- abas */
+.tabs{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:5}
+.tabs-in{max-width:1180px;margin:0 auto;padding:0 14px;display:flex;gap:2px;overflow-x:auto}
+.tab{
+  font-family:"Montserrat",sans-serif;font-size:12.5px;font-weight:700;
+  padding:13px 15px;color:var(--ink-3);white-space:nowrap;cursor:pointer;
+  border:none;background:none;border-bottom:2px solid transparent;
+}
+.tab:hover{color:var(--ink-2)}
+.tab[aria-selected="true"]{color:var(--brand-ink);border-bottom-color:var(--brand-ink)}
+.tab:focus-visible{outline:2px solid var(--brand-ink);outline-offset:-3px}
+
+main{max-width:1180px;margin:0 auto;padding:26px 22px 90px}
+.panel[hidden]{display:none}
+
+h2{font-family:"Montserrat",sans-serif;font-size:19px;font-weight:700;
+  margin:0 0 4px;letter-spacing:-.01em}
+h3{font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;margin:0 0 10px}
+.hint{color:var(--ink-3);font-size:13.5px;margin:0 0 18px;max-width:78ch}
+.block{margin-bottom:34px}
+
+/* ------------------------------------------------------- veredito */
+.veredito{
+  background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brand-ink);
+  border-radius:10px;padding:18px 22px;margin-bottom:22px;box-shadow:var(--shadow);
+}
+.veredito .lb{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--brand-ink);margin-bottom:7px}
+.veredito p{margin:0;font-size:15px;color:var(--ink);max-width:82ch}
+
+/* ------------------------------------------------------------ KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:22px}
+.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:15px 17px;box-shadow:var(--shadow)}
+.kpi .l{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.kpi .v{font-family:"Montserrat",sans-serif;font-size:24px;font-weight:800;
+  letter-spacing:-.02em;line-height:1.08;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;
+  display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:99px}
+.kpi .d.up{color:var(--up);background:var(--up-wash)}
+.kpi .d.down{color:var(--down);background:var(--down-wash)}
+.kpi .d.flat{color:var(--flat);background:var(--surface-2)}
+.kpi .sub{font-size:11.5px;color:var(--ink-3);margin-top:6px}
+
+/* --------------------------------------------------------- tabelas */
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface);
+  box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink-3);text-align:left;padding:11px 14px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule);white-space:nowrap}
+th.r,td.r{text-align:right}
+td{padding:11px 14px;border-bottom:1px solid var(--rule-2);color:var(--ink-2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-2)}
+td.nm{color:var(--ink);font-weight:600}
+tfoot td{background:var(--surface-2);color:var(--ink);font-weight:700;
+  border-top:1px solid var(--rule);border-bottom:none}
+.mini{font-size:11.5px;color:var(--ink-3);font-weight:400}
+
+/* --------------------------------------------------------- gráficos */
+.chart{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:18px 20px;box-shadow:var(--shadow)}
+.chart h3{margin-bottom:3px}
+.chart .cap{font-size:12.5px;color:var(--ink-3);margin:0 0 16px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.swatch{width:10px;height:10px;border-radius:2px;flex:none}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+
+/* barras horizontais */
+.hbars{display:flex;flex-direction:column;gap:9px}
+.hbar{display:grid;grid-template-columns:var(--lw,132px) 1fr auto;gap:12px;align-items:center}
+.hbar .nm{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .track{display:block;background:var(--surface-2);border-radius:4px;height:22px;
+  position:relative;overflow:hidden}
+.hbar .fill{display:block;height:100%;border-radius:4px;background:var(--brand-ink);min-width:3px;
+  transition:width .35s ease}
+.hbar .vl{font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink);
+  font-weight:700;min-width:74px;text-align:right}
+.hbar.alerta .fill{background:var(--down)}
+.hbar.alerta .nm,.hbar.alerta .vl{color:var(--down)}
+.step-pct{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* barras verticais */
+.vbars{display:flex;align-items:flex-end;gap:10px;height:170px;padding-top:6px}
+.vbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
+.vbar .col{width:100%;background:var(--brand-ink);border-radius:4px 4px 0 0;min-height:3px;
+  transition:height .35s ease}
+.vbar .lb{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.vbar .vv{font-size:11.5px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* lista */
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.steps li{
+  counter-increment:s;background:var(--surface);border:1px solid var(--rule);border-radius:9px;
+  padding:14px 18px 14px 52px;position:relative;color:var(--ink-2);font-size:14px;
+  box-shadow:var(--shadow);
+}
+.steps li::before{
+  content:counter(s,decimal-leading-zero);position:absolute;left:17px;top:13px;
+  font-family:"Montserrat",sans-serif;font-weight:800;font-size:13px;color:var(--brand-ink);
+}
+.notes{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:16px 20px;box-shadow:var(--shadow)}
+.notes ul{margin:0;padding-left:19px}
+.notes li{margin-bottom:7px;color:var(--ink-2);font-size:14px}
+.notes li:last-child{margin-bottom:0}
+.nota{font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border-radius:8px;
+  padding:11px 15px;margin:0 0 16px;max-width:82ch}
+
+.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-3)}
+@media (max-width:620px){
+  .hbar{grid-template-columns:96px 1fr auto;gap:8px}
+  .kpi .v{font-size:21px}
+}
+</style>
+
+<script>
+/* =========================================================================
+   DADOS DA SEMANA — é só isto que muda toda semana.
+   Toda métrica tem `atual` e `anterior`; o painel calcula as variações.
+   Percentual como número (6.79 = 6,79%). Dinheiro em reais (615.72).
+   ========================================================================= */
+const DADOS = {
+  marca: "Mia",
+  periodo: {
+    atual:    { de: "2026-08-12", ate: "2026-08-20" },
+    anterior: { de: "2026-08-03", ate: "2026-08-11" }
+  },
+
+  veredito:
+    "O Google Ads perdeu desempenho depois das últimas otimizações: as conversões caíram de 35 " +
+    "para 5 e o custo por conversão subiu de R$ 21 para R$ 123. A campanha foi recriada em 20/08 " +
+    "para o algoritmo reestabilizar. O Meta seguiu entregando visita ao perfil barata e manteve " +
+    "Connect Rate de 57,7% na campanha de conversão. O OpenAI Ads, ainda em teste, trouxe o " +
+    "cadastro mais barato do período: R$ 5,00.",
+
+  openai: {
+    nota: "Primeiras impressões dentro da plataforma. Campanha em fase de teste.",
+    atual:    { impressoes:12499, cliques:404, conversoes:38, gasto:190.95, cpc:0.47, cpa:5.00, ctr:3.23 },
+    anterior: null,
+    serie: [
+      { data:"17/08", cliques:38,  conversoes:3,  gasto:21.40 },
+      { data:"18/08", cliques:142, conversoes:12, gasto:62.80 },
+      { data:"19/08", cliques:108, conversoes:11, gasto:54.35 },
+      { data:"20/08", cliques:116, conversoes:12, gasto:52.40 }
+    ]
+  },
+
+  meta: {
+    objetivos: [
+      {
+        nome:"Visita ao Perfil",
+        atual:    { gasto:654.83, alcance:67909, impressoes:114711, cpm:5.71, ctr:3.06, cliques:3513, resultados:5610, custoResultado:0.12 },
+        anterior: { gasto:440.26, alcance:45120, impressoes:70301,  cpm:6.26, ctr:3.37, cliques:2370, resultados:3980, custoResultado:0.11 },
+        colunas:["Gasto","Alcance","Impressões","CPM","CTR","Cliques","Resultados","Custo/result."],
+        criativos:[
+          { nome:"ADS-03",    gasto:126.95, alcance:17636, impressoes:27654, cpm:4.59, ctr:3.07, cliques:850, resultados:1325, custoResultado:0.10 },
+          { nome:"ADS-02",    gasto:123.71, alcance:20692, impressoes:30781, cpm:4.02, ctr:2.47, cliques:759, resultados:1181, custoResultado:0.10 },
+          { nome:"ADS-05",    gasto:85.15,  alcance:7533,  impressoes:8989,  cpm:9.47, ctr:4.45, cliques:400, resultados:690,  custoResultado:0.12 },
+          { nome:"CARROSSEL", gasto:87.35,  alcance:11108, impressoes:13087, cpm:6.67, ctr:3.82, cliques:500, resultados:727,  custoResultado:0.12 },
+          { nome:"ADS-04",    gasto:84.15,  alcance:9526,  impressoes:11841, cpm:7.11, ctr:3.34, cliques:396, resultados:688,  custoResultado:0.12 },
+          { nome:"ADS-01",    gasto:147.52, alcance:14942, impressoes:22359, cpm:6.60, ctr:2.72, cliques:608, resultados:999,  custoResultado:0.15 }
+        ]
+      },
+      {
+        nome:"Conversão",
+        atual:    { gasto:149.86, alcance:1707, impressoes:2738, cpm:54.73, ctr:2.85, cliques:78, visitasLP:45, connectRate:57.69 },
+        anterior: { gasto:149.86, alcance:1690, impressoes:2702, cpm:55.46, ctr:2.61, cliques:71, visitasLP:38, connectRate:53.52 },
+        colunas:["Gasto","Alcance","Impressões","CPM","CTR","Cliques","Visitas na LP","Connect Rate"],
+        criativos:[
+          { nome:"ADS01-EXISTENTE", gasto:149.86, alcance:1707, impressoes:2738, cpm:54.73, ctr:2.85, cliques:78, visitasLP:45, connectRate:57.69 }
+        ]
+      }
+    ]
+  },
+
+  google: {
+    campanhas: [
+      { nome:"Pesquisa", nota:"A perda de desempenho se intensificou, motivando a recriação da campanha em 20/08 para restabelecer a estabilidade do algoritmo.",
+        atual:    { impressoes:3565, cliques:242, cpc:2.54, ctr:6.79, conversoes:5,  custoConversao:123.14, custo:615.72, taxaConversao:2.07 },
+        anterior: { impressoes:5312, cliques:348, cpc:2.11, ctr:6.55, conversoes:35, custoConversao:20.98,  custo:734.46, taxaConversao:10.06 } },
+      { nome:"Performance Max", nota:"Não aparecia no relatório manual. Entra aqui para o investimento total do Google fechar.",
+        atual:    { impressoes:12901, cliques:453, cpc:0.40, ctr:3.51, conversoes:0, custoConversao:null, custo:181.03, taxaConversao:0 },
+        anterior: { impressoes:9840,  cliques:361, cpc:0.38, ctr:3.67, conversoes:0, custoConversao:null, custo:137.18, taxaConversao:0 } },
+      { nome:"YouTube", nota:"Campanha de vídeo em fase inicial de testes. Estão sendo avaliados a entrega dos anúncios, o desempenho dos criativos e o comportamento do público antes da mensuração das conversões.",
+        atual:    { impressoes:6695, cliques:72, cpc:1.11, ctr:1.07, conversoes:0, custoConversao:null, custo:79.77, taxaConversao:0 },
+        anterior: { impressoes:5892, cliques:97, cpc:0.25, ctr:1.65, conversoes:0, custoConversao:null, custo:24.42, taxaConversao:0 } }
+    ],
+    termos: [
+      { termo:"agenda online",        impressoes:21, cliques:5, custo:17.57, conversoes:0 },
+      { termo:"agenda gratis online", impressoes:4,  cliques:2, custo:2.62,  conversoes:1 }
+    ]
+  },
+
+  lp: {
+    clarity: {
+      atual:    { scroll:15.82, tempoAtivo:49, sessoes:236, paginasPorSessao:1.41, deadClicks:2.98, quickback:10.17 },
+      anterior: { scroll:19.50, tempoAtivo:44, sessoes:198, paginasPorSessao:1.33, deadClicks:3.60, quickback:13.70 }
+    },
+    porDevice: [
+      { device:"Mobile",  sessoes:202, scroll:11.38, tempoAtivo:24 },
+      { device:"Desktop", sessoes:29,  scroll:32.37, tempoAtivo:68 },
+      { device:"Tablet",  sessoes:5,   scroll:4.86,  tempoAtivo:12 }
+    ],
+    aprendizados: [
+      "Mockup estático com texto não funciona como gancho — os próximos sites terão um novo formato na Hero.",
+      "Botões mais clicados, em ordem: “Veja como”, “Quero meu link Mia” e “Ver taxas”.",
+      "A técnica de motion aplicada no botão “Veja como” se mostrou eficaz com esse público, tornando-o o botão mais clicado da página."
+    ]
+  },
+
+  negocio: {
+    atual:    { cadastros:128, onboarding:109, contasAtivas:4, agendamentos:18, gmv:751.00 },
+    anterior: { cadastros:43,  onboarding:36,  contasAtivas:2, agendamentos:12, gmv:1365.00 },
+    funil: [
+      { etapa:"Impressões",    valor:135872, fonte:"Meta · Google · OpenAI" },
+      { etapa:"Cliques",       valor:4764,   fonte:"Meta · Google · OpenAI" },
+      { etapa:"Sessões na LP", valor:2622,   fonte:"GA4" },
+      { etapa:"Cadastros",     valor:128,    fonte:"Metabase" },
+      { etapa:"Onboarding ok", valor:109,    fonte:"Metabase" },
+      { etapa:"Conta ativada", valor:4,      fonte:"Metabase" },
+      { etapa:"1º pagamento",  valor:0,      fonte:"Metabase" }
+    ],
+    gmvSemanal: [
+      { semana:"20/07", gmv:659.05 },  { semana:"27/07", gmv:1037.05 },
+      { semana:"03/08", gmv:1111.55 }, { semana:"10/08", gmv:1365.00 },
+      { semana:"17/08", gmv:751.00 },  { semana:"24/08", gmv:1313.00 }
+    ]
+  },
+
+  proximosPassos: [
+    "Evitar novas alterações para permitir que o algoritmo estabilize a entrega. Esperar de 5 a 7 dias antes de otimizar uma campanha de pesquisa.",
+    "Acompanhar diariamente o desempenho da nova campanha durante o período de aprendizado.",
+    "Comparar os resultados com a campanha anterior após a conclusão da fase de aprendizado.",
+    "Analisar as campanhas de vídeo para o YouTube."
+  ]
+};
+/* ===================== fim dos dados da semana ===================== */
+</script>
+
+<div class="topbar">
+  <div class="bar-in">
+    <div class="brand" id="brand">Mia<small>Painel de mídia e negócio</small></div>
+    <div class="periodo">
+      <div class="fld"><label for="de">Início</label><input type="date" id="de"></div>
+      <div class="fld"><label for="ate">Fim</label><input type="date" id="ate"></div>
+      <span class="vs" id="vs"></span>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-in" role="tablist" id="tablist"></div>
+</div>
+
+<main id="main"></main>
+
+<script>
+/* ------------------------------------------------------------ formatação */
+const nf0 = new Intl.NumberFormat("pt-BR", {maximumFractionDigits:0});
+const nf2 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+const num = v => (v==null ? "—" : nf0.format(v));
+const brl = v => (v==null ? "—" : "R$ " + nf2.format(v));
+const pct = v => (v==null ? "—" : nf2.format(v).replace(",00","") + "%");
+const seg = v => (v==null ? "—" : num(v) + "s");
+
+function dm(iso){ if(!iso) return ""; const [a,m,d]=iso.split("-"); return `${d}/${m}`; }
+
+/* variação: `inverso` para métricas onde menor é melhor (CPC, CPA, custo) */
+function delta(atual, anterior, inverso){
+  if(atual==null || anterior==null || anterior===0) return null;
+  const p = ((atual - anterior) / Math.abs(anterior)) * 100;
+  const bom = inverso ? p < 0 : p > 0;
+  return { p, cls: Math.abs(p) < 0.5 ? "flat" : (bom ? "up" : "down"),
+           txt: (p>0?"↑ ":p<0?"↓ ":"") + nf2.format(Math.abs(p)).replace(",00","") + "%" };
+}
+
+function kpi(label, valor, d, sub){
+  const dd = d ? `<span class="d ${d.cls}">${d.txt}</span>` : "";
+  const ss = sub ? `<div class="sub">${sub}</div>` : "";
+  return `<div class="kpi"><div class="l">${label}</div><div class="v">${valor}</div>${dd}${ss}</div>`;
+}
+
+function hbars(itens, opts={}){
+  const max = Math.max(...itens.map(i=>i.valor), 1);
+  return `<div class="hbars" style="--lw:${opts.lw||132}px">` + itens.map(i=>`
+    <div class="hbar ${i.alerta?"alerta":""}">
+      <span class="nm" title="${i.nome}">${i.nome}</span>
+      <span class="track"><span class="fill" style="width:${Math.max((i.valor/max)*100,1.2)}%;${i.cor?`background:${i.cor}`:""}"></span></span>
+      <span class="vl">${i.rotulo}</span>
+    </div>`).join("") + `</div>`;
+}
+
+function vbars(itens, fmt){
+  const max = Math.max(...itens.map(i=>i.valor), 1);
+  return `<div class="vbars">` + itens.map(i=>`
+    <div class="vbar" title="${i.rotulo}: ${fmt(i.valor)}">
+      <span class="vv">${fmt(i.valor)}</span>
+      <span class="col" style="height:${Math.max((i.valor/max)*100,2)}%;${i.cor?`background:${i.cor}`:""}"></span>
+      <span class="lb">${i.rotulo}</span>
+    </div>`).join("") + `</div>`;
+}
+
+/* linha comparando dois períodos, no formato do relatório antigo */
+function linhasComparadas(defs, atual, anterior){
+  return defs.map(d=>{
+    const va = atual ? atual[d.k] : null, vb = anterior ? anterior[d.k] : null;
+    const dd = delta(va, vb, d.inv);
+    return `<tr>
+      <td class="nm">${d.rot}</td>
+      <td class="r">${d.f(va)}</td>
+      <td class="r mini">${d.f(vb)}</td>
+      <td class="r">${dd ? `<span class="d ${dd.cls}" style="font-size:12px;font-weight:700;padding:2px 7px;border-radius:99px">${dd.txt}</span>` : "—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+/* ------------------------------------------------------------- as abas */
+const ABAS = [
+  { id:"geral",   nome:"Visão geral",   render:abaGeral },
+  { id:"openai",  nome:"OpenAI Ads",    render:abaOpenAI },
+  { id:"meta",    nome:"Meta Ads",      render:abaMeta },
+  { id:"google",  nome:"Google Ads",    render:abaGoogle },
+  { id:"lp",      nome:"Landing Page",  render:abaLP },
+  { id:"negocio", nome:"Negócio",       render:abaNegocio },
+  { id:"passos",  nome:"Próximos passos", render:abaPassos }
+];
+
+/* ---------------------------------------------------------- visão geral */
+function totaisMidia(){
+  const g = DADOS.google.campanhas.reduce((a,c)=>({
+    custo:a.custo+c.atual.custo, cliques:a.cliques+c.atual.cliques,
+    impressoes:a.impressoes+c.atual.impressoes, conversoes:a.conversoes+c.atual.conversoes
+  }), {custo:0,cliques:0,impressoes:0,conversoes:0});
+  const gAnt = DADOS.google.campanhas.reduce((a,c)=>({
+    custo:a.custo+c.anterior.custo, cliques:a.cliques+c.anterior.cliques,
+    impressoes:a.impressoes+c.anterior.impressoes, conversoes:a.conversoes+c.anterior.conversoes
+  }), {custo:0,cliques:0,impressoes:0,conversoes:0});
+
+  const m = DADOS.meta.objetivos.reduce((a,o)=>({
+    custo:a.custo+o.atual.gasto, cliques:a.cliques+o.atual.cliques, impressoes:a.impressoes+o.atual.impressoes
+  }), {custo:0,cliques:0,impressoes:0});
+  const mAnt = DADOS.meta.objetivos.reduce((a,o)=>({
+    custo:a.custo+o.anterior.gasto, cliques:a.cliques+o.anterior.cliques, impressoes:a.impressoes+o.anterior.impressoes
+  }), {custo:0,cliques:0,impressoes:0});
+
+  const o = DADOS.openai.atual || {gasto:0,cliques:0,impressoes:0,conversoes:0};
+  const oAnt = DADOS.openai.anterior;
+
+  return {
+    google:{...g, nome:"Google Ads", cor:"var(--c-google)"},
+    googleAnt:gAnt,
+    meta:{...m, nome:"Meta Ads", cor:"var(--c-meta)"},
+    metaAnt:mAnt,
+    openai:{custo:o.gasto, cliques:o.cliques, impressoes:o.impressoes, conversoes:o.conversoes,
+            nome:"OpenAI Ads", cor:"var(--c-openai)"},
+    openaiAnt: oAnt ? {custo:oAnt.gasto, cliques:oAnt.cliques} : null,
+    invTotal: g.custo + m.custo + o.gasto,
+    invTotalAnt: gAnt.custo + mAnt.custo + (oAnt?oAnt.gasto:0),
+    cliquesTotal: g.cliques + m.cliques + o.cliques,
+    cliquesTotalAnt: gAnt.cliques + mAnt.cliques + (oAnt?oAnt.cliques:0)
+  };
+}
+
+function abaGeral(){
+  const t = totaisMidia(), n = DADOS.negocio;
+  const cpc = n.atual.cadastros ? t.invTotal / n.atual.cadastros : null;
+  const cpcAnt = n.anterior.cadastros ? t.invTotalAnt / n.anterior.cadastros : null;
+
+  const canais = [t.google, t.meta, t.openai];
+  const maxFunil = DADOS.negocio.funil[0].valor;
+
+  return `
+  <div class="veredito">
+    <div class="lb">Veredito da semana</div>
+    <p>${DADOS.veredito}</p>
+  </div>
+
+  <div class="kpis">
+    ${kpi("Investimento total", brl(t.invTotal), delta(t.invTotal, t.invTotalAnt, true))}
+    ${kpi("Cliques", num(t.cliquesTotal), delta(t.cliquesTotal, t.cliquesTotalAnt))}
+    ${kpi("Novos cadastros", num(n.atual.cadastros), delta(n.atual.cadastros, n.anterior.cadastros))}
+    ${kpi("Custo por cadastro", brl(cpc), delta(cpc, cpcAnt, true), "Consolidado, sem separar canal")}
+    ${kpi("GMV", brl(n.atual.gmv), delta(n.atual.gmv, n.anterior.gmv))}
+  </div>
+
+  <div class="grid2 block">
+    <div class="chart">
+      <h3>Para onde foi o investimento</h3>
+      <p class="cap">Quanto cada canal consumiu no período.</p>
+      <div class="legend">
+        ${canais.map(c=>`<span><i class="swatch" style="background:${c.cor}"></i>${c.nome}</span>`).join("")}
+      </div>
+      ${hbars(canais.map(c=>({nome:c.nome, valor:c.custo, rotulo:brl(c.custo), cor:c.cor})), {lw:110})}
+    </div>
+
+    <div class="chart">
+      <h3>Quanto custou cada clique</h3>
+      <p class="cap">Investimento dividido pelos cliques do próprio canal. Menor é melhor.</p>
+      <div class="legend">
+        ${canais.map(c=>`<span><i class="swatch" style="background:${c.cor}"></i>${c.nome}</span>`).join("")}
+      </div>
+      ${hbars(canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
+          rotulo:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), {lw:110})}
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="chart">
+      <h3>Da impressão ao primeiro pagamento</h3>
+      <p class="cap">A barra mostra quanto <strong>passou</strong> da etapa anterior — não o volume. É assim que o estrangulamento aparece. A etapa que mais perde gente fica em vermelho.</p>
+      ${(()=>{
+        const f = DADOS.negocio.funil;
+        const taxas = f.map((e,i)=>{
+          if(i===0) return 100;
+          const ant = f[i-1].valor;
+          return ant > 0 ? (e.valor/ant)*100 : 0;
+        });
+        let pior = -1, min = Infinity;
+        taxas.forEach((t,i)=>{ if(i>0 && t < min){ min = t; pior = i; } });
+        return hbars(f.map((e,i)=>({
+          nome: e.etapa,
+          valor: taxas[i],
+          rotulo: i===0 ? num(e.valor)
+                        : `${num(e.valor)} · ${nf2.format(taxas[i]).replace(",00","")}%`,
+          alerta: i===pior
+        })), {lw:132});
+      })()}
+    </div>
+  </div>`;
+}
+
+/* -------------------------------------------------------------- OpenAI */
+function abaOpenAI(){
+  const a = DADOS.openai.atual, b = DADOS.openai.anterior;
+  return `
+  <div class="block">
+    <h2>OpenAI Ads</h2>
+    <p class="hint">${DADOS.openai.nota}</p>
+    <div class="kpis">
+      ${kpi("Impressões", num(a.impressoes), delta(a.impressoes, b&&b.impressoes))}
+      ${kpi("Cliques", num(a.cliques), delta(a.cliques, b&&b.cliques))}
+      ${kpi("Conversões", num(a.conversoes), delta(a.conversoes, b&&b.conversoes))}
+      ${kpi("Gasto", brl(a.gasto), delta(a.gasto, b&&b.gasto, true))}
+      ${kpi("Custo por conversão", brl(a.cpa), delta(a.cpa, b&&b.cpa, true))}
+      ${kpi("Custo por clique", brl(a.cpc), delta(a.cpc, b&&b.cpc, true))}
+    </div>
+    ${b ? "" : `<p class="nota">Primeiro período medido neste canal — ainda não há base de comparação.</p>`}
+  </div>
+
+  <div class="grid2 block">
+    <div class="chart">
+      <h3>Cliques por dia</h3>
+      <p class="cap">Como a entrega evoluiu ao longo do período.</p>
+      ${vbars(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.cliques, cor:"var(--c-openai)"})), num)}
+    </div>
+    <div class="chart">
+      <h3>Conversões por dia</h3>
+      <p class="cap">Cadastros atribuídos pela própria plataforma.</p>
+      ${vbars(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.conversoes, cor:"var(--c-openai)"})), num)}
+    </div>
+  </div>`;
+}
+
+/* ---------------------------------------------------------------- Meta */
+function abaMeta(){
+  return DADOS.meta.objetivos.map(o=>{
+    const a=o.atual, b=o.anterior;
+    const temResultados = "resultados" in a;
+    const cols = temResultados
+      ? [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
+         ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
+         ["Resultados",c=>num(c.resultados)],["Custo/result.",c=>brl(c.custoResultado)]]
+      : [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
+         ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
+         ["Visitas na LP",c=>num(c.visitasLP)],["Connect Rate",c=>pct(c.connectRate)]];
+
+    const kpis = temResultados
+      ? kpi("Gasto",brl(a.gasto),delta(a.gasto,b.gasto,true)) +
+        kpi("Impressões",num(a.impressoes),delta(a.impressoes,b.impressoes)) +
+        kpi("CTR",pct(a.ctr),delta(a.ctr,b.ctr)) +
+        kpi("Resultados",num(a.resultados),delta(a.resultados,b.resultados)) +
+        kpi("Custo por resultado",brl(a.custoResultado),delta(a.custoResultado,b.custoResultado,true))
+      : kpi("Gasto",brl(a.gasto),delta(a.gasto,b.gasto,true)) +
+        kpi("Impressões",num(a.impressoes),delta(a.impressoes,b.impressoes)) +
+        kpi("CTR",pct(a.ctr),delta(a.ctr,b.ctr)) +
+        kpi("Visitas na LP",num(a.visitasLP),delta(a.visitasLP,b.visitasLP)) +
+        kpi("Connect Rate",pct(a.connectRate),delta(a.connectRate,b.connectRate),"Cliques que viraram visita de verdade");
+
+    const ordenados = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
+
+    return `
+    <div class="block">
+      <h2>Objetivo: ${o.nome}</h2>
+      <p class="hint">${o.criativos.length} ${o.criativos.length===1?"anúncio":"anúncios"} no período.</p>
+      <div class="kpis">${kpis}</div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${ordenados.map(c=>`<tr><td class="nm">${c.nome}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}
+          </tbody>
+          <tfoot><tr><td>Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
+        </table>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* -------------------------------------------------------------- Google */
+function abaGoogle(){
+  const defs = [
+    {k:"impressoes",     rot:"Impressões",          f:num},
+    {k:"cliques",        rot:"Cliques",             f:num},
+    {k:"ctr",            rot:"CTR",                 f:pct},
+    {k:"cpc",            rot:"CPC médio",           f:brl, inv:true},
+    {k:"conversoes",     rot:"Conversões",          f:num},
+    {k:"taxaConversao",  rot:"Taxa de conversão",   f:pct},
+    {k:"custoConversao", rot:"Custo por conversão", f:brl, inv:true},
+    {k:"custo",          rot:"Custo",               f:brl, inv:true}
+  ];
+  const total = DADOS.google.campanhas.reduce((s,c)=>s+c.atual.custo,0);
+
+  return `
+  <div class="block">
+    <h2>Google Ads</h2>
+    <p class="hint">Cada campanha comparada com o período anterior. O investimento total do canal no período foi de <strong>${brl(total)}</strong>.</p>
+  </div>
+  ${DADOS.google.campanhas.map(c=>`
+    <div class="block">
+      <h3>${c.nome}</h3>
+      ${c.nota?`<p class="nota">${c.nota}</p>`:""}
+      <div class="tw">
+        <table>
+          <thead><tr><th>Métrica</th><th class="r">Período atual</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
+          <tbody>${linhasComparadas(defs, c.atual, c.anterior)}</tbody>
+        </table>
+      </div>
+    </div>`).join("")}
+  <div class="block">
+    <h3>Termos de pesquisa</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Termo</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">Custo</th><th class="r">Conversões</th></tr></thead>
+        <tbody>${DADOS.google.termos.map(t=>`<tr>
+          <td class="nm">${t.termo}</td><td class="r">${num(t.impressoes)}</td>
+          <td class="r">${num(t.cliques)}</td><td class="r">${brl(t.custo)}</td>
+          <td class="r">${num(t.conversoes)}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+/* --------------------------------------------------------- Landing Page */
+function abaLP(){
+  const a = DADOS.lp.clarity.atual, b = DADOS.lp.clarity.anterior;
+  return `
+  <div class="block">
+    <h2>Comportamento na Landing Page</h2>
+    <p class="hint">Como as pessoas se comportam depois que clicam no anúncio. Dados do Microsoft Clarity.</p>
+    <div class="kpis">
+      ${kpi("Profundidade de rolagem", pct(a.scroll), delta(a.scroll,b.scroll), "Até onde o visitante desce na página")}
+      ${kpi("Tempo ativo", seg(a.tempoAtivo), delta(a.tempoAtivo,b.tempoAtivo))}
+      ${kpi("Sessões", num(a.sessoes), delta(a.sessoes,b.sessoes))}
+      ${kpi("Páginas por sessão", nf2.format(a.paginasPorSessao), delta(a.paginasPorSessao,b.paginasPorSessao))}
+      ${kpi("Cliques mortos", pct(a.deadClicks), delta(a.deadClicks,b.deadClicks,true), "Clique em algo que parece botão e não é")}
+      ${kpi("Quickback", pct(a.quickback), delta(a.quickback,b.quickback,true), "Entra e volta na hora")}
+    </div>
+  </div>
+
+  <div class="grid2 block">
+    <div class="chart">
+      <h3>Rolagem por dispositivo</h3>
+      <p class="cap">A diferença entre celular e computador é a leitura mais acionável da página.</p>
+      ${hbars(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rotulo:pct(d.scroll)})), {lw:92})}
+    </div>
+    <div class="chart">
+      <h3>Sessões por dispositivo</h3>
+      <p class="cap">De onde vem o público que chega na página.</p>
+      ${hbars(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rotulo:num(d.sessoes)})), {lw:92})}
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>O que aprendemos</h3>
+    <div class="notes"><ul>${DADOS.lp.aprendizados.map(t=>`<li>${t}</li>`).join("")}</ul></div>
+  </div>`;
+}
+
+/* ------------------------------------------------------------- Negócio */
+function abaNegocio(){
+  const a = DADOS.negocio.atual, b = DADOS.negocio.anterior;
+  return `
+  <div class="block">
+    <h2>Resultado de negócio</h2>
+    <p class="hint">O que a mídia produziu do outro lado: profissionais entrando, ativando a conta e transacionando.</p>
+    <div class="kpis">
+      ${kpi("Novos cadastros", num(a.cadastros), delta(a.cadastros,b.cadastros))}
+      ${kpi("Onboarding concluído", num(a.onboarding), delta(a.onboarding,b.onboarding))}
+      ${kpi("Contas ativadas", num(a.contasAtivas), delta(a.contasAtivas,b.contasAtivas), "Conta de pagamento aprovada")}
+      ${kpi("Agendamentos", num(a.agendamentos), delta(a.agendamentos,b.agendamentos))}
+      ${kpi("GMV", brl(a.gmv), delta(a.gmv,b.gmv))}
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="chart">
+      <h3>GMV por semana</h3>
+      <p class="cap">Volume transacionado dentro do produto, semana a semana.</p>
+      ${vbars(DADOS.negocio.gmvSemanal.map(s=>({rotulo:s.semana, valor:s.gmv})), v=>brl(v).replace("R$ ",""))}
+    </div>
+  </div>`;
+}
+
+/* ------------------------------------------------------ Próximos passos */
+function abaPassos(){
+  return `
+  <div class="block">
+    <h2>Próximos passos</h2>
+    <p class="hint">O que fica decidido para a semana que começa.</p>
+    <ol class="steps">${DADOS.proximosPassos.map(p=>`<li>${p}</li>`).join("")}</ol>
+  </div>`;
+}
+
+/* -------------------------------------------------------------- montagem */
+const tablist = document.getElementById("tablist");
+const main = document.getElementById("main");
+
+ABAS.forEach((ab,i)=>{
+  const b = document.createElement("button");
+  b.className="tab"; b.type="button"; b.textContent=ab.nome;
+  b.id="tab-"+ab.id; b.setAttribute("role","tab");
+  b.setAttribute("aria-selected", i===0 ? "true":"false");
+  b.setAttribute("aria-controls","p-"+ab.id);
+  b.addEventListener("click", ()=>selecionar(ab.id));
+  tablist.appendChild(b);
+
+  const p = document.createElement("section");
+  p.className="panel"; p.id="p-"+ab.id;
+  p.setAttribute("role","tabpanel"); p.setAttribute("aria-labelledby","tab-"+ab.id);
+  if(i>0) p.hidden = true;
+  main.appendChild(p);
+});
+
+function selecionar(id){
+  ABAS.forEach(ab=>{
+    const ativo = ab.id===id;
+    document.getElementById("tab-"+ab.id).setAttribute("aria-selected", ativo?"true":"false");
+    document.getElementById("p-"+ab.id).hidden = !ativo;
+  });
+  try{ localStorage.setItem("painel:aba", id); }catch(e){}
+}
+
+function renderTudo(){
+  ABAS.forEach(ab=>{ document.getElementById("p-"+ab.id).innerHTML = ab.render(); });
+  document.getElementById("brand").innerHTML =
+    `${DADOS.marca}<small>Painel de mídia e negócio</small>`;
+}
+
+/* período — muda os rótulos e recalcula automaticamente o período de comparação */
+const inDe = document.getElementById("de"), inAte = document.getElementById("ate");
+const elVs = document.getElementById("vs");
+
+function diasEntre(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
+function menos(iso, dias){
+  const d = new Date(iso+"T12:00:00"); d.setDate(d.getDate()-dias);
+  return d.toISOString().slice(0,10);
+}
+
+function atualizarPeriodo(){
+  const de = inDe.value, ate = inAte.value;
+  if(!de || !ate || de > ate){ elVs.textContent = ""; return; }
+  const span = diasEntre(de, ate);
+  const antAte = menos(de, 1), antDe = menos(antAte, span);
+  DADOS.periodo.atual = {de, ate};
+  DADOS.periodo.anterior = {de:antDe, ate:antAte};
+  elVs.textContent = `${dm(de)} – ${dm(ate)}  ·  compara com ${dm(antDe)} – ${dm(antAte)}`;
+}
+
+inDe.value = DADOS.periodo.atual.de;
+inAte.value = DADOS.periodo.atual.ate;
+inDe.addEventListener("change", atualizarPeriodo);
+inAte.addEventListener("change", atualizarPeriodo);
+atualizarPeriodo();
+renderTudo();
+
+const rodape = document.createElement("div");
+rodape.className = "foot";
+rodape.textContent = "Meta Ads · Google Ads · OpenAI Ads · Microsoft Clarity · GA4 · Metabase";
+main.appendChild(rodape);
+
+try{
+  const salva = localStorage.getItem("painel:aba");
+  if(salva && ABAS.some(a=>a.id===salva)) selecionar(salva);
+}catch(e){}
+</script>
