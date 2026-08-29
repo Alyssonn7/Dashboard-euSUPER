@@ -272,6 +272,34 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
   .step .nm{font-size:12px}
   .phase{grid-template-columns:1fr;gap:10px}
 }
+
+/* ---------- abas do painel ---------- */
+.tabs{
+  display:flex;gap:2px;background:var(--surface-2);padding:0 8px;
+  border-bottom:1px solid var(--rule);overflow-x:auto;
+}
+.tab{
+  font-family:"Montserrat",sans-serif;font-size:12px;font-weight:700;
+  padding:11px 14px;color:var(--ink-3);white-space:nowrap;
+  border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--brand);border-bottom-color:var(--brand);background:var(--surface)}
+.tab .badge{
+  display:inline-block;margin-left:6px;font-size:10px;padding:1px 5px;border-radius:99px;
+  background:var(--warn-wash);color:var(--warn);font-weight:700;
+}
+.decided{
+  display:grid;grid-template-columns:auto 1fr;gap:14px 16px;align-items:start;
+  padding:16px 0;border-top:1px solid var(--rule);
+}
+.decided:last-of-type{border-bottom:1px solid var(--rule)}
+.decided .mark{
+  font-size:13px;font-weight:800;color:#fff;background:var(--ok);
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex:none;margin-top:3px;font-family:"Montserrat",sans-serif;
+}
+.decided h3{margin-bottom:3px;font-size:15px}
+.decided p{font-size:14.5px;color:var(--ink-2);margin:0;max-width:none}
 </style>
 
 <div class="masthead">
@@ -282,7 +310,8 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
     <div class="meta-row">
       <span>29 de agosto de 2026</span>
       <span>Base: Relatório Semanal 20/08</span>
-      <span>6 fontes de dados testadas com dados reais</span>
+      <span>6 fontes testadas com dados reais</span>
+      <span>Decisões fechadas</span>
     </div>
   </div>
 </div>
@@ -404,12 +433,21 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
 
 <section>
   <div class="section-mark"><span class="n">05</span><h2>Como o painel abre na reunião</h2></div>
-  <p class="sub">A tela responde "o que aconteceu e por quê" em trinta segundos, antes de qualquer tabela. Os números abaixo são reais, do banco e das plataformas, para você ver o formato com conteúdo de verdade.</p>
+  <p class="sub">Uma aba por canal, como você pediu — a mesma divisão que o relatório de hoje já tem, só que preenchida sozinha. A primeira aba fecha a semana inteira; as outras existem para você aprofundar quando perguntarem. Como quem apresenta é você, a densidade sobe: cabe detalhe por campanha e por criativo.</p>
 
-  <div class="mock" role="img" aria-label="Maquete do painel semanal com veredito, cinco indicadores e o funil único">
+  <div class="mock" role="img" aria-label="Maquete do painel com abas por canal, veredito, indicadores e o funil único">
     <div class="mock-bar">
-      <span class="t">Painel Semanal · Mia</span>
+      <span class="t">Painel Semanal</span>
       <span class="d">22/08 – 28/08 &nbsp;vs&nbsp; 15/08 – 21/08</span>
+    </div>
+    <div class="tabs">
+      <span class="tab active">Visão geral</span>
+      <span class="tab">Google Ads</span>
+      <span class="tab">Meta Ads</span>
+      <span class="tab">OpenAI Ads</span>
+      <span class="tab">Landing Page</span>
+      <span class="tab">Negócio</span>
+      <span class="tab">Experimentos</span>
     </div>
     <div class="verdict">
       <b>Veredito da semana.</b> O investimento caiu 12% e o custo por cadastro melhorou, mas o gargalo mudou de lugar: a passagem de cadastro para conta ativada continua em <b>3,6%</b> e é ela que trava o GMV, não o topo do funil. As campanhas de Visita ao Perfil foram desligadas em 22/08 — a comparação semana a semana do Meta não é maçã com maçã.
@@ -417,7 +455,7 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
     <div class="kpis">
       <div class="kpi"><div class="l">Investimento</div><div class="v">R$ 1.284</div><div class="delta down">↓ 12,4% vs semana anterior</div></div>
       <div class="kpi"><div class="l">Novos cadastros</div><div class="v">44</div><div class="delta down">↓ 84 &nbsp;·&nbsp; semana parcial</div></div>
-      <div class="kpi"><div class="l">Custo por cadastro</div><div class="v">R$ 29,18</div><div class="delta flat">consolidado, sem canal</div></div>
+      <div class="kpi"><div class="l">Custo por cadastro</div><div class="v">R$ 29,18</div><div class="delta flat">consolidado</div></div>
       <div class="kpi"><div class="l">Contas ativadas</div><div class="v">3,6%</div><div class="delta down">gargalo da semana</div></div>
       <div class="kpi"><div class="l">GMV</div><div class="v">R$ 1.313</div><div class="delta up">↑ 74,8% &nbsp;·&nbsp; 38 pagamentos</div></div>
     </div>
@@ -433,35 +471,26 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
     </div>
   </div>
 
-  <div class="grid2" style="margin-top:22px">
-    <div class="card">
-      <h3>O que o semanal mostra</h3>
-      <ul class="tight">
-        <li><strong>Veredito</strong> escrito pela IA, com o gargalo da semana já identificado</li>
-        <li><strong>Cinco indicadores</strong> com variação contra a semana anterior</li>
-        <li><strong>Funil único</strong> ponta a ponta, com a etapa que trava destacada</li>
-        <li><strong>Por canal</strong> — Google, Meta e OpenAI lado a lado, com o gasto completo</li>
-        <li><strong>Criativos do Meta</strong>, tabela com miniatura, ordenada por eficiência</li>
-        <li><strong>Comportamento na LP</strong> — scroll por device: 11% no mobile contra 32% no desktop</li>
-        <li><strong>Linha do tempo de mudanças</strong> sobreposta aos gráficos</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>O que o mensal acrescenta</h3>
-      <ul class="tight">
-        <li><strong>Coortes semanais</strong> — cada safra de cadastro seguida até o pagamento</li>
-        <li><strong>Ranking de campanhas</strong> do mês por custo por resultado</li>
-        <li><strong>GMV acumulado</strong>, ticket médio e split PIX contra cartão</li>
-        <li><strong>Mix de profissões</strong> entrando na base</li>
-        <li><strong>Veredito dos experimentos</strong> — o que cada mudança do mês provou ou não</li>
-        <li><strong>Mês contra mês</strong> em todos os indicadores de topo</li>
-      </ul>
-    </div>
+  <h3 style="margin:30px 0 12px">O que cada aba carrega</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Aba</th><th>Conteúdo</th><th>Fonte</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Visão geral</strong></td><td>Veredito escrito, cinco indicadores com variação semanal, funil único com o gargalo destacado, consolidado de investimento e resultado.</td><td class="src">todas</td></tr>
+        <tr><td><strong>Google Ads</strong></td><td>Dois períodos lado a lado com deltas, igual ao slide de hoje — mas com Pesquisa, PMax e Demand Gen separados, para o gasto total aparecer. Por campanha, por grupo e termos de pesquisa.</td><td class="src">Windsor · google_ads</td></tr>
+        <tr><td><strong>Meta Ads</strong></td><td>Tabela de criativos com miniatura, separada por objetivo. Gasto, alcance, CPM, CTR de link, cliques, Connect Rate, custo por resultado e reproduções 25/50/100%.</td><td class="src">Windsor · facebook</td></tr>
+        <tr><td><strong>OpenAI Ads</strong></td><td>Impressões, cliques, conversões, gasto, CPC e CPA, com a tendência diária — o mesmo gráfico que hoje é um print da plataforma.</td><td class="src">Windsor · openai_ads</td></tr>
+        <tr><td><strong>Landing Page</strong></td><td>Scroll e tempo ativo <strong>por device e por canal</strong>, rage e dead clicks, mais sessões, início de cadastro e cliques no CTA de WhatsApp por origem.</td><td class="src">Clarity + GA4</td></tr>
+        <tr><td><strong>Negócio</strong></td><td>Cadastros, conclusão de onboarding, ativação de conta, agendamentos, GMV, ticket, split PIX e cartão, coortes semanais e mix de profissões.</td><td class="src">Metabase</td></tr>
+        <tr><td><strong>Experimentos</strong></td><td>Linha do tempo do que mudou, quando, qual métrica deveria mover e o veredito. Avisa quando duas mudanças se sobrepõem na mesma janela.</td><td class="src">registro manual</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="callout" style="margin-top:22px">
-    <h3>A linha do tempo de mudanças resolve o erro do último ciclo</h3>
-    <p>O maior aprendizado do relatório de 20/08 foi um post-mortem: mexeram na campanha do Google e publicaram a Landing Page nova no mesmo ciclo, e não deu para isolar a causa da queda. O painel registra cada alteração com data e qual métrica ela deveria mover, desenhada por cima dos gráficos. Quando duas mudanças se sobrepõem na mesma janela, ele avisa antes da reunião — não depois.</p>
+    <h3>Um detalhe técnico que muda a expectativa</h3>
+    <p>Você mencionou consultar cada canal pelo Windsor na hora da análise. Uma página publicada até consegue chamar conector ao vivo, mas o catálogo de capacidades desta conta hoje responde que nenhum conector está disponível para isso — então não vou prometer consulta ao vivo.</p>
+    <p>O desenho que funciona: a Routine agendada puxa tudo e grava no painel antes da reunião, e o mesmo dado fica versionado no repositório. Você abre e está pronto, sem esperar carregamento na frente dos founders. Se precisar de um número fora da janela no meio da reunião, eu puxo pelo Windsor aqui no chat na hora. Assim que a capacidade de conector ao vivo estiver liberada para a conta, dá para acrescentar um botão de atualizar sem refazer nada.</p>
   </div>
 </section>
 
@@ -493,13 +522,13 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
 
 <section>
   <div class="section-mark"><span class="n">07</span><h2>Ordem de construção</h2></div>
-  <p class="sub">A sequência é real: cada fase entrega algo utilizável sozinha, e a primeira começa a acumular dado que hoje está sendo perdido todo dia.</p>
+  <p class="sub">Cada fase entrega algo utilizável sozinha. A primeira começa a acumular dado que hoje está sendo perdido todo dia.</p>
 
   <div class="phase">
     <span class="idx">1</span>
     <div>
       <h3>Ligar o snapshot diário</h3>
-      <p>Uma Routine que grava o Clarity, o Meta, o Google e o GA4 do dia no repositório. Não depende de decisão nenhuma e para a sangria: cada dia sem isso é um dia de comportamento da LP perdido para sempre.</p>
+      <p>Uma Routine que grava Clarity, Meta, Google e GA4 do dia no repositório. Não depende de nada e para a sangria: cada dia sem isso é um dia de comportamento da LP perdido para sempre, porque o Clarity só guarda três.</p>
       <div class="deliver"><span><b>Entrega:</b> série histórica começando a encher</span><span><b>Depende de:</b> nada</span></div>
     </div>
   </div>
@@ -507,36 +536,36 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
   <div class="phase">
     <span class="idx">2</span>
     <div>
-      <h3>Painel semanal v1, com mídia</h3>
-      <p>Veredito, cinco indicadores, comparação semana a semana, quebra por canal com o gasto completo — incluindo a PMax que hoje some — e a tabela de criativos do Meta com as miniaturas espelhadas. Já substitui a montagem manual dos slides.</p>
-      <div class="deliver"><span><b>Entrega:</b> painel em URL fixa, publicado toda segunda</span><span><b>Depende de:</b> fase 1</span></div>
+      <h3>Conectar o OpenAI Ads</h3>
+      <p>Com a API key do Ads Manager, ligo o connector no Windsor e a primeira seção do relatório passa a ser automática — impressões, gasto, CPC e CPA reais, em vez de print. Você faz a conexão pelo link do Windsor; a chave não precisa passar por aqui.</p>
+      <div class="deliver"><span><b>Entrega:</b> aba OpenAI Ads com dado real</span><span><b>Depende de:</b> a key que você disse conseguir</span></div>
     </div>
   </div>
 
   <div class="phase">
     <span class="idx">3</span>
     <div>
-      <h3>Camada de negócio</h3>
-      <p>O funil único do Metabase — cadastro, onboarding, ativação, agendamento, pagamento, GMV — plugado no painel. É o que tira o relatório do território "métrica de tráfego" e leva para "como o negócio está indo", que é o que os founders querem ver.</p>
-      <div class="deliver"><span><b>Entrega:</b> funil ponta a ponta e gargalo automático</span><span><b>Depende de:</b> fase 2</span></div>
+      <h3>Painel v1 com as abas de canal</h3>
+      <p>Visão geral, Google Ads, Meta Ads, OpenAI Ads e Landing Page. Já substitui a montagem manual dos slides, e já corrige os três erros da seção 02 — a PMax entra no gasto, os períodos comparados passam a ser os mesmos de verdade, e o que não reconcilia aparece marcado em vez de virar número.</p>
+      <div class="deliver"><span><b>Entrega:</b> painel em URL fixa, publicado toda segunda</span><span><b>Depende de:</b> fase 1</span></div>
     </div>
   </div>
 
-  <div class="phase blocked">
+  <div class="phase">
     <span class="idx">4</span>
     <div>
-      <h3>Destravar OpenAI Ads e a atribuição</h3>
-      <p>Conectar o connector <code>openai_ads</code> do Windsor com a API key do Ads Manager, e gravar a origem no cadastro para destravar o custo por canal. São as duas únicas tarefas que dependem de alguém além de nós — por isso ficam em paralelo, não no caminho crítico.</p>
-      <div class="deliver"><span><b>Entrega:</b> primeira seção automática e CAC por canal</span><span><b>Depende de:</b> API key e engenharia de produto</span></div>
+      <h3>Aba de negócio</h3>
+      <p>O funil do Metabase — cadastro, onboarding, ativação, agendamento, pagamento, GMV — e o funil único da Visão geral. É o que tira o relatório do território "métrica de tráfego" e leva para "como o negócio está indo".</p>
+      <div class="deliver"><span><b>Entrega:</b> funil ponta a ponta e gargalo automático</span><span><b>Depende de:</b> fase 3</span></div>
     </div>
   </div>
 
   <div class="phase">
     <span class="idx">5</span>
     <div>
-      <h3>Fechamento mensal e linha do tempo</h3>
-      <p>Coortes semanais, ranking de campanhas, GMV acumulado e o registro de experimentos com veredito. Depende de ter alguns meses de snapshot acumulado para as coortes ficarem legíveis.</p>
-      <div class="deliver"><span><b>Entrega:</b> painel mensal completo</span><span><b>Depende de:</b> fases 1 a 3</span></div>
+      <h3>Fechamento mensal, experimentos e a virada de marca</h3>
+      <p>Coortes semanais, ranking de campanhas, GMV acumulado e o registro de experimentos com veredito. Como a troca de Mia para euSUPER acontece no mês que vem, o nome da marca fica como configuração desde a fase 3 — na virada é um valor que muda, não uma reconstrução.</p>
+      <div class="deliver"><span><b>Entrega:</b> painel mensal completo</span><span><b>Depende de:</b> fases 1 a 4</span></div>
     </div>
   </div>
 </section>
@@ -544,26 +573,45 @@ hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
 <hr class="rule">
 
 <section>
-  <div class="section-mark"><span class="n">08</span><h2>O que eu preciso decidir com você</h2></div>
-  <p class="sub">Quatro pontos que mudam o que eu construo. Os outros eu resolvo sozinho.</p>
+  <div class="section-mark"><span class="n">08</span><h2>Decisões fechadas</h2></div>
+  <p class="sub">O que ficou definido, e o único ponto que continua em aberto.</p>
 
-  <div class="grid2">
-    <div class="card">
-      <h3>Mia ou euSUPER?</h3>
-      <p style="font-size:14.5px;color:var(--ink-2);margin:0">As Routines que existem se chamam "euSUPER" e publicam em <code>#eusuper-tráfego</code>, mas apontam para a conta "MIA PRINCIPAL" e a landing page da Mia. Preciso saber se é o mesmo projeto com nome antigo, ou se são dois — muda se eu estendo o que existe ou crio uma linha separada.</p>
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Mia vira euSUPER no mês que vem</h3>
+      <p>É o mesmo projeto — as Routines já usam o nome novo, o produto ainda usa o antigo. O painel trata a marca como configuração desde o começo, então a virada não custa retrabalho, e o histórico não quebra no meio.</p>
     </div>
-    <div class="card">
-      <h3>Custo por canal agora ou depois?</h3>
-      <p style="font-size:14.5px;color:var(--ink-2);margin:0">Sem a correção de atribuição, o painel só mostra custo por cadastro consolidado. Dá para viver com isso nas primeiras semanas, ou vale segurar o painel até a origem estar sendo gravada no cadastro?</p>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Uma aba por canal, cada uma com o dado da própria plataforma</h3>
+      <p>Cada aba mostra o que a plataforma reporta — exatamente como o relatório de hoje faz. Isso contorna o problema de atribuição sem fingir que ele não existe: o custo por cadastro na Visão geral aparece consolidado e rotulado como tal, em vez de dividir crédito entre canais com um número que não se sustenta.</p>
     </div>
-    <div class="card">
-      <h3>Você consegue a API key da OpenAI?</h3>
-      <p style="font-size:14.5px;color:var(--ink-2);margin:0">Sai em Ads Manager → Settings → API keys, e é uma chave por conta de anúncio. Com ela, a primeira seção do relatório automatiza inteira. Sem ela, fica entrada manual ou o proxy do GA4, que não tem gasto nem impressões.</p>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>OpenAI Ads entra automático</h3>
+      <p>Você consegue a API key, então a seção deixa de ser print. A conexão é feita direto no Windsor por você — a chave não precisa passar pelo chat nem ficar no repositório.</p>
     </div>
-    <div class="card">
-      <h3>Quem mais abre o painel?</h3>
-      <p style="font-size:14.5px;color:var(--ink-2);margin:0">Se for só você na reunião, o painel pode ser mais denso. Se os founders abrem sozinhos antes, a hierarquia muda: o veredito precisa se explicar sem você do lado.</p>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Painel denso, feito para quem apresenta</h3>
+      <p>Como é você narrando, a tela pode carregar detalhe por campanha e por criativo sem medo. O veredito abre, mas o material de apoio fica à mão na aba do canal para quando a pergunta vier.</p>
     </div>
+  </div>
+
+  <div class="finding warn" style="margin-top:26px">
+    <span class="tag warn">Continua em aberto</span>
+    <h3>Gravar a origem no cadastro</h3>
+    <p>As abas por canal resolvem a apresentação, mas não a pergunta "qual canal traz cadastro mais barato" — para isso a origem precisa ser gravada na tabela <code>professional</code> no momento do cadastro. É uma tarefa de engenharia de produto, pequena, e não bloqueia nada do que está acima. Vale abrir com o time quando fizer sentido.</p>
   </div>
 </section>
 
