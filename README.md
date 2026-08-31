@@ -2,7 +2,8 @@
 
 Painel web para a apresentação semanal e mensal aos founders.
 
-**Painel:** `painel/index.html` — abra no navegador ou publique.
+**Painel:** `painel/index.html` — abra no navegador, ou publique numa URL
+seguindo [`docs/publicar.md`](docs/publicar.md). A raiz redireciona para `/painel/`.
 
 ## Como atualizar a semana
 
