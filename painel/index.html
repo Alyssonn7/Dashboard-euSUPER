@@ -1,252 +1,295 @@
 <title>Painel Semanal Mia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Asap:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <style>
 /* ===========================================================================
-   O caderno de agendamento da Mia.
-   Trilho de rótulos à esquerda, conteúdo escrito sobre linhas pautadas,
-   linha de chamada pontilhada ligando rótulo e número.
+   Moldura em verde-mata sobre menta, cartões brancos.
+   Verde escuro é MOLDURA. As cores de dado são outras — o verde escuro
+   reprova o piso de croma como marca de gráfico (fica cinza).
    =========================================================================== */
 :root{
-  --tinta:#10243F;      /* azul de caneta — texto e capa */
-  --tinta-2:#41556F;
-  --tinta-3:#76889E;
-  --papel:#F1F4F9;      /* papel frio */
-  --papel-2:#E5EBF4;    /* trilho / faixa */
-  --linha:#CDD8E8;      /* a linha pautada */
-  --linha-2:#DFE6F1;
-  --mia:#004AAD;        /* o azul da marca */
-  --pago:#00693F;       /* deu certo */
-  --furo:#A82F26;       /* furo na agenda */
-  --pago-t:#E0EFE7;
-  --furo-t:#F7E4E2;
-  --c-meta:#2563EB;
-  --c-google:#D14009;
-  --c-openai:#00875A;
-  --capa:#10243F;
-  --capa-ink:#FFFFFF;
-  --capa-ink-2:rgba(255,255,255,.62);
-  --capa-linha:rgba(255,255,255,.16);
+  --menta:#D8ECE3;  --casca:#FFFFFF;  --tela:#F5F8F6;  --cartao:#FFFFFF;
+  --mata:#2D6A4F;   --mata-2:#24573F; --mata-3:#1C4632;
+  --borda:#E7EDEA;  --borda-2:#EFF3F1;
+  --texto:#182821;  --texto-2:#56695F; --texto-3:#8B9C93;
+  --trilho:#EAEFEC;
+  --d1:#0E8F63;     --d2:#D07C1A;     --d3:#8C4FBF;
+  --bom:#0E7A55;    --ruim:#BC4033;
+  --bom-t:#E2F2EB;  --ruim-t:#FBE9E6;
+  --sombra:0 1px 2px rgba(24,40,33,.04), 0 8px 24px -8px rgba(24,40,33,.10);
+  --menu:rgba(255,255,255,.62); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.13);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --tinta:#E4ECF8; --tinta-2:#A7B8CF; --tinta-3:#74879F;
-    --papel:#0B1522; --papel-2:#142235; --linha:#283A52; --linha-2:#1D2C41;
-    --mia:#83ADF2; --pago:#4CC78D; --furo:#EF8B81;
-    --pago-t:#0E2B1F; --furo-t:#331A18;
-    --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
-    --capa:#060D17; --capa-ink:#EEF3FB; --capa-ink-2:rgba(238,243,251,.6);
-    --capa-linha:rgba(238,243,251,.14);
+    --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
+    --mata:#1A3E2F; --mata-2:#224A38; --mata-3:#153426;
+    --borda:#243530; --borda-2:#1C2A25;
+    --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83;
+    --trilho:#21302B;
+    --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
+    --bom:#3EBE8B; --ruim:#E58579;
+    --bom-t:#0E2A20; --ruim-t:#2E1A17;
+    --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
+    --menu:rgba(230,239,233,.6); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.09);
   }
 }
 :root[data-theme="dark"]{
-  --tinta:#E4ECF8; --tinta-2:#A7B8CF; --tinta-3:#74879F;
-  --papel:#0B1522; --papel-2:#142235; --linha:#283A52; --linha-2:#1D2C41;
-  --mia:#83ADF2; --pago:#4CC78D; --furo:#EF8B81;
-  --pago-t:#0E2B1F; --furo-t:#331A18;
-  --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
-  --capa:#060D17; --capa-ink:#EEF3FB; --capa-ink-2:rgba(238,243,251,.6);
-  --capa-linha:rgba(238,243,251,.14);
+  --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
+  --mata:#1A3E2F; --mata-2:#224A38; --mata-3:#153426;
+  --borda:#243530; --borda-2:#1C2A25;
+  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83;
+  --trilho:#21302B;
+  --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
+  --bom:#3EBE8B; --ruim:#E58579;
+  --bom-t:#0E2A20; --ruim-t:#2E1A17;
+  --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
+  --menu:rgba(230,239,233,.6); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.09);
 }
 
 *{box-sizing:border-box}
 body{
-  background:var(--papel); color:var(--tinta);
-  font-family:"Asap",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15.5px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  background:var(--menta); color:var(--texto);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14.5px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  padding:22px;
 }
-.mono{font-family:"Spline Sans Mono",ui-monospace,Menlo,Consolas,monospace}
-.disp{font-family:"Bricolage Grotesque","Asap",sans-serif}
+.jk{font-family:"Plus Jakarta Sans","IBM Plex Sans",sans-serif}
+.tn{font-variant-numeric:tabular-nums}
 
-/* ------------------------------------------------------------------- capa */
-.capa{background:var(--capa);color:var(--capa-ink);padding:26px 0 0}
-.capa-in{max-width:1120px;margin:0 auto;padding:0 26px;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:26px;flex-wrap:wrap}
-.marca{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:800;
-  font-size:27px;letter-spacing:-.025em;line-height:1;color:var(--capa-ink)}
-.marca em{display:block;font-family:"Spline Sans Mono",monospace;font-style:normal;
-  font-weight:400;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--capa-ink-2);margin-top:9px}
-.quando{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
-.campo{display:flex;flex-direction:column;gap:5px}
-.campo label{font-family:"Spline Sans Mono",monospace;font-size:9.5px;font-weight:500;
-  letter-spacing:.19em;text-transform:uppercase;color:var(--capa-ink-2)}
-.campo input{
-  font-family:"Spline Sans Mono",monospace;font-size:13px;
-  padding:7px 10px;border:1px solid var(--capa-linha);border-radius:3px;
-  background:rgba(255,255,255,.08);color:var(--capa-ink);color-scheme:dark;
+/* ------------------------------------------------------------------ casca */
+.app{
+  max-width:1340px;margin:0 auto;background:var(--casca);border-radius:26px;
+  box-shadow:0 2px 6px rgba(24,40,33,.05), 0 24px 60px -20px rgba(24,40,33,.18);
+  display:grid;grid-template-columns:236px 1fr;overflow:hidden;min-height:86vh;
 }
-.campo input:focus-visible{outline:2px solid var(--capa-ink);outline-offset:1px}
-.contra{font-family:"Spline Sans Mono",monospace;font-size:11.5px;
-  color:var(--capa-ink-2);padding-bottom:9px;line-height:1.5;max-width:22ch}
 
-/* -------------------------------------------------------- abas de fichário */
-.fichario{max-width:1120px;margin:22px auto 0;padding:0 18px;
-  display:flex;gap:3px;overflow-x:auto;scrollbar-width:none}
-.fichario::-webkit-scrollbar{display:none}
-.aba{
-  font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:500;
-  letter-spacing:.09em;text-transform:uppercase;
-  padding:11px 15px 12px;color:var(--capa-ink-2);white-space:nowrap;cursor:pointer;
-  border:none;background:rgba(255,255,255,.05);border-radius:5px 5px 0 0;
-  border-bottom:3px solid transparent;
-}
-.aba:hover{color:var(--capa-ink);background:rgba(255,255,255,.11)}
-.aba[aria-selected="true"]{
-  background:var(--papel);color:var(--mia);font-weight:600;border-bottom-color:var(--papel);
-}
-.aba:focus-visible{outline:2px solid var(--capa-ink);outline-offset:-3px}
+/* --------------------------------------------------------------- barra lat */
+.lado{background:var(--mata);padding:26px 16px 20px;display:flex;flex-direction:column;gap:26px}
+.logo{display:flex;align-items:center;gap:11px;padding:0 8px;color:#fff}
+.logo .bolha{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.16);
+  display:grid;place-items:center;flex:none}
+.logo b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:16.5px;
+  letter-spacing:-.01em;line-height:1.1}
+.logo small{display:block;font-size:10.5px;font-weight:500;color:var(--menu);
+  letter-spacing:.02em;margin-top:1px}
 
-main{max-width:1120px;margin:0 auto;padding:34px 26px 96px}
+.menu{display:flex;flex-direction:column;gap:3px;flex:1}
+.item{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:11px 12px;border-radius:11px;border:none;background:none;cursor:pointer;
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:13.5px;font-weight:600;
+  color:var(--menu);text-align:left;transition:background .16s,color .16s;
+}
+.item svg{width:19px;height:19px;flex:none;stroke:currentColor;stroke-width:1.7;
+  fill:none;stroke-linecap:round;stroke-linejoin:round}
+.item:hover{background:var(--menu-bg);color:var(--menu-on)}
+.item[aria-selected="true"]{background:var(--menu-bg);color:var(--menu-on)}
+.item .pt{margin-left:auto;width:7px;height:7px;border-radius:50%;background:#fff;
+  opacity:0;flex:none}
+.item[aria-selected="true"] .pt{opacity:1}
+.item:focus-visible{outline:2px solid #fff;outline-offset:1px}
+
+.imprimir{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px;border-radius:12px;border:none;background:#fff;cursor:pointer;
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;color:var(--mata);
+}
+.imprimir svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.imprimir:hover{background:#F0F5F2}
+.imprimir:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* -------------------------------------------------------------------- tela */
+.tela{background:var(--tela);padding:20px 24px 34px;min-width:0}
+.topo{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+.busca{position:relative;flex:1;min-width:190px;max-width:330px}
+.busca svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;stroke:var(--texto-3);stroke-width:1.8;fill:none;
+  stroke-linecap:round;pointer-events:none}
+.busca input{
+  width:100%;font:inherit;font-size:13.5px;padding:10px 38px 10px 15px;
+  border:1px solid var(--borda);border-radius:11px;background:var(--cartao);
+  color:var(--texto);
+}
+.busca input::placeholder{color:var(--texto-3)}
+.busca input:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
+.quando{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
+.quando input[type=date]{
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
+  font-variant-numeric:tabular-nums;padding:9px 11px;border-radius:10px;
+  border:1px solid var(--borda);background:var(--cartao);color:var(--texto);
+}
+.quando input[type=date]:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
+.tracinho{color:var(--texto-3);font-size:13px}
+.icone{width:38px;height:38px;border-radius:11px;border:1px solid var(--borda);
+  background:var(--cartao);cursor:pointer;display:grid;place-items:center;color:var(--texto-2)}
+.icone svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.icone:hover{background:var(--tela)}
+.icone:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
+.eu{width:38px;height:38px;border-radius:50%;background:var(--mata);color:#fff;
+  display:grid;place-items:center;font-family:"Plus Jakarta Sans",sans-serif;
+  font-weight:700;font-size:12.5px;flex:none}
+
 .folha[hidden]{display:none}
+.faixa{display:grid;gap:16px;margin-bottom:16px}
+.faixa.dois{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.faixa.meio{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 
-/* --------------------------------------------------------------- cabeçalhos */
-.bloco{margin:0 0 42px}
-.titulo{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;
-  font-size:22px;letter-spacing:-.022em;margin:0 0 5px;line-height:1.16}
-.legenda{color:var(--tinta-2);font-size:14px;margin:0 0 22px;max-width:74ch}
-.rotulo{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:500;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-3);
-  padding-bottom:9px;border-bottom:2px solid var(--tinta);margin-bottom:4px;
-  display:block}
+/* ----------------------------------------------------------------- cartões */
+.cx{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;
+  padding:19px 21px;box-shadow:var(--sombra);min-width:0}
+.cx-topo{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:14px;margin-bottom:16px}
+.cx h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:14.5px;font-weight:700;
+  margin:0;letter-spacing:-.005em;color:var(--texto)}
+.cx h3 + .sub{margin-top:3px}
+.sub{font-size:12.5px;color:var(--texto-3);margin:0;line-height:1.5}
+.selo{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+  padding:6px 11px;border-radius:9px;background:var(--mata);color:#fff;white-space:nowrap}
+.selo.claro{background:var(--trilho);color:var(--texto-2)}
 
-/* ------------------------------------------------------------- o veredito */
-.veredito{
-  display:grid;grid-template-columns:132px 1fr;gap:0 22px;align-items:start;
-  border-top:2px solid var(--tinta);border-bottom:1px solid var(--linha);
-  padding:18px 0 22px;margin-bottom:38px;
-}
-.veredito .marg{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:500;
-  letter-spacing:.17em;text-transform:uppercase;color:var(--mia);padding-top:5px}
-.veredito p{margin:0;font-size:16.5px;line-height:1.62;max-width:64ch;color:var(--tinta)}
+/* veredito — o cartão escuro é a tese da semana */
+.tese{background:var(--mata);border:none;color:#fff;padding:24px 26px}
+.tese .et{font-family:"Plus Jakarta Sans",sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px}
+.tese p{margin:0;font-size:16px;line-height:1.62;max-width:82ch;color:#fff}
 
-/* ------------------------------------------- a linha da agenda (assinatura) */
-.linhas{border-top:1px solid var(--linha);margin:0 0 6px}
-.linha{
-  display:grid;grid-template-columns:minmax(118px,auto) 1fr auto minmax(78px,auto);
-  gap:0 12px;align-items:baseline;
-  padding:13px 0 12px;border-bottom:1px solid var(--linha-2);
-}
-.linha:hover{background:var(--papel-2)}
-.linha .lb{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--tinta-2);white-space:nowrap}
-.linha .chamada{border-bottom:1px dotted var(--linha);height:.72em;min-width:14px}
-.linha .vl{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;
-  font-size:21px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
-  color:var(--tinta);white-space:nowrap}
-.linha .var{font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:500;
-  font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
-.linha .var.up{color:var(--pago)} .linha .var.down{color:var(--furo)}
-.linha .var.flat{color:var(--tinta-3)}
-.linha .nota{grid-column:1/-1;font-size:12.5px;color:var(--tinta-3);
-  margin-top:5px;padding-left:0}
-.linhas.solta .linha:last-child{border-bottom:1px solid var(--linha)}
+/* --------------------------------------------------------------- métricas */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:1px;
+  background:var(--borda-2);border-radius:12px;overflow:hidden}
+.tile{background:var(--cartao);padding:15px 16px}
+.tile .l{font-size:11.5px;font-weight:500;color:var(--texto-3);margin-bottom:7px;
+  line-height:1.35}
+.tile .v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:22px;
+  letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--texto)}
+.pilula{display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
+  font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:99px}
+.pilula.up{background:var(--bom-t);color:var(--bom)}
+.pilula.down{background:var(--ruim-t);color:var(--ruim)}
+.pilula.flat{background:var(--trilho);color:var(--texto-3)}
+.tile .nt{font-size:11px;color:var(--texto-3);margin-top:7px;line-height:1.45}
 
-/* ------------------------------------------------------------ blocos vagos */
-.slots{border-top:1px solid var(--linha)}
-.slot{
-  display:grid;grid-template-columns:minmax(112px,auto) 1fr minmax(112px,auto);
-  gap:0 14px;align-items:center;
-  padding:9px 0;border-bottom:1px solid var(--linha-2);
-}
-.slot .nm{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
-  letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-2);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.slot .faixa{display:block;height:19px;background:var(--papel-2);position:relative;
-  border-radius:2px;overflow:hidden}
-.slot .ocupado{display:block;height:100%;background:var(--mia);border-radius:2px;
-  min-width:3px;transition:width .4s cubic-bezier(.22,.61,.36,1)}
-.slot .qt{font-family:"Spline Sans Mono",monospace;font-size:12px;font-weight:500;
-  font-variant-numeric:tabular-nums;text-align:right;color:var(--tinta);white-space:nowrap}
-.slot.furado .ocupado{background:var(--furo)}
-.slot.furado .nm,.slot.furado .qt{color:var(--furo)}
+/* ------------------------------------------------------------------ barras */
+.bars{display:flex;align-items:flex-end;gap:8px;height:158px}
+.bcol{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:8px;height:100%;min-width:0}
+.bcol .bv{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--texto-3);white-space:nowrap}
+.bcol .bb{width:100%;max-width:40px;background:var(--trilho);border-radius:6px 6px 3px 3px;
+  min-height:4px;transition:height .4s cubic-bezier(.22,.61,.36,1)}
+.bcol.on .bb{background:var(--d1)}
+.bcol.on .bv{color:var(--texto);font-size:11.5px}
+.blabs{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--borda-2)}
+.blabs span{flex:1;text-align:center;font-size:11px;color:var(--texto-3);min-width:0}
 
-/* ------------------------------------------------------------- colunas dia */
-.dias{display:flex;align-items:flex-end;gap:12px;height:158px;
-  border-bottom:1px solid var(--linha);padding-bottom:0}
-.dia{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
-  align-items:center;gap:7px;height:100%}
-.dia .col{width:100%;max-width:56px;background:var(--mia);min-height:3px;
-  border-radius:2px 2px 0 0;transition:height .4s cubic-bezier(.22,.61,.36,1)}
-.dia .n{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;font-size:12.5px;
-  font-variant-numeric:tabular-nums;color:var(--tinta)}
-.diasl{display:flex;gap:12px;margin-top:8px}
-.diasl span{flex:1;text-align:center;font-family:"Spline Sans Mono",monospace;
-  font-size:10.5px;color:var(--tinta-3)}
-
-/* ------------------------------------------------------------------ pautas */
-.pauta{border-top:2px solid var(--tinta)}
-.par{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:38px}
-.quadro{min-width:0}
-.quadro .titulo{font-size:15px;margin-bottom:3px}
-.quadro .legenda{font-size:12.5px;margin-bottom:16px}
-.chave{display:flex;gap:15px;flex-wrap:wrap;margin-bottom:13px}
-.chave span{display:inline-flex;align-items:center;gap:6px;
-  font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--tinta-2)}
-.chave i{width:9px;height:9px;border-radius:1px;flex:none}
-
-/* ------------------------------------------------------------------ tabela */
-.tw{overflow-x:auto;border-top:2px solid var(--tinta)}
-table{border-collapse:collapse;width:100%;font-size:13.5px}
-thead th{font-family:"Spline Sans Mono",monospace;font-size:9.5px;font-weight:500;
-  letter-spacing:.15em;text-transform:uppercase;color:var(--tinta-3);
-  text-align:left;padding:10px 13px 10px 0;border-bottom:1px solid var(--linha);
+/* -------------------------------------------------------- linhas de trilho */
+.rows{display:flex;flex-direction:column;gap:11px}
+.row{display:grid;grid-template-columns:var(--rl,104px) 1fr auto;gap:12px;align-items:center}
+.row .rn{font-size:12.5px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;
   white-space:nowrap}
-thead th.r{text-align:right}
-tbody td{padding:12px 13px 12px 0;border-bottom:1px solid var(--linha-2);
-  color:var(--tinta-2);white-space:nowrap;
-  font-family:"Spline Sans Mono",monospace;font-size:12.5px;
+.row .rt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
+.row .rf{display:block;height:100%;border-radius:99px;background:var(--d1);min-width:4px;
+  transition:width .4s cubic-bezier(.22,.61,.36,1)}
+.row .rv{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--texto);white-space:nowrap;text-align:right;
+  min-width:66px}
+.row.mau .rf{background:var(--ruim)} .row.mau .rn,.row.mau .rv{color:var(--ruim)}
+
+/* ------------------------------------------------------------------ roscas */
+.roscas{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px}
+.rosca{display:flex;align-items:center;gap:12px}
+.rosca svg{width:72px;height:72px;flex:none;transform:rotate(-90deg)}
+.rosca .mid{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:15px;
   font-variant-numeric:tabular-nums}
+.rosca .tx b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;
+  font-weight:700;color:var(--texto);line-height:1.3}
+.rosca .tx span{display:block;font-size:11.5px;color:var(--texto-3);margin-top:4px;
+  line-height:1.45}
+
+/* -------------------------------------------------------------------- área */
+.area{width:100%;height:auto;display:block}
+.area .gd{stroke:var(--borda);stroke-width:1}
+.area .ln{fill:none;stroke:var(--d1);stroke-width:2.2;stroke-linecap:round;
+  stroke-linejoin:round}
+.area .pt{fill:var(--cartao);stroke:var(--d1);stroke-width:2;cursor:default}
+.area .pt:hover{fill:var(--d1)}
+.axl{display:flex;margin-top:8px}
+.axl span{flex:1;text-align:center;font-size:10.5px;color:var(--texto-3)}
+
+/* ----------------------------------------------------------------- tabelas */
+.tw{overflow-x:auto;margin:0 -21px -19px;padding:0 21px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+thead th{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--texto-3);text-align:left;padding:0 12px 10px 0;
+  border-bottom:1px solid var(--borda);white-space:nowrap}
+thead th.r{text-align:right}
+tbody td{padding:12px 12px 12px 0;border-bottom:1px solid var(--borda-2);
+  color:var(--texto-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td.r{text-align:right}
-tbody td.nm{font-family:"Asap",sans-serif;font-size:14px;font-weight:600;color:var(--tinta)}
-tbody tr:hover td{background:var(--papel-2)}
-tfoot td{padding:12px 13px 12px 0;border-top:1px solid var(--linha);
-  font-family:"Spline Sans Mono",monospace;font-size:12.5px;font-weight:600;
-  color:var(--tinta);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody td.nm{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:13px;
+  color:var(--texto)}
+tbody tr:hover td{background:var(--tela)}
+tbody tr:last-child td{border-bottom:none}
+tfoot td{padding:12px 12px;border-top:1px solid var(--borda);font-weight:600;
+  color:var(--texto);white-space:nowrap;font-variant-numeric:tabular-nums;
+  background:var(--tela)}
 tfoot td.r{text-align:right}
-tfoot td.nm{font-family:"Asap",sans-serif;font-size:13.5px}
-td .sub{display:block;font-family:"Spline Sans Mono",monospace;font-size:10.5px;
-  color:var(--tinta-3);margin-top:2px}
+tfoot td:first-child{border-radius:0 0 0 10px} tfoot td:last-child{border-radius:0 0 10px 0}
+.up{color:var(--bom)} .down{color:var(--ruim)} .flat{color:var(--texto-3)}
 
-/* --------------------------------------------------------------- anotações */
-.anot{border-top:1px solid var(--linha);padding-top:4px}
-.anot p{display:grid;grid-template-columns:22px 1fr;gap:12px;margin:0;
-  padding:13px 0;border-bottom:1px solid var(--linha-2);
-  font-size:14.5px;color:var(--tinta-2);max-width:none}
-.anot p b{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
-  color:var(--mia);padding-top:3px}
-.anot p span{max-width:74ch}
+/* ------------------------------------------------------------------- listas */
+.ord{list-style:none;counter-reset:o;padding:0;margin:0;display:flex;
+  flex-direction:column;gap:2px}
+.ord li{counter-increment:o;display:grid;grid-template-columns:24px 1fr auto;gap:11px;
+  align-items:baseline;padding:9px 0;border-bottom:1px solid var(--borda-2);font-size:13px;
+  color:var(--texto-2)}
+.ord li:last-child{border-bottom:none}
+.ord li::before{content:counter(o) ".";font-family:"Plus Jakarta Sans",sans-serif;
+  font-weight:700;font-size:12px;color:var(--texto-3)}
+.ord li b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:12.5px;
+  color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
+.notas{display:flex;flex-direction:column;gap:0}
+.notas p{margin:0;padding:13px 0;border-bottom:1px solid var(--borda-2);font-size:13.5px;
+  color:var(--texto-2);max-width:78ch}
+.notas p:last-child{border-bottom:none}
+.passos{list-style:none;counter-reset:s;padding:0;margin:0;display:flex;
+  flex-direction:column;gap:11px}
+.passos li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:14px;
+  align-items:start;background:var(--cartao);border:1px solid var(--borda);
+  border-radius:13px;padding:16px 18px;font-size:14px;color:var(--texto-2)}
+.passos li::before{content:counter(s,decimal-leading-zero);
+  font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:15px;color:var(--d1)}
+.passos li span{max-width:74ch}
+.recado{font-size:12.5px;color:var(--texto-2);background:var(--tela);
+  border-radius:10px;padding:11px 14px;margin:0 0 15px;line-height:1.55;max-width:82ch}
+.vazio{font-size:13px;color:var(--texto-3);padding:16px 0}
 
-/* sequência real — só aqui a numeração diz algo */
-.passos{list-style:none;counter-reset:p;padding:0;margin:0;border-top:2px solid var(--tinta)}
-.passos li{counter-increment:p;display:grid;grid-template-columns:52px 1fr;gap:16px;
-  padding:19px 0;border-bottom:1px solid var(--linha-2);
-  font-size:15px;color:var(--tinta-2)}
-.passos li::before{content:counter(p,decimal-leading-zero);
-  font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:800;font-size:19px;
-  color:var(--linha);line-height:1.05}
-.passos li span{max-width:70ch}
-
-.aviso{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--tinta-2);
-  background:var(--papel-2);border-left:2px solid var(--mia);
-  padding:11px 15px;margin:0 0 20px;max-width:78ch;line-height:1.6}
-.rodape{margin-top:52px;padding-top:16px;border-top:1px solid var(--linha);
-  font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--tinta-3)}
-
-@media (prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:1080px){
+  .faixa.dois{grid-template-columns:1fr}
 }
-@media (max-width:640px){
-  .veredito{grid-template-columns:1fr;gap:10px}
-  .veredito p{font-size:15.5px}
-  .linha{grid-template-columns:1fr auto;row-gap:2px}
-  .linha .chamada{display:none}
-  .linha .var{grid-column:2}
-  .par{gap:30px}
-  .marca{font-size:23px}
+@media (max-width:820px){
+  body{padding:0}
+  .app{border-radius:0;grid-template-columns:1fr;min-height:100vh}
+  .lado{flex-direction:row;align-items:center;gap:14px;padding:14px 16px;overflow-x:auto}
+  .logo small{display:none}
+  .menu{flex-direction:row;flex:none;gap:4px}
+  .item{padding:9px 11px;white-space:nowrap}
+  .item .pt{display:none}
+  .imprimir{display:none}
+  .tela{padding:16px 16px 30px}
+}
+@media print{
+  body{background:#fff;padding:0}
+  .app{box-shadow:none;border-radius:0;grid-template-columns:1fr;display:block}
+  .lado,.topo,.icone{display:none!important}
+  .tela{background:#fff;padding:0}
+  .cx{break-inside:avoid;box-shadow:none}
+  .faixa.dois{grid-template-columns:1fr}
 }
 </style>
 <script>
@@ -372,19 +415,47 @@ const DADOS = {
 };
 /* ===================== fim dos dados da semana ===================== */
 </script>
-<div class="capa">
-  <div class="capa-in">
-    <div class="marca" id="marca">Mia<em>agenda da semana</em></div>
-    <div class="quando">
-      <div class="campo"><label for="de">Abertura</label><input type="date" id="de"></div>
-      <div class="campo"><label for="ate">Fechamento</label><input type="date" id="ate"></div>
-      <span class="contra" id="contra"></span>
+<div class="app">
+  <nav class="lado" aria-label="Seções do painel">
+    <div class="logo">
+      <span class="bolha" aria-hidden="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/>
+        </svg>
+      </span>
+      <span><b id="marca">Mia</b><small>painel da semana</small></span>
     </div>
-  </div>
-  <div class="fichario" role="tablist" id="fichario"></div>
-</div>
+    <div class="menu" role="tablist" id="menu"></div>
+    <button class="imprimir" type="button" id="btPrint">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9V3.5h11V9"/>
+        <rect x="3.5" y="9" width="17" height="7.5" rx="2"/><path d="M6.5 14h11v6.5h-11z"/></svg>
+      Imprimir
+    </button>
+  </nav>
 
-<main id="main"></main>
+  <div class="tela">
+    <header class="topo">
+      <div class="busca">
+        <label for="q" class="sr" hidden>Filtrar nesta folha</label>
+        <input id="q" type="search" placeholder="Filtrar nesta folha…" autocomplete="off">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/>
+          <path d="m15.6 15.6 4.4 4.4"/></svg>
+      </div>
+      <div class="quando">
+        <input type="date" id="de" aria-label="Início do período">
+        <span class="tracinho" aria-hidden="true">→</span>
+        <input type="date" id="ate" aria-label="Fim do período">
+        <button class="icone" type="button" id="btTema" aria-label="Alternar tema claro e escuro">
+          <svg viewBox="0 0 24 24" aria-hidden="true" id="icTema"><circle cx="12" cy="12" r="4.4"/>
+            <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>
+        </button>
+        <span class="eu" title="Alysson Lima">AL</span>
+      </div>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
 
 <script>
 /* ------------------------------------------------------------- formatação */
@@ -392,82 +463,159 @@ const nf0 = new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
 const nf2 = new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
 const num = v => v==null ? "—" : nf0.format(v);
 const brl = v => v==null ? "—" : "R$ " + nf2.format(v);
+const brl0= v => v==null ? "—" : "R$ " + nf0.format(v);
 const pct = v => v==null ? "—" : nf2.format(v).replace(",00","") + "%";
 const seg = v => v==null ? "—" : num(v) + "s";
 const dm  = iso => { if(!iso) return ""; const [a,m,d]=iso.split("-"); return `${d}/${m}`; };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* variação — `inverso` para métricas em que cair é bom (custo, CPC, CPA) */
-function variacao(atual, anterior, inverso){
+function vari(atual, anterior, inverso){
   if(atual==null || anterior==null || anterior===0) return null;
-  const p = ((atual - anterior) / Math.abs(anterior)) * 100;
-  const bom = inverso ? p < 0 : p > 0;
-  return { cls: Math.abs(p) < 0.5 ? "flat" : (bom ? "up" : "down"),
-           txt: (p>0?"+":p<0?"−":"") + nf2.format(Math.abs(p)).replace(",00","") + "%" };
+  const p = ((atual-anterior)/Math.abs(anterior))*100;
+  const bom = inverso ? p<0 : p>0;
+  return { cls: Math.abs(p)<0.5 ? "flat" : (bom?"up":"down"),
+           txt: (p>0?"▲ ":p<0?"▼ ":"") + nf2.format(Math.abs(p)).replace(",00","")+"%" };
 }
 
-/* a linha da agenda: rótulo · chamada pontilhada · valor · variação */
-function linha(lb, vl, v, nota){
-  return `<div class="linha">
-    <span class="lb">${lb}</span>
-    <span class="chamada"></span>
-    <span class="vl">${vl}</span>
-    <span class="var ${v?v.cls:"flat"}">${v?v.txt:"—"}</span>
-    ${nota?`<span class="nota">${nota}</span>`:""}
+/* investimento e uma decisao, nao um resultado: mostra a variacao sem julgar */
+function variNeutra(atual, anterior){
+  const v = vari(atual, anterior);
+  return v ? {cls:"flat", txt:v.txt} : null;
+}
+
+/* --------------------------------------------------------------- pedaços */
+function tile(l, v, va, nt){
+  return `<div class="tile">
+    <div class="l">${l}</div>
+    <div class="v">${v}</div>
+    ${va?`<span class="pilula ${va.cls}">${va.txt}</span>`:""}
+    ${nt?`<div class="nt">${nt}</div>`:""}
   </div>`;
 }
-const linhas = (html, solta) => `<div class="linhas ${solta?"solta":""}">${html}</div>`;
+const tiles = h => `<div class="tiles">${h}</div>`;
 
-/* horários ocupados: a barra é a proporção, o número é o absoluto */
-function slots(itens){
+function rows(itens, rl){
   const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="slots">` + itens.map(i=>`
-    <div class="slot ${i.furado?"furado":""}">
-      <span class="nm" title="${i.nome}">${i.nome}</span>
-      <span class="faixa"><span class="ocupado" style="width:${Math.max((i.valor/max)*100,1.4)}%${i.cor?`;background:${i.cor}`:""}"></span></span>
-      <span class="qt">${i.rotulo}</span>
+  return `<div class="rows" style="--rl:${rl||104}px">` + itens.map(i=>`
+    <div class="row ${i.mau?"mau":""}">
+      <span class="rn" title="${esc(i.nome)}">${esc(i.nome)}</span>
+      <span class="rt"><span class="rf" style="width:${Math.max((i.valor/max)*100,2)}%${i.cor?`;background:${i.cor}`:""}"></span></span>
+      <span class="rv">${i.rot}</span>
     </div>`).join("") + `</div>`;
 }
 
-/* colunas por dia */
-function dias(itens, fmt){
+/* barras verticais — as apagadas são contexto, a acesa é o período */
+function bars(itens, fmt){
   const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="dias">` + itens.map(i=>`
-    <div class="dia" title="${i.rotulo}: ${fmt(i.valor)}">
-      <span class="n">${fmt(i.valor)}</span>
-      <span class="col" style="height:${Math.max((i.valor/max)*100,2)}%${i.cor?`;background:${i.cor}`:""}"></span>
-    </div>`).join("") + `</div>
-    <div class="diasl">${itens.map(i=>`<span>${i.rotulo}</span>`).join("")}</div>`;
+  return `<div class="bars">${itens.map(i=>`
+    <div class="bcol ${i.on?"on":""}" title="${esc(i.rot)}: ${fmt(i.valor)}">
+      <span class="bv">${fmt(i.valor)}</span>
+      <span class="bb" style="height:${Math.max((i.valor/max)*100,3)}%"></span>
+    </div>`).join("")}</div>
+    <div class="blabs">${itens.map(i=>`<span>${esc(i.rot)}</span>`).join("")}</div>`;
 }
 
-/* ---------------------------------------------------------------- as folhas */
+/* rosca — uma taxa por anel */
+let roscaId = 0;
+function rosca(p, cor, titulo, desc){
+  const r=31, c=2*Math.PI*r, on=Math.max(0,Math.min(100,p))/100*c;
+  const id = "rc"+(++roscaId);
+  return `<div class="rosca">
+    <svg viewBox="0 0 76 76" role="img" aria-labelledby="${id}">
+      <title id="${id}">${esc(titulo)}: ${pct(p)}</title>
+      <circle cx="38" cy="38" r="${r}" fill="none" stroke="var(--trilho)" stroke-width="9"/>
+      <circle cx="38" cy="38" r="${r}" fill="none" stroke="${cor}" stroke-width="9"
+              stroke-linecap="round" stroke-dasharray="${on.toFixed(1)} ${(c-on).toFixed(1)}"/>
+      <text x="38" y="38" class="mid" transform="rotate(90 38 38)" text-anchor="middle"
+            dominant-baseline="central" fill="var(--texto)">${nf0.format(Math.round(p))}%</text>
+    </svg>
+    <span class="tx"><b>${esc(titulo)}</b><span>${esc(desc)}</span></span>
+  </div>`;
+}
+
+/* linha suave com pontos — um SVG só, escala uniforme, hover mostra o valor */
+let areaId = 0;
+function area(serie, fmt){
+  if(!serie.length) return '<p class="vazio">Sem série no período.</p>';
+  const W=300, H=96, pad=10, base=H-16;
+  const vs = serie.map(s=>s.valor);
+  const mx = Math.max(...vs), mn = Math.min(...vs);
+  const lo = mn - (mx-mn||Math.abs(mx)||1)*0.18;
+  const span = (mx-lo)||1;
+  const px = i => serie.length===1 ? W/2 : pad + i*((W-pad*2)/(serie.length-1));
+  const py = v => pad + (1-(v-lo)/span)*(base-pad);
+  const pts = serie.map((s,i)=>[px(i), py(s.valor)]);
+
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for(let i=0;i<pts.length-1;i++){
+    const [x0,y0]=pts[i], [x1,y1]=pts[i+1], m=(x0+x1)/2;
+    d += ` C${m.toFixed(1)},${y0.toFixed(1)} ${m.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  const g = "ag"+(++areaId);
+  return `<svg class="area" viewBox="0 0 ${W} ${H}" role="img"
+      aria-label="${esc(serie[0].rot)} a ${esc(serie[serie.length-1].rot)}: de ${fmt(serie[0].valor)} a ${fmt(serie[serie.length-1].valor)}">
+      <defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--d1)" stop-opacity=".22"/>
+        <stop offset="1" stop-color="var(--d1)" stop-opacity="0"/>
+      </linearGradient></defs>
+      <line class="gd" x1="${pad}" y1="${base}" x2="${W-pad}" y2="${base}"/>
+      <path fill="url(#${g})" stroke="none"
+            d="${d} L${pts[pts.length-1][0].toFixed(1)},${base} L${pts[0][0].toFixed(1)},${base} Z"/>
+      <path class="ln" d="${d}"/>
+      ${pts.map((p,i)=>`<circle class="pt" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2"
+        ><title>${esc(serie[i].rot)}: ${fmt(serie[i].valor)}</title></circle>`).join("")}
+    </svg>
+    <div class="axl">${serie.map(s=>`<span>${esc(s.rot)}</span>`).join("")}</div>`;
+}
+
+const cx = (inner, extra) => `<section class="cx ${extra||""}">${inner}</section>`;
+function cxh(titulo, sub, selo){
+  return `<div class="cx-topo"><div><h3>${titulo}</h3>${sub?`<p class="sub">${sub}</p>`:""}</div>
+    ${selo?`<span class="selo">${selo}</span>`:""}</div>`;
+}
+
+/* ----------------------------------------------------------------- folhas */
+const IC = {
+  casa:'<path d="M3 10.2 12 3l9 7.2"/><path d="M5.6 8.9V20.4h12.8V8.9"/>',
+  faisca:'<path d="M12 3.4 13.8 9l5.5 1.8L13.8 12.6 12 18.2l-1.8-5.6L4.7 10.8 10.2 9z"/>',
+  bolha:'<path d="M20.4 12.1c0 3.9-3.8 7.1-8.4 7.1a10 10 0 0 1-2.6-.34L4.6 20.9l1.2-3.5a6.8 6.8 0 0 1-2.2-5.3C3.6 8.2 7.4 5 12 5s8.4 3.2 8.4 7.1Z"/>',
+  lupa:'<circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.6 15.6 4.4 4.4"/>',
+  tela:'<rect x="3" y="4.6" width="18" height="12.4" rx="2.2"/><path d="M9 20.4h6M12 17v3.4"/>',
+  carteira:'<rect x="3" y="6" width="18" height="12.4" rx="2.6"/><path d="M3 10.6h18M16.6 14.6h1.6"/>',
+  bandeira:'<path d="M6 3.5v17"/><path d="M6 4.7h11.4l-2.2 4 2.2 4H6z"/>'
+};
+
 const FOLHAS = [
-  { id:"geral",   nome:"A semana",     render:folhaGeral },
-  { id:"openai",  nome:"OpenAI Ads",   render:folhaOpenAI },
-  { id:"meta",    nome:"Meta Ads",     render:folhaMeta },
-  { id:"google",  nome:"Google Ads",   render:folhaGoogle },
-  { id:"lp",      nome:"A página",     render:folhaLP },
-  { id:"negocio", nome:"O negócio",    render:folhaNegocio },
-  { id:"passos",  nome:"O que vem",    render:folhaPassos }
+  { id:"geral",   nome:"A semana",   ic:"casa",      render:fGeral },
+  { id:"openai",  nome:"OpenAI Ads", ic:"faisca",    render:fOpenAI },
+  { id:"meta",    nome:"Meta Ads",   ic:"bolha",     render:fMeta },
+  { id:"google",  nome:"Google Ads", ic:"lupa",      render:fGoogle },
+  { id:"lp",      nome:"A página",   ic:"tela",      render:fLP },
+  { id:"negocio", nome:"O negócio",  ic:"carteira",  render:fNegocio },
+  { id:"passos",  nome:"O que vem",  ic:"bandeira",  render:fPassos }
 ];
 
-function somaMidia(){
-  const soma = (arr, get) => arr.reduce((s,x)=>{
-    const o = get(x); return { custo:s.custo+o.custo, cliques:s.cliques+o.cliques,
-      impressoes:s.impressoes+o.impressoes };
-  }, {custo:0,cliques:0,impressoes:0});
-
-  const g   = soma(DADOS.google.campanhas, c=>({custo:c.atual.custo,cliques:c.atual.cliques,impressoes:c.atual.impressoes}));
-  const gA  = soma(DADOS.google.campanhas, c=>({custo:c.anterior.custo,cliques:c.anterior.cliques,impressoes:c.anterior.impressoes}));
-  const m   = soma(DADOS.meta.objetivos,  o=>({custo:o.atual.gasto,cliques:o.atual.cliques,impressoes:o.atual.impressoes}));
-  const mA  = soma(DADOS.meta.objetivos,  o=>({custo:o.anterior.gasto,cliques:o.anterior.cliques,impressoes:o.anterior.impressoes}));
-  const o   = DADOS.openai.atual    || {gasto:0,cliques:0,impressoes:0};
-  const oA  = DADOS.openai.anterior;
-
+function somas(){
+  const g  = DADOS.google.campanhas.reduce((a,c)=>({custo:a.custo+c.atual.custo,
+    cliques:a.cliques+c.atual.cliques, impressoes:a.impressoes+c.atual.impressoes}),
+    {custo:0,cliques:0,impressoes:0});
+  const gA = DADOS.google.campanhas.reduce((a,c)=>({custo:a.custo+c.anterior.custo,
+    cliques:a.cliques+c.anterior.cliques, impressoes:a.impressoes+c.anterior.impressoes}),
+    {custo:0,cliques:0,impressoes:0});
+  const m  = DADOS.meta.objetivos.reduce((a,o)=>({custo:a.custo+o.atual.gasto,
+    cliques:a.cliques+o.atual.cliques, impressoes:a.impressoes+o.atual.impressoes}),
+    {custo:0,cliques:0,impressoes:0});
+  const mA = DADOS.meta.objetivos.reduce((a,o)=>({custo:a.custo+o.anterior.gasto,
+    cliques:a.cliques+o.anterior.cliques, impressoes:a.impressoes+o.anterior.impressoes}),
+    {custo:0,cliques:0,impressoes:0});
+  const o = DADOS.openai.atual || {gasto:0,cliques:0,impressoes:0};
+  const oA = DADOS.openai.anterior;
   return {
     canais:[
-      {nome:"Google Ads", custo:g.custo, cliques:g.cliques, cor:"var(--c-google)"},
-      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--c-meta)"},
-      {nome:"OpenAI Ads", custo:o.gasto, cliques:o.cliques, cor:"var(--c-openai)"}
+      {nome:"Google Ads", custo:g.custo, cliques:g.cliques, cor:"var(--d2)"},
+      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--d3)"},
+      {nome:"OpenAI Ads", custo:o.gasto, cliques:o.cliques, cor:"var(--d1)"}
     ],
     invest:g.custo+m.custo+o.gasto,
     investA:gA.custo+mA.custo+(oA?oA.gasto:0),
@@ -476,104 +624,101 @@ function somaMidia(){
   };
 }
 
-/* ----------------------------------------------------------------- a semana */
-function folhaGeral(){
-  const t = somaMidia(), n = DADOS.negocio;
-  const cpc  = n.atual.cadastros    ? t.invest  / n.atual.cadastros    : null;
-  const cpcA = n.anterior.cadastros ? t.investA / n.anterior.cadastros : null;
+/* ---------------------------------------------------------------- a semana */
+function fGeral(){
+  const t = somas(), n = DADOS.negocio;
+  const cp  = n.atual.cadastros    ? t.invest /n.atual.cadastros    : null;
+  const cpA = n.anterior.cadastros ? t.investA/n.anterior.cadastros : null;
 
   const f = n.funil;
   const taxas = f.map((e,i)=> i===0 ? 100 : (f[i-1].valor>0 ? (e.valor/f[i-1].valor)*100 : 0));
-  let pior=-1, min=Infinity;
-  taxas.forEach((x,i)=>{ if(i>0 && x<min){ min=x; pior=i; } });
+  let pior=-1, mn=Infinity;
+  taxas.forEach((x,i)=>{ if(i>0 && x<mn){ mn=x; pior=i; } });
+
+  const gmv = DADOS.negocio.gmvSemanal;
+  const ult = gmv.length-1;
+
+  const meta = DADOS.meta.objetivos.find(o=>"connectRate" in o.atual);
+  const taxaOnb = n.atual.cadastros ? (n.atual.onboarding/n.atual.cadastros)*100 : 0;
+  const taxaAtiv = n.atual.onboarding ? (n.atual.contasAtivas/n.atual.onboarding)*100 : 0;
+
+  const criativos = DADOS.meta.objetivos.flatMap(o=>o.criativos)
+    .filter(c=>c.custoResultado!=null)
+    .sort((a,b)=>a.custoResultado-b.custoResultado).slice(0,4);
 
   return `
-  <div class="veredito">
-    <span class="marg">O que aconteceu</span>
-    <p>${DADOS.veredito}</p>
+  ${cx(`<div class="et">O que aconteceu</div><p>${DADOS.veredito}</p>`, "tese")}
+
+  <div class="faixa dois">
+    ${cx(cxh("GMV por semana","Volume transacionado dentro do produto. A barra acesa é a semana do período.",`${gmv.length} semanas`)
+      + bars(gmv.map((s,i)=>({rot:s.semana, valor:s.gmv, on:i===ult})), v=>nf0.format(v)))}
+    ${cx(cxh("Da impressão ao pagamento","A barra é quanto passou da etapa anterior — não o volume.")
+      + rows(f.map((e,i)=>({
+          nome:e.etapa, valor:taxas[i], mau:i===pior,
+          rot: i===0 ? num(e.valor) : `${num(e.valor)} · ${nf2.format(taxas[i]).replace(",00","")}%`
+        })), 112))}
   </div>
 
-  <div class="bloco">
-    <span class="rotulo">Os números da semana</span>
-    ${linhas(
-      linha("Investimento", brl(t.invest), variacao(t.invest, t.investA, true)) +
-      linha("Cliques",      num(t.cliques), variacao(t.cliques, t.cliquesA)) +
-      linha("Cadastros",    num(n.atual.cadastros), variacao(n.atual.cadastros, n.anterior.cadastros)) +
-      linha("Por cadastro", brl(cpc), variacao(cpc, cpcA, true),
-            "Investimento total dividido pelos cadastros. Consolidado — não separa quanto veio de cada canal.") +
-      linha("GMV",          brl(n.atual.gmv), variacao(n.atual.gmv, n.anterior.gmv)) +
-      linha("Contas ativas", num(n.atual.contasAtivas), variacao(n.atual.contasAtivas, n.anterior.contasAtivas),
-            "Profissionais com a conta de pagamento aprovada — é a etapa que trava o faturamento."),
-      true)}
+  <div class="faixa dois">
+    ${cx(cxh("Os números da semana","Comparados com o período anterior de mesmo tamanho.")
+      + tiles(
+        tile("Investimento", brl(t.invest), variNeutra(t.invest,t.investA)) +
+        tile("Cliques", num(t.cliques), vari(t.cliques,t.cliquesA)) +
+        tile("Cadastros", num(n.atual.cadastros), vari(n.atual.cadastros,n.anterior.cadastros)) +
+        tile("Custo por cadastro", brl(cp), vari(cp,cpA,true), "Consolidado — não separa canal") +
+        tile("GMV", brl(n.atual.gmv), vari(n.atual.gmv,n.anterior.gmv)) +
+        tile("Contas ativas", num(n.atual.contasAtivas), vari(n.atual.contasAtivas,n.anterior.contasAtivas),
+             "Sem isso o profissional não recebe")
+      ))}
+    ${cx(cxh("Onde foi o dinheiro","Gasto por canal e o que cada clique custou.")
+      + rows(t.canais.map(c=>({nome:c.nome, valor:c.custo, rot:brl(c.custo), cor:c.cor})), 90)
+      + `<p class="sub" style="margin:16px 0 11px">Custo por clique</p>`
+      + rows(t.canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
+          rot:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), 90))}
   </div>
 
-  <div class="bloco par">
-    <div class="quadro">
-      <h3 class="titulo">Para onde foi o dinheiro</h3>
-      <p class="legenda">Quanto cada canal consumiu no período.</p>
-      <div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>
-      ${slots(t.canais.map(c=>({nome:c.nome, valor:c.custo, rotulo:brl(c.custo), cor:c.cor})))}
-    </div>
-    <div class="quadro">
-      <h3 class="titulo">Quanto custou cada clique</h3>
-      <p class="legenda">Gasto do canal dividido pelos cliques dele. Menor é melhor.</p>
-      <div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>
-      ${slots(t.canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
-        rotulo:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})))}
-    </div>
-  </div>
-
-  <div class="bloco">
-    <span class="rotulo">Da impressão ao primeiro pagamento</span>
-    <p class="legenda" style="margin-top:14px">A barra mostra quanto <strong>passou</strong> da etapa
-    anterior, não o volume — é assim que o estrangulamento aparece. A etapa que mais perde gente fica marcada.</p>
-    ${slots(f.map((e,i)=>({
-      nome: e.etapa,
-      valor: taxas[i],
-      rotulo: i===0 ? num(e.valor)
-                    : `${num(e.valor)} <em style="font-style:normal;color:var(--tinta-3)">·</em> ${nf2.format(taxas[i]).replace(",00","")}%`,
-      furado: i===pior
-    })))}
+  <div class="faixa dois">
+    ${cx(cxh("As três taxas que mandam na semana","Onde as pessoas passam e onde param.")
+      + `<div class="roscas">
+          ${rosca(taxaOnb,"var(--d1)","Concluem o onboarding","Quantos terminam a configuração inicial.")}
+          ${rosca(taxaAtiv,"var(--d2)","Ativam a conta","Conta de pagamento aprovada.")}
+          ${meta?rosca(meta.atual.connectRate,"var(--d3)","Connect Rate","Cliques que viraram visita de verdade."):""}
+        </div>`)}
+    ${cx(cxh("Criativos mais eficientes","Menor custo por resultado no período.")
+      + (criativos.length
+          ? `<ol class="ord">${criativos.map(c=>`<li><span>${esc(c.nome)}</span><b>${brl(c.custoResultado)}</b></li>`).join("")}</ol>`
+          : `<p class="vazio">Nenhum criativo com custo por resultado no período.</p>`))}
   </div>`;
 }
 
-/* ---------------------------------------------------------------- OpenAI Ads */
-function folhaOpenAI(){
+/* -------------------------------------------------------------- OpenAI Ads */
+function fOpenAI(){
   const a = DADOS.openai.atual, b = DADOS.openai.anterior;
   return `
-  <div class="bloco">
-    <h2 class="titulo">OpenAI Ads</h2>
-    <p class="legenda">${DADOS.openai.nota}</p>
-    ${b ? "" : `<p class="aviso">Primeiro período medido neste canal. Ainda não há período anterior para comparar.</p>`}
-    ${linhas(
-      linha("Impressões",   num(a.impressoes),  variacao(a.impressoes, b&&b.impressoes)) +
-      linha("Cliques",      num(a.cliques),     variacao(a.cliques, b&&b.cliques)) +
-      linha("Conversões",   num(a.conversoes),  variacao(a.conversoes, b&&b.conversoes)) +
-      linha("Gasto",        brl(a.gasto),       variacao(a.gasto, b&&b.gasto, true)) +
-      linha("Por conversão",brl(a.cpa),         variacao(a.cpa, b&&b.cpa, true)) +
-      linha("Por clique",   brl(a.cpc),         variacao(a.cpc, b&&b.cpc, true)),
-      true)}
+  <div class="faixa">
+    ${cx(cxh("OpenAI Ads", DADOS.openai.nota, "Em teste")
+      + (b?"":`<p class="recado">Primeiro período medido neste canal — ainda não há período anterior para comparar.</p>`)
+      + tiles(
+        tile("Impressões", num(a.impressoes), vari(a.impressoes,b&&b.impressoes)) +
+        tile("Cliques", num(a.cliques), vari(a.cliques,b&&b.cliques)) +
+        tile("Conversões", num(a.conversoes), vari(a.conversoes,b&&b.conversoes)) +
+        tile("Gasto", brl(a.gasto), vari(a.gasto,b&&b.gasto,true)) +
+        tile("Por conversão", brl(a.cpa), vari(a.cpa,b&&b.cpa,true)) +
+        tile("Por clique", brl(a.cpc), vari(a.cpc,b&&b.cpc,true))
+      ))}
   </div>
-
-  <div class="bloco par">
-    <div class="quadro">
-      <h3 class="titulo">Cliques por dia</h3>
-      <p class="legenda">Como a entrega evoluiu ao longo do período.</p>
-      ${dias(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.cliques, cor:"var(--c-openai)"})), num)}
-    </div>
-    <div class="quadro">
-      <h3 class="titulo">Conversões por dia</h3>
-      <p class="legenda">Cadastros que a própria plataforma atribuiu.</p>
-      ${dias(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.conversoes, cor:"var(--c-openai)"})), num)}
-    </div>
+  <div class="faixa dois">
+    ${cx(cxh("Cliques por dia","Como a entrega evoluiu no período.")
+      + area(DADOS.openai.serie.map(d=>({rot:d.data, valor:d.cliques})), num))}
+    ${cx(cxh("Conversões por dia","Cadastros que a própria plataforma atribuiu.")
+      + bars(DADOS.openai.serie.map(d=>({rot:d.data, valor:d.conversoes, on:true})), num))}
   </div>`;
 }
 
-/* ------------------------------------------------------------------ Meta Ads */
-function folhaMeta(){
+/* ---------------------------------------------------------------- Meta Ads */
+function fMeta(){
   return DADOS.meta.objetivos.map(o=>{
     const a=o.atual, b=o.anterior, perfil = "resultados" in a;
-
     const cols = perfil
       ? [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
          ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
@@ -582,238 +727,243 @@ function folhaMeta(){
          ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
          ["Visitas na página",c=>num(c.visitasLP)],["Connect Rate",c=>pct(c.connectRate)]];
 
-    const resumo = perfil
-      ? linha("Gasto", brl(a.gasto), variacao(a.gasto,b.gasto,true)) +
-        linha("Impressões", num(a.impressoes), variacao(a.impressoes,b.impressoes)) +
-        linha("CTR", pct(a.ctr), variacao(a.ctr,b.ctr)) +
-        linha("Resultados", num(a.resultados), variacao(a.resultados,b.resultados)) +
-        linha("Por resultado", brl(a.custoResultado), variacao(a.custoResultado,b.custoResultado,true))
-      : linha("Gasto", brl(a.gasto), variacao(a.gasto,b.gasto,true)) +
-        linha("Impressões", num(a.impressoes), variacao(a.impressoes,b.impressoes)) +
-        linha("CTR", pct(a.ctr), variacao(a.ctr,b.ctr)) +
-        linha("Visitas na página", num(a.visitasLP), variacao(a.visitasLP,b.visitasLP)) +
-        linha("Connect Rate", pct(a.connectRate), variacao(a.connectRate,b.connectRate),
-              "Fatia dos cliques que virou visita de verdade na página.");
+    const t = perfil
+      ? tile("Gasto",brl(a.gasto),vari(a.gasto,b.gasto,true)) +
+        tile("Impressões",num(a.impressoes),vari(a.impressoes,b.impressoes)) +
+        tile("CTR",pct(a.ctr),vari(a.ctr,b.ctr)) +
+        tile("Resultados",num(a.resultados),vari(a.resultados,b.resultados)) +
+        tile("Por resultado",brl(a.custoResultado),vari(a.custoResultado,b.custoResultado,true))
+      : tile("Gasto",brl(a.gasto),vari(a.gasto,b.gasto,true)) +
+        tile("Impressões",num(a.impressoes),vari(a.impressoes,b.impressoes)) +
+        tile("CTR",pct(a.ctr),vari(a.ctr,b.ctr)) +
+        tile("Visitas na página",num(a.visitasLP),vari(a.visitasLP,b.visitasLP)) +
+        tile("Connect Rate",pct(a.connectRate),vari(a.connectRate,b.connectRate),
+             "Cliques que viraram visita de verdade");
 
-    const ordem = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
+    const ord = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
 
-    return `
-    <div class="bloco">
-      <h2 class="titulo">Objetivo: ${o.nome}</h2>
-      <p class="legenda">${o.criativos.length} ${o.criativos.length===1?"anúncio":"anúncios"} rodaram no período.</p>
-      ${linhas(resumo, true)}
+    return `<div class="faixa">
+      ${cx(cxh(`Objetivo: ${esc(o.nome)}`,
+            `${o.criativos.length} ${o.criativos.length===1?"anúncio rodou":"anúncios rodaram"} no período.`,
+            perfil?"Visita ao perfil":"Conversão")
+        + tiles(t))}
     </div>
-    <div class="bloco">
-      <span class="rotulo">Anúncio por anúncio</span>
-      <div class="tw">
-        <table>
-          <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
-          <tbody>${ordem.map(c=>`<tr><td class="nm">${c.nome}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
-          <tfoot><tr><td class="nm">Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
-        </table>
-      </div>
+    <div class="faixa">
+      ${cx(cxh("Anúncio por anúncio","Ordenado por quanto cada um consumiu.")
+        + `<div class="tw"><table>
+            <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
+            <tbody>${ord.map(c=>`<tr><td class="nm">${esc(c.nome)}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
+            <tfoot><tr><td>Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
+          </table></div>`)}
     </div>`;
   }).join("");
 }
 
-/* ---------------------------------------------------------------- Google Ads */
-function folhaGoogle(){
+/* -------------------------------------------------------------- Google Ads */
+function fGoogle(){
   const defs = [
-    {k:"impressoes",     rot:"Impressões",   f:num},
-    {k:"cliques",        rot:"Cliques",      f:num},
-    {k:"ctr",            rot:"CTR",          f:pct},
-    {k:"cpc",            rot:"CPC médio",    f:brl, inv:true},
-    {k:"conversoes",     rot:"Conversões",   f:num},
-    {k:"taxaConversao",  rot:"Taxa de conv.",f:pct},
-    {k:"custoConversao", rot:"Por conversão",f:brl, inv:true},
-    {k:"custo",          rot:"Custo",        f:brl, inv:true}
+    {k:"impressoes",rot:"Impressões",f:num},   {k:"cliques",rot:"Cliques",f:num},
+    {k:"ctr",rot:"CTR",f:pct},                 {k:"cpc",rot:"CPC médio",f:brl,inv:true},
+    {k:"conversoes",rot:"Conversões",f:num},   {k:"taxaConversao",rot:"Taxa de conversão",f:pct},
+    {k:"custoConversao",rot:"Por conversão",f:brl,inv:true}, {k:"custo",rot:"Custo",f:brl,inv:true}
   ];
   const total = DADOS.google.campanhas.reduce((s,c)=>s+c.atual.custo,0);
 
   return `
-  <div class="bloco">
-    <h2 class="titulo">Google Ads</h2>
-    <p class="legenda">Cada campanha contra o período anterior. O canal consumiu
-      <strong>${brl(total)}</strong> no total — as três campanhas somadas, não só a de Pesquisa.</p>
+  <div class="faixa">
+    ${cx(cxh("Google Ads",
+      `O canal consumiu <strong>${brl(total)}</strong> no período — as três campanhas somadas, não só a de Pesquisa.`,
+      brl0(total))
+      + rows(DADOS.google.campanhas.map(c=>({nome:c.nome, valor:c.atual.custo,
+          rot:brl(c.atual.custo), cor:"var(--d2)"})), 132))}
   </div>
   ${DADOS.google.campanhas.map(c=>`
-    <div class="bloco">
-      <span class="rotulo">${c.nome}</span>
-      ${c.nota?`<p class="aviso" style="margin-top:16px">${c.nota}</p>`:""}
-      <div class="tw" style="border-top:none">
-        <table>
-          <thead><tr><th>Métrica</th><th class="r">Este período</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
-          <tbody>${defs.map(d=>{
-            const va=c.atual[d.k], vb=c.anterior[d.k], vr=variacao(va,vb,d.inv);
-            return `<tr>
-              <td class="nm">${d.rot}</td>
-              <td class="r">${d.f(va)}</td>
-              <td class="r" style="color:var(--tinta-3)">${d.f(vb)}</td>
-              <td class="r" style="color:${vr? (vr.cls==="up"?"var(--pago)":vr.cls==="down"?"var(--furo)":"var(--tinta-3)") :"var(--tinta-3)"}">${vr?vr.txt:"—"}</td>
-            </tr>`;
-          }).join("")}</tbody>
-        </table>
-      </div>
+    <div class="faixa">
+      ${cx(cxh(esc(c.nome),"Este período contra o anterior.")
+        + (c.nota?`<p class="recado">${esc(c.nota)}</p>`:"")
+        + `<div class="tw"><table>
+            <thead><tr><th>Métrica</th><th class="r">Este período</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
+            <tbody>${defs.map(d=>{
+              const va=c.atual[d.k], vb=c.anterior[d.k], vr=vari(va,vb,d.inv);
+              return `<tr><td class="nm">${d.rot}</td><td class="r">${d.f(va)}</td>
+                <td class="r" style="color:var(--texto-3)">${d.f(vb)}</td>
+                <td class="r ${vr?vr.cls:"flat"}">${vr?vr.txt:"—"}</td></tr>`;
+            }).join("")}</tbody>
+          </table></div>`)}
     </div>`).join("")}
-  <div class="bloco">
-    <span class="rotulo">O que as pessoas pesquisaram</span>
-    <div class="tw" style="border-top:none">
-      <table>
-        <thead><tr><th>Termo</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">Custo</th><th class="r">Conversões</th></tr></thead>
-        <tbody>${DADOS.google.termos.map(t=>`<tr>
-          <td class="nm">${t.termo}</td><td class="r">${num(t.impressoes)}</td>
-          <td class="r">${num(t.cliques)}</td><td class="r">${brl(t.custo)}</td>
-          <td class="r">${num(t.conversoes)}</td></tr>`).join("")}</tbody>
-      </table>
-    </div>
+  <div class="faixa">
+    ${cx(cxh("O que as pessoas pesquisaram","Termos que geraram clique no período.")
+      + `<div class="tw"><table>
+          <thead><tr><th>Termo</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">Custo</th><th class="r">Conversões</th></tr></thead>
+          <tbody>${DADOS.google.termos.map(t=>`<tr><td class="nm">${esc(t.termo)}</td>
+            <td class="r">${num(t.impressoes)}</td><td class="r">${num(t.cliques)}</td>
+            <td class="r">${brl(t.custo)}</td><td class="r">${num(t.conversoes)}</td></tr>`).join("")}</tbody>
+        </table></div>`)}
   </div>`;
 }
 
-/* ----------------------------------------------------------------- a página */
-function folhaLP(){
+/* --------------------------------------------------------------- a página */
+function fLP(){
   const a = DADOS.lp.clarity.atual, b = DADOS.lp.clarity.anterior;
   return `
-  <div class="bloco">
-    <h2 class="titulo">O que as pessoas fazem na página</h2>
-    <p class="legenda">Comportamento de quem chegou depois de clicar no anúncio. Dados do Microsoft Clarity.</p>
-    ${linhas(
-      linha("Rolagem",     pct(a.scroll), variacao(a.scroll,b.scroll),
-            "Até onde o visitante desce na página. Abaixo de 20% quer dizer que a maioria não passa da primeira dobra.") +
-      linha("Tempo ativo", seg(a.tempoAtivo), variacao(a.tempoAtivo,b.tempoAtivo)) +
-      linha("Sessões",     num(a.sessoes), variacao(a.sessoes,b.sessoes)) +
-      linha("Páginas",     nf2.format(a.paginasPorSessao), variacao(a.paginasPorSessao,b.paginasPorSessao),
-            "Páginas por sessão.") +
-      linha("Cliques mortos", pct(a.deadClicks), variacao(a.deadClicks,b.deadClicks,true),
-            "Clique em algo que parece botão e não é.") +
-      linha("Quickback",   pct(a.quickback), variacao(a.quickback,b.quickback,true),
-            "Entra e volta na hora. Quanto menor, melhor."),
-      true)}
+  <div class="faixa">
+    ${cx(cxh("O que as pessoas fazem na página",
+      "Comportamento de quem chegou depois de clicar no anúncio.","Microsoft Clarity")
+      + tiles(
+        tile("Rolagem", pct(a.scroll), vari(a.scroll,b.scroll), "Abaixo de 20% quer dizer que a maioria não passa da primeira dobra") +
+        tile("Tempo ativo", seg(a.tempoAtivo), vari(a.tempoAtivo,b.tempoAtivo)) +
+        tile("Sessões", num(a.sessoes), vari(a.sessoes,b.sessoes)) +
+        tile("Páginas por sessão", nf2.format(a.paginasPorSessao), vari(a.paginasPorSessao,b.paginasPorSessao)) +
+        tile("Cliques mortos", pct(a.deadClicks), vari(a.deadClicks,b.deadClicks,true), "Clique em algo que parece botão e não é") +
+        tile("Quickback", pct(a.quickback), vari(a.quickback,b.quickback,true), "Entra e volta na hora")
+      ))}
   </div>
-
-  <div class="bloco par">
-    <div class="quadro">
-      <h3 class="titulo">Rolagem por aparelho</h3>
-      <p class="legenda">A diferença entre celular e computador é a leitura mais acionável da página.</p>
-      ${slots(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rotulo:pct(d.scroll)})))}
-    </div>
-    <div class="quadro">
-      <h3 class="titulo">De qual aparelho chegaram</h3>
-      <p class="legenda">Onde o público realmente está.</p>
-      ${slots(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rotulo:num(d.sessoes)})))}
-    </div>
+  <div class="faixa dois">
+    ${cx(cxh("Rolagem por aparelho","A diferença entre celular e computador é a leitura mais acionável da página.")
+      + rows(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rot:pct(d.scroll),
+          cor:"var(--d1)"})), 84))}
+    ${cx(cxh("De qual aparelho chegaram","Onde o público realmente está.")
+      + rows(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rot:num(d.sessoes),
+          cor:"var(--d3)"})), 84))}
   </div>
-
-  <div class="bloco">
-    <span class="rotulo">Anotações da semana</span>
-    <div class="anot" style="margin-top:16px">
-      ${DADOS.lp.aprendizados.map(t=>`<p><b>—</b><span>${t}</span></p>`).join("")}
-    </div>
+  <div class="faixa">
+    ${cx(cxh("Anotações da semana","Aprendizados que mudam o próximo teste.")
+      + `<div class="notas">${DADOS.lp.aprendizados.map(t=>`<p>${t}</p>`).join("")}</div>`)}
   </div>`;
 }
 
-/* ---------------------------------------------------------------- o negócio */
-function folhaNegocio(){
+/* -------------------------------------------------------------- o negócio */
+function fNegocio(){
   const a = DADOS.negocio.atual, b = DADOS.negocio.anterior;
+  const gmv = DADOS.negocio.gmvSemanal;
   return `
-  <div class="bloco">
-    <h2 class="titulo">O que a mídia produziu do outro lado</h2>
-    <p class="legenda">Profissionais entrando, ativando a conta e transacionando dentro do produto.</p>
-    ${linhas(
-      linha("Cadastros",   num(a.cadastros), variacao(a.cadastros,b.cadastros)) +
-      linha("Onboarding",  num(a.onboarding), variacao(a.onboarding,b.onboarding),
-            "Concluíram a configuração inicial.") +
-      linha("Contas ativas", num(a.contasAtivas), variacao(a.contasAtivas,b.contasAtivas),
-            "Conta de pagamento aprovada. Sem isso o profissional não recebe — e a Mia não fatura.") +
-      linha("Agendamentos", num(a.agendamentos), variacao(a.agendamentos,b.agendamentos)) +
-      linha("GMV",         brl(a.gmv), variacao(a.gmv,b.gmv),
-            "Volume transacionado dentro do produto."),
-      true)}
+  <div class="faixa">
+    ${cx(cxh("O que a mídia produziu do outro lado",
+      "Profissionais entrando, ativando a conta e transacionando.","Metabase")
+      + tiles(
+        tile("Cadastros", num(a.cadastros), vari(a.cadastros,b.cadastros)) +
+        tile("Onboarding", num(a.onboarding), vari(a.onboarding,b.onboarding), "Concluíram a configuração") +
+        tile("Contas ativas", num(a.contasAtivas), vari(a.contasAtivas,b.contasAtivas), "Conta de pagamento aprovada") +
+        tile("Agendamentos", num(a.agendamentos), vari(a.agendamentos,b.agendamentos)) +
+        tile("GMV", brl(a.gmv), vari(a.gmv,b.gmv))
+      ))}
   </div>
-
-  <div class="bloco">
-    <span class="rotulo">GMV semana a semana</span>
-    <div style="margin-top:20px">
-      ${dias(DADOS.negocio.gmvSemanal.map(s=>({rotulo:s.semana, valor:s.gmv})),
-             v=>nf0.format(v))}
-    </div>
-    <p class="legenda" style="margin-top:14px">Em reais, por semana de pagamento.</p>
+  <div class="faixa dois">
+    ${cx(cxh("GMV semana a semana","Em reais, por semana de pagamento.")
+      + area(gmv.map(s=>({rot:s.semana, valor:s.gmv})), brl0))}
+    ${cx(cxh("Onde o profissional para","Do cadastro até o primeiro agendamento, no período.")
+      + rows([
+          {nome:"Cadastraram",   valor:a.cadastros,    rot:num(a.cadastros)},
+          {nome:"Configuraram",  valor:a.onboarding,   rot:num(a.onboarding)},
+          {nome:"Ativaram conta",valor:a.contasAtivas, rot:num(a.contasAtivas), mau:true},
+          {nome:"Agendaram",     valor:a.agendamentos, rot:num(a.agendamentos)}
+        ], 116)
+      + `<p class="sub" style="margin-top:16px">A conta de pagamento é o degrau mais alto: sem ela o
+         profissional não recebe, e a Mia não fatura.</p>`)}
   </div>`;
 }
 
-/* ---------------------------------------------------------------- o que vem */
-function folhaPassos(){
-  return `
-  <div class="bloco">
-    <h2 class="titulo">O que fica decidido</h2>
-    <p class="legenda">Para a semana que começa, em ordem de execução.</p>
-    <ol class="passos">${DADOS.proximosPassos.map(p=>`<li><span>${p}</span></li>`).join("")}</ol>
+/* -------------------------------------------------------------- o que vem */
+function fPassos(){
+  return `<div class="faixa">
+    ${cx(cxh("O que fica decidido","Para a semana que começa, em ordem de execução.")
+      + `<ol class="passos">${DADOS.proximosPassos.map(p=>`<li><span>${p}</span></li>`).join("")}</ol>`)}
   </div>`;
 }
 
 /* ---------------------------------------------------------------- montagem */
-const fichario = document.getElementById("fichario");
+const menu = document.getElementById("menu");
 const main = document.getElementById("main");
 
 FOLHAS.forEach((fo,i)=>{
   const b = document.createElement("button");
-  b.className="aba"; b.type="button"; b.textContent=fo.nome;
-  b.id="aba-"+fo.id; b.setAttribute("role","tab");
+  b.className="item"; b.type="button"; b.id="it-"+fo.id;
+  b.setAttribute("role","tab"); b.setAttribute("aria-controls","fo-"+fo.id);
   b.setAttribute("aria-selected", i===0?"true":"false");
-  b.setAttribute("aria-controls","fo-"+fo.id);
+  b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${IC[fo.ic]}</svg>
+    <span>${fo.nome}</span><span class="pt" aria-hidden="true"></span>`;
   b.addEventListener("click", ()=>abrir(fo.id));
-  fichario.appendChild(b);
+  menu.appendChild(b);
 
   const s = document.createElement("section");
   s.className="folha"; s.id="fo-"+fo.id;
-  s.setAttribute("role","tabpanel"); s.setAttribute("aria-labelledby","aba-"+fo.id);
+  s.setAttribute("role","tabpanel"); s.setAttribute("aria-labelledby","it-"+fo.id);
   if(i>0) s.hidden=true;
   main.appendChild(s);
 });
 
 function abrir(id){
   FOLHAS.forEach(fo=>{
-    const ativo = fo.id===id;
-    document.getElementById("aba-"+fo.id).setAttribute("aria-selected", ativo?"true":"false");
-    document.getElementById("fo-"+fo.id).hidden = !ativo;
+    const on = fo.id===id;
+    document.getElementById("it-"+fo.id).setAttribute("aria-selected", on?"true":"false");
+    document.getElementById("fo-"+fo.id).hidden = !on;
   });
-  try{ localStorage.setItem("agenda:folha", id); }catch(e){}
+  try{ localStorage.setItem("painel:folha", id); }catch(e){}
+  filtrar();
 }
 
 function desenhar(){
   FOLHAS.forEach(fo=>{ document.getElementById("fo-"+fo.id).innerHTML = fo.render(); });
-  document.getElementById("marca").innerHTML = `${DADOS.marca}<em>agenda da semana</em>`;
+  document.getElementById("marca").textContent = DADOS.marca;
+  filtrar();
 }
+
+/* filtro — esconde linhas de tabela e itens de lista que não casam */
+const q = document.getElementById("q");
+function filtrar(){
+  const termo = q.value.trim().toLowerCase();
+  const folha = FOLHAS.map(f=>document.getElementById("fo-"+f.id)).find(el=>!el.hidden);
+  if(!folha) return;
+  folha.querySelectorAll("tbody tr, .ord li, .rows .row").forEach(el=>{
+    el.hidden = termo ? !el.textContent.toLowerCase().includes(termo) : false;
+  });
+}
+q.addEventListener("input", filtrar);
 
 /* período — recalcula sozinho o intervalo de comparação */
 const inDe = document.getElementById("de"), inAte = document.getElementById("ate");
-const elContra = document.getElementById("contra");
-const dias_ = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
+const dias = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
 const menos = (iso,d)=>{ const x=new Date(iso+"T12:00:00"); x.setDate(x.getDate()-d);
   return x.toISOString().slice(0,10); };
 
 function periodo(){
   const de=inDe.value, ate=inAte.value;
-  if(!de||!ate||de>ate){ elContra.textContent=""; return; }
-  const vao = dias_(de,ate), antAte = menos(de,1), antDe = menos(antAte,vao);
+  if(!de||!ate||de>ate) return;
+  const vao = dias(de,ate), aAte = menos(de,1), aDe = menos(aAte,vao);
   DADOS.periodo.atual={de,ate};
-  DADOS.periodo.anterior={de:antDe,ate:antAte};
-  elContra.textContent = `${dm(de)}–${dm(ate)} contra ${dm(antDe)}–${dm(antAte)}`;
+  DADOS.periodo.anterior={de:aDe,ate:aAte};
+  inDe.title = inAte.title = `Compara com ${dm(aDe)} – ${dm(aAte)}`;
 }
-
 inDe.value = DADOS.periodo.atual.de;
 inAte.value = DADOS.periodo.atual.ate;
 inDe.addEventListener("change", periodo);
 inAte.addEventListener("change", periodo);
+
+/* tema */
+const SOL = '<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
+const LUA = '<path d="M20 14.5A8.4 8.4 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>';
+const btTema = document.getElementById("btTema"), icTema = document.getElementById("icTema");
+function tema(t){
+  if(t) document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  const escuro = t==="dark" ||
+    (!t && matchMedia("(prefers-color-scheme:dark)").matches);
+  icTema.innerHTML = escuro ? SOL : LUA;
+  try{ t ? localStorage.setItem("painel:tema",t) : localStorage.removeItem("painel:tema"); }catch(e){}
+}
+btTema.addEventListener("click", ()=>{
+  const atual = document.documentElement.getAttribute("data-theme");
+  const escuro = atual==="dark" ||
+    (!atual && matchMedia("(prefers-color-scheme:dark)").matches);
+  tema(escuro ? "light" : "dark");
+});
+document.getElementById("btPrint").addEventListener("click", ()=>window.print());
+
 periodo();
 desenhar();
-
-const pe = document.createElement("div");
-pe.className="rodape";
-pe.textContent="Meta Ads · Google Ads · OpenAI Ads · Microsoft Clarity · GA4 · Metabase";
-main.appendChild(pe);
-
 try{
-  const salva = localStorage.getItem("agenda:folha");
-  if(salva && FOLHAS.some(f=>f.id===salva)) abrir(salva);
-}catch(e){}
+  const s = localStorage.getItem("painel:folha");
+  if(s && FOLHAS.some(f=>f.id===s)) abrir(s);
+  tema(localStorage.getItem("painel:tema"));
+}catch(e){ tema(null); }
 </script>
