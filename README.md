@@ -7,9 +7,18 @@ A raiz do repositório redireciona para `/painel/`.
 
 ## Como usar
 
-1. Escolha o **Período** e o **Comparar com** na barra de cima. Mexer no período
-   principal reencaixa a comparação na janela anterior de mesmo tamanho.
+1. Escolha o **Período** e o **Comparar com** na barra de cima — ou use os
+   atalhos **Semana fechada** e **Mês fechado**, que preenchem as quatro datas.
+   Mexer no período principal reencaixa a comparação na janela anterior de
+   mesmo tamanho.
 2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
+
+A análise mensal é o mesmo fluxo: "Mês fechado" põe o último mês-calendário
+completo contra o anterior. Comparar meses de durações diferentes (setembro tem
+30 dias, agosto 31) é esperado — a linha de estado nomeia os meses em vez de
+acusar janelas de tamanhos diferentes. O histórico das fontes alcança o fim de
+2025, então dá para comparar qualquer par de meses desde então (com um buraco
+conhecido em novembro/2025 no Google Ads).
 
 A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
 retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.

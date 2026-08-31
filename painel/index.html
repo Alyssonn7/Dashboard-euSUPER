@@ -88,6 +88,12 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   background:var(--cartao);color:var(--texto)}
 .cg input:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
 .cg .seta{color:var(--texto-3);font-size:12px}
+.atalhos{display:flex;gap:6px;align-self:flex-end;padding-bottom:1px}
+.atalho{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+  padding:9px 13px;border-radius:9px;border:1px solid var(--borda);background:var(--cartao);
+  color:var(--texto-2);cursor:pointer;white-space:nowrap}
+.atalho:hover{background:var(--tela);color:var(--texto)}
+.atalho:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
 .puxar{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
   padding:11px 20px;border-radius:10px;border:none;background:var(--mata);color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
@@ -243,6 +249,7 @@ tfoot td.r{text-align:right}
   .item .lbl{display:inline} .imp{display:none}
   .consulta{padding:12px 14px;gap:10px}
   .cg{flex:1 1 100%} .cg input[type=date]{flex:1;min-width:0} .cg .par{width:100%}
+  .atalhos{width:100%} .atalho{flex:1}
   .puxar{flex:1 1 100%;justify-content:center}
   .ferram{margin-left:0}
   #main{padding:14px 14px 24px}
@@ -363,6 +370,12 @@ const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,148
           <input type="date" id="cate" aria-label="Fim da comparação">
         </div>
       </div>
+      <div class="atalhos">
+        <button class="atalho" type="button" id="btSemana"
+          title="Última semana fechada, segunda a domingo, contra a anterior">Semana fechada</button>
+        <button class="atalho" type="button" id="btMes"
+          title="Último mês fechado contra o mês anterior">Mês fechado</button>
+      </div>
       <button class="puxar" type="button" id="btPuxar">
         <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
       </button>
@@ -440,7 +453,9 @@ const CONSERTO = {
 const RETENTAVEL=new Set(["server_unavailable","rate_limited"]);
 
 let MCP;
-claude.use("mcp").then(m=>{MCP=m;pintarEstado()}).catch(()=>{MCP=null;pintarEstado()});
+/* fora do viewer do claude.ai a página não tem window.claude — não pode derrubar o resto */
+((window.claude && window.claude.use) ? window.claude.use("mcp") : Promise.resolve(null))
+  .then(m=>{MCP=m;pintarEstado()}).catch(()=>{MCP=null;pintarEstado()});
 const espera=ms=>new Promise(r=>setTimeout(r,ms));
 
 async function chamar(server,tool,input,rotulo){
@@ -921,11 +936,25 @@ function abrir(id){
 
 const elEstado=document.getElementById("estado");
 function pintarEstado(){
-  const p=D.periodo, dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
-  const d1=dias(p.atual.de,p.atual.ate), d2=dias(p.anterior.de,p.anterior.ate);
-  const t=[`<b>${dm(p.atual.de)}–${dm(p.atual.ate)}</b> contra <b>${dm(p.anterior.de)}–${dm(p.anterior.ate)}</b>`,
-    d1===d2?`${d1} dias cada`:`<span class="alerta">${d1} dias contra ${d2} — janelas de tamanhos diferentes</span>`,
-    D.aoVivo?"dados desta consulta":`retrato de ${esc(D.puxadoEm)}`];
+  /* a linha de estado descreve a SELEÇÃO (o que o botão vai puxar);
+     o último pedaço diz de onde vieram os dados que estão na tela */
+  const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
+  const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
+  const t=[];
+  if(de&&ate&&cde&&cate&&de<=ate&&cde<=cate){
+    const d1=dias(de,ate), d2=dias(cde,cate);
+    const doisMeses = ehMesCalendario(de,ate) && ehMesCalendario(cde,cate);
+    t.push(`<b>${dm(de)}–${dm(ate)}</b> contra <b>${dm(cde)}–${dm(cate)}</b>`);
+    if(doisMeses)
+      t.push(`<b>${nomeMes(de)}</b> contra <b>${nomeMes(cde)}</b> — meses fechados`);
+    else
+      t.push(d1===d2?`${d1} dias cada`
+        :`<span class="alerta">${d1} dias contra ${d2} — janelas de tamanhos diferentes</span>`);
+    const naTela = D.periodo.atual.de===de && D.periodo.atual.ate===ate &&
+                   D.periodo.anterior.de===cde && D.periodo.anterior.ate===cate;
+    if(!naTela) t.push(`<b>clique em Puxar dados para trazer este período</b>`);
+  }
+  t.push(D.aoVivo?"na tela: dados consultados ao vivo":`na tela: retrato de ${esc(D.puxadoEm)}`);
   if(MCP===null) t.push(`<span class="alerta">consulta ao vivo indisponível nesta janela</span>`);
   elEstado.innerHTML=t.join(" · ");
   btPuxar.disabled=(MCP===null);
@@ -947,6 +976,41 @@ const inCDe=document.getElementById("cde"), inCAte=document.getElementById("cate
 const btPuxar=document.getElementById("btPuxar"), txPuxar=document.getElementById("txPuxar");
 const menos=(iso,d)=>{const x=new Date(iso+"T12:00:00");x.setDate(x.getDate()-d);
   return x.toISOString().slice(0,10)};
+const isoLocal=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+/* um período é um mês-calendário quando vai do dia 1 ao último dia do mesmo mês */
+function ehMesCalendario(de,ate){
+  if(!de||!ate) return false;
+  const a=new Date(de+"T12:00:00"), b=new Date(ate+"T12:00:00");
+  if(a.getDate()!==1) return false;
+  if(a.getFullYear()!==b.getFullYear()||a.getMonth()!==b.getMonth()) return false;
+  const ultimo=new Date(b.getFullYear(),b.getMonth()+1,0).getDate();
+  return b.getDate()===ultimo;
+}
+const nomeMes=iso=>{const d=new Date(iso+"T12:00:00");
+  return d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})};
+
+function preencher(de,ate,cde,cate){
+  inDe.value=isoLocal(de); inAte.value=isoLocal(ate);
+  inCDe.value=isoLocal(cde); inCAte.value=isoLocal(cate);
+  pintarEstado();
+}
+function atalhoSemana(){
+  const hoje=new Date(); const dow=(hoje.getDay()+6)%7;      /* 0 = segunda */
+  const fim=new Date(hoje); fim.setDate(hoje.getDate()-dow-1); /* domingo passado */
+  const ini=new Date(fim);  ini.setDate(fim.getDate()-6);
+  const fimB=new Date(ini); fimB.setDate(ini.getDate()-1);
+  const iniB=new Date(fimB); iniB.setDate(fimB.getDate()-6);
+  preencher(ini,fim,iniB,fimB);
+}
+function atalhoMes(){
+  const hoje=new Date();
+  const fim=new Date(hoje.getFullYear(),hoje.getMonth(),0);     /* último dia do mês passado */
+  const ini=new Date(fim.getFullYear(),fim.getMonth(),1);
+  const fimB=new Date(ini.getFullYear(),ini.getMonth(),0);
+  const iniB=new Date(fimB.getFullYear(),fimB.getMonth(),1);
+  preencher(ini,fim,iniB,fimB);
+}
 function encaixar(){
   const de=inDe.value,ate=inAte.value; if(!de||!ate||de>ate)return;
   const n=Math.round((new Date(ate)-new Date(de))/86400000);
@@ -957,6 +1021,8 @@ inCDe.value=RETRATO.periodo.anterior.de; inCAte.value=RETRATO.periodo.anterior.a
 [inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();pintarEstado()}));
 [inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
 btPuxar.addEventListener("click",puxar);
+document.getElementById("btSemana").addEventListener("click",atalhoSemana);
+document.getElementById("btMes").addEventListener("click",atalhoMes);
 
 const SOL='<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
 const LUA='<path d="M20 14.5A8.4 8.4 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>';
