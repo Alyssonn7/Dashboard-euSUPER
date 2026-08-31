@@ -54,3 +54,33 @@ Tipos: Plus Jakarta Sans nos títulos e números, IBM Plex Sans no corpo.
 
 Tem alternador de tema claro/escuro, filtro de texto por seção e botão de
 imprimir com folha de estilo própria para PDF.
+
+## Comportamento de app
+
+A página não rola. A barra lateral, o cabeçalho e a faixa de período ficam
+fixos, e só a área de conteúdo rola por dentro — do mesmo jeito que um sistema
+web. Trocar de seção volta a rolagem para o topo.
+
+Larguras:
+
+| Largura | Comportamento |
+|---|---|
+| acima de 1240px | menu com rótulos, duas colunas nos blocos |
+| 1240px a 1080px | menu recolhe para ícones, item ativo em pastilha branca |
+| abaixo de 1080px | blocos passam a uma coluna |
+| abaixo de 760px | menu vira faixa horizontal no topo, cartões e gráficos compactos |
+| abaixo de 420px | indicadores empilham em coluna única |
+
+Verificado em 1440, 1180, 900 e 390px: a página não rola em nenhum eixo, o
+conteúdo rola por dentro, e nenhum elemento passa da borda direita.
+
+## As duas janelas de data
+
+A faixa de período mostra **as duas** datas, sempre visíveis: o período atual e
+o de comparação. Mexer no período atual reencaixa a comparação na janela
+imediatamente anterior, do mesmo tamanho; o botão "Janela anterior" refaz esse
+encaixe a qualquer momento. A comparação também pode ser editada à mão.
+
+Ao lado aparece a duração das duas janelas. Quando os tamanhos não batem
+(9 dias contra 7, por exemplo) o aviso fica vermelho — comparar janelas de
+durações diferentes distorce todos os deltas sem dar sinal.

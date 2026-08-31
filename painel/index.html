@@ -49,24 +49,35 @@
 }
 
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   background:var(--menta); color:var(--texto);
   font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:14.5px; line-height:1.55; -webkit-font-smoothing:antialiased;
-  padding:22px;
+  margin:0; padding:20px; overflow:hidden;
 }
+@supports (height:100dvh){ html,body{height:100dvh} }
+
+/* barra de rolagem discreta, como num app */
+.rola{scrollbar-width:thin;scrollbar-color:var(--trilho) transparent}
+.rola::-webkit-scrollbar{width:10px;height:10px}
+.rola::-webkit-scrollbar-track{background:transparent}
+.rola::-webkit-scrollbar-thumb{background:var(--trilho);border-radius:99px;
+  border:3px solid transparent;background-clip:content-box}
+.rola::-webkit-scrollbar-thumb:hover{background:var(--texto-3);background-clip:content-box}
 .jk{font-family:"Plus Jakarta Sans","IBM Plex Sans",sans-serif}
 .tn{font-variant-numeric:tabular-nums}
 
 /* ------------------------------------------------------------------ casca */
 .app{
-  max-width:1340px;margin:0 auto;background:var(--casca);border-radius:26px;
+  max-width:1340px;height:100%;margin:0 auto;background:var(--casca);border-radius:26px;
   box-shadow:0 2px 6px rgba(24,40,33,.05), 0 24px 60px -20px rgba(24,40,33,.18);
-  display:grid;grid-template-columns:236px 1fr;overflow:hidden;min-height:86vh;
+  display:grid;grid-template-columns:236px minmax(0,1fr);overflow:hidden;
 }
 
 /* --------------------------------------------------------------- barra lat */
-.lado{background:var(--mata);padding:26px 16px 20px;display:flex;flex-direction:column;gap:26px}
+.lado{background:var(--mata);padding:26px 16px 20px;display:flex;flex-direction:column;
+  gap:26px;overflow-y:auto;min-height:0}
 .logo{display:flex;align-items:center;gap:11px;padding:0 8px;color:#fff}
 .logo .bolha{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.16);
   display:grid;place-items:center;flex:none}
@@ -102,8 +113,37 @@ body{
 .imprimir:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
 /* -------------------------------------------------------------------- tela */
-.tela{background:var(--tela);padding:20px 24px 34px;min-width:0}
-.topo{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+.tela{background:var(--tela);display:grid;
+  grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);
+  min-width:0;overflow:hidden}
+.topo{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 24px;border-bottom:1px solid var(--borda);background:var(--tela)}
+#main{overflow-y:auto;overflow-x:hidden;min-height:0;padding:20px 24px 28px;
+  overscroll-behavior:contain}
+
+/* faixa de período — fica fora da rolagem, sempre visível na apresentação */
+.pfaixa{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:12px 24px;border-bottom:1px solid var(--borda);background:var(--cartao)}
+.pgrupo{display:flex;align-items:center;gap:7px;min-width:0;flex-wrap:wrap}
+.pet{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--texto-3);white-space:nowrap}
+.pgrupo input[type=date]{
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
+  font-variant-numeric:tabular-nums;padding:7px 9px;border-radius:9px;
+  border:1px solid var(--borda);background:var(--cartao);color:var(--texto);
+}
+.pgrupo input[type=date]:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
+.pseta{color:var(--texto-3);font-size:12px}
+.pvs{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
+  color:var(--texto-3);padding:0 2px;white-space:nowrap}
+.pauto{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+  padding:7px 11px;border-radius:9px;border:1px solid var(--borda);
+  background:var(--cartao);color:var(--texto-2);cursor:pointer;white-space:nowrap}
+.pauto:hover{background:var(--tela);color:var(--texto)}
+.pauto:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
+.pdias{font-size:11.5px;color:var(--texto-3);white-space:nowrap;
+  font-variant-numeric:tabular-nums;padding-left:4px}
+.pdias.torto{color:var(--ruim);font-weight:600}
 .busca{position:relative;flex:1;min-width:190px;max-width:330px}
 .busca svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);
   width:16px;height:16px;stroke:var(--texto-3);stroke-width:1.8;fill:none;
@@ -269,25 +309,67 @@ tfoot td:first-child{border-radius:0 0 0 10px} tfoot td:last-child{border-radius
 .vazio{font-size:13px;color:var(--texto-3);padding:16px 0}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:1080px){
-  .faixa.dois{grid-template-columns:1fr}
+/* telas médias: menu recolhe para só ícones, o conteúdo ganha a largura */
+@media (max-width:1240px){
+  .app{grid-template-columns:74px minmax(0,1fr)}
+  .lado{padding:22px 12px 18px;align-items:center}
+  .logo{padding:0}
+  .logo span:not(.bolha){display:none}
+  .item{justify-content:center;padding:12px 0;gap:0;position:relative}
+  .item .lbl{display:none}
+  .item .pt{display:none}
+  /* recolhido, o item ativo vira uma pastilha branca com o ícone escuro */
+  .item[aria-selected="true"]{background:#fff;color:var(--mata)}
+  .item[aria-selected="true"]:hover{background:#fff;color:var(--mata)}
+  .imprimir{padding:12px 0}
+  .imprimir span{display:none}
 }
-@media (max-width:820px){
-  body{padding:0}
-  .app{border-radius:0;grid-template-columns:1fr;min-height:100vh}
-  .lado{flex-direction:row;align-items:center;gap:14px;padding:14px 16px;overflow-x:auto}
-  .logo small{display:none}
+@media (max-width:1080px){
+  .faixa.dois{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  body{padding:0;overflow:hidden}
+  .app{border-radius:0;grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr)}
+  .lado{flex-direction:row;align-items:center;gap:10px;padding:11px 12px;
+    overflow-x:auto;overflow-y:hidden}
+  .logo{flex:none}
   .menu{flex-direction:row;flex:none;gap:4px}
-  .item{padding:9px 11px;white-space:nowrap}
+  .item{padding:10px 12px;white-space:nowrap;justify-content:flex-start}
+  .item .lbl{display:inline}
   .item .pt{display:none}
   .imprimir{display:none}
-  .tela{padding:16px 16px 30px}
+  .topo{padding:12px 14px;gap:10px}
+  .pfaixa{padding:12px 14px;gap:9px}
+  .pgrupo{flex:1 1 100%}
+  .pgrupo input[type=date]{flex:1;min-width:0}
+  .pvs{display:none}
+  .pauto{flex:1 1 100%;text-align:center}
+  .busca{max-width:none;flex:1;min-width:0}
+  .quando{flex:none}
+  #main{padding:14px 14px 24px}
+  .cx{padding:16px 17px;border-radius:14px}
+  .tese{padding:19px 20px}
+  .tese p{font-size:15px}
+  .faixa{gap:12px;margin-bottom:12px}
+  .bars{height:132px}
+  .roscas{grid-template-columns:minmax(0,1fr)}
+  .tw{margin:0 -17px -16px;padding:0 17px}
+}
+@media (max-width:420px){
+  .tiles{grid-template-columns:minmax(0,1fr)}
+  .row{grid-template-columns:82px minmax(0,1fr) auto;gap:8px}
+  .row .rv{min-width:0}
 }
 @media print{
+  html,body{height:auto;overflow:visible}
   body{background:#fff;padding:0}
-  .app{box-shadow:none;border-radius:0;grid-template-columns:1fr;display:block}
-  .lado,.topo,.icone{display:none!important}
-  .tela{background:#fff;padding:0}
+  #main{overflow:visible!important;padding:0}
+  .app{box-shadow:none;border-radius:0;grid-template-columns:1fr;display:block;height:auto}
+  .lado,.topo,.icone,.pauto{display:none!important}
+  .pfaixa{border:none;padding:0 0 14px;background:#fff}
+  .pgrupo input[type=date]{border:none;padding:0 4px;background:#fff}
+  .tela{background:#fff;padding:0;display:block;overflow:visible}
   .cx{break-inside:avoid;box-shadow:none}
   .faixa.dois{grid-template-columns:1fr}
 }
@@ -416,7 +498,7 @@ const DADOS = {
 /* ===================== fim dos dados da semana ===================== */
 </script>
 <div class="app">
-  <nav class="lado" aria-label="Seções do painel">
+  <nav class="lado rola" aria-label="Seções do painel">
     <div class="logo">
       <span class="bolha" aria-hidden="true">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff"
@@ -430,7 +512,7 @@ const DADOS = {
     <button class="imprimir" type="button" id="btPrint">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9V3.5h11V9"/>
         <rect x="3.5" y="9" width="17" height="7.5" rx="2"/><path d="M6.5 14h11v6.5h-11z"/></svg>
-      Imprimir
+      <span>Imprimir</span>
     </button>
   </nav>
 
@@ -443,9 +525,6 @@ const DADOS = {
           <path d="m15.6 15.6 4.4 4.4"/></svg>
       </div>
       <div class="quando">
-        <input type="date" id="de" aria-label="Início do período">
-        <span class="tracinho" aria-hidden="true">→</span>
-        <input type="date" id="ate" aria-label="Fim do período">
         <button class="icone" type="button" id="btTema" aria-label="Alternar tema claro e escuro">
           <svg viewBox="0 0 24 24" aria-hidden="true" id="icTema"><circle cx="12" cy="12" r="4.4"/>
             <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>
@@ -453,7 +532,29 @@ const DADOS = {
         <span class="eu" title="Alysson Lima">AL</span>
       </div>
     </header>
-    <main id="main"></main>
+
+    <div class="pfaixa">
+      <div class="pgrupo">
+        <span class="pet">Atual</span>
+        <input type="date" id="de" aria-label="Início do período atual">
+        <span class="pseta" aria-hidden="true">→</span>
+        <input type="date" id="ate" aria-label="Fim do período atual">
+      </div>
+      <span class="pvs">comparado com</span>
+      <div class="pgrupo">
+        <span class="pet">Anterior</span>
+        <input type="date" id="cde" aria-label="Início do período de comparação">
+        <span class="pseta" aria-hidden="true">→</span>
+        <input type="date" id="cate" aria-label="Fim do período de comparação">
+        <button class="pauto" type="button" id="btAuto"
+                title="Volta a comparação para a janela imediatamente anterior, do mesmo tamanho">
+          Janela anterior
+        </button>
+      </div>
+      <span class="pdias" id="pdias"></span>
+    </div>
+
+    <main id="main" class="rola"></main>
   </div>
 </div>
 
@@ -880,9 +981,18 @@ FOLHAS.forEach((fo,i)=>{
   b.className="item"; b.type="button"; b.id="it-"+fo.id;
   b.setAttribute("role","tab"); b.setAttribute("aria-controls","fo-"+fo.id);
   b.setAttribute("aria-selected", i===0?"true":"false");
+  b.title = fo.nome;
   b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${IC[fo.ic]}</svg>
-    <span>${fo.nome}</span><span class="pt" aria-hidden="true"></span>`;
+    <span class="lbl">${fo.nome}</span><span class="pt" aria-hidden="true"></span>`;
   b.addEventListener("click", ()=>abrir(fo.id));
+  b.addEventListener("keydown", e=>{
+    const passo = {ArrowDown:1, ArrowRight:1, ArrowUp:-1, ArrowLeft:-1}[e.key];
+    if(!passo) return;
+    e.preventDefault();
+    const alvo = FOLHAS[(i + passo + FOLHAS.length) % FOLHAS.length];
+    abrir(alvo.id);
+    document.getElementById("it-"+alvo.id).focus();
+  });
   menu.appendChild(b);
 
   const s = document.createElement("section");
@@ -898,6 +1008,7 @@ function abrir(id){
     document.getElementById("it-"+fo.id).setAttribute("aria-selected", on?"true":"false");
     document.getElementById("fo-"+fo.id).hidden = !on;
   });
+  main.scrollTop = 0;
   try{ localStorage.setItem("painel:folha", id); }catch(e){}
   filtrar();
 }
@@ -920,24 +1031,51 @@ function filtrar(){
 }
 q.addEventListener("input", filtrar);
 
-/* período — recalcula sozinho o intervalo de comparação */
-const inDe = document.getElementById("de"), inAte = document.getElementById("ate");
-const dias = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
+/* período — as duas janelas ficam visíveis e editáveis.
+   Mexer no período atual reencaixa a comparação na janela anterior de mesmo
+   tamanho; mexer na comparação é livre, e aí o painel avisa se os tamanhos
+   não baterem — comparar 9 dias com 7 distorce todo delta sem avisar. */
+const inDe  = document.getElementById("de"),   inAte  = document.getElementById("ate");
+const inCDe = document.getElementById("cde"),  inCAte = document.getElementById("cate");
+const elDias = document.getElementById("pdias");
+
+const dias = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
 const menos = (iso,d)=>{ const x=new Date(iso+"T12:00:00"); x.setDate(x.getDate()-d);
   return x.toISOString().slice(0,10); };
 
-function periodo(){
+function encaixar(){
   const de=inDe.value, ate=inAte.value;
   if(!de||!ate||de>ate) return;
-  const vao = dias(de,ate), aAte = menos(de,1), aDe = menos(aAte,vao);
-  DADOS.periodo.atual={de,ate};
-  DADOS.periodo.anterior={de:aDe,ate:aAte};
-  inDe.title = inAte.title = `Compara com ${dm(aDe)} – ${dm(aAte)}`;
+  const cAte = menos(de,1), cDe = menos(cAte, dias(de,ate)-1);
+  inCDe.value = cDe; inCAte.value = cAte;
 }
-inDe.value = DADOS.periodo.atual.de;
+
+function periodo(){
+  const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
+  if(de&&ate&&de<=ate) DADOS.periodo.atual = {de,ate};
+  if(cde&&cate&&cde<=cate) DADOS.periodo.anterior = {de:cde,ate:cate};
+
+  const a = (de&&ate&&de<=ate) ? dias(de,ate) : null;
+  const b = (cde&&cate&&cde<=cate) ? dias(cde,cate) : null;
+  if(a==null||b==null){ elDias.textContent=""; elDias.classList.remove("torto"); return; }
+  const plural = n => n===1 ? "1 dia" : `${n} dias`;
+  if(a===b){
+    elDias.textContent = `${plural(a)} contra ${plural(b)}`;
+    elDias.classList.remove("torto");
+  }else{
+    elDias.textContent = `${plural(a)} contra ${plural(b)} — janelas de tamanhos diferentes`;
+    elDias.classList.add("torto");
+  }
+}
+
+inDe.value  = DADOS.periodo.atual.de;
 inAte.value = DADOS.periodo.atual.ate;
-inDe.addEventListener("change", periodo);
-inAte.addEventListener("change", periodo);
+inCDe.value  = DADOS.periodo.anterior.de;
+inCAte.value = DADOS.periodo.anterior.ate;
+
+[inDe,inAte].forEach(el=>el.addEventListener("change", ()=>{ encaixar(); periodo(); }));
+[inCDe,inCAte].forEach(el=>el.addEventListener("change", periodo));
+document.getElementById("btAuto").addEventListener("click", ()=>{ encaixar(); periodo(); });
 
 /* tema */
 const SOL = '<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
