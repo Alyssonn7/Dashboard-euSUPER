@@ -1,193 +1,254 @@
 <title>Painel Semanal Mia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Asap:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
 
 <style>
+/* ===========================================================================
+   O caderno de agendamento da Mia.
+   Trilho de rótulos à esquerda, conteúdo escrito sobre linhas pautadas,
+   linha de chamada pontilhada ligando rótulo e número.
+   =========================================================================== */
 :root{
-  --brand:#004AAD; --brand-ink:#004AAD;
-  --ground:#F4F7FB; --surface:#FFFFFF; --surface-2:#EBF0F8;
-  --ink:#0B1729; --ink-2:#3E4F67; --ink-3:#6D7E96;
-  --rule:#D7DFEC; --rule-2:#E9EEF6;
-  --up:#00703C; --down:#B3261E; --flat:#6D7E96;
-  --up-wash:#E3F3EA; --down-wash:#FBE9E7;
-  --c-meta:#2563EB; --c-google:#D14009; --c-openai:#00875A;
-  --shadow:0 1px 2px rgba(11,23,41,.05), 0 6px 20px rgba(11,23,41,.05);
+  --tinta:#10243F;      /* azul de caneta — texto e capa */
+  --tinta-2:#41556F;
+  --tinta-3:#76889E;
+  --papel:#F1F4F9;      /* papel frio */
+  --papel-2:#E5EBF4;    /* trilho / faixa */
+  --linha:#CDD8E8;      /* a linha pautada */
+  --linha-2:#DFE6F1;
+  --mia:#004AAD;        /* o azul da marca */
+  --pago:#00693F;       /* deu certo */
+  --furo:#A82F26;       /* furo na agenda */
+  --pago-t:#E0EFE7;
+  --furo-t:#F7E4E2;
+  --c-meta:#2563EB;
+  --c-google:#D14009;
+  --c-openai:#00875A;
+  --capa:#10243F;
+  --capa-ink:#FFFFFF;
+  --capa-ink-2:rgba(255,255,255,.62);
+  --capa-linha:rgba(255,255,255,.16);
 }
-@media (prefers-color-scheme: dark){
+@media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --brand:#7FA8F0; --brand-ink:#9CC0FF;
-    --ground:#080F1C; --surface:#101A2C; --surface-2:#18243A;
-    --ink:#E9EFF9; --ink-2:#B0BED3; --ink-3:#7F90A9;
-    --rule:#26344C; --rule-2:#1B2740;
-    --up:#4BC98A; --down:#F08A80; --flat:#7F90A9;
-    --up-wash:#0F2B20; --down-wash:#331A18;
+    --tinta:#E4ECF8; --tinta-2:#A7B8CF; --tinta-3:#74879F;
+    --papel:#0B1522; --papel-2:#142235; --linha:#283A52; --linha-2:#1D2C41;
+    --mia:#83ADF2; --pago:#4CC78D; --furo:#EF8B81;
+    --pago-t:#0E2B1F; --furo-t:#331A18;
     --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+    --capa:#060D17; --capa-ink:#EEF3FB; --capa-ink-2:rgba(238,243,251,.6);
+    --capa-linha:rgba(238,243,251,.14);
   }
 }
 :root[data-theme="dark"]{
-  --brand:#7FA8F0; --brand-ink:#9CC0FF;
-  --ground:#080F1C; --surface:#101A2C; --surface-2:#18243A;
-  --ink:#E9EFF9; --ink-2:#B0BED3; --ink-3:#7F90A9;
-  --rule:#26344C; --rule-2:#1B2740;
-  --up:#4BC98A; --down:#F08A80; --flat:#7F90A9;
-  --up-wash:#0F2B20; --down-wash:#331A18;
+  --tinta:#E4ECF8; --tinta-2:#A7B8CF; --tinta-3:#74879F;
+  --papel:#0B1522; --papel-2:#142235; --linha:#283A52; --linha-2:#1D2C41;
+  --mia:#83ADF2; --pago:#4CC78D; --furo:#EF8B81;
+  --pago-t:#0E2B1F; --furo-t:#331A18;
   --c-meta:#5C93F0; --c-google:#EA7B4A; --c-openai:#3BB584;
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.35);
+  --capa:#060D17; --capa-ink:#EEF3FB; --capa-ink-2:rgba(238,243,251,.6);
+  --capa-linha:rgba(238,243,251,.14);
 }
 
 *{box-sizing:border-box}
 body{
-  background:var(--ground); color:var(--ink);
-  font-family:"Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  background:var(--papel); color:var(--tinta);
+  font-family:"Asap",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15.5px; line-height:1.55; -webkit-font-smoothing:antialiased;
 }
-.num,.tnum{font-variant-numeric:tabular-nums}
+.mono{font-family:"Spline Sans Mono",ui-monospace,Menlo,Consolas,monospace}
+.disp{font-family:"Bricolage Grotesque","Asap",sans-serif}
 
-/* ------------------------------------------------------------- topo */
-.topbar{background:var(--brand);color:#fff;padding:18px 0}
-:root[data-theme="dark"] .topbar{background:#0D2244}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .topbar{background:#0D2244}}
-.bar-in{
-  max-width:1180px;margin:0 auto;padding:0 22px;
-  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+/* ------------------------------------------------------------------- capa */
+.capa{background:var(--capa);color:var(--capa-ink);padding:26px 0 0}
+.capa-in{max-width:1120px;margin:0 auto;padding:0 26px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:26px;flex-wrap:wrap}
+.marca{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:800;
+  font-size:27px;letter-spacing:-.025em;line-height:1;color:var(--capa-ink)}
+.marca em{display:block;font-family:"Spline Sans Mono",monospace;font-style:normal;
+  font-weight:400;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--capa-ink-2);margin-top:9px}
+.quando{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.campo{display:flex;flex-direction:column;gap:5px}
+.campo label{font-family:"Spline Sans Mono",monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.19em;text-transform:uppercase;color:var(--capa-ink-2)}
+.campo input{
+  font-family:"Spline Sans Mono",monospace;font-size:13px;
+  padding:7px 10px;border:1px solid var(--capa-linha);border-radius:3px;
+  background:rgba(255,255,255,.08);color:var(--capa-ink);color-scheme:dark;
 }
-.brand{font-family:"Montserrat",sans-serif;font-weight:800;font-size:20px;letter-spacing:-.01em}
-.brand small{display:block;font-weight:600;font-size:11.5px;letter-spacing:.12em;
-  text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:2px}
-.periodo{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
-.fld{display:flex;flex-direction:column;gap:4px}
-.fld label{font-family:"Montserrat",sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.72)}
-.fld input{
-  font:inherit;font-size:13px;font-variant-numeric:tabular-nums;
-  padding:6px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.28);
-  background:rgba(255,255,255,.12);color:#fff;color-scheme:dark;
+.campo input:focus-visible{outline:2px solid var(--capa-ink);outline-offset:1px}
+.contra{font-family:"Spline Sans Mono",monospace;font-size:11.5px;
+  color:var(--capa-ink-2);padding-bottom:9px;line-height:1.5;max-width:22ch}
+
+/* -------------------------------------------------------- abas de fichário */
+.fichario{max-width:1120px;margin:22px auto 0;padding:0 18px;
+  display:flex;gap:3px;overflow-x:auto;scrollbar-width:none}
+.fichario::-webkit-scrollbar{display:none}
+.aba{
+  font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:500;
+  letter-spacing:.09em;text-transform:uppercase;
+  padding:11px 15px 12px;color:var(--capa-ink-2);white-space:nowrap;cursor:pointer;
+  border:none;background:rgba(255,255,255,.05);border-radius:5px 5px 0 0;
+  border-bottom:3px solid transparent;
 }
-.fld input:focus{outline:2px solid #fff;outline-offset:1px}
-.vs{font-size:12px;color:rgba(255,255,255,.75);padding-bottom:7px;font-variant-numeric:tabular-nums}
-
-/* ------------------------------------------------------------- abas */
-.tabs{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:5}
-.tabs-in{max-width:1180px;margin:0 auto;padding:0 14px;display:flex;gap:2px;overflow-x:auto}
-.tab{
-  font-family:"Montserrat",sans-serif;font-size:12.5px;font-weight:700;
-  padding:13px 15px;color:var(--ink-3);white-space:nowrap;cursor:pointer;
-  border:none;background:none;border-bottom:2px solid transparent;
+.aba:hover{color:var(--capa-ink);background:rgba(255,255,255,.11)}
+.aba[aria-selected="true"]{
+  background:var(--papel);color:var(--mia);font-weight:600;border-bottom-color:var(--papel);
 }
-.tab:hover{color:var(--ink-2)}
-.tab[aria-selected="true"]{color:var(--brand-ink);border-bottom-color:var(--brand-ink)}
-.tab:focus-visible{outline:2px solid var(--brand-ink);outline-offset:-3px}
+.aba:focus-visible{outline:2px solid var(--capa-ink);outline-offset:-3px}
 
-main{max-width:1180px;margin:0 auto;padding:26px 22px 90px}
-.panel[hidden]{display:none}
+main{max-width:1120px;margin:0 auto;padding:34px 26px 96px}
+.folha[hidden]{display:none}
 
-h2{font-family:"Montserrat",sans-serif;font-size:19px;font-weight:700;
-  margin:0 0 4px;letter-spacing:-.01em}
-h3{font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;margin:0 0 10px}
-.hint{color:var(--ink-3);font-size:13.5px;margin:0 0 18px;max-width:78ch}
-.block{margin-bottom:34px}
+/* --------------------------------------------------------------- cabeçalhos */
+.bloco{margin:0 0 42px}
+.titulo{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;
+  font-size:22px;letter-spacing:-.022em;margin:0 0 5px;line-height:1.16}
+.legenda{color:var(--tinta-2);font-size:14px;margin:0 0 22px;max-width:74ch}
+.rotulo{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-3);
+  padding-bottom:9px;border-bottom:2px solid var(--tinta);margin-bottom:4px;
+  display:block}
 
-/* ------------------------------------------------------- veredito */
+/* ------------------------------------------------------------- o veredito */
 .veredito{
-  background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--brand-ink);
-  border-radius:10px;padding:18px 22px;margin-bottom:22px;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:132px 1fr;gap:0 22px;align-items:start;
+  border-top:2px solid var(--tinta);border-bottom:1px solid var(--linha);
+  padding:18px 0 22px;margin-bottom:38px;
 }
-.veredito .lb{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--brand-ink);margin-bottom:7px}
-.veredito p{margin:0;font-size:15px;color:var(--ink);max-width:82ch}
+.veredito .marg{font-family:"Spline Sans Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--mia);padding-top:5px}
+.veredito p{margin:0;font-size:16.5px;line-height:1.62;max-width:64ch;color:var(--tinta)}
 
-/* ------------------------------------------------------------ KPIs */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:22px}
-.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
-  padding:15px 17px;box-shadow:var(--shadow)}
-.kpi .l{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
-.kpi .v{font-family:"Montserrat",sans-serif;font-size:24px;font-weight:800;
-  letter-spacing:-.02em;line-height:1.08;font-variant-numeric:tabular-nums}
-.kpi .d{font-size:12px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;
-  display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:99px}
-.kpi .d.up{color:var(--up);background:var(--up-wash)}
-.kpi .d.down{color:var(--down);background:var(--down-wash)}
-.kpi .d.flat{color:var(--flat);background:var(--surface-2)}
-.kpi .sub{font-size:11.5px;color:var(--ink-3);margin-top:6px}
+/* ------------------------------------------- a linha da agenda (assinatura) */
+.linhas{border-top:1px solid var(--linha);margin:0 0 6px}
+.linha{
+  display:grid;grid-template-columns:minmax(118px,auto) 1fr auto minmax(78px,auto);
+  gap:0 12px;align-items:baseline;
+  padding:13px 0 12px;border-bottom:1px solid var(--linha-2);
+}
+.linha:hover{background:var(--papel-2)}
+.linha .lb{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--tinta-2);white-space:nowrap}
+.linha .chamada{border-bottom:1px dotted var(--linha);height:.72em;min-width:14px}
+.linha .vl{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;
+  font-size:21px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  color:var(--tinta);white-space:nowrap}
+.linha .var{font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:500;
+  font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.linha .var.up{color:var(--pago)} .linha .var.down{color:var(--furo)}
+.linha .var.flat{color:var(--tinta-3)}
+.linha .nota{grid-column:1/-1;font-size:12.5px;color:var(--tinta-3);
+  margin-top:5px;padding-left:0}
+.linhas.solta .linha:last-child{border-bottom:1px solid var(--linha)}
 
-/* --------------------------------------------------------- tabelas */
-.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface);
-  box-shadow:var(--shadow)}
+/* ------------------------------------------------------------ blocos vagos */
+.slots{border-top:1px solid var(--linha)}
+.slot{
+  display:grid;grid-template-columns:minmax(112px,auto) 1fr minmax(112px,auto);
+  gap:0 14px;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--linha-2);
+}
+.slot .nm{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot .faixa{display:block;height:19px;background:var(--papel-2);position:relative;
+  border-radius:2px;overflow:hidden}
+.slot .ocupado{display:block;height:100%;background:var(--mia);border-radius:2px;
+  min-width:3px;transition:width .4s cubic-bezier(.22,.61,.36,1)}
+.slot .qt{font-family:"Spline Sans Mono",monospace;font-size:12px;font-weight:500;
+  font-variant-numeric:tabular-nums;text-align:right;color:var(--tinta);white-space:nowrap}
+.slot.furado .ocupado{background:var(--furo)}
+.slot.furado .nm,.slot.furado .qt{color:var(--furo)}
+
+/* ------------------------------------------------------------- colunas dia */
+.dias{display:flex;align-items:flex-end;gap:12px;height:158px;
+  border-bottom:1px solid var(--linha);padding-bottom:0}
+.dia{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:7px;height:100%}
+.dia .col{width:100%;max-width:56px;background:var(--mia);min-height:3px;
+  border-radius:2px 2px 0 0;transition:height .4s cubic-bezier(.22,.61,.36,1)}
+.dia .n{font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:700;font-size:12.5px;
+  font-variant-numeric:tabular-nums;color:var(--tinta)}
+.diasl{display:flex;gap:12px;margin-top:8px}
+.diasl span{flex:1;text-align:center;font-family:"Spline Sans Mono",monospace;
+  font-size:10.5px;color:var(--tinta-3)}
+
+/* ------------------------------------------------------------------ pautas */
+.pauta{border-top:2px solid var(--tinta)}
+.par{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:38px}
+.quadro{min-width:0}
+.quadro .titulo{font-size:15px;margin-bottom:3px}
+.quadro .legenda{font-size:12.5px;margin-bottom:16px}
+.chave{display:flex;gap:15px;flex-wrap:wrap;margin-bottom:13px}
+.chave span{display:inline-flex;align-items:center;gap:6px;
+  font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--tinta-2)}
+.chave i{width:9px;height:9px;border-radius:1px;flex:none}
+
+/* ------------------------------------------------------------------ tabela */
+.tw{overflow-x:auto;border-top:2px solid var(--tinta)}
 table{border-collapse:collapse;width:100%;font-size:13.5px}
-th{font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.07em;
-  text-transform:uppercase;color:var(--ink-3);text-align:left;padding:11px 14px;
-  background:var(--surface-2);border-bottom:1px solid var(--rule);white-space:nowrap}
-th.r,td.r{text-align:right}
-td{padding:11px 14px;border-bottom:1px solid var(--rule-2);color:var(--ink-2);white-space:nowrap}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:var(--surface-2)}
-td.nm{color:var(--ink);font-weight:600}
-tfoot td{background:var(--surface-2);color:var(--ink);font-weight:700;
-  border-top:1px solid var(--rule);border-bottom:none}
-.mini{font-size:11.5px;color:var(--ink-3);font-weight:400}
+thead th{font-family:"Spline Sans Mono",monospace;font-size:9.5px;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--tinta-3);
+  text-align:left;padding:10px 13px 10px 0;border-bottom:1px solid var(--linha);
+  white-space:nowrap}
+thead th.r{text-align:right}
+tbody td{padding:12px 13px 12px 0;border-bottom:1px solid var(--linha-2);
+  color:var(--tinta-2);white-space:nowrap;
+  font-family:"Spline Sans Mono",monospace;font-size:12.5px;
+  font-variant-numeric:tabular-nums}
+tbody td.r{text-align:right}
+tbody td.nm{font-family:"Asap",sans-serif;font-size:14px;font-weight:600;color:var(--tinta)}
+tbody tr:hover td{background:var(--papel-2)}
+tfoot td{padding:12px 13px 12px 0;border-top:1px solid var(--linha);
+  font-family:"Spline Sans Mono",monospace;font-size:12.5px;font-weight:600;
+  color:var(--tinta);white-space:nowrap;font-variant-numeric:tabular-nums}
+tfoot td.r{text-align:right}
+tfoot td.nm{font-family:"Asap",sans-serif;font-size:13.5px}
+td .sub{display:block;font-family:"Spline Sans Mono",monospace;font-size:10.5px;
+  color:var(--tinta-3);margin-top:2px}
 
-/* --------------------------------------------------------- gráficos */
-.chart{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
-  padding:18px 20px;box-shadow:var(--shadow)}
-.chart h3{margin-bottom:3px}
-.chart .cap{font-size:12.5px;color:var(--ink-3);margin:0 0 16px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
-.swatch{width:10px;height:10px;border-radius:2px;flex:none}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+/* --------------------------------------------------------------- anotações */
+.anot{border-top:1px solid var(--linha);padding-top:4px}
+.anot p{display:grid;grid-template-columns:22px 1fr;gap:12px;margin:0;
+  padding:13px 0;border-bottom:1px solid var(--linha-2);
+  font-size:14.5px;color:var(--tinta-2);max-width:none}
+.anot p b{font-family:"Spline Sans Mono",monospace;font-size:11px;font-weight:500;
+  color:var(--mia);padding-top:3px}
+.anot p span{max-width:74ch}
 
-/* barras horizontais */
-.hbars{display:flex;flex-direction:column;gap:9px}
-.hbar{display:grid;grid-template-columns:var(--lw,132px) 1fr auto;gap:12px;align-items:center}
-.hbar .nm{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hbar .track{display:block;background:var(--surface-2);border-radius:4px;height:22px;
-  position:relative;overflow:hidden}
-.hbar .fill{display:block;height:100%;border-radius:4px;background:var(--brand-ink);min-width:3px;
-  transition:width .35s ease}
-.hbar .vl{font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink);
-  font-weight:700;min-width:74px;text-align:right}
-.hbar.alerta .fill{background:var(--down)}
-.hbar.alerta .nm,.hbar.alerta .vl{color:var(--down)}
-.step-pct{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+/* sequência real — só aqui a numeração diz algo */
+.passos{list-style:none;counter-reset:p;padding:0;margin:0;border-top:2px solid var(--tinta)}
+.passos li{counter-increment:p;display:grid;grid-template-columns:52px 1fr;gap:16px;
+  padding:19px 0;border-bottom:1px solid var(--linha-2);
+  font-size:15px;color:var(--tinta-2)}
+.passos li::before{content:counter(p,decimal-leading-zero);
+  font-family:"Bricolage Grotesque","Asap",sans-serif;font-weight:800;font-size:19px;
+  color:var(--linha);line-height:1.05}
+.passos li span{max-width:70ch}
 
-/* barras verticais */
-.vbars{display:flex;align-items:flex-end;gap:10px;height:170px;padding-top:6px}
-.vbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
-.vbar .col{width:100%;background:var(--brand-ink);border-radius:4px 4px 0 0;min-height:3px;
-  transition:height .35s ease}
-.vbar .lb{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.vbar .vv{font-size:11.5px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.aviso{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--tinta-2);
+  background:var(--papel-2);border-left:2px solid var(--mia);
+  padding:11px 15px;margin:0 0 20px;max-width:78ch;line-height:1.6}
+.rodape{margin-top:52px;padding-top:16px;border-top:1px solid var(--linha);
+  font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--tinta-3)}
 
-/* lista */
-.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
-.steps li{
-  counter-increment:s;background:var(--surface);border:1px solid var(--rule);border-radius:9px;
-  padding:14px 18px 14px 52px;position:relative;color:var(--ink-2);font-size:14px;
-  box-shadow:var(--shadow);
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
 }
-.steps li::before{
-  content:counter(s,decimal-leading-zero);position:absolute;left:17px;top:13px;
-  font-family:"Montserrat",sans-serif;font-weight:800;font-size:13px;color:var(--brand-ink);
-}
-.notes{background:var(--surface);border:1px solid var(--rule);border-radius:10px;
-  padding:16px 20px;box-shadow:var(--shadow)}
-.notes ul{margin:0;padding-left:19px}
-.notes li{margin-bottom:7px;color:var(--ink-2);font-size:14px}
-.notes li:last-child{margin-bottom:0}
-.nota{font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border-radius:8px;
-  padding:11px 15px;margin:0 0 16px;max-width:82ch}
-
-.foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);
-  font-size:12.5px;color:var(--ink-3)}
-@media (max-width:620px){
-  .hbar{grid-template-columns:96px 1fr auto;gap:8px}
-  .kpi .v{font-size:21px}
+@media (max-width:640px){
+  .veredito{grid-template-columns:1fr;gap:10px}
+  .veredito p{font-size:15.5px}
+  .linha{grid-template-columns:1fr auto;row-gap:2px}
+  .linha .chamada{display:none}
+  .linha .var{grid-column:2}
+  .par{gap:30px}
+  .marca{font-size:23px}
 }
 </style>
-
 <script>
 /* =========================================================================
    DADOS DA SEMANA — é só isto que muda toda semana.
@@ -311,309 +372,292 @@ const DADOS = {
 };
 /* ===================== fim dos dados da semana ===================== */
 </script>
-
-<div class="topbar">
-  <div class="bar-in">
-    <div class="brand" id="brand">Mia<small>Painel de mídia e negócio</small></div>
-    <div class="periodo">
-      <div class="fld"><label for="de">Início</label><input type="date" id="de"></div>
-      <div class="fld"><label for="ate">Fim</label><input type="date" id="ate"></div>
-      <span class="vs" id="vs"></span>
+<div class="capa">
+  <div class="capa-in">
+    <div class="marca" id="marca">Mia<em>agenda da semana</em></div>
+    <div class="quando">
+      <div class="campo"><label for="de">Abertura</label><input type="date" id="de"></div>
+      <div class="campo"><label for="ate">Fechamento</label><input type="date" id="ate"></div>
+      <span class="contra" id="contra"></span>
     </div>
   </div>
-</div>
-
-<div class="tabs">
-  <div class="tabs-in" role="tablist" id="tablist"></div>
+  <div class="fichario" role="tablist" id="fichario"></div>
 </div>
 
 <main id="main"></main>
 
 <script>
-/* ------------------------------------------------------------ formatação */
-const nf0 = new Intl.NumberFormat("pt-BR", {maximumFractionDigits:0});
-const nf2 = new Intl.NumberFormat("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
-const num = v => (v==null ? "—" : nf0.format(v));
-const brl = v => (v==null ? "—" : "R$ " + nf2.format(v));
-const pct = v => (v==null ? "—" : nf2.format(v).replace(",00","") + "%");
-const seg = v => (v==null ? "—" : num(v) + "s");
+/* ------------------------------------------------------------- formatação */
+const nf0 = new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
+const nf2 = new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const num = v => v==null ? "—" : nf0.format(v);
+const brl = v => v==null ? "—" : "R$ " + nf2.format(v);
+const pct = v => v==null ? "—" : nf2.format(v).replace(",00","") + "%";
+const seg = v => v==null ? "—" : num(v) + "s";
+const dm  = iso => { if(!iso) return ""; const [a,m,d]=iso.split("-"); return `${d}/${m}`; };
 
-function dm(iso){ if(!iso) return ""; const [a,m,d]=iso.split("-"); return `${d}/${m}`; }
-
-/* variação: `inverso` para métricas onde menor é melhor (CPC, CPA, custo) */
-function delta(atual, anterior, inverso){
+/* variação — `inverso` para métricas em que cair é bom (custo, CPC, CPA) */
+function variacao(atual, anterior, inverso){
   if(atual==null || anterior==null || anterior===0) return null;
   const p = ((atual - anterior) / Math.abs(anterior)) * 100;
   const bom = inverso ? p < 0 : p > 0;
-  return { p, cls: Math.abs(p) < 0.5 ? "flat" : (bom ? "up" : "down"),
-           txt: (p>0?"↑ ":p<0?"↓ ":"") + nf2.format(Math.abs(p)).replace(",00","") + "%" };
+  return { cls: Math.abs(p) < 0.5 ? "flat" : (bom ? "up" : "down"),
+           txt: (p>0?"+":p<0?"−":"") + nf2.format(Math.abs(p)).replace(",00","") + "%" };
 }
 
-function kpi(label, valor, d, sub){
-  const dd = d ? `<span class="d ${d.cls}">${d.txt}</span>` : "";
-  const ss = sub ? `<div class="sub">${sub}</div>` : "";
-  return `<div class="kpi"><div class="l">${label}</div><div class="v">${valor}</div>${dd}${ss}</div>`;
+/* a linha da agenda: rótulo · chamada pontilhada · valor · variação */
+function linha(lb, vl, v, nota){
+  return `<div class="linha">
+    <span class="lb">${lb}</span>
+    <span class="chamada"></span>
+    <span class="vl">${vl}</span>
+    <span class="var ${v?v.cls:"flat"}">${v?v.txt:"—"}</span>
+    ${nota?`<span class="nota">${nota}</span>`:""}
+  </div>`;
 }
+const linhas = (html, solta) => `<div class="linhas ${solta?"solta":""}">${html}</div>`;
 
-function hbars(itens, opts={}){
+/* horários ocupados: a barra é a proporção, o número é o absoluto */
+function slots(itens){
   const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="hbars" style="--lw:${opts.lw||132}px">` + itens.map(i=>`
-    <div class="hbar ${i.alerta?"alerta":""}">
+  return `<div class="slots">` + itens.map(i=>`
+    <div class="slot ${i.furado?"furado":""}">
       <span class="nm" title="${i.nome}">${i.nome}</span>
-      <span class="track"><span class="fill" style="width:${Math.max((i.valor/max)*100,1.2)}%;${i.cor?`background:${i.cor}`:""}"></span></span>
-      <span class="vl">${i.rotulo}</span>
+      <span class="faixa"><span class="ocupado" style="width:${Math.max((i.valor/max)*100,1.4)}%${i.cor?`;background:${i.cor}`:""}"></span></span>
+      <span class="qt">${i.rotulo}</span>
     </div>`).join("") + `</div>`;
 }
 
-function vbars(itens, fmt){
+/* colunas por dia */
+function dias(itens, fmt){
   const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="vbars">` + itens.map(i=>`
-    <div class="vbar" title="${i.rotulo}: ${fmt(i.valor)}">
-      <span class="vv">${fmt(i.valor)}</span>
-      <span class="col" style="height:${Math.max((i.valor/max)*100,2)}%;${i.cor?`background:${i.cor}`:""}"></span>
-      <span class="lb">${i.rotulo}</span>
-    </div>`).join("") + `</div>`;
+  return `<div class="dias">` + itens.map(i=>`
+    <div class="dia" title="${i.rotulo}: ${fmt(i.valor)}">
+      <span class="n">${fmt(i.valor)}</span>
+      <span class="col" style="height:${Math.max((i.valor/max)*100,2)}%${i.cor?`;background:${i.cor}`:""}"></span>
+    </div>`).join("") + `</div>
+    <div class="diasl">${itens.map(i=>`<span>${i.rotulo}</span>`).join("")}</div>`;
 }
 
-/* linha comparando dois períodos, no formato do relatório antigo */
-function linhasComparadas(defs, atual, anterior){
-  return defs.map(d=>{
-    const va = atual ? atual[d.k] : null, vb = anterior ? anterior[d.k] : null;
-    const dd = delta(va, vb, d.inv);
-    return `<tr>
-      <td class="nm">${d.rot}</td>
-      <td class="r">${d.f(va)}</td>
-      <td class="r mini">${d.f(vb)}</td>
-      <td class="r">${dd ? `<span class="d ${dd.cls}" style="font-size:12px;font-weight:700;padding:2px 7px;border-radius:99px">${dd.txt}</span>` : "—"}</td>
-    </tr>`;
-  }).join("");
-}
-
-/* ------------------------------------------------------------- as abas */
-const ABAS = [
-  { id:"geral",   nome:"Visão geral",   render:abaGeral },
-  { id:"openai",  nome:"OpenAI Ads",    render:abaOpenAI },
-  { id:"meta",    nome:"Meta Ads",      render:abaMeta },
-  { id:"google",  nome:"Google Ads",    render:abaGoogle },
-  { id:"lp",      nome:"Landing Page",  render:abaLP },
-  { id:"negocio", nome:"Negócio",       render:abaNegocio },
-  { id:"passos",  nome:"Próximos passos", render:abaPassos }
+/* ---------------------------------------------------------------- as folhas */
+const FOLHAS = [
+  { id:"geral",   nome:"A semana",     render:folhaGeral },
+  { id:"openai",  nome:"OpenAI Ads",   render:folhaOpenAI },
+  { id:"meta",    nome:"Meta Ads",     render:folhaMeta },
+  { id:"google",  nome:"Google Ads",   render:folhaGoogle },
+  { id:"lp",      nome:"A página",     render:folhaLP },
+  { id:"negocio", nome:"O negócio",    render:folhaNegocio },
+  { id:"passos",  nome:"O que vem",    render:folhaPassos }
 ];
 
-/* ---------------------------------------------------------- visão geral */
-function totaisMidia(){
-  const g = DADOS.google.campanhas.reduce((a,c)=>({
-    custo:a.custo+c.atual.custo, cliques:a.cliques+c.atual.cliques,
-    impressoes:a.impressoes+c.atual.impressoes, conversoes:a.conversoes+c.atual.conversoes
-  }), {custo:0,cliques:0,impressoes:0,conversoes:0});
-  const gAnt = DADOS.google.campanhas.reduce((a,c)=>({
-    custo:a.custo+c.anterior.custo, cliques:a.cliques+c.anterior.cliques,
-    impressoes:a.impressoes+c.anterior.impressoes, conversoes:a.conversoes+c.anterior.conversoes
-  }), {custo:0,cliques:0,impressoes:0,conversoes:0});
+function somaMidia(){
+  const soma = (arr, get) => arr.reduce((s,x)=>{
+    const o = get(x); return { custo:s.custo+o.custo, cliques:s.cliques+o.cliques,
+      impressoes:s.impressoes+o.impressoes };
+  }, {custo:0,cliques:0,impressoes:0});
 
-  const m = DADOS.meta.objetivos.reduce((a,o)=>({
-    custo:a.custo+o.atual.gasto, cliques:a.cliques+o.atual.cliques, impressoes:a.impressoes+o.atual.impressoes
-  }), {custo:0,cliques:0,impressoes:0});
-  const mAnt = DADOS.meta.objetivos.reduce((a,o)=>({
-    custo:a.custo+o.anterior.gasto, cliques:a.cliques+o.anterior.cliques, impressoes:a.impressoes+o.anterior.impressoes
-  }), {custo:0,cliques:0,impressoes:0});
-
-  const o = DADOS.openai.atual || {gasto:0,cliques:0,impressoes:0,conversoes:0};
-  const oAnt = DADOS.openai.anterior;
+  const g   = soma(DADOS.google.campanhas, c=>({custo:c.atual.custo,cliques:c.atual.cliques,impressoes:c.atual.impressoes}));
+  const gA  = soma(DADOS.google.campanhas, c=>({custo:c.anterior.custo,cliques:c.anterior.cliques,impressoes:c.anterior.impressoes}));
+  const m   = soma(DADOS.meta.objetivos,  o=>({custo:o.atual.gasto,cliques:o.atual.cliques,impressoes:o.atual.impressoes}));
+  const mA  = soma(DADOS.meta.objetivos,  o=>({custo:o.anterior.gasto,cliques:o.anterior.cliques,impressoes:o.anterior.impressoes}));
+  const o   = DADOS.openai.atual    || {gasto:0,cliques:0,impressoes:0};
+  const oA  = DADOS.openai.anterior;
 
   return {
-    google:{...g, nome:"Google Ads", cor:"var(--c-google)"},
-    googleAnt:gAnt,
-    meta:{...m, nome:"Meta Ads", cor:"var(--c-meta)"},
-    metaAnt:mAnt,
-    openai:{custo:o.gasto, cliques:o.cliques, impressoes:o.impressoes, conversoes:o.conversoes,
-            nome:"OpenAI Ads", cor:"var(--c-openai)"},
-    openaiAnt: oAnt ? {custo:oAnt.gasto, cliques:oAnt.cliques} : null,
-    invTotal: g.custo + m.custo + o.gasto,
-    invTotalAnt: gAnt.custo + mAnt.custo + (oAnt?oAnt.gasto:0),
-    cliquesTotal: g.cliques + m.cliques + o.cliques,
-    cliquesTotalAnt: gAnt.cliques + mAnt.cliques + (oAnt?oAnt.cliques:0)
+    canais:[
+      {nome:"Google Ads", custo:g.custo, cliques:g.cliques, cor:"var(--c-google)"},
+      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--c-meta)"},
+      {nome:"OpenAI Ads", custo:o.gasto, cliques:o.cliques, cor:"var(--c-openai)"}
+    ],
+    invest:g.custo+m.custo+o.gasto,
+    investA:gA.custo+mA.custo+(oA?oA.gasto:0),
+    cliques:g.cliques+m.cliques+o.cliques,
+    cliquesA:gA.cliques+mA.cliques+(oA?oA.cliques:0)
   };
 }
 
-function abaGeral(){
-  const t = totaisMidia(), n = DADOS.negocio;
-  const cpc = n.atual.cadastros ? t.invTotal / n.atual.cadastros : null;
-  const cpcAnt = n.anterior.cadastros ? t.invTotalAnt / n.anterior.cadastros : null;
+/* ----------------------------------------------------------------- a semana */
+function folhaGeral(){
+  const t = somaMidia(), n = DADOS.negocio;
+  const cpc  = n.atual.cadastros    ? t.invest  / n.atual.cadastros    : null;
+  const cpcA = n.anterior.cadastros ? t.investA / n.anterior.cadastros : null;
 
-  const canais = [t.google, t.meta, t.openai];
-  const maxFunil = DADOS.negocio.funil[0].valor;
+  const f = n.funil;
+  const taxas = f.map((e,i)=> i===0 ? 100 : (f[i-1].valor>0 ? (e.valor/f[i-1].valor)*100 : 0));
+  let pior=-1, min=Infinity;
+  taxas.forEach((x,i)=>{ if(i>0 && x<min){ min=x; pior=i; } });
 
   return `
   <div class="veredito">
-    <div class="lb">Veredito da semana</div>
+    <span class="marg">O que aconteceu</span>
     <p>${DADOS.veredito}</p>
   </div>
 
-  <div class="kpis">
-    ${kpi("Investimento total", brl(t.invTotal), delta(t.invTotal, t.invTotalAnt, true))}
-    ${kpi("Cliques", num(t.cliquesTotal), delta(t.cliquesTotal, t.cliquesTotalAnt))}
-    ${kpi("Novos cadastros", num(n.atual.cadastros), delta(n.atual.cadastros, n.anterior.cadastros))}
-    ${kpi("Custo por cadastro", brl(cpc), delta(cpc, cpcAnt, true), "Consolidado, sem separar canal")}
-    ${kpi("GMV", brl(n.atual.gmv), delta(n.atual.gmv, n.anterior.gmv))}
+  <div class="bloco">
+    <span class="rotulo">Os números da semana</span>
+    ${linhas(
+      linha("Investimento", brl(t.invest), variacao(t.invest, t.investA, true)) +
+      linha("Cliques",      num(t.cliques), variacao(t.cliques, t.cliquesA)) +
+      linha("Cadastros",    num(n.atual.cadastros), variacao(n.atual.cadastros, n.anterior.cadastros)) +
+      linha("Por cadastro", brl(cpc), variacao(cpc, cpcA, true),
+            "Investimento total dividido pelos cadastros. Consolidado — não separa quanto veio de cada canal.") +
+      linha("GMV",          brl(n.atual.gmv), variacao(n.atual.gmv, n.anterior.gmv)) +
+      linha("Contas ativas", num(n.atual.contasAtivas), variacao(n.atual.contasAtivas, n.anterior.contasAtivas),
+            "Profissionais com a conta de pagamento aprovada — é a etapa que trava o faturamento."),
+      true)}
   </div>
 
-  <div class="grid2 block">
-    <div class="chart">
-      <h3>Para onde foi o investimento</h3>
-      <p class="cap">Quanto cada canal consumiu no período.</p>
-      <div class="legend">
-        ${canais.map(c=>`<span><i class="swatch" style="background:${c.cor}"></i>${c.nome}</span>`).join("")}
-      </div>
-      ${hbars(canais.map(c=>({nome:c.nome, valor:c.custo, rotulo:brl(c.custo), cor:c.cor})), {lw:110})}
+  <div class="bloco par">
+    <div class="quadro">
+      <h3 class="titulo">Para onde foi o dinheiro</h3>
+      <p class="legenda">Quanto cada canal consumiu no período.</p>
+      <div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>
+      ${slots(t.canais.map(c=>({nome:c.nome, valor:c.custo, rotulo:brl(c.custo), cor:c.cor})))}
     </div>
-
-    <div class="chart">
-      <h3>Quanto custou cada clique</h3>
-      <p class="cap">Investimento dividido pelos cliques do próprio canal. Menor é melhor.</p>
-      <div class="legend">
-        ${canais.map(c=>`<span><i class="swatch" style="background:${c.cor}"></i>${c.nome}</span>`).join("")}
-      </div>
-      ${hbars(canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
-          rotulo:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), {lw:110})}
+    <div class="quadro">
+      <h3 class="titulo">Quanto custou cada clique</h3>
+      <p class="legenda">Gasto do canal dividido pelos cliques dele. Menor é melhor.</p>
+      <div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>
+      ${slots(t.canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
+        rotulo:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})))}
     </div>
   </div>
 
-  <div class="block">
-    <div class="chart">
-      <h3>Da impressão ao primeiro pagamento</h3>
-      <p class="cap">A barra mostra quanto <strong>passou</strong> da etapa anterior — não o volume. É assim que o estrangulamento aparece. A etapa que mais perde gente fica em vermelho.</p>
-      ${(()=>{
-        const f = DADOS.negocio.funil;
-        const taxas = f.map((e,i)=>{
-          if(i===0) return 100;
-          const ant = f[i-1].valor;
-          return ant > 0 ? (e.valor/ant)*100 : 0;
-        });
-        let pior = -1, min = Infinity;
-        taxas.forEach((t,i)=>{ if(i>0 && t < min){ min = t; pior = i; } });
-        return hbars(f.map((e,i)=>({
-          nome: e.etapa,
-          valor: taxas[i],
-          rotulo: i===0 ? num(e.valor)
-                        : `${num(e.valor)} · ${nf2.format(taxas[i]).replace(",00","")}%`,
-          alerta: i===pior
-        })), {lw:132});
-      })()}
-    </div>
+  <div class="bloco">
+    <span class="rotulo">Da impressão ao primeiro pagamento</span>
+    <p class="legenda" style="margin-top:14px">A barra mostra quanto <strong>passou</strong> da etapa
+    anterior, não o volume — é assim que o estrangulamento aparece. A etapa que mais perde gente fica marcada.</p>
+    ${slots(f.map((e,i)=>({
+      nome: e.etapa,
+      valor: taxas[i],
+      rotulo: i===0 ? num(e.valor)
+                    : `${num(e.valor)} <em style="font-style:normal;color:var(--tinta-3)">·</em> ${nf2.format(taxas[i]).replace(",00","")}%`,
+      furado: i===pior
+    })))}
   </div>`;
 }
 
-/* -------------------------------------------------------------- OpenAI */
-function abaOpenAI(){
+/* ---------------------------------------------------------------- OpenAI Ads */
+function folhaOpenAI(){
   const a = DADOS.openai.atual, b = DADOS.openai.anterior;
   return `
-  <div class="block">
-    <h2>OpenAI Ads</h2>
-    <p class="hint">${DADOS.openai.nota}</p>
-    <div class="kpis">
-      ${kpi("Impressões", num(a.impressoes), delta(a.impressoes, b&&b.impressoes))}
-      ${kpi("Cliques", num(a.cliques), delta(a.cliques, b&&b.cliques))}
-      ${kpi("Conversões", num(a.conversoes), delta(a.conversoes, b&&b.conversoes))}
-      ${kpi("Gasto", brl(a.gasto), delta(a.gasto, b&&b.gasto, true))}
-      ${kpi("Custo por conversão", brl(a.cpa), delta(a.cpa, b&&b.cpa, true))}
-      ${kpi("Custo por clique", brl(a.cpc), delta(a.cpc, b&&b.cpc, true))}
-    </div>
-    ${b ? "" : `<p class="nota">Primeiro período medido neste canal — ainda não há base de comparação.</p>`}
+  <div class="bloco">
+    <h2 class="titulo">OpenAI Ads</h2>
+    <p class="legenda">${DADOS.openai.nota}</p>
+    ${b ? "" : `<p class="aviso">Primeiro período medido neste canal. Ainda não há período anterior para comparar.</p>`}
+    ${linhas(
+      linha("Impressões",   num(a.impressoes),  variacao(a.impressoes, b&&b.impressoes)) +
+      linha("Cliques",      num(a.cliques),     variacao(a.cliques, b&&b.cliques)) +
+      linha("Conversões",   num(a.conversoes),  variacao(a.conversoes, b&&b.conversoes)) +
+      linha("Gasto",        brl(a.gasto),       variacao(a.gasto, b&&b.gasto, true)) +
+      linha("Por conversão",brl(a.cpa),         variacao(a.cpa, b&&b.cpa, true)) +
+      linha("Por clique",   brl(a.cpc),         variacao(a.cpc, b&&b.cpc, true)),
+      true)}
   </div>
 
-  <div class="grid2 block">
-    <div class="chart">
-      <h3>Cliques por dia</h3>
-      <p class="cap">Como a entrega evoluiu ao longo do período.</p>
-      ${vbars(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.cliques, cor:"var(--c-openai)"})), num)}
+  <div class="bloco par">
+    <div class="quadro">
+      <h3 class="titulo">Cliques por dia</h3>
+      <p class="legenda">Como a entrega evoluiu ao longo do período.</p>
+      ${dias(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.cliques, cor:"var(--c-openai)"})), num)}
     </div>
-    <div class="chart">
-      <h3>Conversões por dia</h3>
-      <p class="cap">Cadastros atribuídos pela própria plataforma.</p>
-      ${vbars(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.conversoes, cor:"var(--c-openai)"})), num)}
+    <div class="quadro">
+      <h3 class="titulo">Conversões por dia</h3>
+      <p class="legenda">Cadastros que a própria plataforma atribuiu.</p>
+      ${dias(DADOS.openai.serie.map(d=>({rotulo:d.data, valor:d.conversoes, cor:"var(--c-openai)"})), num)}
     </div>
   </div>`;
 }
 
-/* ---------------------------------------------------------------- Meta */
-function abaMeta(){
+/* ------------------------------------------------------------------ Meta Ads */
+function folhaMeta(){
   return DADOS.meta.objetivos.map(o=>{
-    const a=o.atual, b=o.anterior;
-    const temResultados = "resultados" in a;
-    const cols = temResultados
+    const a=o.atual, b=o.anterior, perfil = "resultados" in a;
+
+    const cols = perfil
       ? [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
          ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
-         ["Resultados",c=>num(c.resultados)],["Custo/result.",c=>brl(c.custoResultado)]]
+         ["Resultados",c=>num(c.resultados)],["Por result.",c=>brl(c.custoResultado)]]
       : [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
          ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
-         ["Visitas na LP",c=>num(c.visitasLP)],["Connect Rate",c=>pct(c.connectRate)]];
+         ["Visitas na página",c=>num(c.visitasLP)],["Connect Rate",c=>pct(c.connectRate)]];
 
-    const kpis = temResultados
-      ? kpi("Gasto",brl(a.gasto),delta(a.gasto,b.gasto,true)) +
-        kpi("Impressões",num(a.impressoes),delta(a.impressoes,b.impressoes)) +
-        kpi("CTR",pct(a.ctr),delta(a.ctr,b.ctr)) +
-        kpi("Resultados",num(a.resultados),delta(a.resultados,b.resultados)) +
-        kpi("Custo por resultado",brl(a.custoResultado),delta(a.custoResultado,b.custoResultado,true))
-      : kpi("Gasto",brl(a.gasto),delta(a.gasto,b.gasto,true)) +
-        kpi("Impressões",num(a.impressoes),delta(a.impressoes,b.impressoes)) +
-        kpi("CTR",pct(a.ctr),delta(a.ctr,b.ctr)) +
-        kpi("Visitas na LP",num(a.visitasLP),delta(a.visitasLP,b.visitasLP)) +
-        kpi("Connect Rate",pct(a.connectRate),delta(a.connectRate,b.connectRate),"Cliques que viraram visita de verdade");
+    const resumo = perfil
+      ? linha("Gasto", brl(a.gasto), variacao(a.gasto,b.gasto,true)) +
+        linha("Impressões", num(a.impressoes), variacao(a.impressoes,b.impressoes)) +
+        linha("CTR", pct(a.ctr), variacao(a.ctr,b.ctr)) +
+        linha("Resultados", num(a.resultados), variacao(a.resultados,b.resultados)) +
+        linha("Por resultado", brl(a.custoResultado), variacao(a.custoResultado,b.custoResultado,true))
+      : linha("Gasto", brl(a.gasto), variacao(a.gasto,b.gasto,true)) +
+        linha("Impressões", num(a.impressoes), variacao(a.impressoes,b.impressoes)) +
+        linha("CTR", pct(a.ctr), variacao(a.ctr,b.ctr)) +
+        linha("Visitas na página", num(a.visitasLP), variacao(a.visitasLP,b.visitasLP)) +
+        linha("Connect Rate", pct(a.connectRate), variacao(a.connectRate,b.connectRate),
+              "Fatia dos cliques que virou visita de verdade na página.");
 
-    const ordenados = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
+    const ordem = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
 
     return `
-    <div class="block">
-      <h2>Objetivo: ${o.nome}</h2>
-      <p class="hint">${o.criativos.length} ${o.criativos.length===1?"anúncio":"anúncios"} no período.</p>
-      <div class="kpis">${kpis}</div>
+    <div class="bloco">
+      <h2 class="titulo">Objetivo: ${o.nome}</h2>
+      <p class="legenda">${o.criativos.length} ${o.criativos.length===1?"anúncio":"anúncios"} rodaram no período.</p>
+      ${linhas(resumo, true)}
+    </div>
+    <div class="bloco">
+      <span class="rotulo">Anúncio por anúncio</span>
       <div class="tw">
         <table>
           <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
-          <tbody>
-            ${ordenados.map(c=>`<tr><td class="nm">${c.nome}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}
-          </tbody>
-          <tfoot><tr><td>Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
+          <tbody>${ordem.map(c=>`<tr><td class="nm">${c.nome}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
+          <tfoot><tr><td class="nm">Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
         </table>
       </div>
     </div>`;
   }).join("");
 }
 
-/* -------------------------------------------------------------- Google */
-function abaGoogle(){
+/* ---------------------------------------------------------------- Google Ads */
+function folhaGoogle(){
   const defs = [
-    {k:"impressoes",     rot:"Impressões",          f:num},
-    {k:"cliques",        rot:"Cliques",             f:num},
-    {k:"ctr",            rot:"CTR",                 f:pct},
-    {k:"cpc",            rot:"CPC médio",           f:brl, inv:true},
-    {k:"conversoes",     rot:"Conversões",          f:num},
-    {k:"taxaConversao",  rot:"Taxa de conversão",   f:pct},
-    {k:"custoConversao", rot:"Custo por conversão", f:brl, inv:true},
-    {k:"custo",          rot:"Custo",               f:brl, inv:true}
+    {k:"impressoes",     rot:"Impressões",   f:num},
+    {k:"cliques",        rot:"Cliques",      f:num},
+    {k:"ctr",            rot:"CTR",          f:pct},
+    {k:"cpc",            rot:"CPC médio",    f:brl, inv:true},
+    {k:"conversoes",     rot:"Conversões",   f:num},
+    {k:"taxaConversao",  rot:"Taxa de conv.",f:pct},
+    {k:"custoConversao", rot:"Por conversão",f:brl, inv:true},
+    {k:"custo",          rot:"Custo",        f:brl, inv:true}
   ];
   const total = DADOS.google.campanhas.reduce((s,c)=>s+c.atual.custo,0);
 
   return `
-  <div class="block">
-    <h2>Google Ads</h2>
-    <p class="hint">Cada campanha comparada com o período anterior. O investimento total do canal no período foi de <strong>${brl(total)}</strong>.</p>
+  <div class="bloco">
+    <h2 class="titulo">Google Ads</h2>
+    <p class="legenda">Cada campanha contra o período anterior. O canal consumiu
+      <strong>${brl(total)}</strong> no total — as três campanhas somadas, não só a de Pesquisa.</p>
   </div>
   ${DADOS.google.campanhas.map(c=>`
-    <div class="block">
-      <h3>${c.nome}</h3>
-      ${c.nota?`<p class="nota">${c.nota}</p>`:""}
-      <div class="tw">
+    <div class="bloco">
+      <span class="rotulo">${c.nome}</span>
+      ${c.nota?`<p class="aviso" style="margin-top:16px">${c.nota}</p>`:""}
+      <div class="tw" style="border-top:none">
         <table>
-          <thead><tr><th>Métrica</th><th class="r">Período atual</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
-          <tbody>${linhasComparadas(defs, c.atual, c.anterior)}</tbody>
+          <thead><tr><th>Métrica</th><th class="r">Este período</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
+          <tbody>${defs.map(d=>{
+            const va=c.atual[d.k], vb=c.anterior[d.k], vr=variacao(va,vb,d.inv);
+            return `<tr>
+              <td class="nm">${d.rot}</td>
+              <td class="r">${d.f(va)}</td>
+              <td class="r" style="color:var(--tinta-3)">${d.f(vb)}</td>
+              <td class="r" style="color:${vr? (vr.cls==="up"?"var(--pago)":vr.cls==="down"?"var(--furo)":"var(--tinta-3)") :"var(--tinta-3)"}">${vr?vr.txt:"—"}</td>
+            </tr>`;
+          }).join("")}</tbody>
         </table>
       </div>
     </div>`).join("")}
-  <div class="block">
-    <h3>Termos de pesquisa</h3>
-    <div class="tw">
+  <div class="bloco">
+    <span class="rotulo">O que as pessoas pesquisaram</span>
+    <div class="tw" style="border-top:none">
       <table>
         <thead><tr><th>Termo</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">Custo</th><th class="r">Conversões</th></tr></thead>
         <tbody>${DADOS.google.termos.map(t=>`<tr>
@@ -625,146 +669,151 @@ function abaGoogle(){
   </div>`;
 }
 
-/* --------------------------------------------------------- Landing Page */
-function abaLP(){
+/* ----------------------------------------------------------------- a página */
+function folhaLP(){
   const a = DADOS.lp.clarity.atual, b = DADOS.lp.clarity.anterior;
   return `
-  <div class="block">
-    <h2>Comportamento na Landing Page</h2>
-    <p class="hint">Como as pessoas se comportam depois que clicam no anúncio. Dados do Microsoft Clarity.</p>
-    <div class="kpis">
-      ${kpi("Profundidade de rolagem", pct(a.scroll), delta(a.scroll,b.scroll), "Até onde o visitante desce na página")}
-      ${kpi("Tempo ativo", seg(a.tempoAtivo), delta(a.tempoAtivo,b.tempoAtivo))}
-      ${kpi("Sessões", num(a.sessoes), delta(a.sessoes,b.sessoes))}
-      ${kpi("Páginas por sessão", nf2.format(a.paginasPorSessao), delta(a.paginasPorSessao,b.paginasPorSessao))}
-      ${kpi("Cliques mortos", pct(a.deadClicks), delta(a.deadClicks,b.deadClicks,true), "Clique em algo que parece botão e não é")}
-      ${kpi("Quickback", pct(a.quickback), delta(a.quickback,b.quickback,true), "Entra e volta na hora")}
+  <div class="bloco">
+    <h2 class="titulo">O que as pessoas fazem na página</h2>
+    <p class="legenda">Comportamento de quem chegou depois de clicar no anúncio. Dados do Microsoft Clarity.</p>
+    ${linhas(
+      linha("Rolagem",     pct(a.scroll), variacao(a.scroll,b.scroll),
+            "Até onde o visitante desce na página. Abaixo de 20% quer dizer que a maioria não passa da primeira dobra.") +
+      linha("Tempo ativo", seg(a.tempoAtivo), variacao(a.tempoAtivo,b.tempoAtivo)) +
+      linha("Sessões",     num(a.sessoes), variacao(a.sessoes,b.sessoes)) +
+      linha("Páginas",     nf2.format(a.paginasPorSessao), variacao(a.paginasPorSessao,b.paginasPorSessao),
+            "Páginas por sessão.") +
+      linha("Cliques mortos", pct(a.deadClicks), variacao(a.deadClicks,b.deadClicks,true),
+            "Clique em algo que parece botão e não é.") +
+      linha("Quickback",   pct(a.quickback), variacao(a.quickback,b.quickback,true),
+            "Entra e volta na hora. Quanto menor, melhor."),
+      true)}
+  </div>
+
+  <div class="bloco par">
+    <div class="quadro">
+      <h3 class="titulo">Rolagem por aparelho</h3>
+      <p class="legenda">A diferença entre celular e computador é a leitura mais acionável da página.</p>
+      ${slots(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rotulo:pct(d.scroll)})))}
+    </div>
+    <div class="quadro">
+      <h3 class="titulo">De qual aparelho chegaram</h3>
+      <p class="legenda">Onde o público realmente está.</p>
+      ${slots(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rotulo:num(d.sessoes)})))}
     </div>
   </div>
 
-  <div class="grid2 block">
-    <div class="chart">
-      <h3>Rolagem por dispositivo</h3>
-      <p class="cap">A diferença entre celular e computador é a leitura mais acionável da página.</p>
-      ${hbars(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rotulo:pct(d.scroll)})), {lw:92})}
+  <div class="bloco">
+    <span class="rotulo">Anotações da semana</span>
+    <div class="anot" style="margin-top:16px">
+      ${DADOS.lp.aprendizados.map(t=>`<p><b>—</b><span>${t}</span></p>`).join("")}
     </div>
-    <div class="chart">
-      <h3>Sessões por dispositivo</h3>
-      <p class="cap">De onde vem o público que chega na página.</p>
-      ${hbars(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rotulo:num(d.sessoes)})), {lw:92})}
-    </div>
-  </div>
-
-  <div class="block">
-    <h3>O que aprendemos</h3>
-    <div class="notes"><ul>${DADOS.lp.aprendizados.map(t=>`<li>${t}</li>`).join("")}</ul></div>
   </div>`;
 }
 
-/* ------------------------------------------------------------- Negócio */
-function abaNegocio(){
+/* ---------------------------------------------------------------- o negócio */
+function folhaNegocio(){
   const a = DADOS.negocio.atual, b = DADOS.negocio.anterior;
   return `
-  <div class="block">
-    <h2>Resultado de negócio</h2>
-    <p class="hint">O que a mídia produziu do outro lado: profissionais entrando, ativando a conta e transacionando.</p>
-    <div class="kpis">
-      ${kpi("Novos cadastros", num(a.cadastros), delta(a.cadastros,b.cadastros))}
-      ${kpi("Onboarding concluído", num(a.onboarding), delta(a.onboarding,b.onboarding))}
-      ${kpi("Contas ativadas", num(a.contasAtivas), delta(a.contasAtivas,b.contasAtivas), "Conta de pagamento aprovada")}
-      ${kpi("Agendamentos", num(a.agendamentos), delta(a.agendamentos,b.agendamentos))}
-      ${kpi("GMV", brl(a.gmv), delta(a.gmv,b.gmv))}
-    </div>
+  <div class="bloco">
+    <h2 class="titulo">O que a mídia produziu do outro lado</h2>
+    <p class="legenda">Profissionais entrando, ativando a conta e transacionando dentro do produto.</p>
+    ${linhas(
+      linha("Cadastros",   num(a.cadastros), variacao(a.cadastros,b.cadastros)) +
+      linha("Onboarding",  num(a.onboarding), variacao(a.onboarding,b.onboarding),
+            "Concluíram a configuração inicial.") +
+      linha("Contas ativas", num(a.contasAtivas), variacao(a.contasAtivas,b.contasAtivas),
+            "Conta de pagamento aprovada. Sem isso o profissional não recebe — e a Mia não fatura.") +
+      linha("Agendamentos", num(a.agendamentos), variacao(a.agendamentos,b.agendamentos)) +
+      linha("GMV",         brl(a.gmv), variacao(a.gmv,b.gmv),
+            "Volume transacionado dentro do produto."),
+      true)}
   </div>
 
-  <div class="block">
-    <div class="chart">
-      <h3>GMV por semana</h3>
-      <p class="cap">Volume transacionado dentro do produto, semana a semana.</p>
-      ${vbars(DADOS.negocio.gmvSemanal.map(s=>({rotulo:s.semana, valor:s.gmv})), v=>brl(v).replace("R$ ",""))}
+  <div class="bloco">
+    <span class="rotulo">GMV semana a semana</span>
+    <div style="margin-top:20px">
+      ${dias(DADOS.negocio.gmvSemanal.map(s=>({rotulo:s.semana, valor:s.gmv})),
+             v=>nf0.format(v))}
     </div>
+    <p class="legenda" style="margin-top:14px">Em reais, por semana de pagamento.</p>
   </div>`;
 }
 
-/* ------------------------------------------------------ Próximos passos */
-function abaPassos(){
+/* ---------------------------------------------------------------- o que vem */
+function folhaPassos(){
   return `
-  <div class="block">
-    <h2>Próximos passos</h2>
-    <p class="hint">O que fica decidido para a semana que começa.</p>
-    <ol class="steps">${DADOS.proximosPassos.map(p=>`<li>${p}</li>`).join("")}</ol>
+  <div class="bloco">
+    <h2 class="titulo">O que fica decidido</h2>
+    <p class="legenda">Para a semana que começa, em ordem de execução.</p>
+    <ol class="passos">${DADOS.proximosPassos.map(p=>`<li><span>${p}</span></li>`).join("")}</ol>
   </div>`;
 }
 
-/* -------------------------------------------------------------- montagem */
-const tablist = document.getElementById("tablist");
+/* ---------------------------------------------------------------- montagem */
+const fichario = document.getElementById("fichario");
 const main = document.getElementById("main");
 
-ABAS.forEach((ab,i)=>{
+FOLHAS.forEach((fo,i)=>{
   const b = document.createElement("button");
-  b.className="tab"; b.type="button"; b.textContent=ab.nome;
-  b.id="tab-"+ab.id; b.setAttribute("role","tab");
-  b.setAttribute("aria-selected", i===0 ? "true":"false");
-  b.setAttribute("aria-controls","p-"+ab.id);
-  b.addEventListener("click", ()=>selecionar(ab.id));
-  tablist.appendChild(b);
+  b.className="aba"; b.type="button"; b.textContent=fo.nome;
+  b.id="aba-"+fo.id; b.setAttribute("role","tab");
+  b.setAttribute("aria-selected", i===0?"true":"false");
+  b.setAttribute("aria-controls","fo-"+fo.id);
+  b.addEventListener("click", ()=>abrir(fo.id));
+  fichario.appendChild(b);
 
-  const p = document.createElement("section");
-  p.className="panel"; p.id="p-"+ab.id;
-  p.setAttribute("role","tabpanel"); p.setAttribute("aria-labelledby","tab-"+ab.id);
-  if(i>0) p.hidden = true;
-  main.appendChild(p);
+  const s = document.createElement("section");
+  s.className="folha"; s.id="fo-"+fo.id;
+  s.setAttribute("role","tabpanel"); s.setAttribute("aria-labelledby","aba-"+fo.id);
+  if(i>0) s.hidden=true;
+  main.appendChild(s);
 });
 
-function selecionar(id){
-  ABAS.forEach(ab=>{
-    const ativo = ab.id===id;
-    document.getElementById("tab-"+ab.id).setAttribute("aria-selected", ativo?"true":"false");
-    document.getElementById("p-"+ab.id).hidden = !ativo;
+function abrir(id){
+  FOLHAS.forEach(fo=>{
+    const ativo = fo.id===id;
+    document.getElementById("aba-"+fo.id).setAttribute("aria-selected", ativo?"true":"false");
+    document.getElementById("fo-"+fo.id).hidden = !ativo;
   });
-  try{ localStorage.setItem("painel:aba", id); }catch(e){}
+  try{ localStorage.setItem("agenda:folha", id); }catch(e){}
 }
 
-function renderTudo(){
-  ABAS.forEach(ab=>{ document.getElementById("p-"+ab.id).innerHTML = ab.render(); });
-  document.getElementById("brand").innerHTML =
-    `${DADOS.marca}<small>Painel de mídia e negócio</small>`;
+function desenhar(){
+  FOLHAS.forEach(fo=>{ document.getElementById("fo-"+fo.id).innerHTML = fo.render(); });
+  document.getElementById("marca").innerHTML = `${DADOS.marca}<em>agenda da semana</em>`;
 }
 
-/* período — muda os rótulos e recalcula automaticamente o período de comparação */
+/* período — recalcula sozinho o intervalo de comparação */
 const inDe = document.getElementById("de"), inAte = document.getElementById("ate");
-const elVs = document.getElementById("vs");
+const elContra = document.getElementById("contra");
+const dias_ = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000);
+const menos = (iso,d)=>{ const x=new Date(iso+"T12:00:00"); x.setDate(x.getDate()-d);
+  return x.toISOString().slice(0,10); };
 
-function diasEntre(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
-function menos(iso, dias){
-  const d = new Date(iso+"T12:00:00"); d.setDate(d.getDate()-dias);
-  return d.toISOString().slice(0,10);
-}
-
-function atualizarPeriodo(){
-  const de = inDe.value, ate = inAte.value;
-  if(!de || !ate || de > ate){ elVs.textContent = ""; return; }
-  const span = diasEntre(de, ate);
-  const antAte = menos(de, 1), antDe = menos(antAte, span);
-  DADOS.periodo.atual = {de, ate};
-  DADOS.periodo.anterior = {de:antDe, ate:antAte};
-  elVs.textContent = `${dm(de)} – ${dm(ate)}  ·  compara com ${dm(antDe)} – ${dm(antAte)}`;
+function periodo(){
+  const de=inDe.value, ate=inAte.value;
+  if(!de||!ate||de>ate){ elContra.textContent=""; return; }
+  const vao = dias_(de,ate), antAte = menos(de,1), antDe = menos(antAte,vao);
+  DADOS.periodo.atual={de,ate};
+  DADOS.periodo.anterior={de:antDe,ate:antAte};
+  elContra.textContent = `${dm(de)}–${dm(ate)} contra ${dm(antDe)}–${dm(antAte)}`;
 }
 
 inDe.value = DADOS.periodo.atual.de;
 inAte.value = DADOS.periodo.atual.ate;
-inDe.addEventListener("change", atualizarPeriodo);
-inAte.addEventListener("change", atualizarPeriodo);
-atualizarPeriodo();
-renderTudo();
+inDe.addEventListener("change", periodo);
+inAte.addEventListener("change", periodo);
+periodo();
+desenhar();
 
-const rodape = document.createElement("div");
-rodape.className = "foot";
-rodape.textContent = "Meta Ads · Google Ads · OpenAI Ads · Microsoft Clarity · GA4 · Metabase";
-main.appendChild(rodape);
+const pe = document.createElement("div");
+pe.className="rodape";
+pe.textContent="Meta Ads · Google Ads · OpenAI Ads · Microsoft Clarity · GA4 · Metabase";
+main.appendChild(pe);
 
 try{
-  const salva = localStorage.getItem("painel:aba");
-  if(salva && ABAS.some(a=>a.id===salva)) selecionar(salva);
+  const salva = localStorage.getItem("agenda:folha");
+  if(salva && FOLHAS.some(f=>f.id===salva)) abrir(salva);
 }catch(e){}
 </script>
