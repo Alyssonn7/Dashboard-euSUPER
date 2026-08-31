@@ -321,8 +321,8 @@ const RETRATO = {
     ]
   },
   meta:{
-    atual:   {alcance:14929, impressoes:40123, cliques:557,  custo:1133.05, conversoes:24, visitasLP:349},
-    anterior:{alcance:27140, impressoes:33088, cliques:1122, custo:480.38,  conversoes:0,  visitasLP:82},
+    atual:   {alcance:12737, impressoes:40124, cliques:557,  custo:1133.11, conversoes:24, visitasLP:349},
+    anterior:{alcance:24012, impressoes:33088, cliques:1122, custo:480.38,  conversoes:0,  visitasLP:84},
     criativos:[
       {nome:"ADS01-EXISTENTE",campanha:"CONVERSÃO 01-DUDA",custo:357.40,impressoes:3156, cliques:240,conversoes:7},
       {nome:"ADS-04",campanha:"ABO A/B",   custo:310.39,impressoes:5845, cliques:116,conversoes:15},
@@ -524,15 +524,19 @@ async function qGoogle(de,ate){
 }
 
 async function qMeta(de,ate){
-  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"facebook",
-    accounts:[CONTAS.meta],
-    fields:["campaign","ad_name","spend","reach","impressions","actions_link_click",
-            "actions_landing_page_view","actions_complete_registration"],
-    date_from:de,date_to:ate},"Meta Ads"));
-  return {total:{alcance:soma(r,x=>x.reach),impressoes:soma(r,x=>x.impressions),
-                 cliques:soma(r,x=>x.actions_link_click),custo:soma(r,x=>x.spend),
-                 conversoes:soma(r,x=>x.actions_complete_registration),
-                 visitasLP:soma(r,x=>x.actions_landing_page_view)},
+  const base={connector:"facebook",accounts:[CONTAS.meta],date_from:de,date_to:ate};
+  /* totais SEM dimensão: só assim o alcance vem deduplicado, igual ao Ads
+     Manager — somar o alcance por anúncio conta a mesma pessoa várias vezes */
+  const tot=linhas(await chamar("Windsor.ai","get_data",{...base,
+    fields:["spend","reach","impressions","actions_link_click",
+            "actions_landing_page_view","actions_complete_registration"]},"Meta Ads"))[0]||{};
+  const r=linhas(await chamar("Windsor.ai","get_data",{...base,
+    fields:["campaign","ad_name","spend","impressions","actions_link_click",
+            "actions_complete_registration"]},"Meta Ads"));
+  return {total:{alcance:+tot.reach||0,impressoes:+tot.impressions||0,
+                 cliques:+tot.actions_link_click||0,custo:+tot.spend||0,
+                 conversoes:+tot.actions_complete_registration||0,
+                 visitasLP:+tot.actions_landing_page_view||0},
           criativos:r.map(x=>({nome:x.ad_name,campanha:x.campaign,custo:+x.spend||0,
             impressoes:+x.impressions||0,cliques:+x.actions_link_click||0,
             conversoes:+x.actions_complete_registration||0})).sort((a,b)=>b.custo-a.custo)};

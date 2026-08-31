@@ -63,8 +63,10 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dez chamadas** por consulta: quatro fontes do Windsor × duas janelas, mais
-uma do Clarity (que só tem uma janela possível) e um SQL que devolve as duas.
+São **doze chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
+duas chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
+no Ads Manager, e uma por anúncio para a tabela), mais uma do Clarity e um SQL
+que devolve as duas janelas.
 
 O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 
