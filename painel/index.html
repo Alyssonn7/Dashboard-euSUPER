@@ -4,562 +4,320 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <style>
-/* ===========================================================================
-   Moldura em verde-mata sobre menta, cartões brancos.
-   Verde escuro é MOLDURA. As cores de dado são outras — o verde escuro
-   reprova o piso de croma como marca de gráfico (fica cinza).
-   =========================================================================== */
 :root{
-  --menta:#D8ECE3;  --casca:#FFFFFF;  --tela:#F5F8F6;  --cartao:#FFFFFF;
-  --mata:#2D6A4F;   --mata-2:#24573F; --mata-3:#1C4632;
-  --borda:#E7EDEA;  --borda-2:#EFF3F1;
-  --texto:#182821;  --texto-2:#56695F; --texto-3:#8B9C93;
-  --trilho:#EAEFEC;
-  --d1:#0E8F63;     --d2:#D07C1A;     --d3:#8C4FBF;
-  --bom:#0E7A55;    --ruim:#BC4033;
-  --bom-t:#E2F2EB;  --ruim-t:#FBE9E6;
+  --menta:#D8ECE3; --casca:#FFF; --tela:#F5F8F6; --cartao:#FFF;
+  --mata:#2D6A4F; --borda:#E7EDEA; --borda-2:#EFF3F1;
+  --texto:#182821; --texto-2:#56695F; --texto-3:#8B9C93; --trilho:#EAEFEC;
+  --d1:#0E8F63; --d2:#D07C1A; --d3:#8C4FBF;
+  --bom:#0E7A55; --ruim:#BC4033; --bom-t:#E2F2EB; --ruim-t:#FBE9E6;
+  --av:#8A5A08; --av-t:#FBF1DE;
   --sombra:0 1px 2px rgba(24,40,33,.04), 0 8px 24px -8px rgba(24,40,33,.10);
-  --menu:rgba(255,255,255,.62); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.13);
+  --menu:rgba(255,255,255,.62); --menu-bg:rgba(255,255,255,.13);
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
-    --mata:#1A3E2F; --mata-2:#224A38; --mata-3:#153426;
-    --borda:#243530; --borda-2:#1C2A25;
-    --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83;
-    --trilho:#21302B;
-    --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
-    --bom:#3EBE8B; --ruim:#E58579;
-    --bom-t:#0E2A20; --ruim-t:#2E1A17;
-    --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
-    --menu:rgba(230,239,233,.6); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.09);
-  }
-}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
+  --mata:#1A3E2F; --borda:#243530; --borda-2:#1C2A25;
+  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83; --trilho:#21302B;
+  --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
+  --bom:#3EBE8B; --ruim:#E58579; --bom-t:#0E2A20; --ruim-t:#2E1A17;
+  --av:#E0AE55; --av-t:#2E2413;
+  --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
+  --menu:rgba(230,239,233,.6); --menu-bg:rgba(255,255,255,.09);
+}}
 :root[data-theme="dark"]{
   --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
-  --mata:#1A3E2F; --mata-2:#224A38; --mata-3:#153426;
-  --borda:#243530; --borda-2:#1C2A25;
-  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83;
-  --trilho:#21302B;
+  --mata:#1A3E2F; --borda:#243530; --borda-2:#1C2A25;
+  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83; --trilho:#21302B;
   --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
-  --bom:#3EBE8B; --ruim:#E58579;
-  --bom-t:#0E2A20; --ruim-t:#2E1A17;
+  --bom:#3EBE8B; --ruim:#E58579; --bom-t:#0E2A20; --ruim-t:#2E1A17;
+  --av:#E0AE55; --av-t:#2E2413;
   --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
-  --menu:rgba(230,239,233,.6); --menu-on:#FFFFFF; --menu-bg:rgba(255,255,255,.09);
+  --menu:rgba(230,239,233,.6); --menu-bg:rgba(255,255,255,.09);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
-body{
-  background:var(--menta); color:var(--texto);
+body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:hidden;
   font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:14.5px; line-height:1.55; -webkit-font-smoothing:antialiased;
-  margin:0; padding:20px; overflow:hidden;
-}
-@supports (height:100dvh){ html,body{height:100dvh} }
-
-/* barra de rolagem discreta, como num app */
+  font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+@supports (height:100dvh){html,body{height:100dvh}}
 .rola{scrollbar-width:thin;scrollbar-color:var(--trilho) transparent}
 .rola::-webkit-scrollbar{width:10px;height:10px}
 .rola::-webkit-scrollbar-track{background:transparent}
 .rola::-webkit-scrollbar-thumb{background:var(--trilho);border-radius:99px;
   border:3px solid transparent;background-clip:content-box}
-.rola::-webkit-scrollbar-thumb:hover{background:var(--texto-3);background-clip:content-box}
-.jk{font-family:"Plus Jakarta Sans","IBM Plex Sans",sans-serif}
-.tn{font-variant-numeric:tabular-nums}
 
-/* ------------------------------------------------------------------ casca */
-.app{
-  max-width:1340px;height:100%;margin:0 auto;background:var(--casca);border-radius:26px;
-  box-shadow:0 2px 6px rgba(24,40,33,.05), 0 24px 60px -20px rgba(24,40,33,.18);
-  display:grid;grid-template-columns:236px minmax(0,1fr);overflow:hidden;
-}
+.app{max-width:1240px;height:100%;margin:0 auto;background:var(--casca);border-radius:26px;
+  box-shadow:0 2px 6px rgba(24,40,33,.05),0 24px 60px -20px rgba(24,40,33,.18);
+  display:grid;grid-template-columns:214px minmax(0,1fr);overflow:hidden}
 
-/* --------------------------------------------------------------- barra lat */
-.lado{background:var(--mata);padding:26px 16px 20px;display:flex;flex-direction:column;
-  gap:26px;overflow-y:auto;min-height:0}
-.logo{display:flex;align-items:center;gap:11px;padding:0 8px;color:#fff}
-.logo .bolha{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.16);
+.lado{background:var(--mata);padding:24px 14px 18px;display:flex;flex-direction:column;
+  gap:24px;overflow-y:auto;min-height:0}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px;color:#fff}
+.logo .b{width:31px;height:31px;border-radius:10px;background:rgba(255,255,255,.16);
   display:grid;place-items:center;flex:none}
-.logo b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:16.5px;
-  letter-spacing:-.01em;line-height:1.1}
-.logo small{display:block;font-size:10.5px;font-weight:500;color:var(--menu);
-  letter-spacing:.02em;margin-top:1px}
-
+.logo b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:16px;line-height:1.1}
+.logo small{display:block;font-size:10px;font-weight:500;color:var(--menu);margin-top:1px}
 .menu{display:flex;flex-direction:column;gap:3px;flex:1}
-.item{
-  display:flex;align-items:center;gap:12px;width:100%;
-  padding:11px 12px;border-radius:11px;border:none;background:none;cursor:pointer;
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:13.5px;font-weight:600;
-  color:var(--menu);text-align:left;transition:background .16s,color .16s;
-}
-.item svg{width:19px;height:19px;flex:none;stroke:currentColor;stroke-width:1.7;
-  fill:none;stroke-linecap:round;stroke-linejoin:round}
-.item:hover{background:var(--menu-bg);color:var(--menu-on)}
-.item[aria-selected="true"]{background:var(--menu-bg);color:var(--menu-on)}
-.item .pt{margin-left:auto;width:7px;height:7px;border-radius:50%;background:#fff;
-  opacity:0;flex:none}
+.item{display:flex;align-items:center;gap:11px;width:100%;padding:11px 12px;border-radius:11px;
+  border:none;background:none;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:13.5px;font-weight:600;color:var(--menu);text-align:left;position:relative}
+.item svg{width:18px;height:18px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.item:hover,.item[aria-selected="true"]{background:var(--menu-bg);color:#fff}
+.item .pt{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#fff;opacity:0}
 .item[aria-selected="true"] .pt{opacity:1}
 .item:focus-visible{outline:2px solid #fff;outline-offset:1px}
+.imp{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;
+  border:none;background:#fff;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:12.5px;font-weight:700;color:var(--mata)}
+.imp svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round}
 
-.imprimir{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  padding:12px;border-radius:12px;border:none;background:#fff;cursor:pointer;
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;color:var(--mata);
-}
-.imprimir svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none;
-  stroke-linecap:round;stroke-linejoin:round}
-.imprimir:hover{background:#F0F5F2}
-.imprimir:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.tela{background:var(--tela);display:grid;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);min-width:0;overflow:hidden}
 
-/* -------------------------------------------------------------------- tela */
-.tela{background:var(--tela);display:grid;
-  grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);
-  min-width:0;overflow:hidden}
-.topo{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  padding:18px 24px;border-bottom:1px solid var(--borda);background:var(--tela)}
-#main{overflow-y:auto;overflow-x:hidden;min-height:0;padding:20px 24px 28px;
-  overscroll-behavior:contain}
-
-/* faixa de período — fica fora da rolagem, sempre visível na apresentação */
-.pfaixa{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  padding:12px 24px;border-bottom:1px solid var(--borda);background:var(--cartao)}
-.pgrupo{display:flex;align-items:center;gap:7px;min-width:0;flex-wrap:wrap}
-.pet{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--texto-3);white-space:nowrap}
-.pgrupo input[type=date]{
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
-  font-variant-numeric:tabular-nums;padding:7px 9px;border-radius:9px;
-  border:1px solid var(--borda);background:var(--cartao);color:var(--texto);
-}
-.pgrupo input[type=date]:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
-.pseta{color:var(--texto-3);font-size:12px}
-.pvs{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
-  color:var(--texto-3);padding:0 2px;white-space:nowrap}
-.pauto{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
-  padding:7px 11px;border-radius:9px;border:1px solid var(--borda);
-  background:var(--cartao);color:var(--texto-2);cursor:pointer;white-space:nowrap}
-.pauto:hover{background:var(--tela);color:var(--texto)}
-.pauto:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
-.pdias{font-size:11.5px;color:var(--texto-3);white-space:nowrap;
-  font-variant-numeric:tabular-nums;padding-left:4px}
-.pdias.torto{color:var(--ruim);font-weight:600}
-.busca{position:relative;flex:1;min-width:190px;max-width:330px}
-.busca svg{position:absolute;right:13px;top:50%;transform:translateY(-50%);
-  width:16px;height:16px;stroke:var(--texto-3);stroke-width:1.8;fill:none;
-  stroke-linecap:round;pointer-events:none}
-.busca input{
-  width:100%;font:inherit;font-size:13.5px;padding:10px 38px 10px 15px;
-  border:1px solid var(--borda);border-radius:11px;background:var(--cartao);
-  color:var(--texto);
-}
-.busca input::placeholder{color:var(--texto-3)}
-.busca input:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
-.quando{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
-.quando input[type=date]{
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
-  font-variant-numeric:tabular-nums;padding:9px 11px;border-radius:10px;
-  border:1px solid var(--borda);background:var(--cartao);color:var(--texto);
-}
-.quando input[type=date]:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
-.tracinho{color:var(--texto-3);font-size:13px}
-.icone{width:38px;height:38px;border-radius:11px;border:1px solid var(--borda);
-  background:var(--cartao);cursor:pointer;display:grid;place-items:center;color:var(--texto-2)}
-.icone svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none;
-  stroke-linecap:round;stroke-linejoin:round}
-.icone:hover{background:var(--tela)}
-.icone:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
-.eu{width:38px;height:38px;border-radius:50%;background:var(--mata);color:#fff;
-  display:grid;place-items:center;font-family:"Plus Jakarta Sans",sans-serif;
-  font-weight:700;font-size:12.5px;flex:none}
-
-.folha[hidden]{display:none}
-.faixa{display:grid;gap:16px;margin-bottom:16px}
-.faixa.dois{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
-.faixa.meio{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-
-/* ----------------------------------------------------------------- cartões */
-.cx{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;
-  padding:19px 21px;box-shadow:var(--sombra);min-width:0}
-.cx-topo{display:flex;align-items:flex-start;justify-content:space-between;
-  gap:14px;margin-bottom:16px}
-.cx h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:14.5px;font-weight:700;
-  margin:0;letter-spacing:-.005em;color:var(--texto)}
-.cx h3 + .sub{margin-top:3px}
-.sub{font-size:12.5px;color:var(--texto-3);margin:0;line-height:1.5}
-.selo{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
-  padding:6px 11px;border-radius:9px;background:var(--mata);color:#fff;white-space:nowrap}
-.selo.claro{background:var(--trilho);color:var(--texto-2)}
-
-/* veredito — o cartão escuro é a tese da semana */
-.tese{background:var(--mata);border:none;color:#fff;padding:24px 26px}
-.tese .et{font-family:"Plus Jakarta Sans",sans-serif;font-size:10.5px;font-weight:700;
-  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px}
-.tese p{margin:0;font-size:16px;line-height:1.62;max-width:82ch;color:#fff}
-
-/* --------------------------------------------------------------- métricas */
-.tiles{display:flex;flex-wrap:wrap;gap:1px;
-  background:var(--borda-2);border-radius:12px;overflow:hidden}
-.tile{background:var(--cartao);padding:15px 16px;flex:1 1 146px;min-width:0}
-.tile .l{font-size:11.5px;font-weight:500;color:var(--texto-3);margin-bottom:7px;
-  line-height:1.35}
-.tile .v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:22px;
-  letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--texto)}
-.pilula{display:inline-flex;align-items:center;gap:4px;margin-top:8px;
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
-  font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:99px}
-.pilula.up{background:var(--bom-t);color:var(--bom)}
-.pilula.down{background:var(--ruim-t);color:var(--ruim)}
-.pilula.flat{background:var(--trilho);color:var(--texto-3)}
-.tile .nt{font-size:11px;color:var(--texto-3);margin-top:7px;line-height:1.45}
-
-/* ------------------------------------------------------------------ barras */
-.bars{display:flex;align-items:flex-end;gap:8px;height:158px}
-.bcol{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
-  align-items:center;gap:8px;height:100%;min-width:0}
-.bcol .bv{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--texto-3);white-space:nowrap}
-.bcol .bb{width:100%;max-width:40px;background:var(--trilho);border-radius:6px 6px 3px 3px;
-  min-height:4px;transition:height .4s cubic-bezier(.22,.61,.36,1)}
-.bcol.on .bb{background:var(--d1)}
-.bcol.on .bv{color:var(--texto);font-size:11.5px}
-.blabs{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--borda-2)}
-.blabs span{flex:1;text-align:center;font-size:11px;color:var(--texto-3);min-width:0}
-
-/* -------------------------------------------------------- linhas de trilho */
-.rows{display:flex;flex-direction:column;gap:11px}
-.row{display:grid;grid-template-columns:var(--rl,104px) 1fr auto;gap:12px;align-items:center}
-.row .rn{font-size:12.5px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;
-  white-space:nowrap}
-.row .rt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
-.row .rf{display:block;height:100%;border-radius:99px;background:var(--d1);min-width:4px;
-  transition:width .4s cubic-bezier(.22,.61,.36,1)}
-.row .rv{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:700;
-  font-variant-numeric:tabular-nums;color:var(--texto);white-space:nowrap;text-align:right;
-  min-width:66px}
-.row.mau .rf{background:var(--ruim)} .row.mau .rn,.row.mau .rv{color:var(--ruim)}
-
-/* ------------------------------------------------------------------ roscas */
-.roscas{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px}
-.rosca{display:flex;align-items:center;gap:12px}
-.rosca svg{width:72px;height:72px;flex:none;transform:rotate(-90deg)}
-.rosca .mid{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:15px;
-  font-variant-numeric:tabular-nums}
-.rosca .tx b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;
-  font-weight:700;color:var(--texto);line-height:1.3}
-.rosca .tx span{display:block;font-size:11.5px;color:var(--texto-3);margin-top:4px;
-  line-height:1.45}
-
-/* -------------------------------------------------------------------- área */
-.area{width:100%;height:auto;display:block}
-.area .gd{stroke:var(--borda);stroke-width:1}
-.area .ln{fill:none;stroke:var(--d1);stroke-width:2.2;stroke-linecap:round;
+/* ---------------- barra de consulta: é o coração do painel ---------------- */
+.consulta{background:var(--cartao);border-bottom:1px solid var(--borda);padding:14px 22px;
+  display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.cg{display:flex;flex-direction:column;gap:5px}
+.cg label{font-family:"Plus Jakarta Sans",sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--texto-3)}
+.cg .par{display:flex;align-items:center;gap:6px}
+.cg input[type=date]{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
+  font-variant-numeric:tabular-nums;padding:8px 10px;border-radius:9px;border:1px solid var(--borda);
+  background:var(--cartao);color:var(--texto)}
+.cg input:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
+.cg .seta{color:var(--texto-3);font-size:12px}
+.puxar{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
+  padding:11px 20px;border-radius:10px;border:none;background:var(--mata);color:#fff;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.puxar:hover{filter:brightness(1.1)}
+.puxar:disabled{opacity:.6;cursor:default}
+.puxar:focus-visible{outline:2px solid var(--mata);outline-offset:2px}
+.puxar .gira{width:14px;height:14px;border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;border-radius:50%;animation:gira .8s linear infinite;display:none}
+.puxar.indo .gira{display:block}
+@keyframes gira{to{transform:rotate(360deg)}}
+.ferram{display:flex;gap:8px;margin-left:auto;align-items:center}
+.ic{width:36px;height:36px;border-radius:10px;border:1px solid var(--borda);background:var(--cartao);
+  cursor:pointer;display:grid;place-items:center;color:var(--texto-2)}
+.ic svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;
   stroke-linejoin:round}
-.area .pt{fill:var(--cartao);stroke:var(--d1);stroke-width:2;cursor:default}
-.area .pt:hover{fill:var(--d1)}
-.axl{display:flex;margin-top:8px}
-.axl span{flex:1;text-align:center;font-size:10.5px;color:var(--texto-3)}
+.ic:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
+.eu{width:36px;height:36px;border-radius:50%;background:var(--mata);color:#fff;display:grid;
+  place-items:center;font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:12px}
+.estado{width:100%;font-size:11.5px;color:var(--texto-3);display:flex;gap:14px;flex-wrap:wrap}
+.estado b{font-weight:600;color:var(--texto-2)}
+.estado .alerta{color:var(--ruim);font-weight:600}
 
-/* ----------------------------------------------------------------- tabelas */
-.tw{overflow-x:auto;margin:0 -21px -19px;padding:0 21px}
+#main{overflow-y:auto;overflow-x:hidden;min-height:0;padding:20px 22px 28px;
+  overscroll-behavior:contain}
+.folha[hidden]{display:none}
+.faixa{display:grid;gap:14px;margin-bottom:14px}
+.faixa.dois{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+
+.cx{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;padding:19px 21px;
+  box-shadow:var(--sombra);min-width:0}
+.cx h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:14px;font-weight:700;margin:0}
+.cx .sub{font-size:12.5px;color:var(--texto-3);margin:3px 0 0}
+.cxt{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
+.selo{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;padding:5px 10px;
+  border-radius:8px;background:var(--trilho);color:var(--texto-2);white-space:nowrap}
+.proc{font-size:11px;color:var(--texto-3);margin:15px 0 0;padding-top:12px;
+  border-top:1px solid var(--borda-2);line-height:1.5}
+.falhou{background:var(--ruim-t);color:var(--ruim);border-radius:10px;padding:11px 14px;
+  font-size:12.5px;margin:0 0 14px;line-height:1.5}
+.falhou b{display:block;margin-bottom:3px}
+.aviso{background:var(--av-t);color:var(--av);border-radius:10px;padding:11px 14px;
+  font-size:12.5px;margin:0 0 14px;line-height:1.5}
+
+/* ---- os cinco números: grandes, sem enfeite ---- */
+.cinco{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;
+  background:var(--borda-2);border-radius:16px;overflow:hidden;border:1px solid var(--borda);
+  box-shadow:var(--sombra)}
+.n{background:var(--cartao);padding:20px 21px}
+.n .l{font-size:12px;font-weight:500;color:var(--texto-3);margin-bottom:9px}
+.n .v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;
+  font-size:clamp(22px,2vw,26px);letter-spacing:-.03em;line-height:1.08;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.n .d{display:inline-flex;align-items:center;gap:4px;margin-top:9px;
+  font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+  font-variant-numeric:tabular-nums;padding:3px 9px;border-radius:99px}
+.n .d.up{background:var(--bom-t);color:var(--bom)}
+.n .d.down{background:var(--ruim-t);color:var(--ruim)}
+.n .d.flat{background:var(--trilho);color:var(--texto-3)}
+.n .a{font-size:11px;color:var(--texto-3);margin-top:8px}
+
+.frase{background:var(--mata);border-radius:16px;padding:23px 25px;color:#fff;margin-bottom:14px}
+.frase .et{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:9px}
+.frase p{margin:0;font-size:15.5px;line-height:1.62;max-width:84ch}
+.nota{margin-top:16px;padding-top:15px;border-top:1px solid rgba(255,255,255,.16)}
+.nota .et{color:rgba(255,255,255,.5)}
+.nota textarea{width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);
+  border-radius:9px;color:#fff;font:inherit;font-size:13.5px;padding:10px 12px;resize:vertical;
+  min-height:52px;line-height:1.5}
+.nota textarea::placeholder{color:rgba(255,255,255,.45)}
+.nota textarea:focus-visible{outline:2px solid #fff;outline-offset:1px}
+
 table{border-collapse:collapse;width:100%;font-size:13px}
+.tw{overflow-x:auto;margin:0 -21px -19px;padding:0 21px}
 thead th{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--texto-3);text-align:left;padding:0 12px 10px 0;
-  border-bottom:1px solid var(--borda);white-space:nowrap}
+  color:var(--texto-3);text-align:left;padding:0 12px 10px 0;border-bottom:1px solid var(--borda);
+  white-space:nowrap}
 thead th.r{text-align:right}
-tbody td{padding:12px 12px 12px 0;border-bottom:1px solid var(--borda-2);
-  color:var(--texto-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+tbody td{padding:12px 12px 12px 0;border-bottom:1px solid var(--borda-2);color:var(--texto-2);
+  white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td.r{text-align:right}
-tbody td.nm{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:13px;
-  color:var(--texto)}
-tbody tr:hover td{background:var(--tela)}
+tbody td.nm{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;color:var(--texto)}
+tbody td.nm span{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:2px}
 tbody tr:last-child td{border-bottom:none}
-tfoot td{padding:12px 12px;border-top:1px solid var(--borda);font-weight:600;
-  color:var(--texto);white-space:nowrap;font-variant-numeric:tabular-nums;
-  background:var(--tela)}
+tfoot td{padding:12px;border-top:1px solid var(--borda);font-weight:600;color:var(--texto);
+  white-space:nowrap;font-variant-numeric:tabular-nums;background:var(--tela)}
 tfoot td.r{text-align:right}
-tfoot td:first-child{border-radius:0 0 0 10px} tfoot td:last-child{border-radius:0 0 10px 0}
 .up{color:var(--bom)} .down{color:var(--ruim)} .flat{color:var(--texto-3)}
 
-/* ------------------------------------------------------------------- listas */
-.ord{list-style:none;counter-reset:o;padding:0;margin:0;display:flex;
-  flex-direction:column;gap:2px}
-.ord li{counter-increment:o;display:grid;grid-template-columns:24px 1fr auto;gap:11px;
-  align-items:baseline;padding:9px 0;border-bottom:1px solid var(--borda-2);font-size:13px;
-  color:var(--texto-2)}
-.ord li:last-child{border-bottom:none}
-.ord li::before{content:counter(o) ".";font-family:"Plus Jakarta Sans",sans-serif;
-  font-weight:700;font-size:12px;color:var(--texto-3)}
-.ord li b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:12.5px;
-  color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
-.notas{display:flex;flex-direction:column;gap:0}
-.notas p{margin:0;padding:13px 0;border-bottom:1px solid var(--borda-2);font-size:13.5px;
-  color:var(--texto-2);max-width:78ch}
-.notas p:last-child{border-bottom:none}
-.passos{list-style:none;counter-reset:s;padding:0;margin:0;display:flex;
-  flex-direction:column;gap:11px}
-.passos li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:14px;
-  align-items:start;background:var(--cartao);border:1px solid var(--borda);
-  border-radius:13px;padding:16px 18px;font-size:14px;color:var(--texto-2)}
-.passos li::before{content:counter(s,decimal-leading-zero);
-  font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:15px;color:var(--d1)}
-.passos li span{max-width:74ch}
-.recado{font-size:12.5px;color:var(--texto-2);background:var(--tela);
-  border-radius:10px;padding:11px 14px;margin:0 0 15px;line-height:1.55;max-width:82ch}
-.vazio{font-size:13px;color:var(--texto-3);padding:16px 0}
-.proc{font-size:11px;color:var(--texto-3);line-height:1.5;margin:15px 0 0;
-  padding-top:12px;border-top:1px solid var(--borda-2)}
-.mini{font-style:normal;font-size:11px;color:var(--texto-3);font-weight:500}
-.aster{font-style:normal;color:var(--d2);font-weight:700}
-.sub2{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:2px}
-.fonte{display:grid;grid-template-columns:1fr auto auto;gap:3px 10px;
-  padding:11px 0;border-bottom:1px solid var(--borda-2)}
-.fonte:last-child{border-bottom:none}
-.fonte .fn{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:13px;
-  color:var(--texto)}
-.fonte .fj{font-size:11.5px;color:var(--texto-2);font-variant-numeric:tabular-nums;
-  white-space:nowrap;align-self:center}
-.fonte .fe{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;
-  white-space:nowrap;align-self:center}
-.fonte .fe.ok{background:var(--bom-t);color:var(--bom)}
-.fonte .fe.parcial{background:#FBF1DE;color:#8A5A08}
-.fonte .fe.falta{background:var(--ruim-t);color:var(--ruim)}
-.fonte .fo{grid-column:1/-1;font-size:11.5px;color:var(--texto-3);line-height:1.5}
+.bars{display:flex;align-items:flex-end;gap:9px;height:140px}
+.bc{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;
+  height:100%;min-width:0}
+.bc .bv{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
+  font-variant-numeric:tabular-nums;color:var(--texto-3)}
+.bc .bb{width:100%;max-width:42px;background:var(--trilho);border-radius:6px 6px 3px 3px;min-height:4px}
+.bc.on .bb{background:var(--d1)} .bc.on .bv{color:var(--texto)}
+.blabs{display:flex;gap:9px;margin-top:9px;padding-top:9px;border-top:1px solid var(--borda-2)}
+.blabs span{flex:1;text-align:center;font-size:10.5px;color:var(--texto-3);min-width:0}
 
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-/* telas médias: menu recolhe para só ícones, o conteúdo ganha a largura */
+.linha{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:10px 0;border-bottom:1px solid var(--borda-2)}
+.linha:last-child{border-bottom:none}
+.linha .ln{font-size:13px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.linha .lt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
+.linha .lf{display:block;height:100%;border-radius:99px;min-width:4px}
+.linha .lv{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:700;
+  font-variant-numeric:tabular-nums;text-align:right;min-width:78px}
+.vazio{font-size:13px;color:var(--texto-3);padding:14px 0}
+.passos{list-style:none;counter-reset:s;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.passos li{counter-increment:s;display:grid;grid-template-columns:32px 1fr;gap:13px;
+  background:var(--cartao);border:1px solid var(--borda);border-radius:13px;padding:15px 17px;
+  font-size:14px;color:var(--texto-2)}
+.passos li::before{content:counter(s,decimal-leading-zero);
+  font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:14px;color:var(--d1)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1240px){
-  .app{grid-template-columns:74px minmax(0,1fr)}
-  .lado{padding:22px 12px 18px;align-items:center}
-  .logo{padding:0}
-  .logo span:not(.bolha){display:none}
-  .item{justify-content:center;padding:12px 0;gap:0;position:relative}
-  .item .lbl{display:none}
-  .item .pt{display:none}
-  /* recolhido, o item ativo vira uma pastilha branca com o ícone escuro */
+  .app{grid-template-columns:70px minmax(0,1fr)}
+  .lado{padding:20px 11px 16px;align-items:center}
+  .logo{padding:0} .logo span:not(.b){display:none}
+  .item{justify-content:center;padding:12px 0;gap:0} .item .lbl{display:none} .item .pt{display:none}
   .item[aria-selected="true"]{background:#fff;color:var(--mata)}
-  .item[aria-selected="true"]:hover{background:#fff;color:var(--mata)}
-  .imprimir{padding:12px 0}
-  .imprimir span{display:none}
+  .imp{padding:11px 0} .imp span{display:none}
 }
-@media (max-width:1080px){
-  .faixa.dois{grid-template-columns:minmax(0,1fr)}
-}
+@media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){
-  body{padding:0;overflow:hidden}
-  .app{border-radius:0;grid-template-columns:minmax(0,1fr);
-    grid-template-rows:auto minmax(0,1fr)}
-  .lado{flex-direction:row;align-items:center;gap:10px;padding:11px 12px;
-    overflow-x:auto;overflow-y:hidden}
-  .logo{flex:none}
+  body{padding:0}
+  .app{border-radius:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .lado{flex-direction:row;gap:9px;padding:10px 11px;overflow-x:auto;overflow-y:hidden}
   .menu{flex-direction:row;flex:none;gap:4px}
   .item{padding:10px 12px;white-space:nowrap;justify-content:flex-start}
-  .item .lbl{display:inline}
-  .item .pt{display:none}
-  .imprimir{display:none}
-  .topo{padding:12px 14px;gap:10px}
-  .pfaixa{padding:12px 14px;gap:9px}
-  .pgrupo{flex:1 1 100%}
-  .pgrupo input[type=date]{flex:1;min-width:0}
-  .pvs{display:none}
-  .pauto{flex:1 1 100%;text-align:center}
-  .busca{max-width:none;flex:1;min-width:0}
-  .quando{flex:none}
+  .item .lbl{display:inline} .imp{display:none}
+  .consulta{padding:12px 14px;gap:10px}
+  .cg{flex:1 1 100%} .cg input[type=date]{flex:1;min-width:0} .cg .par{width:100%}
+  .puxar{flex:1 1 100%;justify-content:center}
+  .ferram{margin-left:0}
   #main{padding:14px 14px 24px}
-  .cx{padding:16px 17px;border-radius:14px}
-  .tese{padding:19px 20px}
-  .tese p{font-size:15px}
-  .faixa{gap:12px;margin-bottom:12px}
-  .bars{height:132px}
-  .roscas{grid-template-columns:minmax(0,1fr)}
-  .tw{margin:0 -17px -16px;padding:0 17px}
-}
-@media (max-width:420px){
-  .tiles{grid-template-columns:minmax(0,1fr)}
-  .row{grid-template-columns:82px minmax(0,1fr) auto;gap:8px}
-  .row .rv{min-width:0}
+  .cx{padding:16px 17px} .tw{margin:0 -17px -16px;padding:0 17px}
+  .n .v{font-size:26px}
+  .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
+  .linha .lv{min-width:0}
 }
 @media print{
-  html,body{height:auto;overflow:visible}
-  body{background:#fff;padding:0}
+  html,body{height:auto;overflow:visible} body{background:#fff;padding:0}
   #main{overflow:visible!important;padding:0}
-  .app{box-shadow:none;border-radius:0;grid-template-columns:1fr;display:block;height:auto}
-  .lado,.topo,.icone,.pauto{display:none!important}
-  .pfaixa{border:none;padding:0 0 14px;background:#fff}
-  .pgrupo input[type=date]{border:none;padding:0 4px;background:#fff}
-  .tela{background:#fff;padding:0;display:block;overflow:visible}
+  .app{box-shadow:none;border-radius:0;display:block;height:auto}
+  .lado,.puxar,.ic,.ferram{display:none!important}
+  .tela{display:block;overflow:visible;background:#fff}
+  .consulta{border:none;padding:0 0 14px}
   .cx{break-inside:avoid;box-shadow:none}
   .faixa.dois{grid-template-columns:1fr}
 }
 </style>
+
 <script>
 /* =========================================================================
-   DADOS DA SEMANA — puxados de verdade em 31/08/2026.
-
-   Janela: 24/08–30/08 contra 17/08–23/08 (semanas fechadas, segunda a domingo).
-   Toda métrica tem `atual` e `anterior`; o painel calcula as variações.
-   Percentual como número (8.37 = 8,37%). Dinheiro em reais (449.18).
-
-   `null` em atual significa NÃO RODOU na janela — o painel escreve isso em
-   vez de inventar zero. Cada bloco carrega a fonte e a janela real de onde
-   o número veio, e isso aparece na tela.
+   RETRATO GRAVADO — o que o painel mostra antes de você clicar em "Puxar".
+   Puxado em 31/08/2026 para 24/08–30/08 contra 17/08–23/08.
+   O botão "Puxar dados" substitui tudo isto por uma consulta ao vivo.
    ========================================================================= */
-const DADOS = {
-  marca: "Mia",
-  puxadoEm: "31/08/2026",
-  periodo: {
-    atual:    { de: "2026-08-24", ate: "2026-08-30" },
-    anterior: { de: "2026-08-17", ate: "2026-08-23" }
+const RETRATO = {
+  puxadoEm: "31/08/2026 (gravado)",
+  aoVivo: false,
+  periodo: { atual:{de:"2026-08-24",ate:"2026-08-30"}, anterior:{de:"2026-08-17",ate:"2026-08-23"} },
+  resumo: {
+    atual:    { investimento:1684.21, cadastros:65,  pagamentos:41, gmv:1328.00 },
+    anterior: { investimento:1351.84, cadastros:128, pagamentos:18, gmv:751.00 }
   },
-
-  veredito:
-    "O investimento subiu 25% e os cadastros caíram pela metade: 65 contra 128. " +
-    "A troca foi de canal — a Performance Max e as campanhas de Visita ao Perfil " +
-    "foram desligadas, e o Meta mais que dobrou de verba, saindo de R$ 299 para " +
-    "R$ 1.133 na campanha de conversão. Isso levou o custo por cadastro de R$ 10,56 " +
-    "para R$ 25,91. Do lado bom, o Google Pesquisa voltou a converter depois da " +
-    "recriação da campanha — 20 conversões a R$ 22,46, contra zero na semana anterior — " +
-    "e o GMV subiu 77%, de R$ 751 para R$ 1.328, com 41 pagamentos contra 18.",
-
-  /* de onde cada número veio — é isto que responde "posso confiar?" */
-  fontes: [
-    { nome:"Google Ads",  via:"Windsor · google_ads · conta 326-604-5511",
-      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
-      obs:"Janela exata. Pesquisa, Performance Max e YouTube separados." },
-    { nome:"Meta Ads",    via:"Windsor · facebook · conta 604915332642452",
-      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
-      obs:"Janela exata, por anúncio. Cadastros vêm do pixel (actions_complete_registration)." },
-    { nome:"Negócio",     via:"Metabase · Mia Production · SQL",
-      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
-      obs:"Coorte de cadastro por data. Exclui perfis de teste e deletados." },
-    { nome:"Sessões na LP", via:"Windsor · googleanalytics4 · propriedade 511677134",
-      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
-      obs:"Só o hostname miaapp.com.br. Inclui tráfego que não veio de anúncio." },
-    { nome:"Comportamento na página", via:"Windsor · microsoft_clarity · conta 1347",
-      janela:"28/08–30/08 (3 dias)", estado:"parcial",
-      obs:"A API do Clarity só devolve os últimos 3 dias. Não cobre a janela e não entra no funil." },
-    { nome:"OpenAI Ads",  via:"connector openai_ads — não conectado",
-      janela:"—", estado:"falta",
-      obs:"Precisa de uma API key do Ads Manager. Sem ela não há impressões, gasto nem CPA." }
+  canais: [
+    { nome:"Google Ads", cor:"var(--d2)", atual:{gasto:551.16, cliques:218, conversoes:20},
+      anterior:{gasto:871.46, cliques:832, conversoes:0} },
+    { nome:"Meta Ads",   cor:"var(--d3)", atual:{gasto:1133.05, cliques:557, conversoes:24},
+      anterior:{gasto:480.38, cliques:1122, conversoes:0} },
+    { nome:"OpenAI Ads", cor:"var(--d1)", atual:null, anterior:null, erro:"não conectado" }
   ],
-
-  /* ---------------------------------------------------------------- Google */
-  google: {
-    fonte:"Windsor · google_ads · conta 326-604-5511",
-    campanhas: [
-      { nome:"Pesquisa",
-        nota:"Voltou a converter depois da recriação da campanha em 20/08: 20 conversões contra zero na semana anterior.",
-        atual:    { impressoes:1959, cliques:164, cpc:2.74, ctr:8.37, conversoes:20, custoConversao:22.46, custo:449.18, taxaConversao:12.20 },
-        anterior: { impressoes:2160, cliques:198, cpc:2.78, ctr:9.17, conversoes:0,  custoConversao:null,  custo:550.09, taxaConversao:0 } },
-      { nome:"Performance Max",
-        nota:"Desligada nesta janela. Consumiu R$ 180,92 na semana anterior sem nenhuma conversão.",
-        atual:    null,
-        anterior: { impressoes:12899, cliques:452, cpc:0.40, ctr:3.50, conversoes:0, custoConversao:null, custo:180.92, taxaConversao:0 } },
-      { nome:"YouTube",
-        nota:"Entrega subiu e o clique encareceu: CPC de R$ 0,77 para R$ 1,89, ainda sem conversão medida.",
-        atual:    { impressoes:10759, cliques:54,  cpc:1.89, ctr:0.50, conversoes:0, custoConversao:null, custo:101.98, taxaConversao:0 },
-        anterior: { impressoes:14051, cliques:182, cpc:0.77, ctr:1.30, conversoes:0, custoConversao:null, custo:140.45, taxaConversao:0 } }
-    ]
+  funil: {
+    atual:{ sessoes:1781, cadastros:65, onboarding:56, contasAtivas:2 },
+    anterior:{ sessoes:3393, cadastros:128, onboarding:109, contasAtivas:13 }
   },
-
-  /* ------------------------------------------------------------------ Meta */
-  meta: {
-    fonte:"Windsor · facebook · conta 604915332642452",
-    objetivos: [
-      { nome:"Conversão",
-        atual:    { gasto:1133.05, alcance:14929, impressoes:40123, cpm:28.24, ctr:1.39, cliques:557, visitasLP:349, connectRate:62.66, cadastros:24, custoCadastro:47.21 },
-        anterior: { gasto:298.90,  alcance:4300,  impressoes:6191,  cpm:48.28, ctr:2.18, cliques:135, visitasLP:82,  connectRate:60.74, cadastros:0,  custoCadastro:null },
-        criativos: [
-          { nome:"ADS01-EXISTENTE", campanha:"CONVERSÃO 01-DUDA", gasto:357.40, alcance:2227, impressoes:3156,  cpm:113.24, ctr:7.60, cliques:240, visitasLP:179, cadastros:7 },
-          { nome:"ADS-04", campanha:"ABO A/B",     gasto:310.39, alcance:4903, impressoes:5845,  cpm:53.10, ctr:1.98, cliques:116, visitasLP:71, cadastros:15 },
-          { nome:"ADS-02", campanha:"CBO SIGNUP",  gasto:206.62, alcance:3420, impressoes:8110,  cpm:25.48, ctr:0.75, cliques:61,  visitasLP:42, cadastros:0 },
-          { nome:"ADS-01", campanha:"CBO SIGNUP",  gasto:108.09, alcance:2433, impressoes:20782, cpm:5.20,  ctr:0.45, cliques:93,  visitasLP:29, cadastros:1 },
-          { nome:"ADS-05", campanha:"ABO A/B",     gasto:61.06,  alcance:658,  impressoes:803,   cpm:76.04, ctr:3.24, cliques:26,  visitasLP:16, cadastros:1 },
-          { nome:"ADS-03", campanha:"ABO A/B",     gasto:42.07,  alcance:560,  impressoes:614,   cpm:68.52, ctr:1.30, cliques:8,   visitasLP:5,  cadastros:0 },
-          { nome:"ADS-02", campanha:"ABO A/B",     gasto:37.91,  alcance:591,  impressoes:663,   cpm:57.18, ctr:1.06, cliques:7,   visitasLP:4,  cadastros:0 },
-          { nome:"ADS-01", campanha:"ABO A/B",     gasto:9.51,   alcance:137,  impressoes:150,   cpm:63.40, ctr:4.00, cliques:6,   visitasLP:3,  cadastros:0 }
-        ] },
-      { nome:"Visita ao Perfil",
-        nota:"As seis campanhas de visita ao perfil foram desligadas em 24/08. Os números abaixo são da semana anterior, para registro.",
-        atual: null,
-        anterior: { gasto:181.48, alcance:22840, impressoes:26897, cpm:6.75, ctr:3.67, cliques:987, visitasPerfil:50, custoVisita:3.63 },
-        criativos: [] }
-    ]
-  },
-
-  /* ------------------------------------------------------------- Landing Page */
-  lp: {
-    ga4: {
-      fonte:"Windsor · googleanalytics4 · hostname miaapp.com.br",
-      atual:{ sessoes:1781 }, anterior:{ sessoes:3393 }
-    },
-    clarity: {
-      fonte:"Windsor · microsoft_clarity · conta 1347",
-      janela:"28/08–30/08 (3 dias — a API não devolve histórico)",
-      atual:{ scroll:16.70, tempoAtivo:30, sessoes:396, usuarios:426,
-              paginasPorSessao:1.30, deadClicks:2.78, quickbackCliques:30, rageClicks:0 }
-    },
-    aprendizados: {
-      origem:"Anotações manuais do relatório de 20/08 — não vêm de API.",
-      itens:[
-        "Mockup estático com texto não funciona como gancho — os próximos sites terão um novo formato na Hero.",
-        "Botões mais clicados, em ordem: “Veja como”, “Quero meu link Mia” e “Ver taxas”.",
-        "A técnica de motion aplicada no botão “Veja como” se mostrou eficaz com esse público."
-      ]
-    }
-  },
-
-  /* --------------------------------------------------------------- Negócio */
-  negocio: {
-    fonte:"Metabase · Mia Production",
-    /* coorte: quem se cadastrou DENTRO da janela */
-    coorte: {
-      atual:    { cadastros:65,  onboarding:56,  contasAtivas:2 },
-      anterior: { cadastros:128, onboarding:109, contasAtivas:13 }
-    },
-    /* plataforma: TODOS os profissionais, não só os novos */
-    plataforma: {
-      atual:    { agendamentos:820,  pagamentos:41, gmv:1328.00 },
-      anterior: { agendamentos:1088, pagamentos:18, gmv:751.00 }
-    },
-    gmvSemanal: [
-      { semana:"20/07", gmv:659.05 },  { semana:"27/07", gmv:1037.05 },
-      { semana:"03/08", gmv:1111.55 }, { semana:"10/08", gmv:1365.00 },
-      { semana:"17/08", gmv:751.00 },  { semana:"24/08", gmv:1328.00 }
-    ]
-  },
-
-  /* ------------------------------------------------------------ OpenAI Ads */
-  openai: {
-    conectado: false,
-    porque: "O connector openai_ads existe no Windsor, mas não há conta conectada.",
-    comoDestravar: "Pegar uma API key em OpenAI Ads Manager → Settings → API keys e conectar em onboard.windsor.ai. Cada key vale para uma conta de anúncio."
-  },
-
-  proximosPassos: [
-    "Decidir se o Meta continua com R$ 1.133 por semana: o custo por cadastro dele está em R$ 47,21, contra R$ 22,46 do Google Pesquisa.",
-    "Não mexer no Google Pesquisa: voltou a converter depois da recriação e está no melhor custo por conversão da série.",
-    "Definir se a Performance Max volta. Ficou desligada nesta janela depois de R$ 180,92 sem nenhuma conversão.",
-    "Conectar o OpenAI Ads no Windsor para a primeira seção deixar de ser um buraco.",
-    "Gravar a origem no cadastro. Sem isso, nenhuma destas contas de custo por canal pode ser fechada de verdade."
+  gmvSemanal: [
+    {semana:"20/07",gmv:659.05},{semana:"27/07",gmv:1037.05},{semana:"03/08",gmv:1111.55},
+    {semana:"10/08",gmv:1365.00},{semana:"17/08",gmv:751.00},{semana:"24/08",gmv:1328.00}
+  ],
+  campanhas: [
+    {nome:"Pesquisa", canal:"Google", gasto:449.18, cliques:164, conversoes:20},
+    {nome:"YouTube", canal:"Google", gasto:101.98, cliques:54, conversoes:0},
+    {nome:"Performance Max", canal:"Google", gasto:0, cliques:0, conversoes:0},
+    {nome:"Conversão", canal:"Meta", gasto:1133.05, cliques:557, conversoes:24},
+    {nome:"Visita ao Perfil", canal:"Meta", gasto:0, cliques:0, conversoes:0}
+  ],
+  criativos: [
+    {nome:"ADS01-EXISTENTE",campanha:"CONVERSÃO 01-DUDA",gasto:357.40,cliques:240,cadastros:7},
+    {nome:"ADS-04",campanha:"ABO A/B",gasto:310.39,cliques:116,cadastros:15},
+    {nome:"ADS-02",campanha:"CBO SIGNUP",gasto:206.62,cliques:61,cadastros:0},
+    {nome:"ADS-01",campanha:"CBO SIGNUP",gasto:108.09,cliques:93,cadastros:1},
+    {nome:"ADS-05",campanha:"ABO A/B",gasto:61.06,cliques:26,cadastros:1},
+    {nome:"ADS-03",campanha:"ABO A/B",gasto:42.07,cliques:8,cadastros:0},
+    {nome:"ADS-02",campanha:"ABO A/B",gasto:37.91,cliques:7,cadastros:0},
+    {nome:"ADS-01",campanha:"ABO A/B",gasto:9.51,cliques:6,cadastros:0}
+  ],
+  frase: "O investimento subiu 25% e os cadastros caíram pela metade: 65 contra 128. A troca foi " +
+    "de canal — Performance Max e Visita ao Perfil desligadas, e o Meta mais que dobrou de verba. " +
+    "Isso levou o custo por cadastro de R$ 10,56 para R$ 25,91. Do lado bom, o Google Pesquisa " +
+    "voltou a converter depois da recriação da campanha, e o GMV subiu 77%.",
+  passos: [
+    "Decidir se o Meta continua com R$ 1.133 por semana: R$ 47 por cadastro contra R$ 22 do Google Pesquisa.",
+    "Não mexer no Google Pesquisa — voltou a converter depois da recriação.",
+    "Definir se a Performance Max volta, depois de R$ 181 sem nenhuma conversão.",
+    "Destravar a leitura do OpenAI Ads no Windsor (a chave está dando 403).",
+    "Gravar a origem no cadastro, para o custo por canal existir de verdade."
   ]
 };
-/* ===================== fim dos dados da semana ===================== */
+
+/* ---- contas do cliente, usadas nas consultas ---- */
+const CONTAS = {
+  google:"326-604-5511", meta:"604915332642452", ga4:"511677134", openai:"284", metabaseDb:4
+};
+const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
 </script>
+
 <div class="app">
-  <nav class="lado rola" aria-label="Seções do painel">
+  <nav class="lado rola" aria-label="Seções">
     <div class="logo">
-      <span class="bolha" aria-hidden="true">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/>
-        </svg>
-      </span>
-      <span><b id="marca">Mia</b><small>painel da semana</small></span>
+      <span class="b" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/></svg></span>
+      <span><b>Mia</b><small>painel da semana</small></span>
     </div>
     <div class="menu" role="tablist" id="menu"></div>
-    <button class="imprimir" type="button" id="btPrint">
+    <button class="imp" type="button" id="btImp">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9V3.5h11V9"/>
         <rect x="3.5" y="9" width="17" height="7.5" rx="2"/><path d="M6.5 14h11v6.5h-11z"/></svg>
       <span>Imprimir</span>
@@ -567,644 +325,502 @@ const DADOS = {
   </nav>
 
   <div class="tela">
-    <header class="topo">
-      <div class="busca">
-        <label for="q" class="sr" hidden>Filtrar nesta folha</label>
-        <input id="q" type="search" placeholder="Filtrar nesta folha…" autocomplete="off">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/>
-          <path d="m15.6 15.6 4.4 4.4"/></svg>
+    <div class="consulta">
+      <div class="cg">
+        <label for="de">Período</label>
+        <div class="par">
+          <input type="date" id="de" aria-label="Início do período">
+          <span class="seta" aria-hidden="true">→</span>
+          <input type="date" id="ate" aria-label="Fim do período">
+        </div>
       </div>
-      <div class="quando">
-        <button class="icone" type="button" id="btTema" aria-label="Alternar tema claro e escuro">
-          <svg viewBox="0 0 24 24" aria-hidden="true" id="icTema"><circle cx="12" cy="12" r="4.4"/>
-            <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>
+      <div class="cg">
+        <label for="cde">Comparar com</label>
+        <div class="par">
+          <input type="date" id="cde" aria-label="Início da comparação">
+          <span class="seta" aria-hidden="true">→</span>
+          <input type="date" id="cate" aria-label="Fim da comparação">
+        </div>
+      </div>
+      <button class="puxar" type="button" id="btPuxar">
+        <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
+      </button>
+      <div class="ferram">
+        <button class="ic" type="button" id="btTema" aria-label="Alternar tema">
+          <svg viewBox="0 0 24 24" id="icTema" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/>
+          <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>
         </button>
         <span class="eu" title="Alysson Lima">AL</span>
       </div>
-    </header>
-
-    <div class="pfaixa">
-      <div class="pgrupo">
-        <span class="pet">Atual</span>
-        <input type="date" id="de" aria-label="Início do período atual">
-        <span class="pseta" aria-hidden="true">→</span>
-        <input type="date" id="ate" aria-label="Fim do período atual">
-      </div>
-      <span class="pvs">comparado com</span>
-      <div class="pgrupo">
-        <span class="pet">Anterior</span>
-        <input type="date" id="cde" aria-label="Início do período de comparação">
-        <span class="pseta" aria-hidden="true">→</span>
-        <input type="date" id="cate" aria-label="Fim do período de comparação">
-        <button class="pauto" type="button" id="btAuto"
-                title="Volta a comparação para a janela imediatamente anterior, do mesmo tamanho">
-          Janela anterior
-        </button>
-      </div>
-      <span class="pdias" id="pdias"></span>
+      <div class="estado" id="estado"></div>
     </div>
-
     <main id="main" class="rola"></main>
   </div>
 </div>
 
 <script>
 /* ------------------------------------------------------------- formatação */
-const nf0 = new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
-const nf2 = new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
-const num = v => v==null ? "—" : nf0.format(v);
-const brl = v => v==null ? "—" : "R$ " + nf2.format(v);
-const brl0= v => v==null ? "—" : "R$ " + nf0.format(v);
-const pct = v => v==null ? "—" : nf2.format(v).replace(",00","") + "%";
-const seg = v => v==null ? "—" : num(v) + "s";
-const dm  = iso => { if(!iso) return ""; const [a,m,d]=iso.split("-"); return `${d}/${m}`; };
-const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nf0=new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
+const nf2=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=v=>v==null?"—":nf0.format(v);
+const brl=v=>v==null?"—":"R$ "+nf2.format(v);
+const brl0=v=>v==null?"—":"R$ "+nf0.format(v);
+const dm=iso=>{if(!iso)return"";const[a,m,d]=iso.split("-");return `${d}/${m}`};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-/* variação — `inverso` para métricas em que cair é bom (custo, CPC, CPA) */
-function vari(atual, anterior, inverso){
-  if(atual==null || anterior==null || anterior===0) return null;
-  const p = ((atual-anterior)/Math.abs(anterior))*100;
-  const bom = inverso ? p<0 : p>0;
-  return { cls: Math.abs(p)<0.5 ? "flat" : (bom?"up":"down"),
-           txt: (p>0?"▲ ":p<0?"▼ ":"") + nf2.format(Math.abs(p)).replace(",00","")+"%" };
+function vari(a,b,inv){
+  if(a==null||b==null||b===0)return null;
+  const p=((a-b)/Math.abs(b))*100, bom=inv?p<0:p>0;
+  return {cls:Math.abs(p)<0.5?"flat":(bom?"up":"down"),
+          txt:(p>0?"▲ ":p<0?"▼ ":"")+nf2.format(Math.abs(p)).replace(",00","")+"%"};
 }
+const variN=(a,b)=>{const v=vari(a,b);return v?{cls:"flat",txt:v.txt}:null};
 
-/* investimento e uma decisao, nao um resultado: mostra a variacao sem julgar */
-function variNeutra(atual, anterior){
-  const v = vari(atual, anterior);
-  return v ? {cls:"flat", txt:v.txt} : null;
-}
+/* estado vivo do painel — começa no retrato gravado */
+let D = JSON.parse(JSON.stringify(RETRATO));
+let FALHAS = {};
 
-/* --------------------------------------------------------------- pedaços */
-function tile(l, v, va, nt){
-  return `<div class="tile">
-    <div class="l">${l}</div>
-    <div class="v">${v}</div>
-    ${va?`<span class="pilula ${va.cls}">${va.txt}</span>`:""}
-    ${nt?`<div class="nt">${nt}</div>`:""}
-  </div>`;
-}
-const tiles = h => `<div class="tiles">${h}</div>`;
+/* --------------------------------------------------------------- consulta */
+/* Erros do conector têm códigos distintos e conserto distinto. Não colapsar
+   tudo num "algo deu errado": isso esconde a ação que resolveria. */
+const CONSERTO = {
+  needs_reauth:      "A conexão expirou. Reconecte em claude.ai → Configurações → Conectores.",
+  server_not_connected:"O conector não está adicionado nesta conta do claude.ai.",
+  not_granted:       "Permissão não concedida. Clique em Puxar dados de novo e autorize.",
+  blocked_by_policy: "Bloqueado por política da organização.",
+  approval_required: "A chamada precisa de aprovação de um administrador.",
+  selection_required:"Há mais de uma conexão desse conector. Escolha uma no claude.ai.",
+  server_not_found:  "Conector não encontrado com esse nome.",
+  server_unavailable:"O conector não respondeu. Tente puxar de novo.",
+  upstream_error:    "A plataforma de origem recusou a chamada.",
+  rate_limited:      "Limite de chamadas atingido. Espere um pouco e puxe de novo.",
+  tool_error:        "A fonte respondeu com erro.",
+  bad_request:       "A consulta foi montada de forma inválida.",
+  cancelled:         "Consulta cancelada.",
+  capability_disabled:"A consulta ao vivo está desligada para este painel.",
+  capability_removed: "A consulta ao vivo foi removida deste painel.",
+  transform_error:   "A resposta veio num formato inesperado."
+};
+const RETENTAVEL = new Set(["server_unavailable","rate_limited"]);
 
-function rows(itens, rl){
-  const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="rows" style="--rl:${rl||104}px">` + itens.map(i=>`
-    <div class="row ${i.mau?"mau":""}">
-      <span class="rn" title="${esc(i.nome)}">${esc(i.nome)}</span>
-      <span class="rt"><span class="rf" style="width:${Math.max((i.valor/max)*100,2)}%${i.cor?`;background:${i.cor}`:""}"></span></span>
-      <span class="rv">${i.rot}</span>
-    </div>`).join("") + `</div>`;
-}
+let MCP = undefined; // undefined = ainda resolvendo, null = indisponível
+claude.use("mcp").then(m=>{ MCP=m; pintarEstado(); }).catch(()=>{ MCP=null; pintarEstado(); });
 
-/* barras verticais — as apagadas são contexto, a acesa é o período */
-function bars(itens, fmt){
-  const max = Math.max(...itens.map(i=>i.valor), 1);
-  return `<div class="bars">${itens.map(i=>`
-    <div class="bcol ${i.on?"on":""}" title="${esc(i.rot)}: ${fmt(i.valor)}">
-      <span class="bv">${fmt(i.valor)}</span>
-      <span class="bb" style="height:${Math.max((i.valor/max)*100,3)}%"></span>
-    </div>`).join("")}</div>
-    <div class="blabs">${itens.map(i=>`<span>${esc(i.rot)}</span>`).join("")}</div>`;
-}
+const espera = ms => new Promise(r=>setTimeout(r,ms));
 
-/* rosca — uma taxa por anel */
-let roscaId = 0;
-function rosca(p, cor, titulo, desc){
-  const r=31, c=2*Math.PI*r, on=Math.max(0,Math.min(100,p))/100*c;
-  const id = "rc"+(++roscaId);
-  return `<div class="rosca">
-    <svg viewBox="0 0 76 76" role="img" aria-labelledby="${id}">
-      <title id="${id}">${esc(titulo)}: ${pct(p)}</title>
-      <circle cx="38" cy="38" r="${r}" fill="none" stroke="var(--trilho)" stroke-width="9"/>
-      <circle cx="38" cy="38" r="${r}" fill="none" stroke="${cor}" stroke-width="9"
-              stroke-linecap="round" stroke-dasharray="${on.toFixed(1)} ${(c-on).toFixed(1)}"/>
-      <text x="38" y="38" class="mid" transform="rotate(90 38 38)" text-anchor="middle"
-            dominant-baseline="central" fill="var(--texto)">${nf0.format(Math.round(p))}%</text>
-    </svg>
-    <span class="tx"><b>${esc(titulo)}</b><span>${esc(desc)}</span></span>
-  </div>`;
-}
-
-/* linha suave com pontos — um SVG só, escala uniforme, hover mostra o valor */
-let areaId = 0;
-function area(serie, fmt){
-  if(!serie.length) return '<p class="vazio">Sem série no período.</p>';
-  const W=300, H=96, pad=10, base=H-16;
-  const vs = serie.map(s=>s.valor);
-  const mx = Math.max(...vs), mn = Math.min(...vs);
-  const lo = mn - (mx-mn||Math.abs(mx)||1)*0.18;
-  const span = (mx-lo)||1;
-  const px = i => serie.length===1 ? W/2 : pad + i*((W-pad*2)/(serie.length-1));
-  const py = v => pad + (1-(v-lo)/span)*(base-pad);
-  const pts = serie.map((s,i)=>[px(i), py(s.valor)]);
-
-  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
-  for(let i=0;i<pts.length-1;i++){
-    const [x0,y0]=pts[i], [x1,y1]=pts[i+1], m=(x0+x1)/2;
-    d += ` C${m.toFixed(1)},${y0.toFixed(1)} ${m.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+async function chamar(server, tool, input, rotulo){
+  if(!MCP) throw {code:"capability_disabled", message:"sem consulta ao vivo", rotulo};
+  for(let tentativa=0; tentativa<2; tentativa++){
+    try{
+      const r = await MCP.callTool(server, tool, input, {cache:{refresh:true}});
+      return r.payload;
+    }catch(e){
+      const cod = e && e.code;
+      const podeRepetir = tentativa===0 && (e && e.retryable===true || RETENTAVEL.has(cod));
+      if(!podeRepetir) throw {code:cod||"tool_error", message:(e&&e.message)||"falhou", rotulo};
+      await espera((e&&e.retryAfterMs) || 700 + Math.random()*600);
+    }
   }
-  const g = "ag"+(++areaId);
-  return `<svg class="area" viewBox="0 0 ${W} ${H}" role="img"
-      aria-label="${esc(serie[0].rot)} a ${esc(serie[serie.length-1].rot)}: de ${fmt(serie[0].valor)} a ${fmt(serie[serie.length-1].valor)}">
-      <defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="var(--d1)" stop-opacity=".22"/>
-        <stop offset="1" stop-color="var(--d1)" stop-opacity="0"/>
-      </linearGradient></defs>
-      <line class="gd" x1="${pad}" y1="${base}" x2="${W-pad}" y2="${base}"/>
-      <path fill="url(#${g})" stroke="none"
-            d="${d} L${pts[pts.length-1][0].toFixed(1)},${base} L${pts[0][0].toFixed(1)},${base} Z"/>
-      <path class="ln" d="${d}"/>
-      ${pts.map((p,i)=>`<circle class="pt" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2"
-        ><title>${esc(serie[i].rot)}: ${fmt(serie[i].valor)}</title></circle>`).join("")}
-    </svg>
-    <div class="axl">${serie.map(s=>`<span>${esc(s.rot)}</span>`).join("")}</div>`;
 }
 
-const cx = (inner, extra) => `<section class="cx ${extra||""}">${inner}</section>`;
-function cxh(titulo, sub, selo){
-  return `<div class="cx-topo"><div><h3>${titulo}</h3>${sub?`<p class="sub">${sub}</p>`:""}</div>
-    ${selo?`<span class="selo">${selo}</span>`:""}</div>`;
+const linhas = p => (p && Array.isArray(p.result)) ? p.result : [];
+const soma = (arr, f) => arr.reduce((s,x)=>s+(Number(f(x))||0),0);
+
+async function windsorGoogle(de,ate){
+  const p = await chamar("Windsor.ai","get_data",{connector:"google_ads",accounts:[CONTAS.google],
+    fields:["campaign","advertising_channel_type","impressions","clicks","cost","conversions"],
+    date_from:de,date_to:ate},"Google Ads");
+  const r = linhas(p);
+  const porCampanha = {};
+  r.forEach(x=>{
+    const k = x.advertising_channel_type==="SEARCH" ? "Pesquisa"
+            : x.advertising_channel_type==="PERFORMANCE_MAX" ? "Performance Max"
+            : x.advertising_channel_type==="DEMAND_GEN" ? "YouTube" : (x.advertising_channel_type||"Outra");
+    porCampanha[k] = porCampanha[k] || {nome:k, canal:"Google", gasto:0, cliques:0, conversoes:0};
+    porCampanha[k].gasto += Number(x.cost)||0;
+    porCampanha[k].cliques += Number(x.clicks)||0;
+    porCampanha[k].conversoes += Number(x.conversions)||0;
+  });
+  return { total:{gasto:soma(r,x=>x.cost), cliques:soma(r,x=>x.clicks), conversoes:soma(r,x=>x.conversions)},
+           campanhas:Object.values(porCampanha) };
 }
 
-/* ----------------------------------------------------------------- folhas */
+async function windsorMeta(de,ate){
+  const p = await chamar("Windsor.ai","get_data",{connector:"facebook",accounts:[CONTAS.meta],
+    fields:["campaign","ad_name","adsset_optimization_goal","spend","impressions",
+            "actions_link_click","actions_complete_registration"],
+    date_from:de,date_to:ate},"Meta Ads");
+  const r = linhas(p);
+  const objetivo = g => g==="PROFILE_VISIT" ? "Visita ao Perfil" : "Conversão";
+  const porObj = {};
+  r.forEach(x=>{
+    const k = objetivo(x.adsset_optimization_goal);
+    porObj[k] = porObj[k] || {nome:k, canal:"Meta", gasto:0, cliques:0, conversoes:0};
+    porObj[k].gasto += Number(x.spend)||0;
+    porObj[k].cliques += Number(x.actions_link_click)||0;
+    porObj[k].conversoes += Number(x.actions_complete_registration)||0;
+  });
+  const criativos = r.map(x=>({nome:x.ad_name, campanha:x.campanha||x.campaign,
+    gasto:Number(x.spend)||0, cliques:Number(x.actions_link_click)||0,
+    cadastros:Number(x.actions_complete_registration)||0}))
+    .sort((a,b)=>b.gasto-a.gasto);
+  return { total:{gasto:soma(r,x=>x.spend), cliques:soma(r,x=>x.actions_link_click),
+                  conversoes:soma(r,x=>x.actions_complete_registration)},
+           campanhas:Object.values(porObj), criativos };
+}
+
+async function windsorOpenai(de,ate){
+  const p = await chamar("Windsor.ai","get_data",{connector:"openai_ads",accounts:[CONTAS.openai],
+    fields:["campaign","impressions","clicks","spend"],date_from:de,date_to:ate},"OpenAI Ads");
+  const r = linhas(p);
+  return { total:{gasto:soma(r,x=>x.spend), cliques:soma(r,x=>x.clicks), conversoes:null} };
+}
+
+async function windsorSessoes(de,ate){
+  const p = await chamar("Windsor.ai","get_data",{connector:"googleanalytics4",accounts:[CONTAS.ga4],
+    fields:["hostname","sessions"],date_from:de,date_to:ate},"Sessões na página");
+  const r = linhas(p).filter(x=>x.hostname==="miaapp.com.br");
+  return soma(r,x=>x.sessions);
+}
+
+function sqlNegocio(de,ate,cde,cate){
+  return `WITH j AS (
+  SELECT 'atual'::text AS janela, DATE '${de}' AS de, DATE '${ate}' AS ate
+  UNION ALL SELECT 'anterior', DATE '${cde}', DATE '${cate}'),
+teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id)
+SELECT j.janela,
+ (SELECT count(*) FROM professional p WHERE p.deleted_at IS NULL
+   AND p.id NOT IN (SELECT id FROM teste)
+   AND p.created_at::date BETWEEN j.de AND j.ate) AS cadastros,
+ (SELECT count(*) FROM professional p WHERE p.deleted_at IS NULL
+   AND p.id NOT IN (SELECT id FROM teste)
+   AND p.created_at::date BETWEEN j.de AND j.ate
+   AND p.onboarding_step = 'FINISHED') AS onboarding,
+ (SELECT count(*) FROM professional p JOIN professional_account a ON a.professional_id = p.id
+   WHERE p.deleted_at IS NULL AND p.id NOT IN (SELECT id FROM teste)
+   AND p.created_at::date BETWEEN j.de AND j.ate AND a.status = 'ACTIVE') AS contas_ativas,
+ (SELECT count(*) FROM checkout_session c WHERE c.paid_at IS NOT NULL
+   AND c.paid_at::date BETWEEN j.de AND j.ate) AS pagamentos,
+ (SELECT COALESCE(sum((c.price->>'amount')::numeric),0)/100 FROM checkout_session c
+   WHERE c.paid_at IS NOT NULL AND c.paid_at::date BETWEEN j.de AND j.ate) AS gmv
+FROM j ORDER BY j.janela DESC`;
+}
+
+async function metabaseNegocio(de,ate,cde,cate){
+  const p = await chamar("Metabase","execute_sql",
+    {database_id:CONTAS.metabaseDb, sql:sqlNegocio(de,ate,cde,cate)},"Negócio");
+  const rows = (p && p.data && Array.isArray(p.data.rows)) ? p.data.rows : [];
+  const ler = nome => {
+    const l = rows.find(r=>r[0]===nome);
+    return l ? {cadastros:+l[1], onboarding:+l[2], contasAtivas:+l[3],
+                pagamentos:+l[4], gmv:+l[5]} : null;
+  };
+  return {atual:ler("atual"), anterior:ler("anterior")};
+}
+
+async function puxar(){
+  const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
+  if(!de||!ate||de>ate||!cde||!cate||cde>cate){
+    FALHAS={geral:{rotulo:"Período",code:"bad_request",
+      message:"Preencha as quatro datas, com o início antes do fim."}};
+    desenhar(); return;
+  }
+  btPuxar.disabled=true; btPuxar.classList.add("indo"); txPuxar.textContent="Puxando…";
+  FALHAS={};
+  const novo = JSON.parse(JSON.stringify(RETRATO));
+  novo.periodo={atual:{de,ate},anterior:{de:cde,ate:cate}};
+  novo.aoVivo=true;
+
+  const tarefas = [
+    ["googleA", ()=>windsorGoogle(de,ate)],   ["googleB", ()=>windsorGoogle(cde,cate)],
+    ["metaA",   ()=>windsorMeta(de,ate)],     ["metaB",   ()=>windsorMeta(cde,cate)],
+    ["openaiA", ()=>windsorOpenai(de,ate)],   ["openaiB", ()=>windsorOpenai(cde,cate)],
+    ["sessA",   ()=>windsorSessoes(de,ate)],  ["sessB",   ()=>windsorSessoes(cde,cate)],
+    ["neg",     ()=>metabaseNegocio(de,ate,cde,cate)]
+  ];
+  const res = {};
+  await Promise.all(tarefas.map(async ([k,f])=>{
+    try{ res[k] = await f(); }
+    catch(e){ res[k]=null; FALHAS[k]=e; }
+  }));
+
+  /* monta o que deu, deixa marcado o que não deu — cada bloco falha sozinho */
+  const g=res.googleA, gB=res.googleB, m=res.metaA, mB=res.metaB, o=res.openaiA, oB=res.openaiB;
+  novo.canais = [
+    {nome:"Google Ads", cor:"var(--d2)", atual:g&&g.total, anterior:gB&&gB.total,
+     erro:FALHAS.googleA?CONSERTO[FALHAS.googleA.code]||FALHAS.googleA.message:null},
+    {nome:"Meta Ads", cor:"var(--d3)", atual:m&&m.total, anterior:mB&&mB.total,
+     erro:FALHAS.metaA?CONSERTO[FALHAS.metaA.code]||FALHAS.metaA.message:null},
+    {nome:"OpenAI Ads", cor:"var(--d1)", atual:o&&o.total, anterior:oB&&oB.total,
+     erro:FALHAS.openaiA?CONSERTO[FALHAS.openaiA.code]||FALHAS.openaiA.message:null}
+  ];
+  novo.campanhas = [...((g&&g.campanhas)||[]), ...((m&&m.campanhas)||[])];
+  novo.criativos = (m&&m.criativos)||[];
+  const inv  = novo.canais.reduce((s,c)=>s+((c.atual&&c.atual.gasto)||0),0);
+  const invB = novo.canais.reduce((s,c)=>s+((c.anterior&&c.anterior.gasto)||0),0);
+  const n=res.neg;
+  novo.resumo = {
+    atual:    {investimento:inv,  cadastros:n&&n.atual?n.atual.cadastros:null,
+               pagamentos:n&&n.atual?n.atual.pagamentos:null, gmv:n&&n.atual?n.atual.gmv:null},
+    anterior: {investimento:invB, cadastros:n&&n.anterior?n.anterior.cadastros:null,
+               pagamentos:n&&n.anterior?n.anterior.pagamentos:null, gmv:n&&n.anterior?n.anterior.gmv:null}
+  };
+  novo.funil = {
+    atual:    {sessoes:res.sessA, cadastros:n&&n.atual?n.atual.cadastros:null,
+               onboarding:n&&n.atual?n.atual.onboarding:null,
+               contasAtivas:n&&n.atual?n.atual.contasAtivas:null},
+    anterior: {sessoes:res.sessB, cadastros:n&&n.anterior?n.anterior.cadastros:null,
+               onboarding:n&&n.anterior?n.anterior.onboarding:null,
+               contasAtivas:n&&n.anterior?n.anterior.contasAtivas:null}
+  };
+  novo.gmvSemanal = RETRATO.gmvSemanal;
+  novo.frase = "";
+  novo.puxadoEm = `${dm(de)}–${dm(ate)} · consultado agora`;
+
+  D = novo;
+  btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
+  desenhar();
+}
+
+/* -------------------------------------------------------------------- vistas */
 const IC = {
   casa:'<path d="M3 10.2 12 3l9 7.2"/><path d="M5.6 8.9V20.4h12.8V8.9"/>',
-  faisca:'<path d="M12 3.4 13.8 9l5.5 1.8L13.8 12.6 12 18.2l-1.8-5.6L4.7 10.8 10.2 9z"/>',
-  bolha:'<path d="M20.4 12.1c0 3.9-3.8 7.1-8.4 7.1a10 10 0 0 1-2.6-.34L4.6 20.9l1.2-3.5a6.8 6.8 0 0 1-2.2-5.3C3.6 8.2 7.4 5 12 5s8.4 3.2 8.4 7.1Z"/>',
+  canais:'<path d="M4 20V10M10 20V4M16 20v-7M22 20V7"/>',
   lupa:'<circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.6 15.6 4.4 4.4"/>',
-  tela:'<rect x="3" y="4.6" width="18" height="12.4" rx="2.2"/><path d="M9 20.4h6M12 17v3.4"/>',
-  carteira:'<rect x="3" y="6" width="18" height="12.4" rx="2.6"/><path d="M3 10.6h18M16.6 14.6h1.6"/>',
   bandeira:'<path d="M6 3.5v17"/><path d="M6 4.7h11.4l-2.2 4 2.2 4H6z"/>'
 };
-
-const FOLHAS = [
-  { id:"geral",   nome:"A semana",   ic:"casa",      render:fGeral },
-  { id:"openai",  nome:"OpenAI Ads", ic:"faisca",    render:fOpenAI },
-  { id:"meta",    nome:"Meta Ads",   ic:"bolha",     render:fMeta },
-  { id:"google",  nome:"Google Ads", ic:"lupa",      render:fGoogle },
-  { id:"lp",      nome:"A página",   ic:"tela",      render:fLP },
-  { id:"negocio", nome:"O negócio",  ic:"carteira",  render:fNegocio },
-  { id:"passos",  nome:"O que vem",  ic:"bandeira",  render:fPassos }
+const VISTAS = [
+  {id:"resumo",  nome:"Resumo",  ic:"casa",     r:vResumo},
+  {id:"canais",  nome:"Canais",  ic:"canais",   r:vCanais},
+  {id:"detalhe", nome:"Detalhe", ic:"lupa",     r:vDetalhe},
+  {id:"passos",  nome:"Decisões",ic:"bandeira", r:vPassos}
 ];
 
-function somas(){
-  const g  = DADOS.google.campanhas.reduce((a,c)=>({
-    custo:a.custo+(c.atual?c.atual.custo:0), cliques:a.cliques+(c.atual?c.atual.cliques:0),
-    impressoes:a.impressoes+(c.atual?c.atual.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
-  const gA = DADOS.google.campanhas.reduce((a,c)=>({
-    custo:a.custo+(c.anterior?c.anterior.custo:0), cliques:a.cliques+(c.anterior?c.anterior.cliques:0),
-    impressoes:a.impressoes+(c.anterior?c.anterior.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
-  const m  = DADOS.meta.objetivos.reduce((a,o)=>({
-    custo:a.custo+(o.atual?o.atual.gasto:0), cliques:a.cliques+(o.atual?o.atual.cliques:0),
-    impressoes:a.impressoes+(o.atual?o.atual.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
-  const mA = DADOS.meta.objetivos.reduce((a,o)=>({
-    custo:a.custo+(o.anterior?o.anterior.gasto:0), cliques:a.cliques+(o.anterior?o.anterior.cliques:0),
-    impressoes:a.impressoes+(o.anterior?o.anterior.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
-  return {
-    canais:[
-      {nome:"Google Ads", custo:g.custo, cliques:g.cliques, cor:"var(--d2)"},
-      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--d3)"}
-    ],
-    invest:g.custo+m.custo, investA:gA.custo+mA.custo,
-    cliques:g.cliques+m.cliques, cliquesA:gA.cliques+mA.cliques,
-    impressoes:g.impressoes+m.impressoes
-  };
+const cx=(i,c)=>`<section class="cx ${c||""}">${i}</section>`;
+const cxt=(t,s,se)=>`<div class="cxt"><div><h3>${t}</h3>${s?`<p class="sub">${s}</p>`:""}</div>${se?`<span class="selo">${se}</span>`:""}</div>`;
+const N=(l,v,d,a)=>`<div class="n"><div class="l">${l}</div><div class="v">${v}</div>${d?`<span class="d ${d.cls}">${d.txt}</span>`:""}${a?`<div class="a">${a}</div>`:""}</div>`;
+
+function falhaBox(k){
+  const f=FALHAS[k]; if(!f) return "";
+  return `<p class="falhou"><b>${esc(f.rotulo||"Consulta")} não veio</b>
+    ${esc(CONSERTO[f.code]||f.message||"")}</p>`;
 }
 
-/* rodapé de procedência — todo cartão diz de onde veio o número */
-const proc = (fonte, janela) => `<p class="proc">${esc(fonte)}${janela?` · ${esc(janela)}`:""}</p>`;
+function vResumo(){
+  const a=D.resumo.atual, b=D.resumo.anterior;
+  const cpc  = a.cadastros ? a.investimento/a.cadastros : null;
+  const cpcB = b.cadastros ? b.investimento/b.cadastros : null;
+  const g=D.gmvSemanal, ult=g.length-1;
+  const f=D.funil;
 
-/* ---------------------------------------------------------------- a semana */
-function fGeral(){
-  const t = somas(), co = DADOS.negocio.coorte, pl = DADOS.negocio.plataforma;
-  const cp  = co.atual.cadastros    ? t.invest /co.atual.cadastros    : null;
-  const cpA = co.anterior.cadastros ? t.investA/co.anterior.cadastros : null;
-
-  const gmv = DADOS.negocio.gmvSemanal, ult = gmv.length-1;
-
-  /* funil de aquisição: só a coorte da janela, e só etapas comparáveis */
-  const et = [
-    { etapa:"Impressões",    valor:t.impressoes },
-    { etapa:"Cliques",       valor:t.cliques },
-    { etapa:"Sessões na LP", valor:DADOS.lp.ga4.atual.sessoes, nota:true },
-    { etapa:"Cadastros",     valor:co.atual.cadastros },
-    { etapa:"Onboarding ok", valor:co.atual.onboarding },
-    { etapa:"Conta ativada", valor:co.atual.contasAtivas }
+  const etapas=[
+    {n:"Visitas na página", v:f.atual.sessoes},
+    {n:"Cadastros",         v:f.atual.cadastros},
+    {n:"Configuraram",      v:f.atual.onboarding},
+    {n:"Conta ativa",       v:f.atual.contasAtivas}
   ];
-  const taxas = et.map((e,i)=> i===0 ? 100 : (et[i-1].valor>0 ? (e.valor/et[i-1].valor)*100 : 0));
-  let pior=-1, mn=Infinity;
-  taxas.forEach((x,i)=>{ if(i>0 && i!==2 && x<mn){ mn=x; pior=i; } });
-
-  const meta = DADOS.meta.objetivos.find(o=>o.atual && "connectRate" in o.atual);
-  const tOnb  = co.atual.cadastros  ? (co.atual.onboarding/co.atual.cadastros)*100 : 0;
-  const tAtiv = co.atual.onboarding ? (co.atual.contasAtivas/co.atual.onboarding)*100 : 0;
-
-  const crias = DADOS.meta.objetivos.flatMap(o=>o.criativos||[])
-    .filter(c=>c.cadastros>0)
-    .map(c=>({...c, cpc:c.gasto/c.cadastros}))
-    .sort((a,b)=>a.cpc-b.cpc);
+  const max=Math.max(...etapas.map(e=>e.v||0),1);
 
   return `
-  ${cx(`<div class="et">O que aconteceu</div><p>${DADOS.veredito}</p>`, "tese")}
-
-  <div class="faixa dois">
-    ${cx(cxh("Os números da semana","Cada linha comparada com a janela anterior, de mesmo tamanho.")
-      + tiles(
-        tile("Investimento", brl(t.invest), variNeutra(t.invest,t.investA), "Meta + Google") +
-        tile("Cliques", num(t.cliques), vari(t.cliques,t.cliquesA)) +
-        tile("Cadastros", num(co.atual.cadastros), vari(co.atual.cadastros,co.anterior.cadastros)) +
-        tile("Custo por cadastro", brl(cp), vari(cp,cpA,true), "Consolidado — não separa canal") +
-        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv), "Toda a plataforma") +
-        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos),
-             "Toda a plataforma")
-      )
-      + proc("Windsor + Metabase", `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
-
-    ${cx(cxh("De onde vêm estes números","Fonte e janela real de cada bloco do painel.")
-      + `<div class="rows" style="--rl:150px">${DADOS.fontes.map(f=>`
-          <div class="fonte">
-            <span class="fn">${esc(f.nome)}</span>
-            <span class="fj">${esc(f.janela)}</span>
-            <span class="fe ${f.estado}">${f.estado==="ok"?"puxado":f.estado==="parcial"?"parcial":"falta"}</span>
-            <span class="fo">${esc(f.via)} — ${esc(f.obs)}</span>
-          </div>`).join("")}</div>`
-      + `<p class="proc">Puxado em ${esc(DADOS.puxadoEm)}. O painel não consulta nada
-          sozinho: estes números foram gravados no arquivo.</p>`)}
-  </div>
-
-  <div class="faixa dois">
-    ${cx(cxh("Aquisição da semana","Só quem entrou nesta janela. A barra é quanto passou da etapa anterior.")
-      + slotsFunil(et, taxas, pior)
-      + `<p class="proc">As sessões na LP incluem tráfego que não veio de anúncio — por isso
-         são mais que os cliques. A etapa não é uma cascata pura.</p>`)}
-    ${cx(cxh("Atividade na plataforma","Todos os profissionais, não só os que entraram esta semana.")
-      + tiles(
-        tile("Agendamentos", num(pl.atual.agendamentos), vari(pl.atual.agendamentos,pl.anterior.agendamentos)) +
-        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos)) +
-        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv))
-      )
-      + `<p class="proc">Separado do funil de propósito: misturar estes números com a coorte
-         da semana produz taxas que não querem dizer nada.</p>`)}
-  </div>
-
-  <div class="faixa dois">
-    ${cx(cxh("Para onde foi o dinheiro","Quanto cada canal consumiu, e o que cada clique custou.")
-      + `<div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>`
-      + rows(t.canais.map(c=>({nome:c.nome, valor:c.custo, rot:brl(c.custo), cor:c.cor})), 90)
-      + `<p class="sub" style="margin:16px 0 11px">Custo por clique</p>`
-      + rows(t.canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
-          rot:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), 90)
-      + proc(DADOS.google.fonte.split(" · ")[0] + " · google_ads + facebook"))}
-    ${cx(cxh("GMV por semana","A barra acesa é a semana desta janela.", `${gmv.length} semanas`)
-      + bars(gmv.map((s,i)=>({rot:s.semana, valor:s.gmv, on:i===ult})), v=>nf0.format(v))
-      + proc(DADOS.negocio.fonte))}
-  </div>
-
-  <div class="faixa dois">
-    ${cx(cxh("As taxas da coorte","Da turma que se cadastrou nesta janela.")
-      + `<div class="roscas">
-          ${rosca(tOnb,"var(--d1)","Concluem o onboarding","Quantos terminam a configuração inicial.")}
-          ${rosca(tAtiv,"var(--d2)","Ativam a conta","Conta de pagamento aprovada.")}
-          ${meta?rosca(meta.atual.connectRate,"var(--d3)","Connect Rate","Cliques que viraram visita de verdade."):""}
-        </div>`
-      + `<p class="proc">A ativação de conta demora: quem se cadastrou nesta semana ainda não
-         teve tempo de completar o cadastro bancário. Comparar com a semana anterior
-         favorece a mais antiga.</p>`)}
-    ${cx(cxh("Criativos que trouxeram cadastro","Ordenados por custo por cadastro.")
-      + (crias.length
-          ? `<ol class="ord">${crias.map(c=>`<li><span>${esc(c.nome)} <em class="mini">${esc(c.campanha)}</em></span><b>${brl(c.cpc)}</b></li>`).join("")}</ol>`
-          : `<p class="vazio">Nenhum criativo registrou cadastro nesta janela.</p>`)
-      + proc(DADOS.meta.fonte))}
-  </div>`;
-}
-
-/* funil: reaproveita o componente de linha do painel, com a etapa que trava marcada */
-function slotsFunil(et, taxas, pior){
-  return rows(et.map((e,i)=>({
-    nome: e.etapa + (e.nota ? "  *" : ""),
-    valor: taxas[i],
-    rot: i===0 ? num(e.valor)
-               : `${num(e.valor)} <em class="mini">${nf2.format(taxas[i]).replace(",00","")}%</em>`,
-    mau: i===pior
-  })), 118);
-}
-
-/* -------------------------------------------------------------- OpenAI Ads */
-function fOpenAI(){
-  return `<div class="faixa">
-    ${cx(cxh("OpenAI Ads","Este canal ainda não está ligado ao painel.","Falta conectar")
-      + `<p class="recado">${esc(DADOS.openai.porque)}</p>
-         <p class="sub" style="margin-bottom:14px">${esc(DADOS.openai.comoDestravar)}</p>
-         <p class="vazio">Enquanto não estiver conectado, este painel não mostra número
-         nenhum de OpenAI Ads — nem estimativa, nem número copiado de print.</p>`)}
-  </div>`;
-}
-
-/* ---------------------------------------------------------------- Meta Ads */
-function fMeta(){
-  return DADOS.meta.objetivos.map(o=>{
-    const a=o.atual, b=o.anterior, perfil = !!(b && "visitasPerfil" in b);
-
-    if(!a){
-      return `<div class="faixa">
-        ${cx(cxh(`Objetivo: ${esc(o.nome)}`,"Não rodou nesta janela.","Desligado")
-          + (o.nota?`<p class="recado">${esc(o.nota)}</p>`:"")
-          + (b ? tiles(
-              tile("Gasto na janela anterior", brl(b.gasto)) +
-              tile("Impressões", num(b.impressoes)) +
-              tile("CTR", pct(b.ctr)) +
-              (perfil ? tile("Visitas ao perfil", num(b.visitasPerfil)) +
-                        tile("Por visita", brl(b.custoVisita))
-                      : tile("Cliques", num(b.cliques)))
-            ) : `<p class="vazio">Sem dados na janela anterior.</p>`)
-          + proc(DADOS.meta.fonte, `${dm(DADOS.periodo.anterior.de)}–${dm(DADOS.periodo.anterior.ate)}`))}
-      </div>`;
-    }
-
-    const resumo =
-      tile("Gasto", brl(a.gasto), vari(a.gasto,b&&b.gasto,true)) +
-      tile("Impressões", num(a.impressoes), vari(a.impressoes,b&&b.impressoes)) +
-      tile("CTR no link", pct(a.ctr), vari(a.ctr,b&&b.ctr)) +
-      tile("Cliques no link", num(a.cliques), vari(a.cliques,b&&b.cliques)) +
-      tile("Connect Rate", pct(a.connectRate), vari(a.connectRate,b&&b.connectRate),
-           "Cliques que viraram visita") +
-      tile("Cadastros", num(a.cadastros), vari(a.cadastros,b&&b.cadastros), "Pixel de cadastro") +
-      tile("Por cadastro", brl(a.custoCadastro), vari(a.custoCadastro,b&&b.custoCadastro,true));
-
-    const cols = [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],
-      ["Impressões",c=>num(c.impressoes)],["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],
-      ["Cliques",c=>num(c.cliques)],["Visitas na LP",c=>num(c.visitasLP)],
-      ["Cadastros",c=>num(c.cadastros)],
-      ["Por cadastro",c=>c.cadastros?brl(c.gasto/c.cadastros):"—"]];
-
-    return `<div class="faixa">
-      ${cx(cxh(`Objetivo: ${esc(o.nome)}`,
-            `${o.criativos.length} anúncios rodaram nesta janela.`,"Conversão")
-        + tiles(resumo)
-        + proc(DADOS.meta.fonte, `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
+  <div class="frase">
+    <div class="et">A semana em uma frase</div>
+    <p id="fraseTx">${D.frase ? esc(D.frase)
+      : "Escreva aqui o que aconteceu — é a primeira coisa que os founders leem."}</p>
+    <div class="nota">
+      <div class="et">Observação do período</div>
+      <textarea id="obs" placeholder="Ex: agosto foi atípico — houve um erro de tratamento nas duas últimas semanas, então parte dos dados não reflete operação normal."></textarea>
     </div>
-    <div class="faixa">
-      ${cx(cxh("Anúncio por anúncio","Ordenado por quanto cada um consumiu.")
-        + `<div class="tw"><table>
-            <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
-            <tbody>${o.criativos.map(c=>`<tr>
-              <td class="nm">${esc(c.nome)}<span class="sub2">${esc(c.campanha)}</span></td>
-              ${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
-            <tfoot><tr><td class="nm">Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
-          </table></div>`
-        + `<p class="proc">O mesmo nome de anúncio existe em campanhas diferentes — por isso a
-           campanha aparece embaixo do nome.</p>`)}
-    </div>`;
-  }).join("");
-}
-
-/* -------------------------------------------------------------- Google Ads */
-function fGoogle(){
-  const defs = [
-    {k:"impressoes",rot:"Impressões",f:num},   {k:"cliques",rot:"Cliques",f:num},
-    {k:"ctr",rot:"CTR",f:pct},                 {k:"cpc",rot:"CPC médio",f:brl,inv:true},
-    {k:"conversoes",rot:"Conversões",f:num},   {k:"taxaConversao",rot:"Taxa de conversão",f:pct},
-    {k:"custoConversao",rot:"Por conversão",f:brl,inv:true}, {k:"custo",rot:"Custo",f:brl,inv:true}
-  ];
-  const total  = DADOS.google.campanhas.reduce((s,c)=>s+(c.atual?c.atual.custo:0),0);
-  const totalA = DADOS.google.campanhas.reduce((s,c)=>s+(c.anterior?c.anterior.custo:0),0);
-
-  return `
-  <div class="faixa">
-    ${cx(cxh("Google Ads",
-      `O canal consumiu <strong>${brl(total)}</strong> nesta janela, contra
-       <strong>${brl(totalA)}</strong> na anterior — as três campanhas somadas.`, brl0(total))
-      + rows(DADOS.google.campanhas.map(c=>({nome:c.nome, valor:c.atual?c.atual.custo:0,
-          rot:c.atual?brl(c.atual.custo):"desligada", cor:"var(--d2)"})), 132)
-      + proc(DADOS.google.fonte, `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
   </div>
-  ${DADOS.google.campanhas.map(c=>`
-    <div class="faixa">
-      ${cx(cxh(esc(c.nome), c.atual?"Esta janela contra a anterior.":"Não rodou nesta janela.",
-               c.atual?null:"Desligada")
-        + (c.nota?`<p class="recado">${esc(c.nota)}</p>`:"")
-        + `<div class="tw"><table>
-            <thead><tr><th>Métrica</th><th class="r">Esta janela</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
-            <tbody>${defs.map(d=>{
-              const va=c.atual?c.atual[d.k]:null, vb=c.anterior?c.anterior[d.k]:null;
-              const vr=vari(va,vb,d.inv);
-              return `<tr><td class="nm">${d.rot}</td>
-                <td class="r">${c.atual?d.f(va):"—"}</td>
-                <td class="r" style="color:var(--texto-3)">${c.anterior?d.f(vb):"—"}</td>
-                <td class="r ${vr?vr.cls:"flat"}">${vr?vr.txt:"—"}</td></tr>`;
-            }).join("")}</tbody>
-          </table></div>`)}
-    </div>`).join("")}`;
-}
 
-/* --------------------------------------------------------------- a página */
-function fLP(){
-  const g = DADOS.lp.ga4, c = DADOS.lp.clarity.atual;
-  return `
+  ${falhaBox("neg")}
+  <div class="cinco" style="margin-bottom:14px">
+    ${N("Investimento", brl(a.investimento), variN(a.investimento,b.investimento), "Soma dos canais")}
+    ${N("Cadastros novos", num(a.cadastros), vari(a.cadastros,b.cadastros))}
+    ${N("Custo por cadastro", brl(cpc), vari(cpc,cpcB,true))}
+    ${N("Pagamentos", num(a.pagamentos), vari(a.pagamentos,b.pagamentos))}
+    ${N("GMV", brl(a.gmv), vari(a.gmv,b.gmv))}
+  </div>
+
   <div class="faixa dois">
-    ${cx(cxh("Sessões na landing page","Só o hostname miaapp.com.br, nas duas janelas.")
-      + tiles(tile("Sessões", num(g.atual.sessoes), vari(g.atual.sessoes,g.anterior.sessoes)))
-      + `<p class="proc">${esc(g.fonte)} · ${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}.
-         Inclui tráfego direto, orgânico e de IA, não só anúncio.</p>`)}
-    ${cx(cxh("Comportamento na página","Como as pessoas se comportam depois de chegar.","3 dias")
-      + `<p class="recado">Estes números <strong>não são da janela do painel</strong>. A API do
-         Clarity só devolve os últimos 3 dias, então não há como puxar 24/08–30/08. Para
-         ter série é preciso gravar um retrato por dia.</p>`
-      + tiles(
-        tile("Rolagem", pct(c.scroll), null, "Até onde o visitante desce") +
-        tile("Tempo ativo", seg(c.tempoAtivo)) +
-        tile("Sessões", num(c.sessoes)) +
-        tile("Páginas por sessão", nf2.format(c.paginasPorSessao)) +
-        tile("Cliques mortos", pct(c.deadClicks), null, "Clique em algo que parece botão") +
-        tile("Quickback", num(c.quickbackCliques), null, "Cliques de quem entra e volta na hora")
-      )
-      + proc(DADOS.lp.clarity.fonte, DADOS.lp.clarity.janela))}
-  </div>
-  <div class="faixa">
-    ${cx(cxh("Anotações da página","O que aprendemos, escrito à mão.")
-      + `<div class="notas">${DADOS.lp.aprendizados.itens.map(t=>`<p>${t}</p>`).join("")}</div>`
-      + `<p class="proc">${esc(DADOS.lp.aprendizados.origem)}</p>`)}
+    ${cx(cxt("Do visitante ao profissional pagando","Quantas pessoas sobram em cada etapa.")
+      + falhaBox("sessA")
+      + etapas.map(e=>`<div class="linha">
+          <span class="ln">${esc(e.n)}</span>
+          <span class="lt"><span class="lf" style="width:${Math.max((e.v||0)/max*100,2)}%;background:var(--d1)"></span></span>
+          <span class="lv">${num(e.v)}</span>
+        </div>`).join(""))}
+    ${cx(cxt("GMV por semana","Quanto passou pelo produto.",`${g.length} semanas`)
+      + `<div class="bars">${g.map((s,i)=>`<div class="bc ${i===ult?"on":""}" title="${s.semana}: ${brl(s.gmv)}">
+          <span class="bv">${nf0.format(s.gmv)}</span>
+          <span class="bb" style="height:${Math.max(s.gmv/Math.max(...g.map(x=>x.gmv))*100,3)}%"></span></div>`).join("")}</div>
+         <div class="blabs">${g.map(s=>`<span>${s.semana}</span>`).join("")}</div>`
+      + `<p class="proc">Série gravada — as seis semanas não vêm da consulta ao vivo.</p>`)}
   </div>`;
 }
 
-/* --------------------------------------------------------------- o negócio */
-function fNegocio(){
-  const co = DADOS.negocio.coorte, pl = DADOS.negocio.plataforma;
-  const gmv = DADOS.negocio.gmvSemanal;
-  return `
-  <div class="faixa dois">
-    ${cx(cxh("A turma que entrou nesta janela","Coorte: só quem se cadastrou entre as duas datas.")
-      + tiles(
-        tile("Cadastros", num(co.atual.cadastros), vari(co.atual.cadastros,co.anterior.cadastros)) +
-        tile("Onboarding", num(co.atual.onboarding), vari(co.atual.onboarding,co.anterior.onboarding),
-             "Concluíram a configuração") +
-        tile("Contas ativas", num(co.atual.contasAtivas), vari(co.atual.contasAtivas,co.anterior.contasAtivas),
-             "Conta de pagamento aprovada")
-      )
-      + `<p class="proc">${esc(DADOS.negocio.fonte)} · coorte por data de cadastro.
-         Ativação de conta demora, então a coorte mais nova sempre parece pior.</p>`)}
-    ${cx(cxh("A plataforma inteira","Todos os profissionais transacionando na janela.")
-      + tiles(
-        tile("Agendamentos", num(pl.atual.agendamentos), vari(pl.atual.agendamentos,pl.anterior.agendamentos)) +
-        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos)) +
-        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv))
-      )
-      + `<p class="proc">${esc(DADOS.negocio.fonte)}. Não é a coorte — é por isso que
-         41 pagamentos convivem com 2 contas ativadas.</p>`)}
-  </div>
-  <div class="faixa dois">
-    ${cx(cxh("GMV semana a semana","Em reais, por semana de pagamento.")
-      + area(gmv.map(s=>({rot:s.semana, valor:s.gmv})), brl0)
-      + proc(DADOS.negocio.fonte))}
-    ${cx(cxh("Onde o profissional para","Da turma desta janela, do cadastro até a conta ativa.")
-      + rows([
-          {nome:"Cadastraram",   valor:co.atual.cadastros,    rot:num(co.atual.cadastros)},
-          {nome:"Configuraram",  valor:co.atual.onboarding,   rot:num(co.atual.onboarding)},
-          {nome:"Ativaram conta",valor:co.atual.contasAtivas, rot:num(co.atual.contasAtivas), mau:true}
-        ], 116)
-      + `<p class="proc">A conta de pagamento é o degrau mais alto: sem ela o profissional
-         não recebe, e a Mia não fatura.</p>`)}
-  </div>`;
-}
-
-/* -------------------------------------------------------------- o que vem */
-function fPassos(){
+function vCanais(){
+  const cs=D.canais.filter(c=>c.atual||c.erro);
+  const max=Math.max(...cs.map(c=>(c.atual&&c.atual.gasto)||0),1);
   return `<div class="faixa">
-    ${cx(cxh("O que fica decidido","Para a semana que começa, em ordem.")
-      + `<ol class="passos">${DADOS.proximosPassos.map(p=>`<li><span>${p}</span></li>`).join("")}</ol>`)}
+    ${cx(cxt("Onde o dinheiro foi","Um canal por linha. Menos é melhor no custo por clique.")
+      + cs.map(c=>{
+          if(!c.atual) return `<p class="falhou"><b>${esc(c.nome)}</b>${esc(c.erro||"sem dados")}</p>`;
+          return `<div class="linha">
+            <span class="ln">${esc(c.nome)}</span>
+            <span class="lt"><span class="lf" style="width:${Math.max(c.atual.gasto/max*100,2)}%;background:${c.cor}"></span></span>
+            <span class="lv">${brl(c.atual.gasto)}</span></div>`;
+        }).join(""))}
+  </div>
+  <div class="faixa">
+    ${cx(cxt("Canal por canal","Gasto, cliques e o que cada resultado custou.")
+      + `<div class="tw"><table>
+        <thead><tr><th>Canal</th><th class="r">Gasto</th><th class="r">Cliques</th>
+          <th class="r">Por clique</th><th class="r">Resultados</th><th class="r">Por resultado</th></tr></thead>
+        <tbody>${cs.map(c=>{
+          if(!c.atual) return `<tr><td class="nm">${esc(c.nome)}<span>${esc(c.erro||"")}</span></td>
+            <td class="r" colspan="5" style="color:var(--texto-3)">sem dados</td></tr>`;
+          const x=c.atual;
+          return `<tr><td class="nm">${esc(c.nome)}</td>
+            <td class="r">${brl(x.gasto)}</td><td class="r">${num(x.cliques)}</td>
+            <td class="r">${brl(x.cliques?x.gasto/x.cliques:null)}</td>
+            <td class="r">${x.conversoes==null?"—":num(x.conversoes)}</td>
+            <td class="r">${x.conversoes?brl(x.gasto/x.conversoes):"—"}</td></tr>`;
+        }).join("")}</tbody></table></div>`
+      + `<p class="proc">"Resultados" é o que cada plataforma reporta por conta própria: conversão no
+         Google, cadastro pelo pixel no Meta. Não é comparável entre canais, e o OpenAI Ads não
+         reporta conversão nenhuma.</p>`)}
   </div>`;
 }
 
-/* ---------------------------------------------------------------- montagem */
-const menu = document.getElementById("menu");
-const main = document.getElementById("main");
+function vDetalhe(){
+  const camp=(D.campanhas||[]).filter(c=>c.gasto>0).sort((a,b)=>b.gasto-a.gasto);
+  const cri=(D.criativos||[]).filter(c=>c.gasto>0);
+  return `<div class="faixa">
+    ${cx(cxt("Campanhas","Só as que gastaram no período.")
+      + (camp.length?`<div class="tw"><table>
+        <thead><tr><th>Campanha</th><th>Canal</th><th class="r">Gasto</th>
+          <th class="r">Cliques</th><th class="r">Resultados</th></tr></thead>
+        <tbody>${camp.map(c=>`<tr><td class="nm">${esc(c.nome)}</td><td>${esc(c.canal)}</td>
+          <td class="r">${brl(c.gasto)}</td><td class="r">${num(c.cliques)}</td>
+          <td class="r">${num(c.conversoes)}</td></tr>`).join("")}</tbody></table></div>`
+        : `<p class="vazio">Nenhuma campanha com gasto no período.</p>`))}
+  </div>
+  <div class="faixa">
+    ${cx(cxt("Anúncios do Meta","Ordenados por quanto consumiram.")
+      + (cri.length?`<div class="tw"><table>
+        <thead><tr><th>Anúncio</th><th class="r">Gasto</th><th class="r">Cliques</th>
+          <th class="r">Cadastros</th><th class="r">Por cadastro</th></tr></thead>
+        <tbody>${cri.map(c=>`<tr>
+          <td class="nm">${esc(c.nome)}<span>${esc(c.campanha||"")}</span></td>
+          <td class="r">${brl(c.gasto)}</td><td class="r">${num(c.cliques)}</td>
+          <td class="r">${num(c.cadastros)}</td>
+          <td class="r">${c.cadastros?brl(c.gasto/c.cadastros):"—"}</td></tr>`).join("")}</tbody></table></div>`
+        : `<p class="vazio">Nenhum anúncio com gasto no período.</p>`))}
+  </div>`;
+}
 
-FOLHAS.forEach((fo,i)=>{
-  const b = document.createElement("button");
-  b.className="item"; b.type="button"; b.id="it-"+fo.id;
-  b.setAttribute("role","tab"); b.setAttribute("aria-controls","fo-"+fo.id);
+function vPassos(){
+  return `<div class="faixa">
+    ${cx(cxt("O que fica decidido","Para a semana que começa.")
+      + `<ol class="passos">${(D.passos||[]).map(p=>`<li><span>${esc(p)}</span></li>`).join("")}</ol>`)}
+  </div>`;
+}
+
+/* -------------------------------------------------------------------- monta */
+const menu=document.getElementById("menu"), main=document.getElementById("main");
+VISTAS.forEach((v,i)=>{
+  const b=document.createElement("button");
+  b.className="item"; b.type="button"; b.id="it-"+v.id; b.title=v.nome;
+  b.setAttribute("role","tab"); b.setAttribute("aria-controls","v-"+v.id);
   b.setAttribute("aria-selected", i===0?"true":"false");
-  b.title = fo.nome;
-  b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${IC[fo.ic]}</svg>
-    <span class="lbl">${fo.nome}</span><span class="pt" aria-hidden="true"></span>`;
-  b.addEventListener("click", ()=>abrir(fo.id));
-  b.addEventListener("keydown", e=>{
-    const passo = {ArrowDown:1, ArrowRight:1, ArrowUp:-1, ArrowLeft:-1}[e.key];
-    if(!passo) return;
+  b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[v.ic]}</svg>
+    <span class="lbl">${v.nome}</span><span class="pt" aria-hidden="true"></span>`;
+  b.addEventListener("click",()=>abrir(v.id));
+  b.addEventListener("keydown",e=>{
+    const p={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key]; if(!p)return;
     e.preventDefault();
-    const alvo = FOLHAS[(i + passo + FOLHAS.length) % FOLHAS.length];
-    abrir(alvo.id);
-    document.getElementById("it-"+alvo.id).focus();
+    const alvo=VISTAS[(i+p+VISTAS.length)%VISTAS.length];
+    abrir(alvo.id); document.getElementById("it-"+alvo.id).focus();
   });
   menu.appendChild(b);
-
-  const s = document.createElement("section");
-  s.className="folha"; s.id="fo-"+fo.id;
-  s.setAttribute("role","tabpanel"); s.setAttribute("aria-labelledby","it-"+fo.id);
+  const s=document.createElement("section");
+  s.className="folha"; s.id="v-"+v.id;
+  s.setAttribute("role","tabpanel"); s.setAttribute("aria-labelledby","it-"+v.id);
   if(i>0) s.hidden=true;
   main.appendChild(s);
 });
-
 function abrir(id){
-  FOLHAS.forEach(fo=>{
-    const on = fo.id===id;
-    document.getElementById("it-"+fo.id).setAttribute("aria-selected", on?"true":"false");
-    document.getElementById("fo-"+fo.id).hidden = !on;
+  VISTAS.forEach(v=>{
+    const on=v.id===id;
+    document.getElementById("it-"+v.id).setAttribute("aria-selected",on?"true":"false");
+    document.getElementById("v-"+v.id).hidden=!on;
   });
-  main.scrollTop = 0;
-  try{ localStorage.setItem("painel:folha", id); }catch(e){}
-  filtrar();
+  main.scrollTop=0;
+  try{localStorage.setItem("mia:vista",id)}catch(e){}
+}
+
+const elEstado=document.getElementById("estado");
+function pintarEstado(){
+  const p=D.periodo;
+  const partes=[`<b>${dm(p.atual.de)}–${dm(p.atual.ate)}</b> contra <b>${dm(p.anterior.de)}–${dm(p.anterior.ate)}</b>`];
+  const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
+  const d1=dias(p.atual.de,p.atual.ate), d2=dias(p.anterior.de,p.anterior.ate);
+  partes.push(d1===d2 ? `${d1} dias cada`
+    : `<span class="alerta">${d1} dias contra ${d2} — janelas de tamanhos diferentes</span>`);
+  partes.push(D.aoVivo ? "dados desta consulta" : `retrato de ${esc(D.puxadoEm)}`);
+  if(MCP===null) partes.push(`<span class="alerta">consulta ao vivo indisponível nesta janela</span>`);
+  elEstado.innerHTML = partes.join(" · ");
+  btPuxar.disabled = (MCP===null);
+  if(MCP===null) btPuxar.title="Abra o painel dentro do claude.ai para consultar ao vivo.";
 }
 
 function desenhar(){
-  FOLHAS.forEach(fo=>{ document.getElementById("fo-"+fo.id).innerHTML = fo.render(); });
-  document.getElementById("marca").textContent = DADOS.marca;
-  filtrar();
-}
-
-/* filtro — esconde linhas de tabela e itens de lista que não casam */
-const q = document.getElementById("q");
-function filtrar(){
-  const termo = q.value.trim().toLowerCase();
-  const folha = FOLHAS.map(f=>document.getElementById("fo-"+f.id)).find(el=>!el.hidden);
-  if(!folha) return;
-  folha.querySelectorAll("tbody tr, .ord li, .rows .row").forEach(el=>{
-    el.hidden = termo ? !el.textContent.toLowerCase().includes(termo) : false;
-  });
-}
-q.addEventListener("input", filtrar);
-
-/* período — as duas janelas ficam visíveis e editáveis.
-   Mexer no período atual reencaixa a comparação na janela anterior de mesmo
-   tamanho; mexer na comparação é livre, e aí o painel avisa se os tamanhos
-   não baterem — comparar 9 dias com 7 distorce todo delta sem avisar. */
-const inDe  = document.getElementById("de"),   inAte  = document.getElementById("ate");
-const inCDe = document.getElementById("cde"),  inCAte = document.getElementById("cate");
-const elDias = document.getElementById("pdias");
-
-const dias = (a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
-const menos = (iso,d)=>{ const x=new Date(iso+"T12:00:00"); x.setDate(x.getDate()-d);
-  return x.toISOString().slice(0,10); };
-
-function encaixar(){
-  const de=inDe.value, ate=inAte.value;
-  if(!de||!ate||de>ate) return;
-  const cAte = menos(de,1), cDe = menos(cAte, dias(de,ate)-1);
-  inCDe.value = cDe; inCAte.value = cAte;
-}
-
-function periodo(){
-  const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
-  if(de&&ate&&de<=ate) DADOS.periodo.atual = {de,ate};
-  if(cde&&cate&&cde<=cate) DADOS.periodo.anterior = {de:cde,ate:cate};
-
-  const a = (de&&ate&&de<=ate) ? dias(de,ate) : null;
-  const b = (cde&&cate&&cde<=cate) ? dias(cde,cate) : null;
-  if(a==null||b==null){ elDias.textContent=""; elDias.classList.remove("torto"); return; }
-  const plural = n => n===1 ? "1 dia" : `${n} dias`;
-  if(a===b){
-    elDias.textContent = `${plural(a)} contra ${plural(b)}`;
-    elDias.classList.remove("torto");
-  }else{
-    elDias.textContent = `${plural(a)} contra ${plural(b)} — janelas de tamanhos diferentes`;
-    elDias.classList.add("torto");
+  VISTAS.forEach(v=>{ document.getElementById("v-"+v.id).innerHTML=v.r(); });
+  pintarEstado();
+  const t=document.getElementById("obs");
+  if(t){
+    try{ t.value=localStorage.getItem("mia:obs")||"" }catch(e){}
+    t.addEventListener("input",()=>{try{localStorage.setItem("mia:obs",t.value)}catch(e){}});
   }
 }
 
-inDe.value  = DADOS.periodo.atual.de;
-inAte.value = DADOS.periodo.atual.ate;
-inCDe.value  = DADOS.periodo.anterior.de;
-inCAte.value = DADOS.periodo.anterior.ate;
-
-[inDe,inAte].forEach(el=>el.addEventListener("change", ()=>{ encaixar(); periodo(); }));
-[inCDe,inCAte].forEach(el=>el.addEventListener("change", periodo));
-document.getElementById("btAuto").addEventListener("click", ()=>{ encaixar(); periodo(); });
-
-/* tema */
-const SOL = '<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
-const LUA = '<path d="M20 14.5A8.4 8.4 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>';
-const btTema = document.getElementById("btTema"), icTema = document.getElementById("icTema");
-function tema(t){
-  if(t) document.documentElement.setAttribute("data-theme", t);
-  else document.documentElement.removeAttribute("data-theme");
-  const escuro = t==="dark" ||
-    (!t && matchMedia("(prefers-color-scheme:dark)").matches);
-  icTema.innerHTML = escuro ? SOL : LUA;
-  try{ t ? localStorage.setItem("painel:tema",t) : localStorage.removeItem("painel:tema"); }catch(e){}
+const inDe=document.getElementById("de"), inAte=document.getElementById("ate");
+const inCDe=document.getElementById("cde"), inCAte=document.getElementById("cate");
+const btPuxar=document.getElementById("btPuxar"), txPuxar=document.getElementById("txPuxar");
+const menos=(iso,d)=>{const x=new Date(iso+"T12:00:00");x.setDate(x.getDate()-d);
+  return x.toISOString().slice(0,10)};
+function encaixar(){
+  const de=inDe.value, ate=inAte.value; if(!de||!ate||de>ate) return;
+  const n=Math.round((new Date(ate)-new Date(de))/86400000);
+  inCAte.value=menos(de,1); inCDe.value=menos(inCAte.value,n);
 }
-btTema.addEventListener("click", ()=>{
-  const atual = document.documentElement.getAttribute("data-theme");
-  const escuro = atual==="dark" ||
-    (!atual && matchMedia("(prefers-color-scheme:dark)").matches);
-  tema(escuro ? "light" : "dark");
-});
-document.getElementById("btPrint").addEventListener("click", ()=>window.print());
+inDe.value=RETRATO.periodo.atual.de;  inAte.value=RETRATO.periodo.atual.ate;
+inCDe.value=RETRATO.periodo.anterior.de; inCAte.value=RETRATO.periodo.anterior.ate;
+[inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();pintarEstado()}));
+[inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
+btPuxar.addEventListener("click",puxar);
 
-periodo();
+const SOL='<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
+const LUA='<path d="M20 14.5A8.4 8.4 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>';
+const icTema=document.getElementById("icTema");
+function tema(t){
+  if(t) document.documentElement.setAttribute("data-theme",t);
+  else document.documentElement.removeAttribute("data-theme");
+  const esc2 = t==="dark" || (!t && matchMedia("(prefers-color-scheme:dark)").matches);
+  icTema.innerHTML = esc2?SOL:LUA;
+  try{ t?localStorage.setItem("mia:tema",t):localStorage.removeItem("mia:tema") }catch(e){}
+}
+document.getElementById("btTema").addEventListener("click",()=>{
+  const at=document.documentElement.getAttribute("data-theme");
+  const es=at==="dark"||(!at&&matchMedia("(prefers-color-scheme:dark)").matches);
+  tema(es?"light":"dark");
+});
+document.getElementById("btImp").addEventListener("click",()=>window.print());
+
 desenhar();
 try{
-  const s = localStorage.getItem("painel:folha");
-  if(s && FOLHAS.some(f=>f.id===s)) abrir(s);
-  tema(localStorage.getItem("painel:tema"));
+  const s=localStorage.getItem("mia:vista");
+  if(s&&VISTAS.some(v=>v.id===s)) abrir(s);
+  tema(localStorage.getItem("mia:tema"));
 }catch(e){ tema(null); }
 </script>

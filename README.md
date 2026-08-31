@@ -1,92 +1,68 @@
 # Painel — Mia
 
-Painel web para a apresentação semanal e mensal aos founders.
+Painel semanal e mensal para a reunião com os founders.
 
-**Painel:** `painel/index.html` — abra no navegador, ou publique numa URL
-seguindo [`docs/publicar.md`](docs/publicar.md). A raiz redireciona para `/painel/`.
+**Painel:** `painel/index.html` — um arquivo, sem build, sem dependência.
+A raiz do repositório redireciona para `/painel/`.
 
-## Como atualizar a semana
+## Como usar
 
-Tudo que muda toda semana está num único bloco no topo de `painel/index.html`,
-entre os comentários `DADOS DA SEMANA` e `fim dos dados da semana`.
+1. Escolha o **Período** e o **Comparar com** na barra de cima. Mexer no período
+   principal reencaixa a comparação na janela anterior de mesmo tamanho.
+2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
 
-Cada métrica tem `atual` e `anterior`; o painel calcula as variações sozinho e
-pinta verde ou vermelho conforme o que é bom para aquela métrica (num custo,
-cair é bom). Percentual vai como número (`6.79` = 6,79%), dinheiro em reais
-(`615.72`).
+A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
+retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 
-## Seções
+## Quatro seções, nesta ordem
 
-| Seção | O que mostra | De onde vêm os dados |
+| Seção | O que mostra |
+|---|---|
+| **Resumo** | Cinco números, uma frase, o funil em quatro etapas e o GMV por semana |
+| **Canais** | Google, Meta e OpenAI: gasto, cliques, custo por clique e por resultado |
+| **Detalhe** | Campanhas e anúncios — para quando perguntarem |
+| **Decisões** | O que fica combinado para a semana que começa |
+
+Os cinco números da abertura: **Investimento**, **Cadastros novos**,
+**Custo por cadastro**, **Pagamentos** e **GMV**. Nada mais. Founder entende os
+cinco sem explicação.
+
+## De onde vem cada número
+
+| Bloco | Fonte | Chamada |
 |---|---|---|
-| A semana | Veredito, GMV por semana, funil, indicadores, três taxas, criativos | todas |
-| OpenAI Ads | Impressões, cliques, conversões, CPA, série diária | Windsor · openai_ads |
-| Meta Ads | Criativos por objetivo, Connect Rate | Windsor · facebook |
-| Google Ads | Campanhas comparadas com o período anterior, termos | Windsor · google_ads |
-| A página | Rolagem, tempo ativo, cliques mortos, por dispositivo | Clarity + GA4 |
-| O negócio | Cadastros, onboarding, contas ativas, GMV | Metabase |
-| O que vem | Decisões da semana | manual |
+| Google Ads | Windsor · `google_ads` · conta 326-604-5511 | `get_data` |
+| Meta Ads | Windsor · `facebook` · conta 604915332642452 | `get_data` |
+| OpenAI Ads | Windsor · `openai_ads` · conta 284 | `get_data` |
+| Visitas na página | Windsor · `googleanalytics4` · propriedade 511677134 | `get_data` |
+| Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-## Os dados são reais?
+São **nove chamadas** por consulta: quatro fontes do Windsor × duas janelas, mais
+um SQL que já devolve as duas.
 
-Sim, e [`docs/procedencia.md`](docs/procedencia.md) diz de onde vem cada um.
-Resumo: o painel **não consulta nada** — a coleta é feita fora dele e o resultado
-é gravado no bloco `DADOS`. Mudar as datas na tela não dispara query.
+O GMV por semana é série gravada — as seis semanas não vêm da consulta.
+
+## O que cada fonte não entrega
+
+- **OpenAI Ads** não tem campo de conversão. Vai trazer impressões, cliques,
+  gasto, CPC e CPM — nunca CPA.
+- **Microsoft Clarity** ficou fora: a API só devolve os últimos 3 dias, então não
+  cobre nenhuma janela escolhida. Precisa de retrato diário acumulado.
+- **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
+  aparece consolidado, e não por canal.
+
+## Quando uma fonte falha
+
+Cada bloco falha sozinho e mostra o que fazer — conexão expirada, conector não
+adicionado, permissão negada, limite de chamadas, erro da plataforma de origem.
+Os outros blocos continuam na tela.
+
+Fora do claude.ai a consulta ao vivo não existe: o painel avisa e mostra o
+retrato gravado.
 
 ## Documentos
 
 - [`docs/plano-painel.html`](docs/plano-painel.html) — plano de construção
-- [`docs/descoberta-fontes.md`](docs/descoberta-fontes.md) — o que cada fonte entrega,
-  validado com chamadas reais em 29/08/2026
-
-## Próximo passo
-
-Ligar a coleta automática: uma rotina agendada puxa os números pelo Windsor,
-Meta Ads e Metabase e reescreve o bloco de dados antes da reunião.
-
-## Visual
-
-Moldura em verde-mata sobre fundo menta, casca branca arredondada, menu lateral
-com ícones e cartões brancos — seguindo a referência de layout escolhida.
-
-O verde escuro é **moldura**, não cor de dado: ele reprova o piso de croma do
-validador de paleta, ou seja, vira cinza quando usado como barra ou linha de
-gráfico. As séries usam verde `#0E8F63`, laranja `#D07C1A` e violeta `#8C4FBF`
-no tema claro, e `#14A070` / `#C67B22` / `#8E72D0` no escuro — as duas paletas
-passam os seis testes (banda de luminosidade, piso de croma, separação para
-daltonismo, piso de visão normal e contraste com a superfície).
-
-Tipos: Plus Jakarta Sans nos títulos e números, IBM Plex Sans no corpo.
-
-Tem alternador de tema claro/escuro, filtro de texto por seção e botão de
-imprimir com folha de estilo própria para PDF.
-
-## Comportamento de app
-
-A página não rola. A barra lateral, o cabeçalho e a faixa de período ficam
-fixos, e só a área de conteúdo rola por dentro — do mesmo jeito que um sistema
-web. Trocar de seção volta a rolagem para o topo.
-
-Larguras:
-
-| Largura | Comportamento |
-|---|---|
-| acima de 1240px | menu com rótulos, duas colunas nos blocos |
-| 1240px a 1080px | menu recolhe para ícones, item ativo em pastilha branca |
-| abaixo de 1080px | blocos passam a uma coluna |
-| abaixo de 760px | menu vira faixa horizontal no topo, cartões e gráficos compactos |
-| abaixo de 420px | indicadores empilham em coluna única |
-
-Verificado em 1440, 1180, 900 e 390px: a página não rola em nenhum eixo, o
-conteúdo rola por dentro, e nenhum elemento passa da borda direita.
-
-## As duas janelas de data
-
-A faixa de período mostra **as duas** datas, sempre visíveis: o período atual e
-o de comparação. Mexer no período atual reencaixa a comparação na janela
-imediatamente anterior, do mesmo tamanho; o botão "Janela anterior" refaz esse
-encaixe a qualquer momento. A comparação também pode ser editada à mão.
-
-Ao lado aparece a duração das duas janelas. Quando os tamanhos não batem
-(9 dias contra 7, por exemplo) o aviso fica vermelho — comparar janelas de
-durações diferentes distorce todos os deltas sem dar sinal.
+- [`docs/descoberta-fontes.md`](docs/descoberta-fontes.md) — o que cada fonte entrega
+- [`docs/procedencia.md`](docs/procedencia.md) — como a coleta é feita
+- [`docs/publicar.md`](docs/publicar.md) — publicar numa URL própria
