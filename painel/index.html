@@ -77,23 +77,39 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   grid-template-rows:auto minmax(0,1fr);min-width:0;overflow:hidden}
 
 /* ---------------- barra de consulta: é o coração do painel ---------------- */
-.consulta{background:var(--cartao);border-bottom:1px solid var(--borda);padding:14px 22px;
-  display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
-.cg{display:flex;flex-direction:column;gap:5px}
-.cg label{font-family:"Plus Jakarta Sans",sans-serif;font-size:9.5px;font-weight:700;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--texto-3)}
-.cg .par{display:flex;align-items:center;gap:6px}
-.cg input[type=date]{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:600;
-  font-variant-numeric:tabular-nums;padding:8px 10px;border-radius:9px;border:1px solid var(--borda);
-  background:var(--cartao);color:var(--texto)}
-.cg input:focus-visible{outline:2px solid var(--mata);outline-offset:-1px}
-.cg .seta{color:var(--texto-3);font-size:12px}
-.atalhos{display:flex;gap:6px;align-self:flex-end;padding-bottom:1px}
-.atalho{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
-  padding:9px 13px;border-radius:9px;border:1px solid var(--borda);background:var(--cartao);
-  color:var(--texto-2);cursor:pointer;white-space:nowrap}
-.atalho:hover{background:var(--tela);color:var(--texto)}
-.atalho:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
+.consulta{background:var(--cartao);border-bottom:1px solid var(--borda);
+  padding:16px 22px 13px;display:flex;flex-direction:column;gap:12px}
+.c-linha{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+
+/* par de datas como um campo só, com o rótulo dentro */
+.cd{display:flex;flex-direction:column;justify-content:center;gap:3px;
+  background:var(--tela);border:1px solid var(--borda);border-radius:13px;
+  padding:8px 15px;transition:border-color .15s}
+.cd:hover{border-color:var(--texto-3)}
+.cd:focus-within{border-color:var(--mata);box-shadow:0 0 0 3px
+  color-mix(in srgb, var(--mata) 14%, transparent)}
+.cd-l{font-family:"Plus Jakarta Sans",sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--texto-3);line-height:1}
+.cd-v{display:flex;align-items:center;gap:7px}
+.cd input[type=date]{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
+  font-variant-numeric:tabular-nums;border:none;background:none;padding:0;margin:0;
+  color:var(--texto);letter-spacing:-.01em;width:8.6em}
+.cd input[type=date]::-webkit-calendar-picker-indicator{opacity:.4;cursor:pointer}
+.cd input[type=date]:focus-visible{outline:none}
+.cd-seta{color:var(--texto-3);font-size:12px}
+.c-vs{align-self:center;font-family:"Plus Jakarta Sans",sans-serif;font-size:10.5px;
+  font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-3);
+  padding:0 2px}
+
+/* atalhos como controle segmentado */
+.seg{display:flex;align-self:stretch;border:1px solid var(--borda);border-radius:13px;
+  overflow:hidden;background:var(--tela)}
+.seg button{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+  padding:0 15px;border:none;background:none;color:var(--texto-2);cursor:pointer;
+  white-space:nowrap;transition:background .15s,color .15s}
+.seg button + button{border-left:1px solid var(--borda)}
+.seg button:hover{background:var(--cartao);color:var(--texto)}
+.seg button:focus-visible{outline:2px solid var(--mata);outline-offset:-3px}
 .puxar{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
   padding:11px 20px;border-radius:10px;border:none;background:var(--mata);color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
@@ -112,9 +128,19 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .ic:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
 .eu{width:36px;height:36px;border-radius:50%;background:var(--mata);color:#fff;display:grid;
   place-items:center;font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:12px}
-.estado{width:100%;font-size:11.5px;color:var(--texto-3);display:flex;gap:14px;flex-wrap:wrap}
-.estado b{font-weight:600;color:var(--texto-2)}
-.estado .alerta{color:var(--ruim);font-weight:600}
+/* estado em chips: cada fato num selo, nada de frase corrida */
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:10.5px;font-weight:700;letter-spacing:.02em;padding:5px 11px;border-radius:99px;
+  background:var(--tela);border:1px solid var(--borda-2);color:var(--texto-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip i{width:6px;height:6px;border-radius:50%;flex:none}
+.chip.vivo{background:var(--bom-t);border-color:transparent;color:var(--bom)}
+.chip.vivo i{background:var(--bom)}
+.chip.foto i{background:var(--texto-3)}
+.chip.acao{background:var(--mata);border-color:transparent;color:#fff}
+.chip.mal{background:var(--ruim-t);border-color:transparent;color:var(--ruim)}
+.chip.aviso2{background:var(--av-t);border-color:transparent;color:var(--av)}
 
 #main{overflow-y:auto;overflow-x:hidden;min-height:0;padding:20px 22px 28px;
   overscroll-behavior:contain}
@@ -247,11 +273,12 @@ tfoot td.r{text-align:right}
   .menu{flex-direction:row;flex:none;gap:4px}
   .item{padding:10px 12px;white-space:nowrap;justify-content:flex-start}
   .item .lbl{display:inline} .imp{display:none}
-  .consulta{padding:12px 14px;gap:10px}
-  .cg{flex:1 1 100%} .cg input[type=date]{flex:1;min-width:0} .cg .par{width:100%}
-  .atalhos{width:100%} .atalho{flex:1}
+  .consulta{padding:12px 14px 10px;gap:10px}
+  .cd{flex:1 1 100%} .cd input[type=date]{width:auto;flex:1;min-width:0}
+  .c-vs{display:none}
+  .seg{flex:1 1 auto} .seg button{flex:1;padding:10px 0}
   .puxar{flex:1 1 100%;justify-content:center}
-  .ferram{margin-left:0}
+  .ferram{margin-left:auto}
   #main{padding:14px 14px 24px}
   .cx{padding:16px 17px} .tw{margin:0 -17px -16px;padding:0 17px}
   .bl-v{font-size:21px}
@@ -264,7 +291,8 @@ tfoot td.r{text-align:right}
   html,body{height:auto;overflow:visible} body{background:#fff;padding:0}
   #main{overflow:visible!important;padding:0}
   .app{box-shadow:none;border-radius:0;display:block;height:auto}
-  .lado,.puxar,.ic,.ferram{display:none!important}
+  .lado,.puxar,.ic,.ferram,.seg{display:none!important}
+  .cd{border:none;padding:0;background:#fff}
   .tela{display:block;overflow:visible;background:#fff}
   .consulta{border:none;padding:0 0 14px}
   .cx{break-inside:avoid;box-shadow:none}
@@ -357,39 +385,42 @@ const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,148
 
   <div class="tela">
     <div class="consulta">
-      <div class="cg">
-        <label for="de">Período</label>
-        <div class="par">
-          <input type="date" id="de" aria-label="Início do período">
-          <span class="seta" aria-hidden="true">→</span>
-          <input type="date" id="ate" aria-label="Fim do período">
+      <div class="c-linha">
+        <div class="cd">
+          <span class="cd-l" id="lde">Período</span>
+          <div class="cd-v">
+            <input type="date" id="de" aria-labelledby="lde" aria-label="Início do período">
+            <span class="cd-seta" aria-hidden="true">→</span>
+            <input type="date" id="ate" aria-label="Fim do período">
+          </div>
         </div>
-      </div>
-      <div class="cg">
-        <label for="cde">Comparar com</label>
-        <div class="par">
-          <input type="date" id="cde" aria-label="Início da comparação">
-          <span class="seta" aria-hidden="true">→</span>
-          <input type="date" id="cate" aria-label="Fim da comparação">
+        <span class="c-vs" aria-hidden="true">vs</span>
+        <div class="cd">
+          <span class="cd-l" id="lcde">Comparar com</span>
+          <div class="cd-v">
+            <input type="date" id="cde" aria-labelledby="lcde" aria-label="Início da comparação">
+            <span class="cd-seta" aria-hidden="true">→</span>
+            <input type="date" id="cate" aria-label="Fim da comparação">
+          </div>
         </div>
-      </div>
-      <div class="atalhos">
-        <button class="atalho" type="button" id="btSemana"
-          title="Última semana fechada, segunda a domingo, contra a anterior">Semana fechada</button>
-        <button class="atalho" type="button" id="btMes"
-          title="Último mês fechado contra o mês anterior">Mês fechado</button>
-      </div>
-      <button class="puxar" type="button" id="btPuxar">
-        <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
-      </button>
-      <div class="ferram">
+        <div class="seg" role="group" aria-label="Períodos prontos">
+          <button type="button" id="btSemana"
+            title="Última semana fechada, segunda a domingo, contra a anterior">Semana</button>
+          <button type="button" id="btMes"
+            title="Último mês fechado contra o mês anterior">Mês</button>
+        </div>
+        <button class="puxar" type="button" id="btPuxar">
+          <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
+        </button>
+        <div class="ferram">
         <button class="ic" type="button" id="btTema" aria-label="Alternar tema">
           <svg viewBox="0 0 24 24" id="icTema" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/>
           <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>
         </button>
-        <span class="eu" title="Alysson Lima">AL</span>
+          <span class="eu" title="Alysson Lima">AL</span>
+        </div>
       </div>
-      <div class="estado" id="estado"></div>
+      <div class="chips" id="estado"></div>
     </div>
     <main id="main" class="rola"></main>
   </div>
@@ -968,23 +999,27 @@ function pintarEstado(){
      o último pedaço diz de onde vieram os dados que estão na tela */
   const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
   const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
+  const chip=(txt,cls,ponto)=>`<span class="chip ${cls||""}">${ponto?"<i></i>":""}${txt}</span>`;
   const t=[];
   if(de&&ate&&cde&&cate&&de<=ate&&cde<=cate){
     const d1=dias(de,ate), d2=dias(cde,cate);
     const doisMeses = ehMesCalendario(de,ate) && ehMesCalendario(cde,cate);
-    t.push(`<b>${dm(de)}–${dm(ate)}</b> contra <b>${dm(cde)}–${dm(cate)}</b>`);
-    if(doisMeses)
-      t.push(`<b>${nomeMes(de)}</b> contra <b>${nomeMes(cde)}</b> — meses fechados`);
-    else
-      t.push(d1===d2?`${d1} dias cada`
-        :`<span class="alerta">${d1} dias contra ${d2} — janelas de tamanhos diferentes</span>`);
+    if(doisMeses){
+      t.push(chip(`${nomeMes(de)} vs ${nomeMes(cde)}`));
+      t.push(chip("meses fechados"));
+    } else {
+      t.push(chip(`${dm(de)}–${dm(ate)} vs ${dm(cde)}–${dm(cate)}`));
+      t.push(d1===d2 ? chip(`${d1} dias cada`)
+                     : chip(`${d1} vs ${d2} dias — tamanhos diferentes`,"mal"));
+    }
     const naTela = D.periodo.atual.de===de && D.periodo.atual.ate===ate &&
                    D.periodo.anterior.de===cde && D.periodo.anterior.ate===cate;
-    if(!naTela) t.push(`<b>clique em Puxar dados para trazer este período</b>`);
+    if(!naTela) t.push(chip("período novo — clique em Puxar dados","acao"));
   }
-  t.push(D.aoVivo?"na tela: dados consultados ao vivo":`na tela: retrato de ${esc(D.puxadoEm)}`);
-  if(MCP===null) t.push(`<span class="alerta">consulta ao vivo indisponível nesta janela</span>`);
-  elEstado.innerHTML=t.join(" · ");
+  t.push(D.aoVivo ? chip("dados ao vivo","vivo",true)
+                  : chip(`retrato de ${esc(D.puxadoEm).replace(" (gravado)","")}`,"foto",true));
+  if(MCP===null) t.push(chip("consulta ao vivo indisponível fora do claude.ai","aviso2"));
+  elEstado.innerHTML=t.join("");
   btPuxar.disabled=(MCP===null);
   if(MCP===null) btPuxar.title="Abra o painel dentro do claude.ai para consultar ao vivo.";
 }
