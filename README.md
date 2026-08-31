@@ -14,18 +14,34 @@ A raiz do repositório redireciona para `/painel/`.
 A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
 retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 
-## Quatro seções, nesta ordem
+## Seis seções, uma por canal
 
 | Seção | O que mostra |
 |---|---|
-| **Resumo** | Cinco números, uma frase, o funil em quatro etapas e o GMV por semana |
-| **Canais** | Google, Meta e OpenAI: gasto, cliques, custo por clique e por resultado |
-| **Detalhe** | Campanhas e anúncios — para quando perguntarem |
-| **Decisões** | O que fica combinado para a semana que começa |
+| **Resumo** | Cinco números, uma frase, o funil e o GMV por semana |
+| **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
+| **Meta Ads** | Alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento — mais a tabela por anúncio |
+| **OpenAI Ads** | Impressões, cliques, CTR, CPC, CPM, investimento |
+| **Landing Page** | Visitas na janela escolhida, e o comportamento pelo Clarity |
+| **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
 
-Os cinco números da abertura: **Investimento**, **Cadastros novos**,
-**Custo por cadastro**, **Pagamentos** e **GMV**. Nada mais. Founder entende os
-cinco sem explicação.
+Cada bloco de métrica traz três coisas: o valor, a variação contra a janela
+anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 que
+viram, quantos clicaram", "quanto custou cada cadastro". É o que deixa a tela
+legível para quem não vive de tráfego.
+
+Cada aba de canal fecha com **"O que esses números dizem"**: um parágrafo em
+português direto, montado a partir dos próprios números da consulta. Muda quando
+os dados mudam, e aponta o criativo mais eficiente e o que gastou sem retorno.
+
+## Nada de métrica guardada pela metade
+
+CTR, CPC, CPM, frequência, taxa de conversão e custo por conversão **não são
+gravados** — são calculados na hora, a partir das contagens brutas. Assim não
+existe número que não fecha com o vizinho.
+
+Quando a janela anterior é zero, a variação diz **"vinha de 0"** em vez de um
+travessão: 24 conversões contra zero é a história, não um dado ausente.
 
 ## De onde vem cada número
 
@@ -35,10 +51,11 @@ cinco sem explicação.
 | Meta Ads | Windsor · `facebook` · conta 604915332642452 | `get_data` |
 | OpenAI Ads | Windsor · `openai_ads` · conta 284 | `get_data` |
 | Visitas na página | Windsor · `googleanalytics4` · propriedade 511677134 | `get_data` |
+| Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **nove chamadas** por consulta: quatro fontes do Windsor × duas janelas, mais
-um SQL que já devolve as duas.
+São **dez chamadas** por consulta: quatro fontes do Windsor × duas janelas, mais
+uma do Clarity (que só tem uma janela possível) e um SQL que devolve as duas.
 
 O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 
@@ -46,8 +63,9 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 
 - **OpenAI Ads** não tem campo de conversão. Vai trazer impressões, cliques,
   gasto, CPC e CPM — nunca CPA.
-- **Microsoft Clarity** ficou fora: a API só devolve os últimos 3 dias, então não
-  cobre nenhuma janela escolhida. Precisa de retrato diário acumulado.
+- **Microsoft Clarity** só devolve os últimos 3 dias. Ele aparece na aba Landing
+  Page com a janela dele marcada em amarelo, e não entra em nenhuma conta que
+  dependa do período escolhido.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 
