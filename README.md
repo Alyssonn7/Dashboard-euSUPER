@@ -27,6 +27,12 @@ cair é bom). Percentual vai como número (`6.79` = 6,79%), dinheiro em reais
 | O negócio | Cadastros, onboarding, contas ativas, GMV | Metabase |
 | O que vem | Decisões da semana | manual |
 
+## Os dados são reais?
+
+Sim, e [`docs/procedencia.md`](docs/procedencia.md) diz de onde vem cada um.
+Resumo: o painel **não consulta nada** — a coleta é feita fora dele e o resultado
+é gravado no bloco `DADOS`. Mudar as datas na tela não dispara query.
+
 ## Documentos
 
 - [`docs/plano-painel.html`](docs/plano-painel.html) — plano de construção

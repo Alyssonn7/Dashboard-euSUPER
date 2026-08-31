@@ -198,9 +198,9 @@ body{
 .tese p{margin:0;font-size:16px;line-height:1.62;max-width:82ch;color:#fff}
 
 /* --------------------------------------------------------------- métricas */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:1px;
+.tiles{display:flex;flex-wrap:wrap;gap:1px;
   background:var(--borda-2);border-radius:12px;overflow:hidden}
-.tile{background:var(--cartao);padding:15px 16px}
+.tile{background:var(--cartao);padding:15px 16px;flex:1 1 146px;min-width:0}
 .tile .l{font-size:11.5px;font-weight:500;color:var(--texto-3);margin-bottom:7px;
   line-height:1.35}
 .tile .v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:22px;
@@ -307,6 +307,25 @@ tfoot td:first-child{border-radius:0 0 0 10px} tfoot td:last-child{border-radius
 .recado{font-size:12.5px;color:var(--texto-2);background:var(--tela);
   border-radius:10px;padding:11px 14px;margin:0 0 15px;line-height:1.55;max-width:82ch}
 .vazio{font-size:13px;color:var(--texto-3);padding:16px 0}
+.proc{font-size:11px;color:var(--texto-3);line-height:1.5;margin:15px 0 0;
+  padding-top:12px;border-top:1px solid var(--borda-2)}
+.mini{font-style:normal;font-size:11px;color:var(--texto-3);font-weight:500}
+.aster{font-style:normal;color:var(--d2);font-weight:700}
+.sub2{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:2px}
+.fonte{display:grid;grid-template-columns:1fr auto auto;gap:3px 10px;
+  padding:11px 0;border-bottom:1px solid var(--borda-2)}
+.fonte:last-child{border-bottom:none}
+.fonte .fn{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:13px;
+  color:var(--texto)}
+.fonte .fj{font-size:11.5px;color:var(--texto-2);font-variant-numeric:tabular-nums;
+  white-space:nowrap;align-self:center}
+.fonte .fe{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;
+  white-space:nowrap;align-self:center}
+.fonte .fe.ok{background:var(--bom-t);color:var(--bom)}
+.fonte .fe.parcial{background:#FBF1DE;color:#8A5A08}
+.fonte .fe.falta{background:var(--ruim-t);color:var(--ruim)}
+.fonte .fo{grid-column:1/-1;font-size:11.5px;color:var(--texto-3);line-height:1.5}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /* telas médias: menu recolhe para só ícones, o conteúdo ganha a largura */
@@ -376,123 +395,154 @@ tfoot td:first-child{border-radius:0 0 0 10px} tfoot td:last-child{border-radius
 </style>
 <script>
 /* =========================================================================
-   DADOS DA SEMANA — é só isto que muda toda semana.
+   DADOS DA SEMANA — puxados de verdade em 31/08/2026.
+
+   Janela: 24/08–30/08 contra 17/08–23/08 (semanas fechadas, segunda a domingo).
    Toda métrica tem `atual` e `anterior`; o painel calcula as variações.
-   Percentual como número (6.79 = 6,79%). Dinheiro em reais (615.72).
+   Percentual como número (8.37 = 8,37%). Dinheiro em reais (449.18).
+
+   `null` em atual significa NÃO RODOU na janela — o painel escreve isso em
+   vez de inventar zero. Cada bloco carrega a fonte e a janela real de onde
+   o número veio, e isso aparece na tela.
    ========================================================================= */
 const DADOS = {
   marca: "Mia",
+  puxadoEm: "31/08/2026",
   periodo: {
-    atual:    { de: "2026-08-12", ate: "2026-08-20" },
-    anterior: { de: "2026-08-03", ate: "2026-08-11" }
+    atual:    { de: "2026-08-24", ate: "2026-08-30" },
+    anterior: { de: "2026-08-17", ate: "2026-08-23" }
   },
 
   veredito:
-    "O Google Ads perdeu desempenho depois das últimas otimizações: as conversões caíram de 35 " +
-    "para 5 e o custo por conversão subiu de R$ 21 para R$ 123. A campanha foi recriada em 20/08 " +
-    "para o algoritmo reestabilizar. O Meta seguiu entregando visita ao perfil barata e manteve " +
-    "Connect Rate de 57,7% na campanha de conversão. O OpenAI Ads, ainda em teste, trouxe o " +
-    "cadastro mais barato do período: R$ 5,00.",
+    "O investimento subiu 25% e os cadastros caíram pela metade: 65 contra 128. " +
+    "A troca foi de canal — a Performance Max e as campanhas de Visita ao Perfil " +
+    "foram desligadas, e o Meta mais que dobrou de verba, saindo de R$ 299 para " +
+    "R$ 1.133 na campanha de conversão. Isso levou o custo por cadastro de R$ 10,56 " +
+    "para R$ 25,91. Do lado bom, o Google Pesquisa voltou a converter depois da " +
+    "recriação da campanha — 20 conversões a R$ 22,46, contra zero na semana anterior — " +
+    "e o GMV subiu 77%, de R$ 751 para R$ 1.328, com 41 pagamentos contra 18.",
 
-  openai: {
-    nota: "Primeiras impressões dentro da plataforma. Campanha em fase de teste.",
-    atual:    { impressoes:12499, cliques:404, conversoes:38, gasto:190.95, cpc:0.47, cpa:5.00, ctr:3.23 },
-    anterior: null,
-    serie: [
-      { data:"17/08", cliques:38,  conversoes:3,  gasto:21.40 },
-      { data:"18/08", cliques:142, conversoes:12, gasto:62.80 },
-      { data:"19/08", cliques:108, conversoes:11, gasto:54.35 },
-      { data:"20/08", cliques:116, conversoes:12, gasto:52.40 }
-    ]
-  },
+  /* de onde cada número veio — é isto que responde "posso confiar?" */
+  fontes: [
+    { nome:"Google Ads",  via:"Windsor · google_ads · conta 326-604-5511",
+      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
+      obs:"Janela exata. Pesquisa, Performance Max e YouTube separados." },
+    { nome:"Meta Ads",    via:"Windsor · facebook · conta 604915332642452",
+      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
+      obs:"Janela exata, por anúncio. Cadastros vêm do pixel (actions_complete_registration)." },
+    { nome:"Negócio",     via:"Metabase · Mia Production · SQL",
+      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
+      obs:"Coorte de cadastro por data. Exclui perfis de teste e deletados." },
+    { nome:"Sessões na LP", via:"Windsor · googleanalytics4 · propriedade 511677134",
+      janela:"24/08–30/08 e 17/08–23/08", estado:"ok",
+      obs:"Só o hostname miaapp.com.br. Inclui tráfego que não veio de anúncio." },
+    { nome:"Comportamento na página", via:"Windsor · microsoft_clarity · conta 1347",
+      janela:"28/08–30/08 (3 dias)", estado:"parcial",
+      obs:"A API do Clarity só devolve os últimos 3 dias. Não cobre a janela e não entra no funil." },
+    { nome:"OpenAI Ads",  via:"connector openai_ads — não conectado",
+      janela:"—", estado:"falta",
+      obs:"Precisa de uma API key do Ads Manager. Sem ela não há impressões, gasto nem CPA." }
+  ],
 
-  meta: {
-    objetivos: [
-      {
-        nome:"Visita ao Perfil",
-        atual:    { gasto:654.83, alcance:67909, impressoes:114711, cpm:5.71, ctr:3.06, cliques:3513, resultados:5610, custoResultado:0.12 },
-        anterior: { gasto:440.26, alcance:45120, impressoes:70301,  cpm:6.26, ctr:3.37, cliques:2370, resultados:3980, custoResultado:0.11 },
-        colunas:["Gasto","Alcance","Impressões","CPM","CTR","Cliques","Resultados","Custo/result."],
-        criativos:[
-          { nome:"ADS-03",    gasto:126.95, alcance:17636, impressoes:27654, cpm:4.59, ctr:3.07, cliques:850, resultados:1325, custoResultado:0.10 },
-          { nome:"ADS-02",    gasto:123.71, alcance:20692, impressoes:30781, cpm:4.02, ctr:2.47, cliques:759, resultados:1181, custoResultado:0.10 },
-          { nome:"ADS-05",    gasto:85.15,  alcance:7533,  impressoes:8989,  cpm:9.47, ctr:4.45, cliques:400, resultados:690,  custoResultado:0.12 },
-          { nome:"CARROSSEL", gasto:87.35,  alcance:11108, impressoes:13087, cpm:6.67, ctr:3.82, cliques:500, resultados:727,  custoResultado:0.12 },
-          { nome:"ADS-04",    gasto:84.15,  alcance:9526,  impressoes:11841, cpm:7.11, ctr:3.34, cliques:396, resultados:688,  custoResultado:0.12 },
-          { nome:"ADS-01",    gasto:147.52, alcance:14942, impressoes:22359, cpm:6.60, ctr:2.72, cliques:608, resultados:999,  custoResultado:0.15 }
-        ]
-      },
-      {
-        nome:"Conversão",
-        atual:    { gasto:149.86, alcance:1707, impressoes:2738, cpm:54.73, ctr:2.85, cliques:78, visitasLP:45, connectRate:57.69 },
-        anterior: { gasto:149.86, alcance:1690, impressoes:2702, cpm:55.46, ctr:2.61, cliques:71, visitasLP:38, connectRate:53.52 },
-        colunas:["Gasto","Alcance","Impressões","CPM","CTR","Cliques","Visitas na LP","Connect Rate"],
-        criativos:[
-          { nome:"ADS01-EXISTENTE", gasto:149.86, alcance:1707, impressoes:2738, cpm:54.73, ctr:2.85, cliques:78, visitasLP:45, connectRate:57.69 }
-        ]
-      }
-    ]
-  },
-
+  /* ---------------------------------------------------------------- Google */
   google: {
+    fonte:"Windsor · google_ads · conta 326-604-5511",
     campanhas: [
-      { nome:"Pesquisa", nota:"A perda de desempenho se intensificou, motivando a recriação da campanha em 20/08 para restabelecer a estabilidade do algoritmo.",
-        atual:    { impressoes:3565, cliques:242, cpc:2.54, ctr:6.79, conversoes:5,  custoConversao:123.14, custo:615.72, taxaConversao:2.07 },
-        anterior: { impressoes:5312, cliques:348, cpc:2.11, ctr:6.55, conversoes:35, custoConversao:20.98,  custo:734.46, taxaConversao:10.06 } },
-      { nome:"Performance Max", nota:"Não aparecia no relatório manual. Entra aqui para o investimento total do Google fechar.",
-        atual:    { impressoes:12901, cliques:453, cpc:0.40, ctr:3.51, conversoes:0, custoConversao:null, custo:181.03, taxaConversao:0 },
-        anterior: { impressoes:9840,  cliques:361, cpc:0.38, ctr:3.67, conversoes:0, custoConversao:null, custo:137.18, taxaConversao:0 } },
-      { nome:"YouTube", nota:"Campanha de vídeo em fase inicial de testes. Estão sendo avaliados a entrega dos anúncios, o desempenho dos criativos e o comportamento do público antes da mensuração das conversões.",
-        atual:    { impressoes:6695, cliques:72, cpc:1.11, ctr:1.07, conversoes:0, custoConversao:null, custo:79.77, taxaConversao:0 },
-        anterior: { impressoes:5892, cliques:97, cpc:0.25, ctr:1.65, conversoes:0, custoConversao:null, custo:24.42, taxaConversao:0 } }
-    ],
-    termos: [
-      { termo:"agenda online",        impressoes:21, cliques:5, custo:17.57, conversoes:0 },
-      { termo:"agenda gratis online", impressoes:4,  cliques:2, custo:2.62,  conversoes:1 }
+      { nome:"Pesquisa",
+        nota:"Voltou a converter depois da recriação da campanha em 20/08: 20 conversões contra zero na semana anterior.",
+        atual:    { impressoes:1959, cliques:164, cpc:2.74, ctr:8.37, conversoes:20, custoConversao:22.46, custo:449.18, taxaConversao:12.20 },
+        anterior: { impressoes:2160, cliques:198, cpc:2.78, ctr:9.17, conversoes:0,  custoConversao:null,  custo:550.09, taxaConversao:0 } },
+      { nome:"Performance Max",
+        nota:"Desligada nesta janela. Consumiu R$ 180,92 na semana anterior sem nenhuma conversão.",
+        atual:    null,
+        anterior: { impressoes:12899, cliques:452, cpc:0.40, ctr:3.50, conversoes:0, custoConversao:null, custo:180.92, taxaConversao:0 } },
+      { nome:"YouTube",
+        nota:"Entrega subiu e o clique encareceu: CPC de R$ 0,77 para R$ 1,89, ainda sem conversão medida.",
+        atual:    { impressoes:10759, cliques:54,  cpc:1.89, ctr:0.50, conversoes:0, custoConversao:null, custo:101.98, taxaConversao:0 },
+        anterior: { impressoes:14051, cliques:182, cpc:0.77, ctr:1.30, conversoes:0, custoConversao:null, custo:140.45, taxaConversao:0 } }
     ]
   },
 
+  /* ------------------------------------------------------------------ Meta */
+  meta: {
+    fonte:"Windsor · facebook · conta 604915332642452",
+    objetivos: [
+      { nome:"Conversão",
+        atual:    { gasto:1133.05, alcance:14929, impressoes:40123, cpm:28.24, ctr:1.39, cliques:557, visitasLP:349, connectRate:62.66, cadastros:24, custoCadastro:47.21 },
+        anterior: { gasto:298.90,  alcance:4300,  impressoes:6191,  cpm:48.28, ctr:2.18, cliques:135, visitasLP:82,  connectRate:60.74, cadastros:0,  custoCadastro:null },
+        criativos: [
+          { nome:"ADS01-EXISTENTE", campanha:"CONVERSÃO 01-DUDA", gasto:357.40, alcance:2227, impressoes:3156,  cpm:113.24, ctr:7.60, cliques:240, visitasLP:179, cadastros:7 },
+          { nome:"ADS-04", campanha:"ABO A/B",     gasto:310.39, alcance:4903, impressoes:5845,  cpm:53.10, ctr:1.98, cliques:116, visitasLP:71, cadastros:15 },
+          { nome:"ADS-02", campanha:"CBO SIGNUP",  gasto:206.62, alcance:3420, impressoes:8110,  cpm:25.48, ctr:0.75, cliques:61,  visitasLP:42, cadastros:0 },
+          { nome:"ADS-01", campanha:"CBO SIGNUP",  gasto:108.09, alcance:2433, impressoes:20782, cpm:5.20,  ctr:0.45, cliques:93,  visitasLP:29, cadastros:1 },
+          { nome:"ADS-05", campanha:"ABO A/B",     gasto:61.06,  alcance:658,  impressoes:803,   cpm:76.04, ctr:3.24, cliques:26,  visitasLP:16, cadastros:1 },
+          { nome:"ADS-03", campanha:"ABO A/B",     gasto:42.07,  alcance:560,  impressoes:614,   cpm:68.52, ctr:1.30, cliques:8,   visitasLP:5,  cadastros:0 },
+          { nome:"ADS-02", campanha:"ABO A/B",     gasto:37.91,  alcance:591,  impressoes:663,   cpm:57.18, ctr:1.06, cliques:7,   visitasLP:4,  cadastros:0 },
+          { nome:"ADS-01", campanha:"ABO A/B",     gasto:9.51,   alcance:137,  impressoes:150,   cpm:63.40, ctr:4.00, cliques:6,   visitasLP:3,  cadastros:0 }
+        ] },
+      { nome:"Visita ao Perfil",
+        nota:"As seis campanhas de visita ao perfil foram desligadas em 24/08. Os números abaixo são da semana anterior, para registro.",
+        atual: null,
+        anterior: { gasto:181.48, alcance:22840, impressoes:26897, cpm:6.75, ctr:3.67, cliques:987, visitasPerfil:50, custoVisita:3.63 },
+        criativos: [] }
+    ]
+  },
+
+  /* ------------------------------------------------------------- Landing Page */
   lp: {
-    clarity: {
-      atual:    { scroll:15.82, tempoAtivo:49, sessoes:236, paginasPorSessao:1.41, deadClicks:2.98, quickback:10.17 },
-      anterior: { scroll:19.50, tempoAtivo:44, sessoes:198, paginasPorSessao:1.33, deadClicks:3.60, quickback:13.70 }
+    ga4: {
+      fonte:"Windsor · googleanalytics4 · hostname miaapp.com.br",
+      atual:{ sessoes:1781 }, anterior:{ sessoes:3393 }
     },
-    porDevice: [
-      { device:"Mobile",  sessoes:202, scroll:11.38, tempoAtivo:24 },
-      { device:"Desktop", sessoes:29,  scroll:32.37, tempoAtivo:68 },
-      { device:"Tablet",  sessoes:5,   scroll:4.86,  tempoAtivo:12 }
-    ],
-    aprendizados: [
-      "Mockup estático com texto não funciona como gancho — os próximos sites terão um novo formato na Hero.",
-      "Botões mais clicados, em ordem: “Veja como”, “Quero meu link Mia” e “Ver taxas”.",
-      "A técnica de motion aplicada no botão “Veja como” se mostrou eficaz com esse público, tornando-o o botão mais clicado da página."
-    ]
+    clarity: {
+      fonte:"Windsor · microsoft_clarity · conta 1347",
+      janela:"28/08–30/08 (3 dias — a API não devolve histórico)",
+      atual:{ scroll:16.70, tempoAtivo:30, sessoes:396, usuarios:426,
+              paginasPorSessao:1.30, deadClicks:2.78, quickbackCliques:30, rageClicks:0 }
+    },
+    aprendizados: {
+      origem:"Anotações manuais do relatório de 20/08 — não vêm de API.",
+      itens:[
+        "Mockup estático com texto não funciona como gancho — os próximos sites terão um novo formato na Hero.",
+        "Botões mais clicados, em ordem: “Veja como”, “Quero meu link Mia” e “Ver taxas”.",
+        "A técnica de motion aplicada no botão “Veja como” se mostrou eficaz com esse público."
+      ]
+    }
   },
 
+  /* --------------------------------------------------------------- Negócio */
   negocio: {
-    atual:    { cadastros:128, onboarding:109, contasAtivas:4, agendamentos:18, gmv:751.00 },
-    anterior: { cadastros:43,  onboarding:36,  contasAtivas:2, agendamentos:12, gmv:1365.00 },
-    funil: [
-      { etapa:"Impressões",    valor:135872, fonte:"Meta · Google · OpenAI" },
-      { etapa:"Cliques",       valor:4764,   fonte:"Meta · Google · OpenAI" },
-      { etapa:"Sessões na LP", valor:2622,   fonte:"GA4" },
-      { etapa:"Cadastros",     valor:128,    fonte:"Metabase" },
-      { etapa:"Onboarding ok", valor:109,    fonte:"Metabase" },
-      { etapa:"Conta ativada", valor:4,      fonte:"Metabase" },
-      { etapa:"1º pagamento",  valor:0,      fonte:"Metabase" }
-    ],
+    fonte:"Metabase · Mia Production",
+    /* coorte: quem se cadastrou DENTRO da janela */
+    coorte: {
+      atual:    { cadastros:65,  onboarding:56,  contasAtivas:2 },
+      anterior: { cadastros:128, onboarding:109, contasAtivas:13 }
+    },
+    /* plataforma: TODOS os profissionais, não só os novos */
+    plataforma: {
+      atual:    { agendamentos:820,  pagamentos:41, gmv:1328.00 },
+      anterior: { agendamentos:1088, pagamentos:18, gmv:751.00 }
+    },
     gmvSemanal: [
       { semana:"20/07", gmv:659.05 },  { semana:"27/07", gmv:1037.05 },
       { semana:"03/08", gmv:1111.55 }, { semana:"10/08", gmv:1365.00 },
-      { semana:"17/08", gmv:751.00 },  { semana:"24/08", gmv:1313.00 }
+      { semana:"17/08", gmv:751.00 },  { semana:"24/08", gmv:1328.00 }
     ]
   },
 
+  /* ------------------------------------------------------------ OpenAI Ads */
+  openai: {
+    conectado: false,
+    porque: "O connector openai_ads existe no Windsor, mas não há conta conectada.",
+    comoDestravar: "Pegar uma API key em OpenAI Ads Manager → Settings → API keys e conectar em onboard.windsor.ai. Cada key vale para uma conta de anúncio."
+  },
+
   proximosPassos: [
-    "Evitar novas alterações para permitir que o algoritmo estabilize a entrega. Esperar de 5 a 7 dias antes de otimizar uma campanha de pesquisa.",
-    "Acompanhar diariamente o desempenho da nova campanha durante o período de aprendizado.",
-    "Comparar os resultados com a campanha anterior após a conclusão da fase de aprendizado.",
-    "Analisar as campanhas de vídeo para o YouTube."
+    "Decidir se o Meta continua com R$ 1.133 por semana: o custo por cadastro dele está em R$ 47,21, contra R$ 22,46 do Google Pesquisa.",
+    "Não mexer no Google Pesquisa: voltou a converter depois da recriação e está no melhor custo por conversão da série.",
+    "Definir se a Performance Max volta. Ficou desligada nesta janela depois de R$ 180,92 sem nenhuma conversão.",
+    "Conectar o OpenAI Ads no Windsor para a primeira seção deixar de ser um buraco.",
+    "Gravar a origem no cadastro. Sem isso, nenhuma destas contas de custo por canal pode ser fechada de verdade."
   ]
 };
 /* ===================== fim dos dados da semana ===================== */
@@ -698,164 +748,212 @@ const FOLHAS = [
 ];
 
 function somas(){
-  const g  = DADOS.google.campanhas.reduce((a,c)=>({custo:a.custo+c.atual.custo,
-    cliques:a.cliques+c.atual.cliques, impressoes:a.impressoes+c.atual.impressoes}),
-    {custo:0,cliques:0,impressoes:0});
-  const gA = DADOS.google.campanhas.reduce((a,c)=>({custo:a.custo+c.anterior.custo,
-    cliques:a.cliques+c.anterior.cliques, impressoes:a.impressoes+c.anterior.impressoes}),
-    {custo:0,cliques:0,impressoes:0});
-  const m  = DADOS.meta.objetivos.reduce((a,o)=>({custo:a.custo+o.atual.gasto,
-    cliques:a.cliques+o.atual.cliques, impressoes:a.impressoes+o.atual.impressoes}),
-    {custo:0,cliques:0,impressoes:0});
-  const mA = DADOS.meta.objetivos.reduce((a,o)=>({custo:a.custo+o.anterior.gasto,
-    cliques:a.cliques+o.anterior.cliques, impressoes:a.impressoes+o.anterior.impressoes}),
-    {custo:0,cliques:0,impressoes:0});
-  const o = DADOS.openai.atual || {gasto:0,cliques:0,impressoes:0};
-  const oA = DADOS.openai.anterior;
+  const g  = DADOS.google.campanhas.reduce((a,c)=>({
+    custo:a.custo+(c.atual?c.atual.custo:0), cliques:a.cliques+(c.atual?c.atual.cliques:0),
+    impressoes:a.impressoes+(c.atual?c.atual.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
+  const gA = DADOS.google.campanhas.reduce((a,c)=>({
+    custo:a.custo+(c.anterior?c.anterior.custo:0), cliques:a.cliques+(c.anterior?c.anterior.cliques:0),
+    impressoes:a.impressoes+(c.anterior?c.anterior.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
+  const m  = DADOS.meta.objetivos.reduce((a,o)=>({
+    custo:a.custo+(o.atual?o.atual.gasto:0), cliques:a.cliques+(o.atual?o.atual.cliques:0),
+    impressoes:a.impressoes+(o.atual?o.atual.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
+  const mA = DADOS.meta.objetivos.reduce((a,o)=>({
+    custo:a.custo+(o.anterior?o.anterior.gasto:0), cliques:a.cliques+(o.anterior?o.anterior.cliques:0),
+    impressoes:a.impressoes+(o.anterior?o.anterior.impressoes:0)}),{custo:0,cliques:0,impressoes:0});
   return {
     canais:[
       {nome:"Google Ads", custo:g.custo, cliques:g.cliques, cor:"var(--d2)"},
-      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--d3)"},
-      {nome:"OpenAI Ads", custo:o.gasto, cliques:o.cliques, cor:"var(--d1)"}
+      {nome:"Meta Ads",   custo:m.custo, cliques:m.cliques, cor:"var(--d3)"}
     ],
-    invest:g.custo+m.custo+o.gasto,
-    investA:gA.custo+mA.custo+(oA?oA.gasto:0),
-    cliques:g.cliques+m.cliques+o.cliques,
-    cliquesA:gA.cliques+mA.cliques+(oA?oA.cliques:0)
+    invest:g.custo+m.custo, investA:gA.custo+mA.custo,
+    cliques:g.cliques+m.cliques, cliquesA:gA.cliques+mA.cliques,
+    impressoes:g.impressoes+m.impressoes
   };
 }
 
+/* rodapé de procedência — todo cartão diz de onde veio o número */
+const proc = (fonte, janela) => `<p class="proc">${esc(fonte)}${janela?` · ${esc(janela)}`:""}</p>`;
+
 /* ---------------------------------------------------------------- a semana */
 function fGeral(){
-  const t = somas(), n = DADOS.negocio;
-  const cp  = n.atual.cadastros    ? t.invest /n.atual.cadastros    : null;
-  const cpA = n.anterior.cadastros ? t.investA/n.anterior.cadastros : null;
+  const t = somas(), co = DADOS.negocio.coorte, pl = DADOS.negocio.plataforma;
+  const cp  = co.atual.cadastros    ? t.invest /co.atual.cadastros    : null;
+  const cpA = co.anterior.cadastros ? t.investA/co.anterior.cadastros : null;
 
-  const f = n.funil;
-  const taxas = f.map((e,i)=> i===0 ? 100 : (f[i-1].valor>0 ? (e.valor/f[i-1].valor)*100 : 0));
+  const gmv = DADOS.negocio.gmvSemanal, ult = gmv.length-1;
+
+  /* funil de aquisição: só a coorte da janela, e só etapas comparáveis */
+  const et = [
+    { etapa:"Impressões",    valor:t.impressoes },
+    { etapa:"Cliques",       valor:t.cliques },
+    { etapa:"Sessões na LP", valor:DADOS.lp.ga4.atual.sessoes, nota:true },
+    { etapa:"Cadastros",     valor:co.atual.cadastros },
+    { etapa:"Onboarding ok", valor:co.atual.onboarding },
+    { etapa:"Conta ativada", valor:co.atual.contasAtivas }
+  ];
+  const taxas = et.map((e,i)=> i===0 ? 100 : (et[i-1].valor>0 ? (e.valor/et[i-1].valor)*100 : 0));
   let pior=-1, mn=Infinity;
-  taxas.forEach((x,i)=>{ if(i>0 && x<mn){ mn=x; pior=i; } });
+  taxas.forEach((x,i)=>{ if(i>0 && i!==2 && x<mn){ mn=x; pior=i; } });
 
-  const gmv = DADOS.negocio.gmvSemanal;
-  const ult = gmv.length-1;
+  const meta = DADOS.meta.objetivos.find(o=>o.atual && "connectRate" in o.atual);
+  const tOnb  = co.atual.cadastros  ? (co.atual.onboarding/co.atual.cadastros)*100 : 0;
+  const tAtiv = co.atual.onboarding ? (co.atual.contasAtivas/co.atual.onboarding)*100 : 0;
 
-  const meta = DADOS.meta.objetivos.find(o=>"connectRate" in o.atual);
-  const taxaOnb = n.atual.cadastros ? (n.atual.onboarding/n.atual.cadastros)*100 : 0;
-  const taxaAtiv = n.atual.onboarding ? (n.atual.contasAtivas/n.atual.onboarding)*100 : 0;
-
-  const criativos = DADOS.meta.objetivos.flatMap(o=>o.criativos)
-    .filter(c=>c.custoResultado!=null)
-    .sort((a,b)=>a.custoResultado-b.custoResultado).slice(0,4);
+  const crias = DADOS.meta.objetivos.flatMap(o=>o.criativos||[])
+    .filter(c=>c.cadastros>0)
+    .map(c=>({...c, cpc:c.gasto/c.cadastros}))
+    .sort((a,b)=>a.cpc-b.cpc);
 
   return `
   ${cx(`<div class="et">O que aconteceu</div><p>${DADOS.veredito}</p>`, "tese")}
 
   <div class="faixa dois">
-    ${cx(cxh("GMV por semana","Volume transacionado dentro do produto. A barra acesa é a semana do período.",`${gmv.length} semanas`)
-      + bars(gmv.map((s,i)=>({rot:s.semana, valor:s.gmv, on:i===ult})), v=>nf0.format(v)))}
-    ${cx(cxh("Da impressão ao pagamento","A barra é quanto passou da etapa anterior — não o volume.")
-      + rows(f.map((e,i)=>({
-          nome:e.etapa, valor:taxas[i], mau:i===pior,
-          rot: i===0 ? num(e.valor) : `${num(e.valor)} · ${nf2.format(taxas[i]).replace(",00","")}%`
-        })), 112))}
+    ${cx(cxh("Os números da semana","Cada linha comparada com a janela anterior, de mesmo tamanho.")
+      + tiles(
+        tile("Investimento", brl(t.invest), variNeutra(t.invest,t.investA), "Meta + Google") +
+        tile("Cliques", num(t.cliques), vari(t.cliques,t.cliquesA)) +
+        tile("Cadastros", num(co.atual.cadastros), vari(co.atual.cadastros,co.anterior.cadastros)) +
+        tile("Custo por cadastro", brl(cp), vari(cp,cpA,true), "Consolidado — não separa canal") +
+        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv), "Toda a plataforma") +
+        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos),
+             "Toda a plataforma")
+      )
+      + proc("Windsor + Metabase", `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
+
+    ${cx(cxh("De onde vêm estes números","Fonte e janela real de cada bloco do painel.")
+      + `<div class="rows" style="--rl:150px">${DADOS.fontes.map(f=>`
+          <div class="fonte">
+            <span class="fn">${esc(f.nome)}</span>
+            <span class="fj">${esc(f.janela)}</span>
+            <span class="fe ${f.estado}">${f.estado==="ok"?"puxado":f.estado==="parcial"?"parcial":"falta"}</span>
+            <span class="fo">${esc(f.via)} — ${esc(f.obs)}</span>
+          </div>`).join("")}</div>`
+      + `<p class="proc">Puxado em ${esc(DADOS.puxadoEm)}. O painel não consulta nada
+          sozinho: estes números foram gravados no arquivo.</p>`)}
   </div>
 
   <div class="faixa dois">
-    ${cx(cxh("Os números da semana","Comparados com o período anterior de mesmo tamanho.")
+    ${cx(cxh("Aquisição da semana","Só quem entrou nesta janela. A barra é quanto passou da etapa anterior.")
+      + slotsFunil(et, taxas, pior)
+      + `<p class="proc">As sessões na LP incluem tráfego que não veio de anúncio — por isso
+         são mais que os cliques. A etapa não é uma cascata pura.</p>`)}
+    ${cx(cxh("Atividade na plataforma","Todos os profissionais, não só os que entraram esta semana.")
       + tiles(
-        tile("Investimento", brl(t.invest), variNeutra(t.invest,t.investA)) +
-        tile("Cliques", num(t.cliques), vari(t.cliques,t.cliquesA)) +
-        tile("Cadastros", num(n.atual.cadastros), vari(n.atual.cadastros,n.anterior.cadastros)) +
-        tile("Custo por cadastro", brl(cp), vari(cp,cpA,true), "Consolidado — não separa canal") +
-        tile("GMV", brl(n.atual.gmv), vari(n.atual.gmv,n.anterior.gmv)) +
-        tile("Contas ativas", num(n.atual.contasAtivas), vari(n.atual.contasAtivas,n.anterior.contasAtivas),
-             "Sem isso o profissional não recebe")
-      ))}
-    ${cx(cxh("Onde foi o dinheiro","Gasto por canal e o que cada clique custou.")
+        tile("Agendamentos", num(pl.atual.agendamentos), vari(pl.atual.agendamentos,pl.anterior.agendamentos)) +
+        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos)) +
+        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv))
+      )
+      + `<p class="proc">Separado do funil de propósito: misturar estes números com a coorte
+         da semana produz taxas que não querem dizer nada.</p>`)}
+  </div>
+
+  <div class="faixa dois">
+    ${cx(cxh("Para onde foi o dinheiro","Quanto cada canal consumiu, e o que cada clique custou.")
+      + `<div class="chave">${t.canais.map(c=>`<span><i style="background:${c.cor}"></i>${c.nome}</span>`).join("")}</div>`
       + rows(t.canais.map(c=>({nome:c.nome, valor:c.custo, rot:brl(c.custo), cor:c.cor})), 90)
       + `<p class="sub" style="margin:16px 0 11px">Custo por clique</p>`
       + rows(t.canais.map(c=>({nome:c.nome, valor:c.cliques?c.custo/c.cliques:0,
-          rot:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), 90))}
+          rot:brl(c.cliques?c.custo/c.cliques:null), cor:c.cor})), 90)
+      + proc(DADOS.google.fonte.split(" · ")[0] + " · google_ads + facebook"))}
+    ${cx(cxh("GMV por semana","A barra acesa é a semana desta janela.", `${gmv.length} semanas`)
+      + bars(gmv.map((s,i)=>({rot:s.semana, valor:s.gmv, on:i===ult})), v=>nf0.format(v))
+      + proc(DADOS.negocio.fonte))}
   </div>
 
   <div class="faixa dois">
-    ${cx(cxh("As três taxas que mandam na semana","Onde as pessoas passam e onde param.")
+    ${cx(cxh("As taxas da coorte","Da turma que se cadastrou nesta janela.")
       + `<div class="roscas">
-          ${rosca(taxaOnb,"var(--d1)","Concluem o onboarding","Quantos terminam a configuração inicial.")}
-          ${rosca(taxaAtiv,"var(--d2)","Ativam a conta","Conta de pagamento aprovada.")}
+          ${rosca(tOnb,"var(--d1)","Concluem o onboarding","Quantos terminam a configuração inicial.")}
+          ${rosca(tAtiv,"var(--d2)","Ativam a conta","Conta de pagamento aprovada.")}
           ${meta?rosca(meta.atual.connectRate,"var(--d3)","Connect Rate","Cliques que viraram visita de verdade."):""}
-        </div>`)}
-    ${cx(cxh("Criativos mais eficientes","Menor custo por resultado no período.")
-      + (criativos.length
-          ? `<ol class="ord">${criativos.map(c=>`<li><span>${esc(c.nome)}</span><b>${brl(c.custoResultado)}</b></li>`).join("")}</ol>`
-          : `<p class="vazio">Nenhum criativo com custo por resultado no período.</p>`))}
+        </div>`
+      + `<p class="proc">A ativação de conta demora: quem se cadastrou nesta semana ainda não
+         teve tempo de completar o cadastro bancário. Comparar com a semana anterior
+         favorece a mais antiga.</p>`)}
+    ${cx(cxh("Criativos que trouxeram cadastro","Ordenados por custo por cadastro.")
+      + (crias.length
+          ? `<ol class="ord">${crias.map(c=>`<li><span>${esc(c.nome)} <em class="mini">${esc(c.campanha)}</em></span><b>${brl(c.cpc)}</b></li>`).join("")}</ol>`
+          : `<p class="vazio">Nenhum criativo registrou cadastro nesta janela.</p>`)
+      + proc(DADOS.meta.fonte))}
   </div>`;
+}
+
+/* funil: reaproveita o componente de linha do painel, com a etapa que trava marcada */
+function slotsFunil(et, taxas, pior){
+  return rows(et.map((e,i)=>({
+    nome: e.etapa + (e.nota ? "  *" : ""),
+    valor: taxas[i],
+    rot: i===0 ? num(e.valor)
+               : `${num(e.valor)} <em class="mini">${nf2.format(taxas[i]).replace(",00","")}%</em>`,
+    mau: i===pior
+  })), 118);
 }
 
 /* -------------------------------------------------------------- OpenAI Ads */
 function fOpenAI(){
-  const a = DADOS.openai.atual, b = DADOS.openai.anterior;
-  return `
-  <div class="faixa">
-    ${cx(cxh("OpenAI Ads", DADOS.openai.nota, "Em teste")
-      + (b?"":`<p class="recado">Primeiro período medido neste canal — ainda não há período anterior para comparar.</p>`)
-      + tiles(
-        tile("Impressões", num(a.impressoes), vari(a.impressoes,b&&b.impressoes)) +
-        tile("Cliques", num(a.cliques), vari(a.cliques,b&&b.cliques)) +
-        tile("Conversões", num(a.conversoes), vari(a.conversoes,b&&b.conversoes)) +
-        tile("Gasto", brl(a.gasto), vari(a.gasto,b&&b.gasto,true)) +
-        tile("Por conversão", brl(a.cpa), vari(a.cpa,b&&b.cpa,true)) +
-        tile("Por clique", brl(a.cpc), vari(a.cpc,b&&b.cpc,true))
-      ))}
-  </div>
-  <div class="faixa dois">
-    ${cx(cxh("Cliques por dia","Como a entrega evoluiu no período.")
-      + area(DADOS.openai.serie.map(d=>({rot:d.data, valor:d.cliques})), num))}
-    ${cx(cxh("Conversões por dia","Cadastros que a própria plataforma atribuiu.")
-      + bars(DADOS.openai.serie.map(d=>({rot:d.data, valor:d.conversoes, on:true})), num))}
+  return `<div class="faixa">
+    ${cx(cxh("OpenAI Ads","Este canal ainda não está ligado ao painel.","Falta conectar")
+      + `<p class="recado">${esc(DADOS.openai.porque)}</p>
+         <p class="sub" style="margin-bottom:14px">${esc(DADOS.openai.comoDestravar)}</p>
+         <p class="vazio">Enquanto não estiver conectado, este painel não mostra número
+         nenhum de OpenAI Ads — nem estimativa, nem número copiado de print.</p>`)}
   </div>`;
 }
 
 /* ---------------------------------------------------------------- Meta Ads */
 function fMeta(){
   return DADOS.meta.objetivos.map(o=>{
-    const a=o.atual, b=o.anterior, perfil = "resultados" in a;
-    const cols = perfil
-      ? [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
-         ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
-         ["Resultados",c=>num(c.resultados)],["Por result.",c=>brl(c.custoResultado)]]
-      : [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],["Impressões",c=>num(c.impressoes)],
-         ["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],["Cliques",c=>num(c.cliques)],
-         ["Visitas na página",c=>num(c.visitasLP)],["Connect Rate",c=>pct(c.connectRate)]];
+    const a=o.atual, b=o.anterior, perfil = !!(b && "visitasPerfil" in b);
 
-    const t = perfil
-      ? tile("Gasto",brl(a.gasto),vari(a.gasto,b.gasto,true)) +
-        tile("Impressões",num(a.impressoes),vari(a.impressoes,b.impressoes)) +
-        tile("CTR",pct(a.ctr),vari(a.ctr,b.ctr)) +
-        tile("Resultados",num(a.resultados),vari(a.resultados,b.resultados)) +
-        tile("Por resultado",brl(a.custoResultado),vari(a.custoResultado,b.custoResultado,true))
-      : tile("Gasto",brl(a.gasto),vari(a.gasto,b.gasto,true)) +
-        tile("Impressões",num(a.impressoes),vari(a.impressoes,b.impressoes)) +
-        tile("CTR",pct(a.ctr),vari(a.ctr,b.ctr)) +
-        tile("Visitas na página",num(a.visitasLP),vari(a.visitasLP,b.visitasLP)) +
-        tile("Connect Rate",pct(a.connectRate),vari(a.connectRate,b.connectRate),
-             "Cliques que viraram visita de verdade");
+    if(!a){
+      return `<div class="faixa">
+        ${cx(cxh(`Objetivo: ${esc(o.nome)}`,"Não rodou nesta janela.","Desligado")
+          + (o.nota?`<p class="recado">${esc(o.nota)}</p>`:"")
+          + (b ? tiles(
+              tile("Gasto na janela anterior", brl(b.gasto)) +
+              tile("Impressões", num(b.impressoes)) +
+              tile("CTR", pct(b.ctr)) +
+              (perfil ? tile("Visitas ao perfil", num(b.visitasPerfil)) +
+                        tile("Por visita", brl(b.custoVisita))
+                      : tile("Cliques", num(b.cliques)))
+            ) : `<p class="vazio">Sem dados na janela anterior.</p>`)
+          + proc(DADOS.meta.fonte, `${dm(DADOS.periodo.anterior.de)}–${dm(DADOS.periodo.anterior.ate)}`))}
+      </div>`;
+    }
 
-    const ord = [...o.criativos].sort((x,y)=>y.gasto-x.gasto);
+    const resumo =
+      tile("Gasto", brl(a.gasto), vari(a.gasto,b&&b.gasto,true)) +
+      tile("Impressões", num(a.impressoes), vari(a.impressoes,b&&b.impressoes)) +
+      tile("CTR no link", pct(a.ctr), vari(a.ctr,b&&b.ctr)) +
+      tile("Cliques no link", num(a.cliques), vari(a.cliques,b&&b.cliques)) +
+      tile("Connect Rate", pct(a.connectRate), vari(a.connectRate,b&&b.connectRate),
+           "Cliques que viraram visita") +
+      tile("Cadastros", num(a.cadastros), vari(a.cadastros,b&&b.cadastros), "Pixel de cadastro") +
+      tile("Por cadastro", brl(a.custoCadastro), vari(a.custoCadastro,b&&b.custoCadastro,true));
+
+    const cols = [["Gasto",c=>brl(c.gasto)],["Alcance",c=>num(c.alcance)],
+      ["Impressões",c=>num(c.impressoes)],["CPM",c=>brl(c.cpm)],["CTR",c=>pct(c.ctr)],
+      ["Cliques",c=>num(c.cliques)],["Visitas na LP",c=>num(c.visitasLP)],
+      ["Cadastros",c=>num(c.cadastros)],
+      ["Por cadastro",c=>c.cadastros?brl(c.gasto/c.cadastros):"—"]];
 
     return `<div class="faixa">
       ${cx(cxh(`Objetivo: ${esc(o.nome)}`,
-            `${o.criativos.length} ${o.criativos.length===1?"anúncio rodou":"anúncios rodaram"} no período.`,
-            perfil?"Visita ao perfil":"Conversão")
-        + tiles(t))}
+            `${o.criativos.length} anúncios rodaram nesta janela.`,"Conversão")
+        + tiles(resumo)
+        + proc(DADOS.meta.fonte, `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
     </div>
     <div class="faixa">
       ${cx(cxh("Anúncio por anúncio","Ordenado por quanto cada um consumiu.")
         + `<div class="tw"><table>
             <thead><tr><th>Anúncio</th>${cols.map(c=>`<th class="r">${c[0]}</th>`).join("")}</tr></thead>
-            <tbody>${ord.map(c=>`<tr><td class="nm">${esc(c.nome)}</td>${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
-            <tfoot><tr><td>Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
-          </table></div>`)}
+            <tbody>${o.criativos.map(c=>`<tr>
+              <td class="nm">${esc(c.nome)}<span class="sub2">${esc(c.campanha)}</span></td>
+              ${cols.map(k=>`<td class="r">${k[1](c)}</td>`).join("")}</tr>`).join("")}</tbody>
+            <tfoot><tr><td class="nm">Total</td>${cols.map(k=>`<td class="r">${k[1](a)}</td>`).join("")}</tr></tfoot>
+          </table></div>`
+        + `<p class="proc">O mesmo nome de anúncio existe em campanhas diferentes — por isso a
+           campanha aparece embaixo do nome.</p>`)}
     </div>`;
   }).join("");
 }
@@ -868,106 +966,111 @@ function fGoogle(){
     {k:"conversoes",rot:"Conversões",f:num},   {k:"taxaConversao",rot:"Taxa de conversão",f:pct},
     {k:"custoConversao",rot:"Por conversão",f:brl,inv:true}, {k:"custo",rot:"Custo",f:brl,inv:true}
   ];
-  const total = DADOS.google.campanhas.reduce((s,c)=>s+c.atual.custo,0);
+  const total  = DADOS.google.campanhas.reduce((s,c)=>s+(c.atual?c.atual.custo:0),0);
+  const totalA = DADOS.google.campanhas.reduce((s,c)=>s+(c.anterior?c.anterior.custo:0),0);
 
   return `
   <div class="faixa">
     ${cx(cxh("Google Ads",
-      `O canal consumiu <strong>${brl(total)}</strong> no período — as três campanhas somadas, não só a de Pesquisa.`,
-      brl0(total))
-      + rows(DADOS.google.campanhas.map(c=>({nome:c.nome, valor:c.atual.custo,
-          rot:brl(c.atual.custo), cor:"var(--d2)"})), 132))}
+      `O canal consumiu <strong>${brl(total)}</strong> nesta janela, contra
+       <strong>${brl(totalA)}</strong> na anterior — as três campanhas somadas.`, brl0(total))
+      + rows(DADOS.google.campanhas.map(c=>({nome:c.nome, valor:c.atual?c.atual.custo:0,
+          rot:c.atual?brl(c.atual.custo):"desligada", cor:"var(--d2)"})), 132)
+      + proc(DADOS.google.fonte, `${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}`))}
   </div>
   ${DADOS.google.campanhas.map(c=>`
     <div class="faixa">
-      ${cx(cxh(esc(c.nome),"Este período contra o anterior.")
+      ${cx(cxh(esc(c.nome), c.atual?"Esta janela contra a anterior.":"Não rodou nesta janela.",
+               c.atual?null:"Desligada")
         + (c.nota?`<p class="recado">${esc(c.nota)}</p>`:"")
         + `<div class="tw"><table>
-            <thead><tr><th>Métrica</th><th class="r">Este período</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
+            <thead><tr><th>Métrica</th><th class="r">Esta janela</th><th class="r">Anterior</th><th class="r">Variação</th></tr></thead>
             <tbody>${defs.map(d=>{
-              const va=c.atual[d.k], vb=c.anterior[d.k], vr=vari(va,vb,d.inv);
-              return `<tr><td class="nm">${d.rot}</td><td class="r">${d.f(va)}</td>
-                <td class="r" style="color:var(--texto-3)">${d.f(vb)}</td>
+              const va=c.atual?c.atual[d.k]:null, vb=c.anterior?c.anterior[d.k]:null;
+              const vr=vari(va,vb,d.inv);
+              return `<tr><td class="nm">${d.rot}</td>
+                <td class="r">${c.atual?d.f(va):"—"}</td>
+                <td class="r" style="color:var(--texto-3)">${c.anterior?d.f(vb):"—"}</td>
                 <td class="r ${vr?vr.cls:"flat"}">${vr?vr.txt:"—"}</td></tr>`;
             }).join("")}</tbody>
           </table></div>`)}
-    </div>`).join("")}
-  <div class="faixa">
-    ${cx(cxh("O que as pessoas pesquisaram","Termos que geraram clique no período.")
-      + `<div class="tw"><table>
-          <thead><tr><th>Termo</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">Custo</th><th class="r">Conversões</th></tr></thead>
-          <tbody>${DADOS.google.termos.map(t=>`<tr><td class="nm">${esc(t.termo)}</td>
-            <td class="r">${num(t.impressoes)}</td><td class="r">${num(t.cliques)}</td>
-            <td class="r">${brl(t.custo)}</td><td class="r">${num(t.conversoes)}</td></tr>`).join("")}</tbody>
-        </table></div>`)}
-  </div>`;
+    </div>`).join("")}`;
 }
 
 /* --------------------------------------------------------------- a página */
 function fLP(){
-  const a = DADOS.lp.clarity.atual, b = DADOS.lp.clarity.anterior;
+  const g = DADOS.lp.ga4, c = DADOS.lp.clarity.atual;
   return `
-  <div class="faixa">
-    ${cx(cxh("O que as pessoas fazem na página",
-      "Comportamento de quem chegou depois de clicar no anúncio.","Microsoft Clarity")
-      + tiles(
-        tile("Rolagem", pct(a.scroll), vari(a.scroll,b.scroll), "Abaixo de 20% quer dizer que a maioria não passa da primeira dobra") +
-        tile("Tempo ativo", seg(a.tempoAtivo), vari(a.tempoAtivo,b.tempoAtivo)) +
-        tile("Sessões", num(a.sessoes), vari(a.sessoes,b.sessoes)) +
-        tile("Páginas por sessão", nf2.format(a.paginasPorSessao), vari(a.paginasPorSessao,b.paginasPorSessao)) +
-        tile("Cliques mortos", pct(a.deadClicks), vari(a.deadClicks,b.deadClicks,true), "Clique em algo que parece botão e não é") +
-        tile("Quickback", pct(a.quickback), vari(a.quickback,b.quickback,true), "Entra e volta na hora")
-      ))}
-  </div>
   <div class="faixa dois">
-    ${cx(cxh("Rolagem por aparelho","A diferença entre celular e computador é a leitura mais acionável da página.")
-      + rows(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.scroll, rot:pct(d.scroll),
-          cor:"var(--d1)"})), 84))}
-    ${cx(cxh("De qual aparelho chegaram","Onde o público realmente está.")
-      + rows(DADOS.lp.porDevice.map(d=>({nome:d.device, valor:d.sessoes, rot:num(d.sessoes),
-          cor:"var(--d3)"})), 84))}
+    ${cx(cxh("Sessões na landing page","Só o hostname miaapp.com.br, nas duas janelas.")
+      + tiles(tile("Sessões", num(g.atual.sessoes), vari(g.atual.sessoes,g.anterior.sessoes)))
+      + `<p class="proc">${esc(g.fonte)} · ${dm(DADOS.periodo.atual.de)}–${dm(DADOS.periodo.atual.ate)}.
+         Inclui tráfego direto, orgânico e de IA, não só anúncio.</p>`)}
+    ${cx(cxh("Comportamento na página","Como as pessoas se comportam depois de chegar.","3 dias")
+      + `<p class="recado">Estes números <strong>não são da janela do painel</strong>. A API do
+         Clarity só devolve os últimos 3 dias, então não há como puxar 24/08–30/08. Para
+         ter série é preciso gravar um retrato por dia.</p>`
+      + tiles(
+        tile("Rolagem", pct(c.scroll), null, "Até onde o visitante desce") +
+        tile("Tempo ativo", seg(c.tempoAtivo)) +
+        tile("Sessões", num(c.sessoes)) +
+        tile("Páginas por sessão", nf2.format(c.paginasPorSessao)) +
+        tile("Cliques mortos", pct(c.deadClicks), null, "Clique em algo que parece botão") +
+        tile("Quickback", num(c.quickbackCliques), null, "Cliques de quem entra e volta na hora")
+      )
+      + proc(DADOS.lp.clarity.fonte, DADOS.lp.clarity.janela))}
   </div>
   <div class="faixa">
-    ${cx(cxh("Anotações da semana","Aprendizados que mudam o próximo teste.")
-      + `<div class="notas">${DADOS.lp.aprendizados.map(t=>`<p>${t}</p>`).join("")}</div>`)}
+    ${cx(cxh("Anotações da página","O que aprendemos, escrito à mão.")
+      + `<div class="notas">${DADOS.lp.aprendizados.itens.map(t=>`<p>${t}</p>`).join("")}</div>`
+      + `<p class="proc">${esc(DADOS.lp.aprendizados.origem)}</p>`)}
   </div>`;
 }
 
-/* -------------------------------------------------------------- o negócio */
+/* --------------------------------------------------------------- o negócio */
 function fNegocio(){
-  const a = DADOS.negocio.atual, b = DADOS.negocio.anterior;
+  const co = DADOS.negocio.coorte, pl = DADOS.negocio.plataforma;
   const gmv = DADOS.negocio.gmvSemanal;
   return `
-  <div class="faixa">
-    ${cx(cxh("O que a mídia produziu do outro lado",
-      "Profissionais entrando, ativando a conta e transacionando.","Metabase")
+  <div class="faixa dois">
+    ${cx(cxh("A turma que entrou nesta janela","Coorte: só quem se cadastrou entre as duas datas.")
       + tiles(
-        tile("Cadastros", num(a.cadastros), vari(a.cadastros,b.cadastros)) +
-        tile("Onboarding", num(a.onboarding), vari(a.onboarding,b.onboarding), "Concluíram a configuração") +
-        tile("Contas ativas", num(a.contasAtivas), vari(a.contasAtivas,b.contasAtivas), "Conta de pagamento aprovada") +
-        tile("Agendamentos", num(a.agendamentos), vari(a.agendamentos,b.agendamentos)) +
-        tile("GMV", brl(a.gmv), vari(a.gmv,b.gmv))
-      ))}
+        tile("Cadastros", num(co.atual.cadastros), vari(co.atual.cadastros,co.anterior.cadastros)) +
+        tile("Onboarding", num(co.atual.onboarding), vari(co.atual.onboarding,co.anterior.onboarding),
+             "Concluíram a configuração") +
+        tile("Contas ativas", num(co.atual.contasAtivas), vari(co.atual.contasAtivas,co.anterior.contasAtivas),
+             "Conta de pagamento aprovada")
+      )
+      + `<p class="proc">${esc(DADOS.negocio.fonte)} · coorte por data de cadastro.
+         Ativação de conta demora, então a coorte mais nova sempre parece pior.</p>`)}
+    ${cx(cxh("A plataforma inteira","Todos os profissionais transacionando na janela.")
+      + tiles(
+        tile("Agendamentos", num(pl.atual.agendamentos), vari(pl.atual.agendamentos,pl.anterior.agendamentos)) +
+        tile("Pagamentos", num(pl.atual.pagamentos), vari(pl.atual.pagamentos,pl.anterior.pagamentos)) +
+        tile("GMV", brl(pl.atual.gmv), vari(pl.atual.gmv,pl.anterior.gmv))
+      )
+      + `<p class="proc">${esc(DADOS.negocio.fonte)}. Não é a coorte — é por isso que
+         41 pagamentos convivem com 2 contas ativadas.</p>`)}
   </div>
   <div class="faixa dois">
     ${cx(cxh("GMV semana a semana","Em reais, por semana de pagamento.")
-      + area(gmv.map(s=>({rot:s.semana, valor:s.gmv})), brl0))}
-    ${cx(cxh("Onde o profissional para","Do cadastro até o primeiro agendamento, no período.")
+      + area(gmv.map(s=>({rot:s.semana, valor:s.gmv})), brl0)
+      + proc(DADOS.negocio.fonte))}
+    ${cx(cxh("Onde o profissional para","Da turma desta janela, do cadastro até a conta ativa.")
       + rows([
-          {nome:"Cadastraram",   valor:a.cadastros,    rot:num(a.cadastros)},
-          {nome:"Configuraram",  valor:a.onboarding,   rot:num(a.onboarding)},
-          {nome:"Ativaram conta",valor:a.contasAtivas, rot:num(a.contasAtivas), mau:true},
-          {nome:"Agendaram",     valor:a.agendamentos, rot:num(a.agendamentos)}
+          {nome:"Cadastraram",   valor:co.atual.cadastros,    rot:num(co.atual.cadastros)},
+          {nome:"Configuraram",  valor:co.atual.onboarding,   rot:num(co.atual.onboarding)},
+          {nome:"Ativaram conta",valor:co.atual.contasAtivas, rot:num(co.atual.contasAtivas), mau:true}
         ], 116)
-      + `<p class="sub" style="margin-top:16px">A conta de pagamento é o degrau mais alto: sem ela o
-         profissional não recebe, e a Mia não fatura.</p>`)}
+      + `<p class="proc">A conta de pagamento é o degrau mais alto: sem ela o profissional
+         não recebe, e a Mia não fatura.</p>`)}
   </div>`;
 }
 
 /* -------------------------------------------------------------- o que vem */
 function fPassos(){
   return `<div class="faixa">
-    ${cx(cxh("O que fica decidido","Para a semana que começa, em ordem de execução.")
+    ${cx(cxh("O que fica decidido","Para a semana que começa, em ordem.")
       + `<ol class="passos">${DADOS.proximosPassos.map(p=>`<li><span>${p}</span></li>`).join("")}</ol>`)}
   </div>`;
 }
