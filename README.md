@@ -58,7 +58,7 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 |---|---|---|
 | Google Ads | Windsor · `google_ads` · conta 326-604-5511 | `get_data` |
 | Meta Ads | Windsor · `facebook` · conta 604915332642452 | `get_data` |
-| OpenAI Ads | Windsor · `openai_ads` · conta 284 | `get_data` |
+| OpenAI Ads | Windsor · `openai_ads` (sem pino de conta — o id muda a cada reconexão) | `get_data` |
 | Visitas na página | Windsor · `googleanalytics4` · propriedade 511677134 | `get_data` |
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
@@ -70,8 +70,9 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 
 ## O que cada fonte não entrega
 
-- **OpenAI Ads** não tem campo de conversão. Vai trazer impressões, cliques,
-  gasto, CPC e CPM — nunca CPA.
+- **OpenAI Ads** está conectado e lendo, mas não tem campo de conversão: traz
+  impressões, cliques, gasto, CPC e CPM — nunca CPA. E a API recusa janelas que
+  terminam hoje: o fim tem que ser até ontem, no fuso da conta de anúncio.
 - **Microsoft Clarity** só devolve os últimos 3 dias. Ele aparece na aba Landing
   Page com a janela dele marcada em amarelo, e não entra em nenhuma conta que
   dependa do período escolhido.

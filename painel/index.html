@@ -306,8 +306,11 @@ const RETRATO = {
       {nome:"ADS-01",campanha:"ABO A/B",   custo:9.51,  impressoes:150,  cliques:6,  conversoes:0}
     ]
   },
-  openai:{ atual:null, anterior:null,
-    erro:"A chave conectada no Windsor está sem permissão de leitura (403). Assim que ela for liberada, este canal preenche sozinho." },
+  openai:{
+    atual:   {impressoes:9905,  cliques:163, custo:199.27, conversoes:null},
+    anterior:{impressoes:38068, cliques:972, custo:524.83, conversoes:null},
+    nota:"O canal ficou pausado de 24 a 28/08 e voltou em 29/08 — por isso a semana atual é bem menor que a anterior."
+  },
 
   lp:{
     sessoes:{atual:1781, anterior:3393},
@@ -326,13 +329,13 @@ const RETRATO = {
     {t:"Rever a verba do Meta", q:"O Meta levou R$ 1.133 e entregou cadastro a R$ 47. O Google Pesquisa entregou a R$ 22 com metade do dinheiro.", c:"Realocar parte da verba do Meta para o Google Pesquisa e medir por duas semanas."},
     {t:"Não tocar no Google Pesquisa", q:"Voltou a converter depois da recriação: 20 conversões contra zero na semana anterior.", c:"Deixar rodando sem alteração até o algoritmo estabilizar."},
     {t:"Decidir sobre a Performance Max", q:"Ficou desligada nesta janela depois de consumir R$ 181 sem nenhuma conversão.", c:"Ou volta com meta de conversão configurada, ou fica desligada de vez."},
-    {t:"Destravar o OpenAI Ads", q:"A chave está conectada mas sem permissão de leitura.", c:"Gerar uma chave com escopo de leitura no Ads Manager da OpenAI."},
+    {t:"Explicar a pausa do OpenAI Ads", q:"O canal entregou R$ 524,83 na semana anterior, ficou zerado de 24 a 28/08 e voltou em 29/08.", c:"Confirmar se a pausa foi intencional e decidir a verba de setembro para o canal."},
     {t:"Gravar a origem no cadastro", q:"Hoje não dá para saber de qual canal veio cada cadastro.", c:"Salvar utm_source e gclid/fbclid na tabela de profissionais no momento do cadastro."}
   ]
 };
 
 const CONTAS = {google:"326-604-5511", meta:"604915332642452", ga4:"511677134",
-                openai:"284", clarity:"1347", metabaseDb:4};
+                clarity:"1347", metabaseDb:4};
 const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
 </script>
 
@@ -505,8 +508,9 @@ async function qMeta(de,ate){
 }
 
 async function qOpenai(de,ate){
+  /* sem filtro de conta: o id muda a cada reconexão e só existe uma conta */
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"openai_ads",
-    accounts:[CONTAS.openai],fields:["campaign","impressions","clicks","spend"],
+    fields:["campaign","impressions","clicks","spend"],
     date_from:de,date_to:ate},"OpenAI Ads"));
   return {total:{impressoes:soma(r,x=>x.impressions),cliques:soma(r,x=>x.clicks),
                  custo:soma(r,x=>x.spend),conversoes:null}};
@@ -604,7 +608,11 @@ async function puxar(){
   btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
   desenhar();
 }
-const msg=k=>FALHAS[k]?(CONSERTO[FALHAS[k].code]||FALHAS[k].message||"não veio"):null;
+const msg=k=>{
+  const f=FALHAS[k]; if(!f) return null;
+  if(f.code==="tool_error" && f.message) return f.message;
+  return CONSERTO[f.code]||f.message||"não veio";
+};
 
 /* ------------------------------------------------------------- componentes */
 const cx=(i,c)=>`<section class="cx ${c||""}">${i}</section>`;
@@ -677,7 +685,7 @@ function vResumo(){
     <div class="et">A semana em uma frase</div>
     <p>${D.aoVivo
       ? `Investimos <b>${brl(inv)}</b> e trouxemos <b>${num(n?n.cadastros:null)}</b> cadastros novos, a <b>${brl(cpc)}</b> cada. O produto transacionou <b>${brl(n?n.gmv:null)}</b> em <b>${num(n?n.pagamentos:null)}</b> pagamentos.`
-      : esc("O investimento subiu 25% e os cadastros caíram pela metade: 65 contra 128. A troca foi de canal — Performance Max e Visita ao Perfil desligadas, e o Meta mais que dobrou de verba. Do lado bom, o Google Pesquisa voltou a converter e o GMV subiu 77%.")}</p>
+      : esc("Com os três canais somados, o investimento ficou estável (R$ 1.883 contra R$ 1.877), mas os cadastros caíram pela metade: 65 contra 128 — o custo por cadastro foi de R$ 14,66 para R$ 28,98. Houve troca de canal: Performance Max, Visita ao Perfil e o OpenAI (pausado de 24 a 28/08) saíram de cena, e o Meta mais que dobrou de verba. Do lado bom, o Google Pesquisa voltou a converter e o GMV subiu 77%.")}</p>
     <div class="nota"><div class="et">Observação do período</div>
       <textarea id="obs" placeholder="Ex: agosto foi atípico — houve um erro de tratamento nas duas últimas semanas, então parte dos dados não reflete operação normal."></textarea></div>
   </div>
@@ -816,10 +824,12 @@ function vMeta(){
 function vOpenai(){
   const a=derivar(D.openai&&D.openai.atual), b=derivar(D.openai&&D.openai.anterior);
   if(!a) return semDados("OpenAI Ads", D.openai&&D.openai.erro);
+  const notaCanal = D.openai.nota?`<p class="aviso">${esc(D.openai.nota)}</p>`:"";
   let txt = `O canal consumiu <b>${brl(a.custo)}</b> e apareceu <b>${num(a.impressoes)}</b> vezes, `;
   txt += `com <b>${num(a.cliques)}</b> cliques a <b>${brl(a.cpc)}</b> cada. `;
   txt += `De cada 100 pessoas que viram, <b>${a.ctr!=null?nf1.format(a.ctr):"—"}</b> clicaram.`;
   return `
+  ${notaCanal}
   ${blocos(
     B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
     B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
