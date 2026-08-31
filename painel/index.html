@@ -147,12 +147,12 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .bl-v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;
   font-size:clamp(20px,1.9vw,25px);letter-spacing:-.03em;line-height:1.08;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.bl-d{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;margin-top:8px;
-  font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
-  font-variant-numeric:tabular-nums;padding:3px 8px;border-radius:99px}
-.bl-d.up{background:var(--bom-t);color:var(--bom)}
-.bl-d.down{background:var(--ruim-t);color:var(--ruim)}
-.bl-d.flat{background:var(--trilho);color:var(--texto-3)}
+.bl-c{display:flex;align-items:baseline;gap:7px;margin-top:8px;flex-wrap:wrap}
+.bl-ant{font-size:11px;color:var(--texto-3)}
+.bl-ant b{font-family:"Plus Jakarta Sans",sans-serif;font-size:13.5px;font-weight:700;
+  color:var(--texto-2);font-variant-numeric:tabular-nums}
+.bl-seta{font-size:11.5px;font-weight:700}
+.bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
 .bl-e{font-size:11px;color:var(--texto-3);margin-top:9px;line-height:1.45}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
@@ -412,7 +412,6 @@ function vari(a,b,inv){
   return {p, cls:Math.abs(p)<0.5?"flat":(bom?"up":"down"),
           txt:(p>0?"▲ ":p<0?"▼ ":"")+nf2.format(Math.abs(p)).replace(",00","")+"%"};
 }
-const variN=(a,b)=>{const v=vari(a,b);return v?{cls:"flat",txt:v.txt}:null};
 
 /* deriva o que é conta: nunca guardo CTR, CPC nem taxa — calculo sempre */
 function derivar(x){
@@ -611,12 +610,31 @@ const msg=k=>FALHAS[k]?(CONSERTO[FALHAS[k].code]||FALHAS[k].message||"não veio"
 const cx=(i,c)=>`<section class="cx ${c||""}">${i}</section>`;
 const cxt=(t,s,se)=>`<div class="cxt"><div><h3>${t}</h3>${s?`<p class="sub">${s}</p>`:""}</div>${se?`<span class="selo">${se}</span>`:""}</div>`;
 
-/* bloco de métrica: valor grande, variação, e uma linha dizendo o que é */
-function B(rot,val,va,expl){
+/* bloco de métrica: valor de agora, o NÚMERO REAL do período de comparação
+   (nada de porcentagem — pedido dos founders) e uma linha dizendo o que é.
+   modo: "inv" = cair é bom (custos) · "neutro" = sem julgamento (investimento) */
+function rotuloAnt(){
+  const pa=D.periodo.anterior;
+  if(pa && ehMesCalendario(pa.de,pa.ate))
+    return new Date(pa.de+"T12:00:00").toLocaleDateString("pt-BR",{month:"long"});
+  return "anterior";
+}
+function B(rot,fmt,a,b,expl,modo){
+  let cmp="";
+  if(b!=null){
+    let seta="";
+    if(a!=null && a!==b){
+      const subiu=a>b;
+      const bom = modo==="neutro" ? null : (modo==="inv" ? !subiu : subiu);
+      const cls = bom==null ? "flat" : (bom ? "up" : "down");
+      seta=`<span class="bl-seta ${cls}">${subiu?"▲":"▼"}</span>`;
+    }
+    cmp=`<div class="bl-c"><span class="bl-ant">${rotuloAnt()} <b>${fmt(b)}</b></span>${seta}</div>`;
+  }
   return `<div class="bl">
     <div class="bl-r">${rot}</div>
-    <div class="bl-v">${val}</div>
-    ${va?`<span class="bl-d ${va.cls}">${va.txt}</span>`:""}
+    <div class="bl-v">${fmt(a)}</div>
+    ${cmp}
     ${expl?`<div class="bl-e">${expl}</div>`:""}
   </div>`;
 }
@@ -666,11 +684,11 @@ function vResumo(){
 
   ${D.negocio&&D.negocio.erro?`<p class="falhou"><b>Dados de negócio não vieram</b>${esc(D.negocio.erro)}</p>`:""}
   ${blocos(
-    B("Investimento",brl(inv),variN(inv,invB),"Soma dos três canais") +
-    B("Cadastros novos",num(n?n.cadastros:null),vari(n?n.cadastros:null,nB?nB.cadastros:null),"Profissionais que entraram") +
-    B("Custo por cadastro",brl(cpc),vari(cpc,cpcB,true),"Investimento ÷ cadastros") +
-    B("Pagamentos",num(n?n.pagamentos:null),vari(n?n.pagamentos:null,nB?nB.pagamentos:null),"Transações concluídas") +
-    B("GMV",brl(n?n.gmv:null),vari(n?n.gmv:null,nB?nB.gmv:null),"Valor que passou pelo produto")
+    B("Investimento",brl,inv,invB,"Soma dos três canais","neutro") +
+    B("Cadastros novos",num,n?n.cadastros:null,nB?nB.cadastros:null,"Profissionais que entraram") +
+    B("Custo por cadastro",brl,cpc,cpcB,"Investimento ÷ cadastros","inv") +
+    B("Pagamentos",num,n?n.pagamentos:null,nB?nB.pagamentos:null,"Transações concluídas") +
+    B("GMV",brl,n?n.gmv:null,nB?nB.gmv:null,"Valor que passou pelo produto")
   )}
 
   <div class="faixa dois" style="margin-top:14px">
@@ -725,14 +743,14 @@ function vGoogle(){
 
   return `
   ${blocos(
-    B("Impressões",num(a.impressoes),vari(a.impressoes,b&&b.impressoes),"Vezes que o anúncio apareceu") +
-    B("Cliques",num(a.cliques),vari(a.cliques,b&&b.cliques),"Quantas pessoas clicaram") +
-    B("CTR",pct(a.ctr),vari(a.ctr,b&&b.ctr),"De 100 que viram, quantos clicaram") +
-    B("CPC",brl(a.cpc),vari(a.cpc,b&&b.cpc,true),"Quanto custou cada clique") +
-    B("Conversões",num(a.conversoes),vari(a.conversoes,b&&b.conversoes),"Cadastros que o Google atribuiu") +
-    B("Tx. conversão",pct(a.txConv),vari(a.txConv,b&&b.txConv),"De 100 cliques, quantos viraram cadastro") +
-    B("Custo por conversão",brl(a.custoConv),vari(a.custoConv,b&&b.custoConv,true),"Quanto custou cada cadastro") +
-    B("Investimento",brl(a.custo),variN(a.custo,b&&b.custo),"Total gasto no canal")
+    B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
+    B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
+    B("CPC",brl,a.cpc,b&&b.cpc,"Quanto custou cada clique","inv") +
+    B("Conversões",num,a.conversoes,b&&b.conversoes,"Cadastros que o Google atribuiu") +
+    B("Tx. conversão",pct,a.txConv,b&&b.txConv,"De 100 cliques, quantos viraram cadastro") +
+    B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
+    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
   )}
   <div class="faixa" style="margin-top:14px">${resumoCx(txt)}</div>
   ${camp.length?`<div class="faixa">${cx(cxt("Por campanha","Só as que gastaram no período.")
@@ -770,17 +788,17 @@ function vMeta(){
 
   return `
   ${blocos(
-    B("Alcance",num(a.alcance),vari(a.alcance,b&&b.alcance),"Pessoas diferentes que viram") +
-    B("Impressões",num(a.impressoes),vari(a.impressoes,b&&b.impressoes),"Vezes que o anúncio apareceu") +
-    B("Frequência",a.frequencia!=null?nf1.format(a.frequencia):"—",vari(a.frequencia,b&&b.frequencia,true),"Vezes que a mesma pessoa viu") +
-    B("CPM",brl(a.cpm),vari(a.cpm,b&&b.cpm,true),"Custo para aparecer mil vezes") +
-    B("Cliques no link",num(a.cliques),vari(a.cliques,b&&b.cliques),"Quantas pessoas clicaram") +
-    B("CTR",pct(a.ctr),vari(a.ctr,b&&b.ctr),"De 100 que viram, quantos clicaram") +
-    B("Chegaram na página",pct(a.connect),vari(a.connect,b&&b.connect),"Cliques que viraram visita de verdade") +
-    B("Conversões",num(a.conversoes),vari(a.conversoes,b&&b.conversoes),"Cadastros registrados pelo pixel") +
-    B("Tx. conversão",pct(a.txConv),vari(a.txConv,b&&b.txConv),"De 100 cliques, quantos viraram cadastro") +
-    B("Custo por conversão",brl(a.custoConv),vari(a.custoConv,b&&b.custoConv,true),"Quanto custou cada cadastro") +
-    B("Investimento",brl(a.custo),variN(a.custo,b&&b.custo),"Total gasto no canal")
+    B("Alcance",num,a.alcance,b&&b.alcance,"Pessoas diferentes que viram") +
+    B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
+    B("Frequência",v=>v!=null?nf1.format(v):"—",a.frequencia,b&&b.frequencia,"Vezes que a mesma pessoa viu","inv") +
+    B("CPM",brl,a.cpm,b&&b.cpm,"Custo para aparecer mil vezes","inv") +
+    B("Cliques no link",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
+    B("Chegaram na página",pct,a.connect,b&&b.connect,"Cliques que viraram visita de verdade") +
+    B("Conversões",num,a.conversoes,b&&b.conversoes,"Cadastros registrados pelo pixel") +
+    B("Tx. conversão",pct,a.txConv,b&&b.txConv,"De 100 cliques, quantos viraram cadastro") +
+    B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
+    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
   )}
   <div class="faixa" style="margin-top:14px">${resumoCx(txt)}</div>
   ${cri.length?`<div class="faixa">${cx(cxt("Anúncio por anúncio","Ordenados por quanto consumiram.")
@@ -803,12 +821,12 @@ function vOpenai(){
   txt += `De cada 100 pessoas que viram, <b>${a.ctr!=null?nf1.format(a.ctr):"—"}</b> clicaram.`;
   return `
   ${blocos(
-    B("Impressões",num(a.impressoes),vari(a.impressoes,b&&b.impressoes),"Vezes que o anúncio apareceu") +
-    B("Cliques",num(a.cliques),vari(a.cliques,b&&b.cliques),"Quantas pessoas clicaram") +
-    B("CTR",pct(a.ctr),vari(a.ctr,b&&b.ctr),"De 100 que viram, quantos clicaram") +
-    B("CPC",brl(a.cpc),vari(a.cpc,b&&b.cpc,true),"Quanto custou cada clique") +
-    B("CPM",brl(a.cpm),vari(a.cpm,b&&b.cpm,true),"Custo para aparecer mil vezes") +
-    B("Investimento",brl(a.custo),variN(a.custo,b&&b.custo),"Total gasto no canal")
+    B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
+    B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
+    B("CPC",brl,a.cpc,b&&b.cpc,"Quanto custou cada clique","inv") +
+    B("CPM",brl,a.cpm,b&&b.cpm,"Custo para aparecer mil vezes","inv") +
+    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
   )}
   <div class="faixa" style="margin-top:14px">
     ${resumoCx(txt)}
@@ -840,7 +858,7 @@ function vLP(){
   return `
   ${D.lp&&D.lp.erroSessoes?`<p class="falhou"><b>Visitas não vieram</b>${esc(D.lp.erroSessoes)}</p>`:""}
   ${s&&s.atual!=null?blocos(
-    B("Visitas na página",num(s.atual),vari(s.atual,s.anterior),"Sessões em miaapp.com.br, na janela escolhida")
+    B("Visitas na página",num,s.atual,s.anterior,"Sessões em miaapp.com.br, na janela escolhida")
   ):""}
 
   <div class="faixa" style="margin-top:14px">
@@ -852,13 +870,13 @@ function vLP(){
           + `<p class="aviso">A API do Clarity só devolve os <b>últimos 3 dias</b> — estes números
              não são da janela que você escolheu acima.</p>`
           + blocos(
-            B("Rolagem",pct(c.scroll),null,"Até onde o visitante desce na página") +
-            B("Tempo ativo",seg(c.tempoAtivo),null,"Tempo realmente interagindo") +
-            B("Sessões",num(c.sessoes),null,"Visitas nos 3 dias") +
-            B("Páginas por sessão",c.paginas!=null?nf1.format(c.paginas):"—",null,"Quantas páginas cada um viu") +
-            B("Cliques mortos",pct(c.deadClicks),null,"Clique em algo que parece botão e não é") +
-            B("Quickback",num(c.quickback),null,"Cliques de quem entra e volta na hora") +
-            B("Rage clicks",num(c.rage),null,"Cliques repetidos de irritação")
+            B("Rolagem",pct,c.scroll,null,"Até onde o visitante desce na página") +
+            B("Tempo ativo",seg,c.tempoAtivo,null,"Tempo realmente interagindo") +
+            B("Sessões",num,c.sessoes,null,"Visitas nos 3 dias") +
+            B("Páginas por sessão",v=>v!=null?nf1.format(v):"—",c.paginas,null,"Quantas páginas cada um viu") +
+            B("Cliques mortos",pct,c.deadClicks,null,"Clique em algo que parece botão e não é") +
+            B("Quickback",num,c.quickback,null,"Cliques de quem entra e volta na hora") +
+            B("Rage clicks",num,c.rage,null,"Cliques repetidos de irritação")
           ))
         : cx(cxt("Comportamento na página","Microsoft Clarity")
             + `<p class="vazio">Clique em Puxar dados para trazer o comportamento na página.</p>`))}
