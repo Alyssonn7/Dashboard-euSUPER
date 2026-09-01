@@ -38,16 +38,20 @@ conhecido em novembro/2025 no Google Ads).
 A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
 retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 
-## Seis seções, uma por canal
+## Cinco seções, uma por canal
 
 | Seção | O que mostra |
 |---|---|
-| **Resumo** | Cinco números, uma frase, o funil e o GMV por semana |
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
 | **Meta Ads** | Alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento — mais a tabela por anúncio |
 | **OpenAI Ads** | Impressões, cliques, CTR, CPC, CPM, investimento |
 | **Landing Page** | Visitas na janela escolhida, e o comportamento pelo Clarity |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
+
+A aba **Resumo** (cinco números, o funil e o GMV semanal) existe no código mas
+está oculta — o modelo de apresentação atual não a usa. Para reativá-la,
+remova a flag `oculta:true` da entrada `resumo` na lista `VISTAS` do
+`painel/index.html`.
 
 Cada bloco de métrica traz três coisas: o valor, a variação contra a janela
 anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 que
