@@ -1,9 +1,24 @@
-# Painel — Mia
+# Painel — euSUPER! (ex-Mia)
 
 Painel semanal e mensal para a reunião com os founders.
 
 **Painel:** `painel/index.html` — um arquivo, sem build, sem dependência.
 A raiz do repositório redireciona para `/painel/`.
+
+## Identidade visual
+
+O front segue o **Manual da Identidade Visual euSUPER! (2026)**: azul
+`#008CF5` (gradiente até `#1760B9`) como cor institucional, laranja `#F9902A`
+na ação principal, verde `#05B27C`, cinza `#87B1DB` e azul claro `#D7FFF7`
+como fundo. Todos os valores vivem nos tokens do `:root` no topo do
+`painel/index.html`. A tipografia oficial é a **Gilroy**; como ela é
+licenciada, o painel carrega a **Poppins** (equivalente geométrica do Google
+Fonts) — a Gilroy vem primeiro na pilha `--fonte` e assume automaticamente
+onde estiver instalada. O símbolo (check + exclamação a 22,5°), o wordmark e
+os ícones do menu vêm da iconografia do manual, desenhados como SVG no
+próprio arquivo. As contas de anúncio, domínios e nomes de fonte de dados
+ainda são os da operação atual (miaapp.com.br, Metabase "Mia Production") e
+trocam quando a migração de marca chegar ao produto.
 
 ## Como usar
 

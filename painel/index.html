@@ -1,44 +1,57 @@
-<title>Painel Semanal Mia</title>
+<title>Painel euSUPER!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
 
 <style>
+/* =========================================================================
+   Identidade visual euSUPER! — Manual da Identidade Visual 2026.
+   Paleta oficial: Azul #008CF5 (gradiente até #1760B9), Laranja #F9902A,
+   Verde #05B27C, Cinza #87B1DB, Azul Claro #D7FFF7, Branco #FEFEFE.
+   Tipografia oficial: Gilroy. Como a Gilroy é licenciada e não existe no
+   Google Fonts, a Poppins (geométrica equivalente) responde por ela;
+   quando a Gilroy for licenciada, basta o navegador tê-la instalada —
+   ela vem primeiro na pilha da --fonte.
+   ========================================================================= */
 :root{
-  --menta:#D8ECE3; --casca:#FFF; --tela:#F5F8F6; --cartao:#FFF;
-  --mata:#2D6A4F; --borda:#E7EDEA; --borda-2:#EFF3F1;
-  --texto:#182821; --texto-2:#56695F; --texto-3:#8B9C93; --trilho:#EAEFEC;
-  --d1:#0E8F63; --d2:#D07C1A; --d3:#8C4FBF;
-  --bom:#0E7A55; --ruim:#BC4033; --bom-t:#E2F2EB; --ruim-t:#FBE9E6;
-  --av:#8A5A08; --av-t:#FBF1DE;
-  --sombra:0 1px 2px rgba(24,40,33,.04), 0 8px 24px -8px rgba(24,40,33,.10);
-  --menu:rgba(255,255,255,.62); --menu-bg:rgba(255,255,255,.13);
+  --fonte:"Gilroy","Poppins",-apple-system,"Segoe UI",sans-serif;
+  --menta:#D7FFF7; --casca:#FEFEFE; --tela:#F2FBF9; --cartao:#FEFEFE;
+  --mata:#008CF5; --mata-2:#1760B9; --titulo:#1760B9; --cta:#F9902A;
+  --borda:#DFEDF9; --borda-2:#EAF4FB;
+  --texto:#123F7C; --texto-2:#4A76A8; --texto-3:#87B1DB; --trilho:#E2F1FA;
+  --d1:#008CF5; --d2:#F9902A; --d3:#05B27C;
+  --bom:#03875F; --ruim:#C05E0F; --bom-t:#DCF5EC; --ruim-t:#FDEEDD;
+  --av:#B36B10; --av-t:#FDF1E0;
+  --sombra:0 1px 2px rgba(18,63,124,.05), 0 8px 24px -8px rgba(18,63,124,.10);
+  --menu:rgba(255,255,255,.74); --menu-bg:rgba(255,255,255,.16);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
-  --mata:#1A3E2F; --borda:#243530; --borda-2:#1C2A25;
-  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83; --trilho:#21302B;
-  --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
-  --bom:#3EBE8B; --ruim:#E58579; --bom-t:#0E2A20; --ruim-t:#2E1A17;
-  --av:#E0AE55; --av-t:#2E2413;
+  --menta:#04182B; --casca:#0A2138; --tela:#071D31; --cartao:#0F2A44;
+  --mata:#1273CE; --mata-2:#0F3F7D; --titulo:#4FB1FF; --cta:#F9902A;
+  --borda:#1C3A5A; --borda-2:#163049;
+  --texto:#E3F1FE; --texto-2:#9DC1E3; --texto-3:#6E93BC; --trilho:#1C3B5C;
+  --d1:#3FA9FF; --d2:#FFA14E; --d3:#17C68E;
+  --bom:#2ECD9A; --ruim:#FF9E55; --bom-t:#0B3229; --ruim-t:#39230F;
+  --av:#F2B04E; --av-t:#33260F;
   --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
-  --menu:rgba(230,239,233,.6); --menu-bg:rgba(255,255,255,.09);
+  --menu:rgba(227,241,254,.62); --menu-bg:rgba(255,255,255,.10);
 }}
 :root[data-theme="dark"]{
-  --menta:#080F0D; --casca:#101B17; --tela:#0C1613; --cartao:#15211D;
-  --mata:#1A3E2F; --borda:#243530; --borda-2:#1C2A25;
-  --texto:#E6EFE9; --texto-2:#A6BAAF; --texto-3:#788C83; --trilho:#21302B;
-  --d1:#14A070; --d2:#C67B22; --d3:#8E72D0;
-  --bom:#3EBE8B; --ruim:#E58579; --bom-t:#0E2A20; --ruim-t:#2E1A17;
-  --av:#E0AE55; --av-t:#2E2413;
+  --menta:#04182B; --casca:#0A2138; --tela:#071D31; --cartao:#0F2A44;
+  --mata:#1273CE; --mata-2:#0F3F7D; --titulo:#4FB1FF; --cta:#F9902A;
+  --borda:#1C3A5A; --borda-2:#163049;
+  --texto:#E3F1FE; --texto-2:#9DC1E3; --texto-3:#6E93BC; --trilho:#1C3B5C;
+  --d1:#3FA9FF; --d2:#FFA14E; --d3:#17C68E;
+  --bom:#2ECD9A; --ruim:#FF9E55; --bom-t:#0B3229; --ruim-t:#39230F;
+  --av:#F2B04E; --av-t:#33260F;
   --sombra:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -8px rgba(0,0,0,.5);
-  --menu:rgba(230,239,233,.6); --menu-bg:rgba(255,255,255,.09);
+  --menu:rgba(227,241,254,.62); --menu-bg:rgba(255,255,255,.10);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:hidden;
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:var(--fonte);
   font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
 @supports (height:100dvh){html,body{height:100dvh}}
 .rola{scrollbar-width:thin;scrollbar-color:var(--trilho) transparent}
@@ -48,30 +61,49 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   border:3px solid transparent;background-clip:content-box}
 
 .app{max-width:1240px;height:100%;margin:0 auto;background:var(--casca);border-radius:26px;
-  box-shadow:0 2px 6px rgba(24,40,33,.05),0 24px 60px -20px rgba(24,40,33,.18);
+  box-shadow:0 2px 6px rgba(18,63,124,.06),0 24px 60px -20px rgba(18,63,124,.20);
   display:grid;grid-template-columns:214px minmax(0,1fr);overflow:hidden}
 
-.lado{background:var(--mata);padding:24px 14px 18px;display:flex;flex-direction:column;
-  gap:24px;overflow-y:auto;min-height:0}
+/* gradiente institucional + a exclamação "estourada" do manual, como camadas
+   de fundo (barra a 22,5° e círculo), para nunca criar scroll no menu */
+.lado{padding:24px 14px 18px;display:flex;flex-direction:column;
+  gap:24px;overflow-y:auto;min-height:0;
+  background:
+    linear-gradient(112.5deg,transparent 55%,rgba(255,255,255,.06) 55%,
+      rgba(255,255,255,.06) 78%,transparent 78%),
+    radial-gradient(circle 44px at 88% 97%,rgba(255,255,255,.08) 98%,transparent 100%),
+    linear-gradient(168deg,var(--mata),var(--mata-2))}
 .logo{display:flex;align-items:center;gap:10px;padding:0 8px;color:#fff}
 .logo .b{width:31px;height:31px;border-radius:10px;background:rgba(255,255,255,.16);
   display:grid;place-items:center;flex:none}
-.logo b{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:16px;line-height:1.1}
+/* wordmark do manual: "eu" minúsculo, "SUPER" em caixa alta e a exclamação
+   inclinada nos 22,5° originais do logotipo */
+.logo b{font-family:var(--fonte);font-weight:800;font-size:16px;line-height:1.1;
+  letter-spacing:-.02em}
+.logo b .ex{display:inline-block;transform:rotate(22.5deg);transform-origin:50% 78%;
+  margin-left:1px}
 .logo small{display:block;font-size:10px;font-weight:500;color:var(--menu);margin-top:1px}
 .menu{display:flex;flex-direction:column;gap:3px;flex:1}
-.item{display:flex;align-items:center;gap:11px;width:100%;padding:11px 12px;border-radius:11px;
-  border:none;background:none;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;
+.item{display:flex;align-items:center;gap:11px;width:100%;padding:11px 10px;border-radius:11px;
+  border:none;background:none;cursor:pointer;font-family:var(--fonte);
   font-size:13.5px;font-weight:600;color:var(--menu);text-align:left;position:relative}
 .item svg{width:18px;height:18px;flex:none;stroke:currentColor;stroke-width:1.7;fill:none;
   stroke-linecap:round;stroke-linejoin:round}
 /* logos oficiais dos canais: preenchidos, sem o traço herdado dos ícones genéricos */
 .item svg.marca{stroke:none;stroke-width:0;fill:currentColor}
+.item .icb{width:26px;height:26px;display:grid;place-items:center;flex:none;margin:-4px 0}
+/* o manual só permite marca colorida sobre fundo branco — por isso o chip
+   atrás dos logos dos canais, que somem sobre o azul institucional */
+.item .icb.fundo{background:#FEFEFE;border-radius:8px;
+  box-shadow:0 1px 2px rgba(18,63,124,.22)}
+.item .icb.fundo svg{width:17px;height:17px}
+.item .lbl{white-space:nowrap}
 .item:hover,.item[aria-selected="true"]{background:var(--menu-bg);color:#fff}
 .item .pt{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#fff;opacity:0}
 .item[aria-selected="true"] .pt{opacity:1}
 .item:focus-visible{outline:2px solid #fff;outline-offset:1px}
 .imp{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;
-  border:none;background:#fff;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;
+  border:none;background:#fff;cursor:pointer;font-family:var(--fonte);
   font-size:12.5px;font-weight:700;color:var(--mata)}
 .imp svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round}
 
@@ -90,34 +122,35 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .cd:hover{border-color:var(--texto-3)}
 .cd:focus-within{border-color:var(--mata);box-shadow:0 0 0 3px
   color-mix(in srgb, var(--mata) 14%, transparent)}
-.cd-l{font-family:"Plus Jakarta Sans",sans-serif;font-size:9px;font-weight:700;
+.cd-l{font-family:var(--fonte);font-size:9px;font-weight:700;
   letter-spacing:.16em;text-transform:uppercase;color:var(--texto-3);line-height:1}
 .cd-v{display:flex;align-items:center;gap:7px}
-.cd input[type=date]{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
+.cd input[type=date]{font-family:var(--fonte);font-size:13px;font-weight:700;
   font-variant-numeric:tabular-nums;border:none;background:none;padding:0;margin:0;
   color:var(--texto);letter-spacing:-.01em;width:8.6em}
 .cd input[type=date]::-webkit-calendar-picker-indicator{opacity:.4;cursor:pointer}
 .cd input[type=date]:focus-visible{outline:none}
 .cd-seta{color:var(--texto-3);font-size:12px}
-.c-vs{align-self:center;font-family:"Plus Jakarta Sans",sans-serif;font-size:10.5px;
+.c-vs{align-self:center;font-family:var(--fonte);font-size:10.5px;
   font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--texto-3);
   padding:0 2px}
 
 /* atalhos como controle segmentado */
 .seg{display:flex;align-self:stretch;border:1px solid var(--borda);border-radius:13px;
   overflow:hidden;background:var(--tela)}
-.seg button{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+.seg button{font-family:var(--fonte);font-size:11.5px;font-weight:700;
   padding:0 15px;border:none;background:none;color:var(--texto-2);cursor:pointer;
   white-space:nowrap;transition:background .15s,color .15s}
 .seg button + button{border-left:1px solid var(--borda)}
 .seg button:hover{background:var(--cartao);color:var(--texto)}
 .seg button:focus-visible{outline:2px solid var(--mata);outline-offset:-3px}
-.puxar{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:700;
-  padding:11px 20px;border-radius:10px;border:none;background:var(--mata);color:#fff;
+/* a ação principal fica no laranja da marca — a cor de energia do manual */
+.puxar{font-family:var(--fonte);font-size:13px;font-weight:700;
+  padding:11px 20px;border-radius:10px;border:none;background:var(--cta);color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.puxar:hover{filter:brightness(1.1)}
+.puxar:hover{filter:brightness(1.06)}
 .puxar:disabled{opacity:.6;cursor:default}
-.puxar:focus-visible{outline:2px solid var(--mata);outline-offset:2px}
+.puxar:focus-visible{outline:2px solid var(--cta);outline-offset:2px}
 .puxar .gira{width:14px;height:14px;border:2px solid rgba(255,255,255,.35);
   border-top-color:#fff;border-radius:50%;animation:gira .8s linear infinite;display:none}
 .puxar.indo .gira{display:block}
@@ -129,10 +162,10 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   stroke-linejoin:round}
 .ic:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
 .eu{width:36px;height:36px;border-radius:50%;background:var(--mata);color:#fff;display:grid;
-  place-items:center;font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;font-size:12px}
+  place-items:center;font-family:var(--fonte);font-weight:700;font-size:12px}
 /* estado em chips: cada fato num selo, nada de frase corrida */
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-.chip{display:inline-flex;align-items:center;gap:6px;font-family:"Plus Jakarta Sans",sans-serif;
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--fonte);
   font-size:10.5px;font-weight:700;letter-spacing:.02em;padding:5px 11px;border-radius:99px;
   background:var(--tela);border:1px solid var(--borda-2);color:var(--texto-2);
   font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -152,10 +185,10 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 
 .cx{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;padding:19px 21px;
   box-shadow:var(--sombra);min-width:0}
-.cx h3{font-family:"Plus Jakarta Sans",sans-serif;font-size:14px;font-weight:700;margin:0}
+.cx h3{font-family:var(--fonte);font-size:14px;font-weight:700;margin:0;color:var(--titulo)}
 .cx .sub{font-size:12.5px;color:var(--texto-3);margin:3px 0 0}
 .cxt{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
-.selo{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;padding:5px 10px;
+.selo{font-family:var(--fonte);font-size:11px;font-weight:700;padding:5px 10px;
   border-radius:8px;background:var(--trilho);color:var(--texto-2);white-space:nowrap}
 .proc{font-size:11px;color:var(--texto-3);margin:15px 0 0;padding-top:12px;
   border-top:1px solid var(--borda-2);line-height:1.5}
@@ -170,14 +203,14 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   overflow:hidden;border:1px solid var(--borda);box-shadow:var(--sombra)}
 .bl{background:var(--cartao);padding:16px 18px;display:flex;flex-direction:column;
   flex:1 1 172px;min-width:0}
-.bl-r{font-family:"Plus Jakarta Sans",sans-serif;font-size:11.5px;font-weight:700;
+.bl-r{font-family:var(--fonte);font-size:11.5px;font-weight:700;
   color:var(--texto-2);margin-bottom:8px;line-height:1.3}
-.bl-v{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;
+.bl-v{font-family:var(--fonte);font-weight:800;
   font-size:clamp(20px,1.9vw,25px);letter-spacing:-.03em;line-height:1.08;
   font-variant-numeric:tabular-nums;white-space:nowrap}
 .bl-c{display:flex;align-items:baseline;gap:7px;margin-top:8px;flex-wrap:wrap}
 .bl-ant{font-size:11px;color:var(--texto-3)}
-.bl-ant b{font-family:"Plus Jakarta Sans",sans-serif;font-size:13.5px;font-weight:700;
+.bl-ant b{font-family:var(--fonte);font-size:13.5px;font-weight:700;
   color:var(--texto-2);font-variant-numeric:tabular-nums}
 .bl-seta{font-size:11.5px;font-weight:700}
 .bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
@@ -191,20 +224,25 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .acoes{display:grid;gap:12px}
 .acao{display:grid;grid-template-columns:auto 1fr;gap:16px;background:var(--cartao);
   border:1px solid var(--borda);border-radius:16px;padding:19px 21px;box-shadow:var(--sombra)}
-.acao-n{font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:15px;color:#fff;
+.acao-n{font-family:var(--fonte);font-weight:800;font-size:15px;color:#fff;
   background:var(--mata);width:34px;height:34px;border-radius:11px;display:grid;
   place-items:center;flex:none}
-.acao-c h4{font-family:"Plus Jakarta Sans",sans-serif;font-size:15.5px;font-weight:700;
+.acao-c h4{font-family:var(--fonte);font-size:15.5px;font-weight:700;
   margin:0 0 11px;color:var(--texto);letter-spacing:-.01em}
 .acao-c p{margin:0;font-size:13.5px;line-height:1.6;color:var(--texto-2);
   display:grid;grid-template-columns:86px 1fr;gap:12px;padding:8px 0;
   border-top:1px solid var(--borda-2)}
-.acao-c p span{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
+.acao-c p span{font-family:var(--fonte);font-size:10px;font-weight:700;
   letter-spacing:.11em;text-transform:uppercase;color:var(--texto-3);padding-top:3px}
 .acao-f span{color:var(--d1)!important}
 
-.frase{background:var(--mata);border-radius:16px;padding:23px 25px;color:#fff;margin-bottom:14px}
-.frase .et{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;
+.frase{border-radius:16px;padding:23px 25px;color:#fff;margin-bottom:14px;
+  background:
+    linear-gradient(112.5deg,transparent 68%,rgba(255,255,255,.07) 68%,
+      rgba(255,255,255,.07) 84%,transparent 84%),
+    radial-gradient(circle 60px at 94% 110%,rgba(255,255,255,.10) 98%,transparent 100%),
+    linear-gradient(135deg,var(--mata),var(--mata-2))}
+.frase .et{font-family:var(--fonte);font-size:10px;font-weight:700;
   letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:9px}
 .frase p{margin:0;font-size:15.5px;line-height:1.62;max-width:84ch}
 .nota{margin-top:16px;padding-top:15px;border-top:1px solid rgba(255,255,255,.16)}
@@ -224,7 +262,7 @@ thead th.r{text-align:right}
 tbody td{padding:12px 12px 12px 0;border-bottom:1px solid var(--borda-2);color:var(--texto-2);
   white-space:nowrap;font-variant-numeric:tabular-nums}
 tbody td.r{text-align:right}
-tbody td.nm{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;color:var(--texto)}
+tbody td.nm{font-family:var(--fonte);font-weight:700;color:var(--texto)}
 tbody td.nm span{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:2px}
 tbody tr:last-child td{border-bottom:none}
 tfoot td{padding:12px;border-top:1px solid var(--borda);font-weight:600;color:var(--texto);
@@ -235,7 +273,7 @@ tfoot td.r{text-align:right}
 .bars{display:flex;align-items:flex-end;gap:9px;height:140px}
 .bc{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;
   height:100%;min-width:0}
-.bc .bv{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;
+.bc .bv{font-family:var(--fonte);font-size:11px;font-weight:700;
   font-variant-numeric:tabular-nums;color:var(--texto-3)}
 .bc .bb{width:100%;max-width:42px;background:var(--trilho);border-radius:6px 6px 3px 3px;min-height:4px}
 .bc.on .bb{background:var(--d1)} .bc.on .bv{color:var(--texto)}
@@ -248,7 +286,7 @@ tfoot td.r{text-align:right}
 .linha .ln{font-size:13px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .linha .lt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
 .linha .lf{display:block;height:100%;border-radius:99px;min-width:4px}
-.linha .lv{font-family:"Plus Jakarta Sans",sans-serif;font-size:12.5px;font-weight:700;
+.linha .lv{font-family:var(--fonte);font-size:12.5px;font-weight:700;
   font-variant-numeric:tabular-nums;text-align:right;min-width:78px}
 .vazio{font-size:13px;color:var(--texto-3);padding:14px 0}
 .passos{list-style:none;counter-reset:s;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
@@ -256,7 +294,7 @@ tfoot td.r{text-align:right}
   background:var(--cartao);border:1px solid var(--borda);border-radius:13px;padding:15px 17px;
   font-size:14px;color:var(--texto-2)}
 .passos li::before{content:counter(s,decimal-leading-zero);
-  font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:14px;color:var(--d1)}
+  font-family:var(--fonte);font-weight:800;font-size:14px;color:var(--d1)}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1240px){
@@ -372,10 +410,13 @@ const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,148
 <div class="app">
   <nav class="lado rola" aria-label="Seções">
     <div class="logo">
-      <span class="b" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-        stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12z"/></svg></span>
-      <span><b>Mia</b><small>painel da semana</small></span>
+      <!-- símbolo oficial: o check formado pelo braço e pela exclamação a 22,5° -->
+      <span class="b" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24"
+        fill="#fff" stroke="none">
+        <path d="M3.4 8.4h4.7l2.7 7.2H6.1z"/>
+        <path d="M16.3 3.2H21l-4.2 10.2h-4.7z"/>
+        <circle cx="16.6" cy="18.6" r="2.6"/></svg></span>
+      <span><b>euSUPER<span class="ex">!</span></b><small>painel da semana</small></span>
     </div>
     <div class="menu" role="tablist" id="menu"></div>
     <button class="imp" type="button" id="btImp">
@@ -951,24 +992,29 @@ function vPassos(){
 
 /* --------------------------------------------------------------------- monta */
 const IC={
-  casa:'<path d="M3 10.2 12 3l9 7.2"/><path d="M5.6 8.9V20.4h12.8V8.9"/>',
+  /* iconografia oficial euSUPER!: paralelogramos e círculos a 22,5°.
+     "grafico", "cartao" e "checklist" vêm da página de iconografia do manual */
+  grafico:'<path d="M3.4 19.4 5.3 13h3L6.4 19.4z"/><path d="M9.2 19.4 12.3 9h3l-3.1 10.4z"/>'+
+          '<path d="M15 19.4 19.4 4.8h3L18 19.4z"/>',
+  cartao:'<path d="M9.6 4.4h11l-1 3.4h-11z"/><path d="M6.4 9.8H19l-2.6 9.8H3.8z"/>',
+  checklist:'<circle cx="4.4" cy="5.4" r="1.7"/><path d="M8.9 3.7h11.5L19 7.1H7.5z"/>'+
+            '<circle cx="4.4" cy="12" r="1.7"/><path d="M8.9 10.3h11.5L19 13.7H7.5z"/>'+
+            '<circle cx="4.4" cy="18.6" r="1.7"/><path d="M8.9 16.9h11.5L19 20.3H7.5z"/>',
   /* logos oficiais — o círculo verde por último cobre a ponta da barra amarela,
      é assim que o logo do Google Ads é construído */
   gads:'<path d="M4.75 17.8 12 4.4" stroke="#FBBC04" stroke-width="5.5" stroke-linecap="round"/>'+
        '<path d="M12 4.4l7.25 13.4" stroke="#4285F4" stroke-width="5.5" stroke-linecap="round"/>'+
        '<circle cx="4.75" cy="17.8" r="2.75" fill="#34A853"/>',
   metaf:'<path fill="#0081FB" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.499-1.56a2.926 2.926 0 0 1 1.122-.258z"/>',
-  oai:'<path transform="translate(1.44 1.44) scale(.88)" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.073zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.0615v5.5826a4.504 4.504 0 0 1-4.4945 4.4849zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>',
-  tela:'<rect x="3" y="4.6" width="18" height="12.4" rx="2.2"/><path d="M9 20.4h6M12 17v3.4"/>',
-  bandeira:'<path d="M6 3.5v17"/><path d="M6 4.7h11.4l-2.2 4 2.2 4H6z"/>'
+  oai:'<path fill="#000" transform="translate(1.44 1.44) scale(.88)" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.073zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.0615v5.5826a4.504 4.504 0 0 1-4.4945 4.4849zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>',
 };
 const VISTAS=[
-  {id:"resumo",nome:"Resumo",     ic:"casa",     r:vResumo},
-  {id:"google",nome:"Google Ads", ic:"gads",  marca:true, r:vGoogle},
-  {id:"meta",  nome:"Meta Ads",   ic:"metaf", marca:true, r:vMeta},
-  {id:"openai",nome:"OpenAI Ads", ic:"oai",   marca:true, r:vOpenai},
-  {id:"lp",    nome:"Landing Page",ic:"tela",    r:vLP},
-  {id:"passos",nome:"Próximos passos",ic:"bandeira",r:vPassos}
+  {id:"resumo",nome:"Resumo",     ic:"grafico", marca:true, r:vResumo},
+  {id:"google",nome:"Google Ads", ic:"gads",    marca:true, chip:true, r:vGoogle},
+  {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
+  {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
+  {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
+  {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,r:vPassos}
 ];
 
 const menu=document.getElementById("menu"), main=document.getElementById("main");
@@ -977,7 +1023,8 @@ VISTAS.forEach((v,i)=>{
   b.className="item"; b.type="button"; b.id="it-"+v.id; b.title=v.nome;
   b.setAttribute("role","tab"); b.setAttribute("aria-controls","v-"+v.id);
   b.setAttribute("aria-selected",i===0?"true":"false");
-  b.innerHTML=`<svg viewBox="0 0 24 24" class="${v.marca?"marca":""}" aria-hidden="true">${IC[v.ic]}</svg>
+  b.innerHTML=`<span class="icb${v.chip?" fundo":""}"><svg viewBox="0 0 24 24"
+      class="${v.marca?"marca":""}" aria-hidden="true">${IC[v.ic]}</svg></span>
     <span class="lbl">${v.nome}</span><span class="pt" aria-hidden="true"></span>`;
   b.addEventListener("click",()=>abrir(v.id));
   b.addEventListener("keydown",e=>{
