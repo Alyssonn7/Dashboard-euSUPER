@@ -198,13 +198,16 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .aviso{background:var(--av-t);color:var(--av);border-radius:10px;padding:11px 14px;
   font-size:12.5px;margin:0 0 14px;line-height:1.5}
 
-/* ---- blocos de métrica: valor grande + o que aquilo significa ---- */
-.blocos{display:flex;flex-wrap:wrap;gap:1px;background:var(--borda-2);border-radius:16px;
-  overflow:hidden;border:1px solid var(--borda);box-shadow:var(--sombra)}
-.bl{background:var(--cartao);padding:16px 18px;display:flex;flex-direction:column;
-  flex:1 1 172px;min-width:0}
+/* ---- blocos de métrica: cada métrica no seu próprio cartão ---- */
+.blocos{display:flex;flex-wrap:wrap;gap:12px}
+.bl{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;
+  box-shadow:var(--sombra);padding:17px 19px 15px;display:flex;flex-direction:column;
+  flex:1 1 168px;min-width:0}
 .bl-r{font-family:var(--fonte);font-size:11.5px;font-weight:700;
   color:var(--texto-2);margin-bottom:8px;line-height:1.3}
+/* o traço a 22,5° da iconografia da marca marcando cada métrica */
+.bl-r::before{content:"";display:inline-block;width:5px;height:9px;margin-right:7px;
+  background:var(--d1);transform:skewX(-22.5deg);border-radius:1.5px}
 .bl-v{font-family:var(--fonte);font-weight:800;
   font-size:clamp(20px,1.9vw,25px);letter-spacing:-.03em;line-height:1.08;
   font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -212,8 +215,10 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .bl-ant{font-size:11px;color:var(--texto-3)}
 .bl-ant b{font-family:var(--fonte);font-size:13.5px;font-weight:700;
   color:var(--texto-2);font-variant-numeric:tabular-nums}
-.bl-seta{font-size:11.5px;font-weight:700}
-.bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
+.bl-seta{font-size:10px;font-weight:700;padding:3px 7px;border-radius:99px;line-height:1}
+.bl-seta.up{color:var(--bom);background:var(--bom-t)}
+.bl-seta.down{color:var(--ruim);background:var(--ruim-t)}
+.bl-seta.flat{color:var(--texto-3);background:var(--trilho)}
 .bl-e{font-size:11px;color:var(--texto-3);margin-top:9px;line-height:1.45}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
