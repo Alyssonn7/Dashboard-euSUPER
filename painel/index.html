@@ -1172,22 +1172,7 @@ function vOpenai(){
       B1("CPC",brl,t.cpc,"Quanto custou cada clique",rp) +
       B1("CPM",brl,t.cpm,"Custo para aparecer mil vezes",rp)
     )}
-    <div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha · "+rp,
-      `Do arquivo ${esc(M.arquivo)} do Ads Manager. Impressões, cliques e gasto foram conferidos no Windsor para ${M.cobertura} e batem no centavo.`)
-      + `<div class="tw"><table><thead><tr><th>Campanha</th><th>Início</th>
-        <th class="r">Investimento</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
-        <th class="r">CPC</th><th class="r">Páginas vistas</th><th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
-        <tbody>${C.sort((x,y)=>y.custo-x.custo).map(c=>`<tr><td class="nm">${esc(c.nome)}<span>${c.status==="active"?"ativa":esc(c.status||"")}</span></td>
-          <td>${dm(c.inicio)}</td>
-          <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
-          <td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td><td class="r">${brl(c.cpc)}</td>
-          <td class="r">${num(c.paginasVistas)}</td><td class="r">${num(c.conversoes)}</td>
-          <td class="r">${brl(c.custoConv)}</td></tr>`).join("")}</tbody>
-        <tfoot><tr><td>Total</td><td></td>
-          <td class="r">${brl(t.custo)}</td><td class="r">${num(t.impressoes)}</td><td class="r">${num(t.cliques)}</td>
-          <td class="r">${pct(t.ctr)}</td><td class="r">${brl(t.cpc)}</td><td class="r">${num(t.visitasLP)}</td>
-          <td class="r">${num(t.conversoes)}</td><td class="r">${brl(t.custoConv)}</td></tr></tfoot>
-        </table></div>`)}</div>`;
+    `;
   }
 
   return exportado || `<div class="vazio">Sem export do Ads Manager carregado para este canal.</div>`;
