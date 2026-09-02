@@ -36,7 +36,13 @@ acusar janelas de tamanhos diferentes. O histórico das fontes alcança o fim de
 conhecido em novembro/2025 no Google Ads).
 
 A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
-retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
+retrato gravado no arquivo, o resultado da consulta que você acabou de fazer, ou
+uma consulta anterior salva no navegador.
+
+O painel **lembra as quatro datas e o último "Puxar dados"** no próprio navegador
+(localStorage): fechar a página, atualizar, ou receber uma versão nova do painel
+não apaga nada. Quando o formato dos dados muda numa versão nova, só o resultado
+salvo é descartado — as datas ficam.
 
 ## Seis seções
 

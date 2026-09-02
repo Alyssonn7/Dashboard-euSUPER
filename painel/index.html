@@ -875,7 +875,9 @@ async function puxar(){
   }));
 
   const novo=JSON.parse(JSON.stringify(RETRATO));
-  novo.aoVivo=true; novo.puxadoEm=`${dm(de)}–${dm(ate)} · consultado agora`;
+  const ag=new Date(), z=n=>String(n).padStart(2,"0");
+  novo.aoVivo=true;
+  novo.puxadoEm=`consultado em ${z(ag.getDate())}/${z(ag.getMonth()+1)} às ${z(ag.getHours())}:${z(ag.getMinutes())}`;
   novo.periodo={atual:{de,ate},anterior:{de:cde,ate:cate}};
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
     campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA")};
@@ -891,7 +893,7 @@ async function puxar(){
   novo.negocio={atual:(R.ng&&R.ng.atual)||null, anterior:(R.ng&&R.ng.anterior)||null,
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
-  D=novo;
+  D=novo; guardarVivo(novo); lembrarDatas();
   btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
   desenhar();
 }
@@ -1396,7 +1398,8 @@ function pintarEstado(){
                    D.periodo.anterior.de===cde && D.periodo.anterior.ate===cate;
     if(!naTela) t.push(chip("período novo — clique em Puxar dados","acao"));
   }
-  t.push(D.aoVivo ? chip("dados ao vivo","vivo",true)
+  t.push(D.aoVivo ? (D.restaurado ? chip(`${esc(D.puxadoEm)} · salvo neste navegador`,"foto",true)
+                                  : chip(`dados ao vivo · ${esc(D.puxadoEm)}`,"vivo",true))
                   : chip(`retrato de ${esc(D.puxadoEm).replace(" (gravado)","")}`,"foto",true));
   if(MCP===null) t.push(chip("consulta ao vivo indisponível fora do claude.ai","aviso2"));
   elEstado.innerHTML=t.join("");
@@ -1436,7 +1439,7 @@ const nomeMes=iso=>{const d=new Date(iso+"T12:00:00");
 function preencher(de,ate,cde,cate){
   inDe.value=isoLocal(de); inAte.value=isoLocal(ate);
   inCDe.value=isoLocal(cde); inCAte.value=isoLocal(cate);
-  pintarEstado();
+  lembrarDatas(); pintarEstado();
 }
 function atalhoSemana(){
   const hoje=new Date(); const dow=(hoje.getDay()+6)%7;      /* 0 = segunda */
@@ -1459,10 +1462,39 @@ function encaixar(){
   const n=Math.round((new Date(ate)-new Date(de))/86400000);
   inCAte.value=menos(de,1); inCDe.value=menos(inCAte.value,n);
 }
+/* memória do painel: as quatro datas e o último resultado de "Puxar dados"
+   ficam guardados no navegador, para não sumirem quando a página é atualizada
+   (inclusive quando uma versão nova do painel é publicada). */
+const VERSAO_DADOS="2026-09-02b";  /* mude quando o formato de D mudar: o
+   resultado salvo é descartado com segurança; as datas ficam sempre */
+function lembrarDatas(){
+  try{localStorage.setItem("mia:datas",JSON.stringify(
+    {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value}))}catch(e){}
+}
+function guardarVivo(d){
+  try{localStorage.setItem("mia:vivo",JSON.stringify({v:VERSAO_DADOS,d}))}catch(e){}
+}
+function restaurar(){
+  try{
+    const s=JSON.parse(localStorage.getItem("mia:vivo")||"null");
+    if(s&&s.v===VERSAO_DADOS&&s.d&&s.d.periodo&&s.d.periodo.atual){ D=s.d; D.restaurado=true; }
+  }catch(e){}
+  try{
+    const dt=JSON.parse(localStorage.getItem("mia:datas")||"null");
+    if(dt&&dt.de&&dt.ate&&dt.cde&&dt.cate){
+      inDe.value=dt.de; inAte.value=dt.ate; inCDe.value=dt.cde; inCAte.value=dt.cate;
+    } else if(D.aoVivo){
+      inDe.value=D.periodo.atual.de; inAte.value=D.periodo.atual.ate;
+      inCDe.value=D.periodo.anterior.de; inCAte.value=D.periodo.anterior.ate;
+    }
+  }catch(e){}
+}
+
 inDe.value=RETRATO.periodo.atual.de;   inAte.value=RETRATO.periodo.atual.ate;
 inCDe.value=RETRATO.periodo.anterior.de; inCAte.value=RETRATO.periodo.anterior.ate;
-[inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();pintarEstado()}));
-[inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
+restaurar();
+[inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();lembrarDatas();pintarEstado()}));
+[inCDe,inCAte].forEach(e=>e.addEventListener("change",()=>{lembrarDatas();pintarEstado()}));
 btPuxar.addEventListener("click",puxar);
 document.getElementById("btSemana").addEventListener("click",atalhoSemana);
 document.getElementById("btMes").addEventListener("click",atalhoMes);
