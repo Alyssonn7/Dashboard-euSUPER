@@ -202,30 +202,30 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .blocos{display:flex;flex-wrap:wrap;gap:12px}
 .bl{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;
   box-shadow:var(--sombra);padding:17px 19px 15px;display:flex;flex-direction:column;
-  flex:1 1 168px;min-width:0}
+  flex:1 1 260px;min-width:0}   /* 260px: cabe "R$ 1.883,54" nas duas colunas */
 .bl-r{font-family:var(--fonte);font-size:11.5px;font-weight:700;
   color:var(--texto-2);margin-bottom:8px;line-height:1.3}
 /* o traço a 22,5° da iconografia da marca marcando cada métrica */
 .bl-r::before{content:"";display:inline-block;width:5px;height:9px;margin-right:7px;
   background:var(--d1);transform:skewX(-22.5deg);border-radius:1.5px}
 .bl-v{font-family:var(--fonte);font-weight:800;
-  font-size:clamp(20px,1.9vw,25px);letter-spacing:-.03em;line-height:1.08;
+  font-size:clamp(17px,1.45vw,20px);letter-spacing:-.03em;line-height:1.1;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-/* as duas faixas de período dentro do bloco: rótulo em selo + número */
-.bl-p{display:flex;flex-direction:column;gap:4px;margin-top:2px}
-.bl-p.ant{margin-top:11px}
-.bl-pk{font-family:var(--fonte);font-size:9.5px;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;line-height:1;padding:4px 8px;border-radius:99px;
-  align-self:flex-start;background:var(--trilho);color:var(--texto-3);white-space:nowrap}
-.bl-p.atual .bl-pk{background:color-mix(in srgb,var(--mata) 13%,transparent);color:var(--mata)}
-.bl-pv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
-.bl-v2{font-family:var(--fonte);font-weight:700;font-size:clamp(16px,1.45vw,19px);
+/* lado a lado: atual à esquerda, comparação à direita, números na mesma linha de base */
+/* grade de 2 colunas: 1ª linha os rótulos dos períodos, 2ª linha os números,
+   alinhados pela linha de base — assim nada fica torto entre as colunas */
+.bl-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 14px;
+  align-items:baseline;margin-top:6px}
+.bl-2.so{grid-template-columns:minmax(0,1fr)}
+.bl-k{font-family:var(--fonte);font-size:10.5px;font-weight:600;color:var(--texto-3);
+  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bl-k.atual{color:var(--mata)}
+.bl-v2{font-family:var(--fonte);font-weight:700;font-size:clamp(15px,1.25vw,17px);
   letter-spacing:-.02em;line-height:1.1;color:var(--texto-2);
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.bl-seta{font-size:10px;font-weight:700;padding:3px 7px;border-radius:99px;line-height:1}
-.bl-seta.up{color:var(--bom);background:var(--bom-t)}
-.bl-seta.down{color:var(--ruim);background:var(--ruim-t)}
-.bl-seta.flat{color:var(--texto-3);background:var(--trilho)}
+/* a seta é só um sinal discreto ao lado do número atual */
+.bl-seta{font-size:9px;line-height:1;margin-left:5px;vertical-align:middle;font-style:normal}
+.bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
 .bl-e{font-size:11px;color:var(--texto-3);margin-top:11px;line-height:1.45}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
@@ -343,7 +343,7 @@ tfoot td.r{text-align:right}
   .ferram{margin-left:auto}
   #main{padding:14px 14px 24px}
   .cx{padding:16px 17px} .tw{margin:0 -17px -16px;padding:0 17px}
-  .bl-v{font-size:21px} .bl-v2{font-size:16px}
+  .bl{flex-basis:100%} .bl-v{font-size:21px} .bl-v2{font-size:17px}
   .acao{grid-template-columns:1fr;gap:12px}
   .acao-c p{grid-template-columns:1fr;gap:2px}
   .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
@@ -774,25 +774,26 @@ function rotuloPer(p){
   }
   return `${dm(p.de)}–${dm(p.ate)}`;
 }
-/* bloco de métrica: o período atual e o de comparação aparecem um embaixo do
-   outro, cada um com seu rótulo e seu número real — pedido do Alysson para os
-   founders enxergarem a diferença entre os meses sem fazer conta */
+/* bloco de métrica "lado a lado": o período atual à esquerda, em destaque,
+   e o de comparação à direita, cada um com seu rótulo e seu número real. A seta
+   pequena ao lado do número atual diz se melhorou (verde) ou piorou (laranja),
+   respeitando métricas em que cair é bom (modo "inv") */
 function B(rot,fmt,a,b,expl,modo){
   let seta="";
   if(a!=null && b!=null && a!==b){
     const subiu=a>b;
     const bom = modo==="neutro" ? null : (modo==="inv" ? !subiu : subiu);
     const cls = bom==null ? "flat" : (bom ? "up" : "down");
-    seta=`<span class="bl-seta ${cls}" title="${subiu?"Subiu":"Caiu"} em relação ao período de comparação">${subiu?"▲":"▼"}</span>`;
+    seta=`<i class="bl-seta ${cls}" title="${subiu?"Subiu":"Caiu"} em relação ao período de comparação">${subiu?"▲":"▼"}</i>`;
   }
   const per=(D&&D.periodo)||{};
   const la=rotuloPer(per.atual)||"Atual", lb=rotuloPer(per.anterior)||"Anterior";
   return `<div class="bl">
     <div class="bl-r">${rot}</div>
-    <div class="bl-p atual"><span class="bl-pk">${la}</span>
-      <div class="bl-pv"><span class="bl-v">${fmt(a)}</span>${seta}</div></div>
-    ${per.anterior?`<div class="bl-p ant"><span class="bl-pk">${lb}</span>
-      <div class="bl-pv"><span class="bl-v2">${fmt(b)}</span></div></div>`:""}
+    <div class="bl-2${per.anterior?"":" so"}">
+      <span class="bl-k atual">${la}</span>${per.anterior?`<span class="bl-k">${lb}</span>`:""}
+      <span class="bl-v">${fmt(a)}${seta}</span>${per.anterior?`<span class="bl-v2">${fmt(b)}</span>`:""}
+    </div>
     ${expl?`<div class="bl-e">${expl}</div>`:""}
   </div>`;
 }
