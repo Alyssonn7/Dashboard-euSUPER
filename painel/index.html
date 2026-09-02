@@ -319,6 +319,12 @@ tfoot td.r{text-align:right}
 .linha .ln{font-size:13px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .linha .lt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
 .linha .lf{display:block;height:100%;border-radius:99px;min-width:4px}
+/* linha de origem com nome + explicação e valor + fatia */
+.linha.larga{grid-template-columns:minmax(200px,300px) minmax(0,1fr) auto;padding:12px 0;align-items:center}
+.linha .lo{min-width:0}
+.linha .lo b{display:block;font-family:var(--fonte);font-size:13.5px;font-weight:700;color:var(--texto);line-height:1.25}
+.linha .lo small{display:block;font-size:11.5px;color:var(--texto-3);line-height:1.4;margin-top:2px}
+.linha .lv small{display:block;font-size:11px;font-weight:600;color:var(--texto-3);margin-top:1px}
 .linha .lv{font-family:var(--fonte);font-size:12.5px;font-weight:700;
   font-variant-numeric:tabular-nums;text-align:right;min-width:78px}
 .vazio{font-size:13px;color:var(--texto-3);padding:14px 0}
@@ -359,6 +365,7 @@ tfoot td.r{text-align:right}
   .acao{grid-template-columns:1fr;gap:12px}
   .acao-c p{grid-template-columns:1fr;gap:2px}
   .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
+  .linha.larga{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .linha.larga .lt{grid-column:1/-1;order:3}
   .linha .lv{min-width:0}
 }
 @media print{
@@ -496,9 +503,14 @@ const CLARITY_AGOSTO={
   /* referenciadores agrupados (facebook = l.facebook + m.facebook + facebook.com;
      WhatsApp = l.wl.co; Lovable = ferramenta em que a página foi construída) */
   origens:[
-    {n:"Google (busca)",s:520},{n:"Facebook",s:293},{n:"Instagram",s:236},{n:"YouTube",s:187},
-    {n:"Lovable (ferramenta de desenvolvimento)",s:137},{n:"O próprio app/site",s:90},
-    {n:"WhatsApp",s:71},{n:"Google Ads (display)",s:31}
+    {n:"Busca no Google",s:520,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
+    {n:"Facebook",s:293,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
+    {n:"Instagram",s:236,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
+    {n:"YouTube",s:187,d:"Clicou em link ou anúncio dentro do YouTube"},
+    {n:"Lovable (ferramenta de desenvolvimento)",s:137,d:"Acessos de quem estava construindo a página — não são visitantes"},
+    {n:"App da Mia",s:90,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
+    {n:"WhatsApp",s:71,d:"Abriu um link compartilhado em conversa no WhatsApp"},
+    {n:"Banners do Google",s:31,d:"Anúncios em imagem do Google Ads espalhados por outros sites"}
   ]
 };
 
@@ -1189,6 +1201,7 @@ function vLP(){
   /* acessos de quem estava construindo a página (Lovable) não são visitantes */
   const origens=K.origens.filter(o=>!/lovable/i.test(o.n));
   const maxO=Math.max(...origens.map(o=>o.s));
+  const totO=origens.reduce((a,o)=>a+o.s,0);
   return `
   ${tituloGrupo("Landing Page · "+rp+" (Microsoft Clarity)")}
   ${blocos(
@@ -1203,10 +1216,12 @@ function vLP(){
        `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(K.desempenho.lcpSeg)}s (o ideal é até 2,5s)`,rp)
   )}
   <div class="faixa" style="margin-top:14px">
-    ${cx(cxt("De onde vieram as visitas","Sites e apps que mandaram gente para a página, em número de visitas.")
-      + origens.map(o=>`<div class="linha"><span class="ln">${esc(o.n)}</span>
+    ${cx(cxt("De onde vieram as visitas",
+        "Por onde a pessoa chegou até a página. Número de visitas em "+rp.toLowerCase()+" e a fatia de cada origem.")
+      + origens.map(o=>`<div class="linha larga"><span class="lo"><b>${esc(o.n)}</b><small>${esc(o.d||"")}</small></span>
         <span class="lt"><span class="lf" style="width:${(o.s/maxO*100).toFixed(1)}%;background:var(--d1)"></span></span>
-        <span class="lv">${num(o.s)}</span></div>`).join(""))}
+        <span class="lv">${num(o.s)}<small>${totO?nf0.format(o.s/totO*100):"—"}%</small></span></div>`).join("")
+      + `<p class="proc">Visitas que chegaram digitando o endereço ou por link sem identificação não aparecem aqui — por isso a soma é menor que o total de visitas do mês.</p>`)}
   </div>`;
 }
 
