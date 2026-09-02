@@ -52,7 +52,7 @@ salvo é descartado — as datas ficam.
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager (`campaigns.csv`, 17/08–31/08), a pedido: conversões, custo por conversão, taxa, páginas vistas, investimento, impressões, cliques, CTR, CPC, CPM. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
-| **Visão geral** | Agosto fechado: os três canais somados (investimento, alcance, impressões, cliques, cadastros atribuídos, custo por cadastro) com a tabela por canal, e o Metabase do mês (cadastros reais, onboarding, contas ativas, pagamentos, GMV, custo por cadastro real) |
+| **Visão geral** | Agosto fechado, só a tabela por canal: Google, Meta e OpenAI com investimento, alcance (só o Meta informa), impressões, cliques, CTR, CPC, cadastros atribuídos e custo por cadastro, mais a linha de total. Os blocos de totais e o bloco do Metabase saíram a pedido |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
 
 A aba **Resumo** (cinco números, o funil e o GMV semanal) existe no código mas

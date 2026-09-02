@@ -1227,6 +1227,8 @@ function vLP(){
 
 /* ------------------------------------------------------------ Visão geral */
 function vVisao(){
+  /* a aba mostra só a tabela por canal, a pedido: saíram os seis blocos de
+     totais e o bloco do Metabase (os números continuam em VISAO_AGOSTO). */
   const V=(typeof VISAO_AGOSTO!=="undefined")?VISAO_AGOSTO:null;
   if(!V) return `<div class="vazio">Sem consolidado de mês fechado.</div>`;
   const rp=V.rotulo;
@@ -1234,23 +1236,9 @@ function vVisao(){
   const T=derivar(C.reduce((a,c)=>({impressoes:a.impressoes+c.impressoes,cliques:a.cliques+c.cliques,
     custo:a.custo+c.custo,conversoes:a.conversoes+(c.cadastros||0)}),{impressoes:0,cliques:0,custo:0,conversoes:0}));
   const alcance=C.reduce((a,c)=>a+(c.alcance||0),0);
-  const quemTemAlcance=C.filter(c=>c.alcance!=null).map(c=>c.n).join(", ");
-  const M=V.metabase, ma=M.atual, mb=M.anterior;
-  const custoReal=ma&&ma.cadastros?T.custo/ma.cadastros:null;
-  const ant=(k,fmt)=>mb&&mb[k]!=null?` Em ${M.rotuloAnt}: ${fmt(mb[k])}.`:"";
 
   return `
-  ${tituloGrupo("Visão geral · "+rp,
-    `Google, Meta e OpenAI somados · ${V.cobertura} · fechado em ${V.fechadoEm} · não muda com "Puxar dados"`)}
-  ${blocos(
-    B1("Investimento total",brl,T.custo,"Soma do que os três canais gastaram",rp) +
-    B1("Alcance",num,alcance,`Pessoas diferentes que viram anúncio. Só o ${quemTemAlcance} informa alcance — Google e OpenAI não`,rp) +
-    B1("Impressões",num,T.impressoes,"Vezes que algum anúncio apareceu, nos três canais",rp) +
-    B1("Cliques",num,T.cliques,"Quantas vezes alguém clicou em um anúncio",rp) +
-    B1("Cadastros atribuídos pelos canais",num,T.conversoes,"Soma do que cada plataforma diz ter gerado. Pode contar a mesma pessoa em dois canais",rp) +
-    B1("Custo por cadastro atribuído",brl,T.custoConv,"Investimento total ÷ cadastros atribuídos",rp)
-  )}
-  <div class="faixa" style="margin-top:14px">${cx(cxt("Por canal · "+rp,"Cada canal com sua fonte. Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor.")
+  <div class="faixa">${cx(cxt("Por canal · "+rp,"Cada canal com sua fonte. Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor. Só o Meta informa alcance.")
     + `<div class="tw"><table><thead><tr><th>Canal</th><th class="r">Investimento</th><th class="r">Alcance</th>
       <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th><th class="r">CPC</th>
       <th class="r">Cadastros</th><th class="r">Por cadastro</th></tr></thead>
@@ -1262,18 +1250,7 @@ function vVisao(){
       <tfoot><tr><td>Total</td><td class="r">${brl(T.custo)}</td><td class="r">${num(alcance)}</td>
         <td class="r">${num(T.impressoes)}</td><td class="r">${num(T.cliques)}</td><td class="r">${pct(T.ctr)}</td>
         <td class="r">${brl(T.cpc)}</td><td class="r">${num(T.conversoes)}</td><td class="r">${brl(T.custoConv)}</td></tr></tfoot>
-      </table></div>`)}</div>
-  ${tituloGrupo("Metabase · o que aconteceu de verdade em "+rp.toLowerCase(),
-    "A base do produto conta quem realmente se cadastrou e pagou, venha de anúncio ou não")}
-  ${ma?blocos(
-    B1("Cadastros reais",num,ma.cadastros,"Profissionais que criaram conta no mês, de qualquer origem."+ant("cadastros",num),rp) +
-    B1("Onboarding concluído",num,ma.onboarding,"Desses, quantos terminaram de configurar."+ant("onboarding",num),rp) +
-    B1("Contas ativas",num,ma.contasAtivas,"Cadastros do mês que já estão com a conta ativa."+ant("contasAtivas",num),rp) +
-    B1("Pagamentos",num,ma.pagamentos,"Transações pagas no mês, de todos os profissionais."+ant("pagamentos",num),rp) +
-    B1("GMV",brl,ma.gmv,"Valor que passou pelo produto no mês."+ant("gmv",brl),rp) +
-    B1("Custo por cadastro real",brl,custoReal,"Investimento dos três canais ÷ cadastros reais do Metabase",rp)
-  ):`<div class="vazio">Sem dados do Metabase para o mês.</div>`}
-  <p class="proc">Os canais atribuem a si ${num(T.conversoes)} cadastros; o Metabase registrou ${num(ma&&ma.cadastros)} no mês. A diferença é quem chegou sem anúncio (busca, indicação, Instagram orgânico) — e o que uma plataforma conta em dobro. Enquanto a origem não for gravada no cadastro, a única conta que fecha de verdade é a do Metabase.</p>`;
+      </table></div>`)}</div>`;
 }
 
 /* --------------------------------------------------------- Próximos passos */
