@@ -43,7 +43,7 @@ retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 | Seção | O que mostra |
 |---|---|
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
-| **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — mais a tabela por anúncio com a miniatura de cada criativo |
+| **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Impressões, cliques, CTR, CPC, CPM, investimento |
 | **Landing Page** | Visitas na janela escolhida, e o comportamento pelo Clarity |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
