@@ -858,26 +858,8 @@ function vGoogle(){
   if(!a) return semDados("Google Ads", D.google&&D.google.erro);
   const camp=(D.google.campanhas||[]).map(derivar).filter(c=>c.custo>0);
 
-  let txt = `O canal consumiu <b>${brl(a.custo)}</b> e apareceu <b>${num(a.impressoes)}</b> vezes. `;
-  txt += `De cada 100 pessoas que viram o anúncio, <b>${a.ctr!=null?nf1.format(a.ctr):"—"}</b> clicaram, `;
-  txt += `e cada clique custou <b>${brl(a.cpc)}</b>. `;
-  if(a.conversoes>0){
-    txt += `Vieram <b>${num(a.conversoes)}</b> conversões, ou seja <b>${a.txConv!=null?nf1.format(a.txConv):"—"}%</b> `;
-    txt += `dos cliques viraram cadastro, a <b>${brl(a.custoConv)}</b> cada.`;
-    if(b && b.conversoes===0) txt += ` Na janela anterior não houve nenhuma conversão — o canal voltou a funcionar.`;
-    else if(b && b.custoConv!=null){
-      const d=vari(a.custoConv,b.custoConv,true);
-      txt += ` Antes cada cadastro custava ${brl(b.custoConv)}, então ficou ${d&&d.cls==="up"?"<b>mais barato</b>":"<b>mais caro</b>"}.`;
-    }
-  } else {
-    txt += `Não houve nenhuma conversão registrada nesta janela — todo o gasto foi para tráfego sem cadastro medido.`;
-  }
-  if(camp.length>1){
-    const melhor=camp.filter(c=>c.conversoes>0).sort((x,y)=>x.custoConv-y.custoConv)[0];
-    const caro=camp.filter(c=>c.conversoes===0&&c.custo>0).sort((x,y)=>y.custo-x.custo)[0];
-    if(melhor) txt += ` A campanha mais eficiente foi <b>${esc(melhor.nome)}</b>, a ${brl(melhor.custoConv)} por conversão.`;
-    if(caro) txt += ` A <b>${esc(caro.nome)}</b> gastou ${brl(caro.custo)} sem nenhuma conversão.`;
-  }
+  /* o cartão "O que esses números dizem" saiu desta aba a pedido do Alysson
+     (comentário no painel, 02/09) — não entra na apresentação aos founders */
 
   return `
   ${blocos(
@@ -890,8 +872,7 @@ function vGoogle(){
     B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
     B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
   )}
-  <div class="faixa" style="margin-top:14px">${resumoCx(txt)}</div>
-  ${camp.length?`<div class="faixa">${cx(cxt("Por campanha","Só as que gastaram no período.")
+  ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha","Só as que gastaram no período.")
     + `<div class="tw"><table><thead><tr><th>Campanha</th><th class="r">Investimento</th>
       <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
       <th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
