@@ -211,15 +211,22 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .bl-v{font-family:var(--fonte);font-weight:800;
   font-size:clamp(20px,1.9vw,25px);letter-spacing:-.03em;line-height:1.08;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.bl-c{display:flex;align-items:baseline;gap:7px;margin-top:8px;flex-wrap:wrap}
-.bl-ant{font-size:11px;color:var(--texto-3)}
-.bl-ant b{font-family:var(--fonte);font-size:13.5px;font-weight:700;
-  color:var(--texto-2);font-variant-numeric:tabular-nums}
+/* as duas faixas de período dentro do bloco: rótulo em selo + número */
+.bl-p{display:flex;flex-direction:column;gap:4px;margin-top:2px}
+.bl-p.ant{margin-top:11px}
+.bl-pk{font-family:var(--fonte);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;line-height:1;padding:4px 8px;border-radius:99px;
+  align-self:flex-start;background:var(--trilho);color:var(--texto-3);white-space:nowrap}
+.bl-p.atual .bl-pk{background:color-mix(in srgb,var(--mata) 13%,transparent);color:var(--mata)}
+.bl-pv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.bl-v2{font-family:var(--fonte);font-weight:700;font-size:clamp(16px,1.45vw,19px);
+  letter-spacing:-.02em;line-height:1.1;color:var(--texto-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
 .bl-seta{font-size:10px;font-weight:700;padding:3px 7px;border-radius:99px;line-height:1}
 .bl-seta.up{color:var(--bom);background:var(--bom-t)}
 .bl-seta.down{color:var(--ruim);background:var(--ruim-t)}
 .bl-seta.flat{color:var(--texto-3);background:var(--trilho)}
-.bl-e{font-size:11px;color:var(--texto-3);margin-top:9px;line-height:1.45}
+.bl-e{font-size:11px;color:var(--texto-3);margin-top:11px;line-height:1.45}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
 .leitura{font-size:15px;line-height:1.68;color:var(--texto-2);max-width:80ch}
@@ -336,7 +343,7 @@ tfoot td.r{text-align:right}
   .ferram{margin-left:auto}
   #main{padding:14px 14px 24px}
   .cx{padding:16px 17px} .tw{margin:0 -17px -16px;padding:0 17px}
-  .bl-v{font-size:21px}
+  .bl-v{font-size:21px} .bl-v2{font-size:16px}
   .acao{grid-template-columns:1fr;gap:12px}
   .acao-c p{grid-template-columns:1fr;gap:2px}
   .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
@@ -757,22 +764,35 @@ function rotuloAnt(){
     return new Date(pa.de+"T12:00:00").toLocaleDateString("pt-BR",{month:"long"});
   return "anterior";
 }
-function B(rot,fmt,a,b,expl,modo){
-  let cmp="";
-  if(b!=null){
-    let seta="";
-    if(a!=null && a!==b){
-      const subiu=a>b;
-      const bom = modo==="neutro" ? null : (modo==="inv" ? !subiu : subiu);
-      const cls = bom==null ? "flat" : (bom ? "up" : "down");
-      seta=`<span class="bl-seta ${cls}">${subiu?"▲":"▼"}</span>`;
-    }
-    cmp=`<div class="bl-c"><span class="bl-ant">${rotuloAnt()} <b>${fmt(b)}</b></span>${seta}</div>`;
+/* rótulo curto de um período: nome do mês se for mês-calendário ("Agosto"),
+   senão as datas ("24/08–30/08") — é o que encabeça cada número no bloco */
+function rotuloPer(p){
+  if(!p||!p.de||!p.ate) return "";
+  if(ehMesCalendario(p.de,p.ate)){
+    const m=new Date(p.de+"T12:00:00").toLocaleDateString("pt-BR",{month:"long"});
+    return m.charAt(0).toUpperCase()+m.slice(1);
   }
+  return `${dm(p.de)}–${dm(p.ate)}`;
+}
+/* bloco de métrica: o período atual e o de comparação aparecem um embaixo do
+   outro, cada um com seu rótulo e seu número real — pedido do Alysson para os
+   founders enxergarem a diferença entre os meses sem fazer conta */
+function B(rot,fmt,a,b,expl,modo){
+  let seta="";
+  if(a!=null && b!=null && a!==b){
+    const subiu=a>b;
+    const bom = modo==="neutro" ? null : (modo==="inv" ? !subiu : subiu);
+    const cls = bom==null ? "flat" : (bom ? "up" : "down");
+    seta=`<span class="bl-seta ${cls}" title="${subiu?"Subiu":"Caiu"} em relação ao período de comparação">${subiu?"▲":"▼"}</span>`;
+  }
+  const per=(D&&D.periodo)||{};
+  const la=rotuloPer(per.atual)||"Atual", lb=rotuloPer(per.anterior)||"Anterior";
   return `<div class="bl">
     <div class="bl-r">${rot}</div>
-    <div class="bl-v">${fmt(a)}</div>
-    ${cmp}
+    <div class="bl-p atual"><span class="bl-pk">${la}</span>
+      <div class="bl-pv"><span class="bl-v">${fmt(a)}</span>${seta}</div></div>
+    ${per.anterior?`<div class="bl-p ant"><span class="bl-pk">${lb}</span>
+      <div class="bl-pv"><span class="bl-v2">${fmt(b)}</span></div></div>`:""}
     ${expl?`<div class="bl-e">${expl}</div>`:""}
   </div>`;
 }
