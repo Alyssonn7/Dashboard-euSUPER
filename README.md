@@ -51,7 +51,7 @@ salvo é descartado — as datas ficam.
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager (`campaigns.csv`, 17/08–31/08), a pedido: conversões, custo por conversão, taxa, páginas vistas, investimento, impressões, cliques, CTR, CPC, CPM. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
-| **Landing Page** | 100% Microsoft Clarity: o mês fechado vem do export do Clarity (visitas, pessoas, novos, rolagem, tempo ativo, páginas por visita, cliques de saída/entrar/mortos/irritação, celular, velocidade), mais de onde vieram as visitas e uma leitura em palavras simples; embaixo, os últimos 3 dias ao vivo |
+| **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
 | **Visão geral** | Agosto fechado: os três canais somados (investimento, alcance, impressões, cliques, cadastros atribuídos, custo por cadastro) com a tabela por canal, e o Metabase do mês (cadastros reais, onboarding, contas ativas, pagamentos, GMV, custo por cadastro real) |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
 
@@ -65,9 +65,8 @@ anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 qu
 viram, quantos clicaram", "quanto custou cada cadastro". É o que deixa a tela
 legível para quem não vive de tráfego.
 
-O cartão **"O que esses números dizem"** foi retirado das abas de canal a pedido —
-a apresentação aos founders não usa. A Landing Page tem, no lugar, o cartão
-**"Em palavras simples"**, com a leitura do mês do Clarity em cinco frases.
+O cartão **"O que esses números dizem"** foi retirado de todas as abas a pedido —
+a apresentação aos founders não usa.
 
 ## Dados de mês fechado que vêm de export (não do botão)
 
@@ -108,11 +107,11 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **catorze chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
+São **treze chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
 três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
 no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
-perfil; e uma por anúncio para a tabela), mais uma do Clarity e um SQL que
-devolve as duas janelas.
+perfil; e uma por anúncio para a tabela), mais um SQL que devolve as duas
+janelas. O Clarity não é mais consultado ao vivo — a Landing Page é só o export.
 
 No Meta, o alcance de cada grupo só é deduplicado quando aquele grupo foi o
 único a gastar na janela (aí vale o alcance da conta). Quando os dois grupos
@@ -127,10 +126,9 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
   impressões, cliques, gasto, CPC e CPM — nunca CPA. As conversões vêm do export
   manual do Ads Manager (seção acima). E a API recusa janelas que terminam hoje:
   o fim tem que ser até ontem, no fuso da conta de anúncio.
-- **Microsoft Clarity** só devolve os últimos 3 dias pela API. Por isso o mês
-  fechado da Landing Page vem do export do painel do Clarity, e o bloco ao vivo
-  fica só com os 3 dias. O GA4 continua sendo consultado, mas não aparece mais na
-  Landing Page — a aba é 100% Clarity a pedido.
+- **Microsoft Clarity** só devolve os últimos 3 dias pela API. Por isso a Landing
+  Page usa o export mensal do painel do Clarity e não consulta a API ao vivo. O GA4
+  continua sendo consultado, mas não aparece na Landing Page — a aba é 100% Clarity.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 

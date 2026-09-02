@@ -867,7 +867,7 @@ async function puxar(){
     ["mA",()=>qMeta(de,ate)],     ["mB",()=>qMeta(cde,cate)],
     ["oA",()=>qOpenai(de,ate)],   ["oB",()=>qOpenai(cde,cate)],
     ["sA",()=>qSessoes(de,ate)],  ["sB",()=>qSessoes(cde,cate)],
-    ["cl",()=>qClarity()],        ["ng",()=>qNegocio(de,ate,cde,cate)]
+    ["ng",()=>qNegocio(de,ate,cde,cate)]   /* qClarity() saiu: a Landing Page é só o export mensal */
   ];
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
@@ -888,8 +888,7 @@ async function puxar(){
       perfil:  {atual:R.mA&&R.mA.grupos.perfil,   anterior:R.mB&&R.mB.grupos.perfil}
     }};
   novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
-  novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:R.cl,
-    erroSessoes:msg("sA"), erroClarity:msg("cl")};
+  novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:null, erroSessoes:msg("sA")};
   novo.negocio={atual:(R.ng&&R.ng.atual)||null, anterior:(R.ng&&R.ng.anterior)||null,
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
@@ -1181,66 +1180,34 @@ function vOpenai(){
 
 /* ------------------------------------------------------------ Landing Page */
 function vLP(){
+  /* a aba mostra só o que o Alysson pediu: oito blocos do export mensal do
+     Clarity e de onde vieram as visitas. Nada de GA4, nada de "últimos 3 dias". */
   const K=(typeof CLARITY_AGOSTO!=="undefined")?CLARITY_AGOSTO:null;
-  const c=D.lp&&D.lp.clarity;
-  const rp=K?K.rotulo:"";
-  const pctDe=(a,b)=>b?a/b*100:null;
-
-  let mes="";
-  if(K){
-    const novosPct=pctDe(K.sessoesNovos,K.sessoes);
-    const maxO=Math.max(...K.origens.map(o=>o.s));
-    mes=`
-    ${tituloGrupo("Landing Page · "+rp+" (Microsoft Clarity)",
-      `Export de ${K.enviadoEm} · ${K.cobertura} · projeto ${esc(K.projeto)} · não muda com "Puxar dados"`)}
-    ${blocos(
-      B1("Visitas",num,K.sessoes,`Vezes que alguém abriu a página. ${num(K.sessoesBot)} delas foram robôs.`,rp) +
-      B1("Pessoas diferentes",num,K.usuarios,"Visitantes únicos no mês",rp) +
-      B1("Visitantes novos",pct,novosPct,"Das visitas, quantas eram de quem nunca tinha entrado",rp) +
-      B1("Rolagem média",pct,K.scroll,"Até onde descem na página: 16% é só a primeira tela",rp) +
-      B1("Tempo ativo",seg,K.tempoAtivo,`Tempo realmente mexendo na página (${seg(K.tempoTotal)} no total)`,rp) +
-      B1("Páginas por visita",v=>v!=null?nf1.format(v):"—",K.paginasPorSessao,"Quase todo mundo vê uma página só",rp) +
-      B1("Cliques de saída",pct,K.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)",rp) +
-      B1("Cliques em “Entrar”",pct,K.cliqueLoginPct,"Visitas que clicaram para fazer login",rp) +
-      B1("Cliques mortos",pct,K.deadClicksPct,"Clicou em algo que parece botão e não é",rp) +
-      B1("Cliques de irritação",pct,K.rageClicksPct,"Clicou várias vezes seguidas no mesmo lugar",rp) +
-      B1("No celular",pct,K.mobilePct,"Visitas vindas de celular (Chrome, Safari, Instagram, Facebook…)",rp) +
-      B1("Velocidade",v=>v!=null?nf0.format(v)+"/100":"—",K.desempenho.pontuacao,
-         `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(K.desempenho.lcpSeg)}s (o ideal é até 2,5s)`,rp)
-    )}
-    <div class="faixa dois" style="margin-top:14px">
-      ${cx(cxt("De onde vieram as visitas","Sites e apps que mandaram gente para a página, em número de visitas.")
-        + K.origens.map(o=>`<div class="linha"><span class="ln">${esc(o.n)}</span>
-          <span class="lt"><span class="lf" style="width:${(o.s/maxO*100).toFixed(1)}%;background:var(--d1)"></span></span>
-          <span class="lv">${num(o.s)}</span></div>`).join("")
-        + `<p class="proc">Visitas sem origem identificada (digitou o endereço, veio de link direto) não entram na lista. “Lovable” é a ferramenta em que a página foi feita — são acessos de quem estava trabalhando nela, não de clientes.</p>`)}
-      ${cx(cxt("Em palavras simples","O que esses números querem dizer.")
-        + `<ul class="simples">
-          <li><b>${num(K.sessoes)} visitas</b> em ${rp.toLowerCase()}, de <b>${num(K.usuarios)} pessoas</b>. Nove em cada dez estavam entrando pela primeira vez.</li>
-          <li>A página é lida só até a <b>primeira tela</b> (${pct(K.scroll)} de rolagem) e por <b>${seg(K.tempoAtivo)}</b>. O que está mais embaixo praticamente não é visto.</li>
-          <li>Quase <b>1 em cada 4 visitas</b> clicou em algo que sai da página — sinal de que o botão principal está sendo usado.</li>
-          <li><b>${pct(K.mobilePct)} no celular</b>: a página precisa ser pensada para o celular primeiro.</li>
-          <li>Velocidade <b>${nf0.format(K.desempenho.pontuacao)}/100</b>: o conteúdo principal demora ${nf2.format(K.desempenho.lcpSeg)}s para aparecer, acima dos 2,5s recomendados. Página mais rápida costuma reter mais gente.</li>
-        </ul>`)}
-    </div>`;
-  }
-
-  /* o que o botão "Puxar dados" traz: só os últimos 3 dias, limite da API do Clarity */
-  const vivo = D.lp&&D.lp.erroClarity
-    ? cx(cxt("Clarity ao vivo · últimos 3 dias","Microsoft Clarity")
-        + `<p class="falhou"><b>Clarity não veio</b>${esc(D.lp.erroClarity)}</p>`)
-    : (c ? blocos(
-          B1("Visitas",num,c.sessoes,"Nos últimos 3 dias","últimos 3 dias") +
-          B1("Rolagem média",pct,c.scroll,"Até onde descem na página","últimos 3 dias") +
-          B1("Tempo ativo",seg,c.tempoAtivo,"Tempo realmente mexendo na página","últimos 3 dias") +
-          B1("Cliques mortos",pct,c.deadClicks,"Clicou em algo que parece botão e não é","últimos 3 dias"))
-        : `<div class="vazio">Clique em Puxar dados para trazer os últimos 3 dias do Clarity.</div>`);
-
+  if(!K) return `<div class="vazio">Sem export do Clarity carregado.</div>`;
+  const rp=K.rotulo;
+  const novosPct=K.sessoes?K.sessoesNovos/K.sessoes*100:null;
+  /* acessos de quem estava construindo a página (Lovable) não são visitantes */
+  const origens=K.origens.filter(o=>!/lovable/i.test(o.n));
+  const maxO=Math.max(...origens.map(o=>o.s));
   return `
-  ${mes}
-  ${tituloGrupo("Clarity ao vivo · últimos 3 dias",
-    "A API do Clarity só devolve os últimos 3 dias — por isso o mês fechado vem do export acima")}
-  ${vivo}`;
+  ${tituloGrupo("Landing Page · "+rp+" (Microsoft Clarity)")}
+  ${blocos(
+    B1("Visitas",num,K.sessoes,"Vezes que alguém abriu a página no mês",rp) +
+    B1("Visitantes novos",pct,novosPct,"Das visitas, quantas eram de quem nunca tinha entrado",rp) +
+    B1("Rolagem média",pct,K.scroll,"Até onde descem na página: 16% é só a primeira tela",rp) +
+    B1("Tempo ativo",seg,K.tempoAtivo,"Tempo realmente mexendo na página",rp) +
+    B1("Cliques de saída",pct,K.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)",rp) +
+    B1("Cliques em “Entrar”",pct,K.cliqueLoginPct,"Visitas que clicaram para fazer login",rp) +
+    B1("No celular",pct,K.mobilePct,"Visitas vindas de celular",rp) +
+    B1("Velocidade",v=>v!=null?nf0.format(v)+"/100":"—",K.desempenho.pontuacao,
+       `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(K.desempenho.lcpSeg)}s (o ideal é até 2,5s)`,rp)
+  )}
+  <div class="faixa" style="margin-top:14px">
+    ${cx(cxt("De onde vieram as visitas","Sites e apps que mandaram gente para a página, em número de visitas.")
+      + origens.map(o=>`<div class="linha"><span class="ln">${esc(o.n)}</span>
+        <span class="lt"><span class="lf" style="width:${(o.s/maxO*100).toFixed(1)}%;background:var(--d1)"></span></span>
+        <span class="lv">${num(o.s)}</span></div>`).join(""))}
+  </div>`;
 }
 
 /* ------------------------------------------------------------ Visão geral */
