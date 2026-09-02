@@ -38,14 +38,15 @@ conhecido em novembro/2025 no Google Ads).
 A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
 retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 
-## Cinco seções, uma por canal
+## Seis seções
 
 | Seção | O que mostra |
 |---|---|
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
-| **OpenAI Ads** | Impressões, cliques, CTR, CPC, CPM, investimento |
-| **Landing Page** | Visitas na janela escolhida, e o comportamento pelo Clarity |
+| **OpenAI Ads** | Dois grupos: **Entrega no período** (Windsor, ao vivo: impressões, cliques, CTR, CPC, CPM, investimento) e **Conversões de agosto**, vindas do export do Ads Manager (`campaigns.csv`, 17/08–31/08): conversões, custo por conversão, taxa, páginas vistas, mais a tabela por campanha |
+| **Landing Page** | 100% Microsoft Clarity: o mês fechado vem do export do Clarity (visitas, pessoas, novos, rolagem, tempo ativo, páginas por visita, cliques de saída/entrar/mortos/irritação, celular, velocidade), mais de onde vieram as visitas e uma leitura em palavras simples; embaixo, os últimos 3 dias ao vivo |
+| **Visão geral** | Agosto fechado: os três canais somados (investimento, alcance, impressões, cliques, cadastros atribuídos, custo por cadastro) com a tabela por canal, e o Metabase do mês (cadastros reais, onboarding, contas ativas, pagamentos, GMV, custo por cadastro real) |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
 
 A aba **Resumo** (cinco números, o funil e o GMV semanal) existe no código mas
@@ -58,10 +59,28 @@ anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 qu
 viram, quantos clicaram", "quanto custou cada cadastro". É o que deixa a tela
 legível para quem não vive de tráfego.
 
-As abas OpenAI Ads e Landing Page fecham com **"O que esses números dizem"**: um
-parágrafo em português direto, montado a partir dos próprios números da consulta.
-Nas abas Google e Meta esse cartão foi retirado a pedido — a apresentação aos
-founders não usa.
+O cartão **"O que esses números dizem"** foi retirado das abas de canal a pedido —
+a apresentação aos founders não usa. A Landing Page tem, no lugar, o cartão
+**"Em palavras simples"**, com a leitura do mês do Clarity em cinco frases.
+
+## Dados de mês fechado que vêm de export (não do botão)
+
+Três blocos do painel são **fechamentos de mês** carregados de arquivos, e não
+mudam com "Puxar dados": as conversões do OpenAI Ads (`OPENAI_MANAGER`), a aba
+Landing Page (`CLARITY_AGOSTO`) e a aba Visão geral (`VISAO_AGOSTO`). Cada um
+diz na tela de onde veio e que período cobre. Para virar o mês, mande os exports
+novos (CSV de campanhas do Ads Manager e CSV do painel do Clarity) e peça a
+atualização — a Visão geral eu fecho com os mesmos Windsor e Metabase do painel.
+
+### Conversões do OpenAI Ads
+
+O conector `openai_ads` do Windsor não tem campo de conversão. Por isso o painel
+carrega um **export do Ads Manager** (`campaigns.csv`) na constante
+`OPENAI_MANAGER` do `painel/index.html`, com as campanhas de agosto. O export
+foi conferido dia a dia no Windsor: impressões, cliques e gasto de cada campanha
+batem no centavo com a soma de 17/08 a 31/08 — só as conversões são informação
+nova. Esse bloco **não muda com "Puxar dados"**; para atualizar, exporte o CSV
+de campanhas do Ads Manager e peça a atualização da constante.
 
 ## Nada de métrica guardada pela metade
 
@@ -99,11 +118,13 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 ## O que cada fonte não entrega
 
 - **OpenAI Ads** está conectado e lendo, mas não tem campo de conversão: traz
-  impressões, cliques, gasto, CPC e CPM — nunca CPA. E a API recusa janelas que
-  terminam hoje: o fim tem que ser até ontem, no fuso da conta de anúncio.
-- **Microsoft Clarity** só devolve os últimos 3 dias. Ele aparece na aba Landing
-  Page com a janela dele marcada em amarelo, e não entra em nenhuma conta que
-  dependa do período escolhido.
+  impressões, cliques, gasto, CPC e CPM — nunca CPA. As conversões vêm do export
+  manual do Ads Manager (seção acima). E a API recusa janelas que terminam hoje:
+  o fim tem que ser até ontem, no fuso da conta de anúncio.
+- **Microsoft Clarity** só devolve os últimos 3 dias pela API. Por isso o mês
+  fechado da Landing Page vem do export do painel do Clarity, e o bloco ao vivo
+  fica só com os 3 dias. O GA4 continua sendo consultado, mas não aparece mais na
+  Landing Page — a aba é 100% Clarity a pedido.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 

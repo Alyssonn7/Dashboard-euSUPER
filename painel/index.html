@@ -233,6 +233,10 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .gt::before{content:"";display:inline-block;width:5px;height:11px;background:var(--d1);
   transform:skewX(-22.5deg);border-radius:1.5px;align-self:center}
 .gt small{font-size:12px;font-weight:500;color:var(--texto-2)}
+.gt + .aviso{margin-top:0}
+.simples{margin:0;padding:0 0 0 18px;font-size:14px;line-height:1.65;color:var(--texto-2)}
+.simples li{margin:0 0 8px} .simples b{color:var(--texto);font-weight:600}
+.faixa .proc{margin-top:14px}
 .blocos + .gt, .vazio + .gt{margin-top:22px} .faixa + .gt{margin-top:8px}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
@@ -311,7 +315,7 @@ tfoot td.r{text-align:right}
 
 .linha{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center;
   padding:10px 0;border-bottom:1px solid var(--borda-2)}
-.linha:last-child{border-bottom:none}
+.linha:last-child,.linha:has(+ .proc){border-bottom:none}
 .linha .ln{font-size:13px;color:var(--texto-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .linha .lt{display:block;height:9px;border-radius:99px;background:var(--trilho);overflow:hidden}
 .linha .lf{display:block;height:100%;border-radius:99px;min-width:4px}
@@ -462,6 +466,64 @@ const RETRATO = {
   ]
 };
 
+/* Export do OpenAI Ads Manager (campaigns.csv, enviado pelo Alysson em 02/09/2026).
+   Cobre agosto: conferido dia a dia no Windsor, impressões, cliques e gasto de
+   cada campanha batem exatamente com a soma de 17/08 a 31/08 (as campanhas
+   nasceram em 17 e 21/08). É a única fonte de conversão do canal — o conector
+   do Windsor não tem esse campo. NÃO muda com "Puxar dados"; para atualizar,
+   é preciso um export novo. */
+const OPENAI_MANAGER={
+  arquivo:"campaigns.csv", enviadoEm:"02/09/2026", cobertura:"17/08–31/08",
+  rotulo:"Agosto", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",     status:"active", inicio:"2026-08-17", orcamentoDia:50,
+     impressoes:32883, cliques:921, conversoes:97, paginasVistas:915, custo:493.82},
+    {nome:"[CAMPANHA DE SIGNUP] [02]",status:"active", inicio:"2026-08-21", orcamentoDia:50,
+     impressoes:19508, cliques:336, conversoes:20, paginasVistas:270, custo:315.57}
+  ]
+};
+
+/* Export do Microsoft Clarity (projeto "LP Mia (Principal)"), enviado pelo Alysson
+   em 02/09/2026, cobrindo 01–31/08. A aba Landing Page é 100% Clarity — sem GA4.
+   NÃO muda com "Puxar dados"; para atualizar, é preciso um export novo. */
+const CLARITY_AGOSTO={
+  arquivo:"Clarity_LP_Mia_Principal_Painel_09022026_10_28.csv", enviadoEm:"02/09/2026",
+  projeto:"LP Mia (Principal)", cobertura:"01/08–31/08", rotulo:"Agosto",
+  sessoes:3159, sessoesBot:327, usuarios:2745, sessoesNovos:2875, sessoesRetorno:284,
+  paginasPorSessao:1.20, scroll:15.99, tempoAtivo:40, tempoTotal:80,
+  rageClicksPct:0.41, deadClicksPct:4.87, botaoDireitoPct:5.57,
+  cliqueSaidaPct:23.14, cliqueLoginPct:5.38, mobilePct:84.56,
+  desempenho:{pontuacao:72.5, lcpSeg:3.95, inpMs:398, cls:0.002}, errosJs:55,
+  /* referenciadores agrupados (facebook = l.facebook + m.facebook + facebook.com;
+     WhatsApp = l.wl.co; Lovable = ferramenta em que a página foi construída) */
+  origens:[
+    {n:"Google (busca)",s:520},{n:"Facebook",s:293},{n:"Instagram",s:236},{n:"YouTube",s:187},
+    {n:"Lovable (ferramenta de desenvolvimento)",s:137},{n:"O próprio app/site",s:90},
+    {n:"WhatsApp",s:71},{n:"Google Ads (display)",s:31}
+  ]
+};
+
+/* Visão geral de agosto: os três canais de anúncio somados + a base do produto.
+   Google e Meta: Windsor, 01–31/08 (alcance do Meta deduplicado pela conta).
+   OpenAI: Windsor para entrega e export do Ads Manager para cadastros (17–31/08,
+   quando as campanhas existiram). Metabase: mesmo SQL do painel, 01–31/08 vs
+   01–31/07. Fechado em 02/09/2026; NÃO muda com "Puxar dados". */
+const VISAO_AGOSTO={
+  rotulo:"Agosto", cobertura:"01/08–31/08", fechadoEm:"02/09/2026",
+  canais:[
+    {n:"Google Ads", fonte:"Windsor · google_ads",
+     alcance:null,   impressoes:54556,  cliques:1892, custo:3382.95, cadastros:88},
+    {n:"Meta Ads",   fonte:"Windsor · facebook · alcance deduplicado da conta",
+     alcance:142623, impressoes:278044, cliques:7305, custo:2847.72, cadastros:39},
+    {n:"OpenAI Ads", fonte:"Windsor (entrega) + export do Ads Manager (cadastros)",
+     alcance:null,   impressoes:52391,  cliques:1257, custo:809.39,  cadastros:117}
+  ],
+  metabase:{
+    rotuloAnt:"julho",
+    atual:   {cadastros:341, onboarding:291, contasAtivas:22, pagamentos:96, gmv:4815.55},
+    anterior:{cadastros:285, onboarding:233, contasAtivas:14, pagamentos:63, gmv:5372.10}
+  }
+};
+
 const CONTAS = {google:"326-604-5511", meta:"604915332642452", ga4:"511677134",
                 clarity:"1347", metabaseDb:4};
 const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
@@ -580,6 +642,19 @@ function grupoCampanha(objetivo,nome){
   const o=(objetivo||"").toUpperCase(), n=(nome||"").toUpperCase();
   return (o==="OUTCOME_TRAFFIC"||/PERFIL|VISITA/.test(n)) ? "perfil" : "cadastro";
 }
+/* título de um grupo de blocos, com subtítulo opcional */
+function tituloGrupo(t,sub){
+  return `<h3 class="gt">${t}${sub?`<small>${sub}</small>`:""}</h3>`;
+}
+/* bloco de um período só (dado que não tem comparação, como um export manual) */
+function B1(rot,fmt,a,expl,rotuloPeriodo){
+  return `<div class="bl">
+    <div class="bl-r">${rot}</div>
+    <div class="bl-2 so"><span class="bl-k atual">${rotuloPeriodo}</span>
+      <span class="bl-v">${fmt(a)}</span></div>
+    ${expl?`<div class="bl-e">${expl}</div>`:""}
+  </div>`;
+}
 function celCriativo(c){
   const emb=criativoDe(c);
   const link=(emb&&emb.post)||c.post||c.thumb||"";
@@ -670,9 +745,13 @@ async function qMeta(de,ate){
   const base={connector:"facebook",accounts:[CONTAS.meta],date_from:de,date_to:ate};
   /* totais SEM dimensão: só assim o alcance vem deduplicado, igual ao Ads
      Manager — somar o alcance por anúncio conta a mesma pessoa várias vezes */
-  const tot=linhas(await chamar("Windsor.ai","get_data",{...base,
-    fields:["spend","reach","impressions","actions_link_click",
-            "actions_landing_page_view","actions_complete_registration"]},"Meta Ads"))[0]||{};
+  /* com account_id o Windsor devolve UMA linha da conta inteira; sem dimensão
+     nenhuma, janelas longas (um mês) voltavam fragmentadas em várias linhas */
+  const totL=linhas(await chamar("Windsor.ai","get_data",{...base,
+    fields:["account_id","spend","reach","impressions","actions_link_click",
+            "actions_landing_page_view","actions_complete_registration"]},"Meta Ads"));
+  const tot=totL.reduce((acc,x)=>{for(const k of ["spend","reach","impressions","actions_link_click",
+    "actions_landing_page_view","actions_complete_registration"]) acc[k]=(+acc[k]||0)+(+x[k]||0); return acc;},{});
   const r=linhas(await chamar("Windsor.ai","get_data",{...base,
     fields:["campaign","campaign_objective","ad_name","spend","impressions",
             "actions_link_click","actions_complete_registration",
@@ -991,7 +1070,7 @@ function vMeta(){
     ? "Pessoas diferentes que viram — soma das campanhas do grupo"
     : "Pessoas diferentes que viram";
   const semAtual=(g,x)=>x?"":(g&&g.nota)||"Sem investimento no período atual.";
-  const titulo=(t,sub)=>`<h3 class="gt">${t}${sub?`<small>${sub}</small>`:""}</h3>`;
+  const titulo=tituloGrupo;
 
   const blocosCadastro = (ca||cb) ? blocos(
     B("Alcance",num,ca&&ca.alcance,cb&&cb.alcance,alcExpl(ca,cb)) +
@@ -1069,10 +1148,53 @@ function vOpenai(){
   const a=derivar(D.openai&&D.openai.atual), b=derivar(D.openai&&D.openai.anterior);
   if(!a) return semDados("OpenAI Ads", D.openai&&D.openai.erro);
   const notaCanal = D.openai.nota?`<p class="aviso">${esc(D.openai.nota)}</p>`:"";
-  let txt = `O canal consumiu <b>${brl(a.custo)}</b> e apareceu <b>${num(a.impressoes)}</b> vezes, `;
-  txt += `com <b>${num(a.cliques)}</b> cliques a <b>${brl(a.cpc)}</b> cada. `;
-  txt += `De cada 100 pessoas que viram, <b>${a.ctr!=null?nf1.format(a.ctr):"—"}</b> clicaram.`;
+
+  /* bloco 2: o export do Ads Manager — a única fonte de conversão do canal */
+  const M=(typeof OPENAI_MANAGER!=="undefined")?OPENAI_MANAGER:null;
+  let exportado="";
+  if(M && M.campanhas && M.campanhas.length){
+    const C=M.campanhas.map(derivar);
+    const t=derivar(C.reduce((s,c)=>({impressoes:s.impressoes+c.impressoes,cliques:s.cliques+c.cliques,
+      conversoes:s.conversoes+c.conversoes,custo:s.custo+c.custo,visitasLP:s.visitasLP+(c.paginasVistas||0)}),
+      {impressoes:0,cliques:0,conversoes:0,custo:0,visitasLP:0}));
+    const rp=M.rotulo||M.cobertura;
+    exportado=`
+    ${tituloGrupo("OpenAI Ads · Conversões de "+rp.toLowerCase()+" (export do Ads Manager)",
+      `Enviado em ${M.enviadoEm} · cobre ${M.cobertura} · não muda com "Puxar dados"`)}
+    ${blocos(
+      B1("Conversões",num,t.conversoes,"Cadastros registrados pelo Ads Manager",rp) +
+      B1("Custo por conversão",brl,t.custoConv,"Quanto custou cada cadastro",rp) +
+      B1("Tx. conversão",pct,t.txConv,"De 100 cliques, quantos viraram cadastro",rp) +
+      B1("Páginas vistas",num,t.visitasLP,"Cliques que carregaram a página",rp) +
+      B1("Chegaram na página",pct,t.connect,"Cliques que viraram visita de verdade",rp) +
+      B1("Investimento",brl,t.custo,"Total gasto no canal em "+rp.toLowerCase(),rp) +
+      B1("Impressões",num,t.impressoes,"Vezes que o anúncio apareceu",rp) +
+      B1("Cliques",num,t.cliques,"Quantas pessoas clicaram",rp) +
+      B1("CTR",pct,t.ctr,"De 100 que viram, quantos clicaram",rp) +
+      B1("CPC",brl,t.cpc,"Quanto custou cada clique",rp) +
+      B1("CPM",brl,t.cpm,"Custo para aparecer mil vezes",rp)
+    )}
+    <div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha · "+rp,
+      `Do arquivo ${esc(M.arquivo)} do Ads Manager. Impressões, cliques e gasto foram conferidos no Windsor para ${M.cobertura} e batem no centavo.`)
+      + `<div class="tw"><table><thead><tr><th>Campanha</th><th>Início</th>
+        <th class="r">Investimento</th><th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
+        <th class="r">CPC</th><th class="r">Páginas vistas</th><th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
+        <tbody>${C.sort((x,y)=>y.custo-x.custo).map(c=>`<tr><td class="nm">${esc(c.nome)}<span>${c.status==="active"?"ativa":esc(c.status||"")}</span></td>
+          <td>${dm(c.inicio)}</td>
+          <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
+          <td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td><td class="r">${brl(c.cpc)}</td>
+          <td class="r">${num(c.paginasVistas)}</td><td class="r">${num(c.conversoes)}</td>
+          <td class="r">${brl(c.custoConv)}</td></tr>`).join("")}</tbody>
+        <tfoot><tr><td>Total</td><td></td>
+          <td class="r">${brl(t.custo)}</td><td class="r">${num(t.impressoes)}</td><td class="r">${num(t.cliques)}</td>
+          <td class="r">${pct(t.ctr)}</td><td class="r">${brl(t.cpc)}</td><td class="r">${num(t.visitasLP)}</td>
+          <td class="r">${num(t.conversoes)}</td><td class="r">${brl(t.custoConv)}</td></tr></tfoot>
+        </table></div>`)}</div>`;
+  }
+
   return `
+  ${tituloGrupo("OpenAI Ads · Entrega no período (Windsor, ao vivo)",
+    "Impressões, cliques e gasto do período escolhido — o conector não traz conversão")}
   ${notaCanal}
   ${blocos(
     B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
@@ -1082,61 +1204,122 @@ function vOpenai(){
     B("CPM",brl,a.cpm,b&&b.cpm,"Custo para aparecer mil vezes","inv") +
     B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
   )}
-  <div class="faixa" style="margin-top:14px">
-    ${resumoCx(txt)}
-  </div>
-  <div class="faixa">
-    ${cx(cxt("Por que não há conversão aqui","Uma limitação da fonte, não do painel.")
-      + `<p class="aviso">O conector de OpenAI Ads no Windsor entrega impressões, cliques, gasto,
-         CPC, CPM e CTR — <b>mas não tem campo de conversão</b>. Conversões e custo por conversão
-         desse canal só existem dentro do Ads Manager da OpenAI.</p>`)}
-  </div>`;
+  ${exportado}`;
 }
 
 /* ------------------------------------------------------------ Landing Page */
 function vLP(){
-  const s=D.lp&&D.lp.sessoes, c=D.lp&&D.lp.clarity;
-  let txt="";
-  if(s&&s.atual!=null){
-    const v=vari(s.atual,s.anterior);
-    txt += `A página recebeu <b>${num(s.atual)}</b> visitas no período`;
-    txt += v?`, ${v.cls==="up"?"<b>mais</b>":"<b>menos</b>"} que as ${num(s.anterior)} da janela anterior. `:". ";
+  const K=(typeof CLARITY_AGOSTO!=="undefined")?CLARITY_AGOSTO:null;
+  const c=D.lp&&D.lp.clarity;
+  const rp=K?K.rotulo:"";
+  const pctDe=(a,b)=>b?a/b*100:null;
+
+  let mes="";
+  if(K){
+    const novosPct=pctDe(K.sessoesNovos,K.sessoes);
+    const maxO=Math.max(...K.origens.map(o=>o.s));
+    mes=`
+    ${tituloGrupo("Landing Page · "+rp+" (Microsoft Clarity)",
+      `Export de ${K.enviadoEm} · ${K.cobertura} · projeto ${esc(K.projeto)} · não muda com "Puxar dados"`)}
+    ${blocos(
+      B1("Visitas",num,K.sessoes,`Vezes que alguém abriu a página. ${num(K.sessoesBot)} delas foram robôs.`,rp) +
+      B1("Pessoas diferentes",num,K.usuarios,"Visitantes únicos no mês",rp) +
+      B1("Visitantes novos",pct,novosPct,"Das visitas, quantas eram de quem nunca tinha entrado",rp) +
+      B1("Rolagem média",pct,K.scroll,"Até onde descem na página: 16% é só a primeira tela",rp) +
+      B1("Tempo ativo",seg,K.tempoAtivo,`Tempo realmente mexendo na página (${seg(K.tempoTotal)} no total)`,rp) +
+      B1("Páginas por visita",v=>v!=null?nf1.format(v):"—",K.paginasPorSessao,"Quase todo mundo vê uma página só",rp) +
+      B1("Cliques de saída",pct,K.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)",rp) +
+      B1("Cliques em “Entrar”",pct,K.cliqueLoginPct,"Visitas que clicaram para fazer login",rp) +
+      B1("Cliques mortos",pct,K.deadClicksPct,"Clicou em algo que parece botão e não é",rp) +
+      B1("Cliques de irritação",pct,K.rageClicksPct,"Clicou várias vezes seguidas no mesmo lugar",rp) +
+      B1("No celular",pct,K.mobilePct,"Visitas vindas de celular (Chrome, Safari, Instagram, Facebook…)",rp) +
+      B1("Velocidade",v=>v!=null?nf0.format(v)+"/100":"—",K.desempenho.pontuacao,
+         `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(K.desempenho.lcpSeg)}s (o ideal é até 2,5s)`,rp)
+    )}
+    <div class="faixa dois" style="margin-top:14px">
+      ${cx(cxt("De onde vieram as visitas","Sites e apps que mandaram gente para a página, em número de visitas.")
+        + K.origens.map(o=>`<div class="linha"><span class="ln">${esc(o.n)}</span>
+          <span class="lt"><span class="lf" style="width:${(o.s/maxO*100).toFixed(1)}%;background:var(--d1)"></span></span>
+          <span class="lv">${num(o.s)}</span></div>`).join("")
+        + `<p class="proc">Visitas sem origem identificada (digitou o endereço, veio de link direto) não entram na lista. “Lovable” é a ferramenta em que a página foi feita — são acessos de quem estava trabalhando nela, não de clientes.</p>`)}
+      ${cx(cxt("Em palavras simples","O que esses números querem dizer.")
+        + `<ul class="simples">
+          <li><b>${num(K.sessoes)} visitas</b> em ${rp.toLowerCase()}, de <b>${num(K.usuarios)} pessoas</b>. Nove em cada dez estavam entrando pela primeira vez.</li>
+          <li>A página é lida só até a <b>primeira tela</b> (${pct(K.scroll)} de rolagem) e por <b>${seg(K.tempoAtivo)}</b>. O que está mais embaixo praticamente não é visto.</li>
+          <li>Quase <b>1 em cada 4 visitas</b> clicou em algo que sai da página — sinal de que o botão principal está sendo usado.</li>
+          <li><b>${pct(K.mobilePct)} no celular</b>: a página precisa ser pensada para o celular primeiro.</li>
+          <li>Velocidade <b>${nf0.format(K.desempenho.pontuacao)}/100</b>: o conteúdo principal demora ${nf2.format(K.desempenho.lcpSeg)}s para aparecer, acima dos 2,5s recomendados. Página mais rápida costuma reter mais gente.</li>
+        </ul>`)}
+    </div>`;
   }
-  if(c&&c.scroll!=null){
-    txt += `Quem chegou desceu em média <b>${pct(c.scroll)}</b> da página e ficou <b>${seg(c.tempoAtivo)}</b> ativo. `;
-    txt += c.scroll<25
-      ? `Abaixo de 25% significa que a maioria não passa da primeira dobra — o que está embaixo praticamente não é visto.`
-      : `Isso indica que a página está sendo lida além da primeira dobra.`;
-  }
+
+  /* o que o botão "Puxar dados" traz: só os últimos 3 dias, limite da API do Clarity */
+  const vivo = D.lp&&D.lp.erroClarity
+    ? cx(cxt("Clarity ao vivo · últimos 3 dias","Microsoft Clarity")
+        + `<p class="falhou"><b>Clarity não veio</b>${esc(D.lp.erroClarity)}</p>`)
+    : (c ? blocos(
+          B1("Visitas",num,c.sessoes,"Nos últimos 3 dias","últimos 3 dias") +
+          B1("Rolagem média",pct,c.scroll,"Até onde descem na página","últimos 3 dias") +
+          B1("Tempo ativo",seg,c.tempoAtivo,"Tempo realmente mexendo na página","últimos 3 dias") +
+          B1("Cliques mortos",pct,c.deadClicks,"Clicou em algo que parece botão e não é","últimos 3 dias"))
+        : `<div class="vazio">Clique em Puxar dados para trazer os últimos 3 dias do Clarity.</div>`);
 
   return `
-  ${D.lp&&D.lp.erroSessoes?`<p class="falhou"><b>Visitas não vieram</b>${esc(D.lp.erroSessoes)}</p>`:""}
-  ${s&&s.atual!=null?blocos(
-    B("Visitas na página",num,s.atual,s.anterior,"Sessões em miaapp.com.br, na janela escolhida")
-  ):""}
+  ${mes}
+  ${tituloGrupo("Clarity ao vivo · últimos 3 dias",
+    "A API do Clarity só devolve os últimos 3 dias — por isso o mês fechado vem do export acima")}
+  ${vivo}`;
+}
 
-  <div class="faixa" style="margin-top:14px">
-    ${D.lp&&D.lp.erroClarity
-      ? cx(cxt("Comportamento na página","Microsoft Clarity")
-          + `<p class="falhou"><b>Clarity não veio</b>${esc(D.lp.erroClarity)}</p>`)
-      : (c ? cx(cxt("Comportamento na página","Como as pessoas se comportam depois de chegar.",
-                    "últimos 3 dias")
-          + `<p class="aviso">A API do Clarity só devolve os <b>últimos 3 dias</b> — estes números
-             não são da janela que você escolheu acima.</p>`
-          + blocos(
-            B("Rolagem",pct,c.scroll,null,"Até onde o visitante desce na página") +
-            B("Tempo ativo",seg,c.tempoAtivo,null,"Tempo realmente interagindo") +
-            B("Sessões",num,c.sessoes,null,"Visitas nos 3 dias") +
-            B("Páginas por sessão",v=>v!=null?nf1.format(v):"—",c.paginas,null,"Quantas páginas cada um viu") +
-            B("Cliques mortos",pct,c.deadClicks,null,"Clique em algo que parece botão e não é") +
-            B("Quickback",num,c.quickback,null,"Cliques de quem entra e volta na hora") +
-            B("Rage clicks",num,c.rage,null,"Cliques repetidos de irritação")
-          ))
-        : cx(cxt("Comportamento na página","Microsoft Clarity")
-            + `<p class="vazio">Clique em Puxar dados para trazer o comportamento na página.</p>`))}
-  </div>
+/* ------------------------------------------------------------ Visão geral */
+function vVisao(){
+  const V=(typeof VISAO_AGOSTO!=="undefined")?VISAO_AGOSTO:null;
+  if(!V) return `<div class="vazio">Sem consolidado de mês fechado.</div>`;
+  const rp=V.rotulo;
+  const C=V.canais.map(derivar);
+  const T=derivar(C.reduce((a,c)=>({impressoes:a.impressoes+c.impressoes,cliques:a.cliques+c.cliques,
+    custo:a.custo+c.custo,conversoes:a.conversoes+(c.cadastros||0)}),{impressoes:0,cliques:0,custo:0,conversoes:0}));
+  const alcance=C.reduce((a,c)=>a+(c.alcance||0),0);
+  const quemTemAlcance=C.filter(c=>c.alcance!=null).map(c=>c.n).join(", ");
+  const M=V.metabase, ma=M.atual, mb=M.anterior;
+  const custoReal=ma&&ma.cadastros?T.custo/ma.cadastros:null;
+  const ant=(k,fmt)=>mb&&mb[k]!=null?` Em ${M.rotuloAnt}: ${fmt(mb[k])}.`:"";
 
-  ${txt?`<div class="faixa">${resumoCx(txt)}</div>`:""}`;
+  return `
+  ${tituloGrupo("Visão geral · "+rp,
+    `Google, Meta e OpenAI somados · ${V.cobertura} · fechado em ${V.fechadoEm} · não muda com "Puxar dados"`)}
+  ${blocos(
+    B1("Investimento total",brl,T.custo,"Soma do que os três canais gastaram",rp) +
+    B1("Alcance",num,alcance,`Pessoas diferentes que viram anúncio. Só o ${quemTemAlcance} informa alcance — Google e OpenAI não`,rp) +
+    B1("Impressões",num,T.impressoes,"Vezes que algum anúncio apareceu, nos três canais",rp) +
+    B1("Cliques",num,T.cliques,"Quantas vezes alguém clicou em um anúncio",rp) +
+    B1("Cadastros atribuídos pelos canais",num,T.conversoes,"Soma do que cada plataforma diz ter gerado. Pode contar a mesma pessoa em dois canais",rp) +
+    B1("Custo por cadastro atribuído",brl,T.custoConv,"Investimento total ÷ cadastros atribuídos",rp)
+  )}
+  <div class="faixa" style="margin-top:14px">${cx(cxt("Por canal · "+rp,"Cada canal com sua fonte. Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor.")
+    + `<div class="tw"><table><thead><tr><th>Canal</th><th class="r">Investimento</th><th class="r">Alcance</th>
+      <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th><th class="r">CPC</th>
+      <th class="r">Cadastros</th><th class="r">Por cadastro</th></tr></thead>
+      <tbody>${C.map(c=>`<tr><td class="nm">${esc(c.n)}<span>${esc(c.fonte)}</span></td>
+        <td class="r">${brl(c.custo)}</td><td class="r">${c.alcance!=null?num(c.alcance):"—"}</td>
+        <td class="r">${num(c.impressoes)}</td><td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td>
+        <td class="r">${brl(c.cpc)}</td><td class="r">${num(c.cadastros)}</td>
+        <td class="r">${brl(c.cadastros?c.custo/c.cadastros:null)}</td></tr>`).join("")}</tbody>
+      <tfoot><tr><td>Total</td><td class="r">${brl(T.custo)}</td><td class="r">${num(alcance)}</td>
+        <td class="r">${num(T.impressoes)}</td><td class="r">${num(T.cliques)}</td><td class="r">${pct(T.ctr)}</td>
+        <td class="r">${brl(T.cpc)}</td><td class="r">${num(T.conversoes)}</td><td class="r">${brl(T.custoConv)}</td></tr></tfoot>
+      </table></div>`)}</div>
+  ${tituloGrupo("Metabase · o que aconteceu de verdade em "+rp.toLowerCase(),
+    "A base do produto conta quem realmente se cadastrou e pagou, venha de anúncio ou não")}
+  ${ma?blocos(
+    B1("Cadastros reais",num,ma.cadastros,"Profissionais que criaram conta no mês, de qualquer origem."+ant("cadastros",num),rp) +
+    B1("Onboarding concluído",num,ma.onboarding,"Desses, quantos terminaram de configurar."+ant("onboarding",num),rp) +
+    B1("Contas ativas",num,ma.contasAtivas,"Cadastros do mês que já estão com a conta ativa."+ant("contasAtivas",num),rp) +
+    B1("Pagamentos",num,ma.pagamentos,"Transações pagas no mês, de todos os profissionais."+ant("pagamentos",num),rp) +
+    B1("GMV",brl,ma.gmv,"Valor que passou pelo produto no mês."+ant("gmv",brl),rp) +
+    B1("Custo por cadastro real",brl,custoReal,"Investimento dos três canais ÷ cadastros reais do Metabase",rp)
+  ):`<div class="vazio">Sem dados do Metabase para o mês.</div>`}
+  <p class="proc">Os canais atribuem a si ${num(T.conversoes)} cadastros; o Metabase registrou ${num(ma&&ma.cadastros)} no mês. A diferença é quem chegou sem anúncio (busca, indicação, Instagram orgânico) — e o que uma plataforma conta em dobro. Enquanto a origem não for gravada no cadastro, a única conta que fecha de verdade é a do Metabase.</p>`;
 }
 
 /* --------------------------------------------------------- Próximos passos */
@@ -1182,6 +1365,7 @@ const VISTAS=[
   {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
+  {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
   {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,r:vPassos}
 ];
 const ABAS=VISTAS.filter(v=>!v.oculta);
