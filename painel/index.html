@@ -1145,11 +1145,9 @@ function vMeta(){
 
 /* ------------------------------------------------------------- OpenAI Ads */
 function vOpenai(){
-  const a=derivar(D.openai&&D.openai.atual), b=derivar(D.openai&&D.openai.anterior);
-  if(!a) return semDados("OpenAI Ads", D.openai&&D.openai.erro);
-  const notaCanal = D.openai.nota?`<p class="aviso">${esc(D.openai.nota)}</p>`:"";
-
-  /* bloco 2: o export do Ads Manager — a única fonte de conversão do canal */
+  /* a aba mostra SÓ o export do Ads Manager, a pedido: é a única fonte com
+     conversão e não faz sentido misturar com a entrega parcial do Windsor.
+     A consulta ao vivo do canal continua existindo para as outras contas. */
   const M=(typeof OPENAI_MANAGER!=="undefined")?OPENAI_MANAGER:null;
   let exportado="";
   if(M && M.campanhas && M.campanhas.length){
@@ -1192,19 +1190,7 @@ function vOpenai(){
         </table></div>`)}</div>`;
   }
 
-  return `
-  ${tituloGrupo("OpenAI Ads · Entrega no período (Windsor, ao vivo)",
-    "Impressões, cliques e gasto do período escolhido — o conector não traz conversão")}
-  ${notaCanal}
-  ${blocos(
-    B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
-    B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
-    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
-    B("CPC",brl,a.cpc,b&&b.cpc,"Quanto custou cada clique","inv") +
-    B("CPM",brl,a.cpm,b&&b.cpm,"Custo para aparecer mil vezes","inv") +
-    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
-  )}
-  ${exportado}`;
+  return exportado || `<div class="vazio">Sem export do Ads Manager carregado para este canal.</div>`;
 }
 
 /* ------------------------------------------------------------ Landing Page */
