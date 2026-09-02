@@ -1157,8 +1157,7 @@ function vOpenai(){
       {impressoes:0,cliques:0,conversoes:0,custo:0,visitasLP:0}));
     const rp=M.rotulo||M.cobertura;
     exportado=`
-    ${tituloGrupo("OpenAI Ads · Conversões de "+rp.toLowerCase()+" (export do Ads Manager)",
-      `Enviado em ${M.enviadoEm} · cobre ${M.cobertura} · não muda com "Puxar dados"`)}
+    ${tituloGrupo("OpenAI Ads · Conversões de "+rp.toLowerCase()+" (export do Ads Manager)")}
     ${blocos(
       B1("Conversões",num,t.conversoes,"Cadastros registrados pelo Ads Manager",rp) +
       B1("Custo por conversão",brl,t.custoConv,"Quanto custou cada cadastro",rp) +
