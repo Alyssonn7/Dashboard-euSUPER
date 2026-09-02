@@ -43,7 +43,7 @@ retrato gravado no arquivo ou o resultado da consulta que você acabou de fazer.
 | Seção | O que mostra |
 |---|---|
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
-| **Meta Ads** | Alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento — mais a tabela por anúncio |
+| **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — mais a tabela por anúncio com a miniatura de cada criativo |
 | **OpenAI Ads** | Impressões, cliques, CTR, CPC, CPM, investimento |
 | **Landing Page** | Visitas na janela escolhida, e o comportamento pelo Clarity |
 | **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
@@ -58,9 +58,10 @@ anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 qu
 viram, quantos clicaram", "quanto custou cada cadastro". É o que deixa a tela
 legível para quem não vive de tráfego.
 
-Cada aba de canal fecha com **"O que esses números dizem"**: um parágrafo em
-português direto, montado a partir dos próprios números da consulta. Muda quando
-os dados mudam, e aponta o criativo mais eficiente e o que gastou sem retorno.
+As abas OpenAI Ads e Landing Page fecham com **"O que esses números dizem"**: um
+parágrafo em português direto, montado a partir dos próprios números da consulta.
+Nas abas Google e Meta esse cartão foi retirado a pedido — a apresentação aos
+founders não usa.
 
 ## Nada de métrica guardada pela metade
 
@@ -82,10 +83,16 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **doze chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
-duas chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
-no Ads Manager, e uma por anúncio para a tabela), mais uma do Clarity e um SQL
-que devolve as duas janelas.
+São **catorze chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
+três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
+no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
+perfil; e uma por anúncio para a tabela), mais uma do Clarity e um SQL que
+devolve as duas janelas.
+
+No Meta, o alcance de cada grupo só é deduplicado quando aquele grupo foi o
+único a gastar na janela (aí vale o alcance da conta). Quando os dois grupos
+rodaram, o Windsor não deduplica por grupo: o alcance é a soma das campanhas
+do grupo, e o bloco diz isso na linha de explicação.
 
 O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 

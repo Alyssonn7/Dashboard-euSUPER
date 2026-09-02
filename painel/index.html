@@ -227,6 +227,13 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .bl-seta{font-size:9px;line-height:1;margin-left:5px;vertical-align:middle;font-style:normal}
 .bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
 .bl-e{font-size:11px;color:var(--texto-3);margin-top:11px;line-height:1.45}
+/* título de um grupo de blocos (ex.: as duas campanhas do Meta) */
+.gt{font-family:var(--fonte);font-size:14px;font-weight:700;color:var(--titulo);margin:0 0 11px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;letter-spacing:-.01em}
+.gt::before{content:"";display:inline-block;width:5px;height:11px;background:var(--d1);
+  transform:skewX(-22.5deg);border-radius:1.5px;align-self:center}
+.gt small{font-size:12px;font-weight:500;color:var(--texto-2)}
+.blocos + .gt, .vazio + .gt{margin-top:22px}
 
 /* ---- leitura: o parágrafo que explica os blocos ---- */
 .leitura{font-size:15px;line-height:1.68;color:var(--texto-2);max-width:80ch}
@@ -385,6 +392,22 @@ const RETRATO = {
   meta:{
     atual:   {alcance:12737, impressoes:40124, cliques:557,  custo:1133.11, conversoes:24, visitasLP:349},
     anterior:{alcance:24012, impressoes:33088, cliques:1122, custo:480.38,  conversoes:0,  visitasLP:84},
+    /* por objetivo de campanha (Windsor · campaign_objective): OUTCOME_SALES é a
+       campanha de cadastro, OUTCOME_TRAFFIC é a de visita ao perfil do Instagram.
+       Alcance: na janela atual só o grupo de cadastro rodou, então vale o alcance
+       deduplicado da conta; na anterior os dois rodaram e o alcance de cada grupo
+       é a soma das campanhas dele (quem viu duas campanhas conta duas vezes). */
+    grupos:{
+      cadastro:{
+        atual:   {alcance:12737, impressoes:40125, cliques:557, custo:1133.18, conversoes:24, visitasLP:349, visitasPerfil:57, alcanceSomado:false},
+        anterior:{alcance:4047,  impressoes:6191,  cliques:135, custo:298.90,  conversoes:0,  visitasLP:82,  visitasPerfil:35, alcanceSomado:true}
+      },
+      perfil:{
+        atual:   null,
+        anterior:{alcance:22840, impressoes:26897, cliques:987, custo:181.48, conversoes:0, visitasLP:2, visitasPerfil:50, alcanceSomado:true},
+        nota:"As seis campanhas de visita ao perfil foram desligadas em 24/08 — por isso não há número no período atual."
+      }
+    },
     criativos:[
       {nome:"ADS01-EXISTENTE",campanha:"CONVERSÃO 01-DUDA",custo:357.40,impressoes:3156, cliques:240,conversoes:7},
       {nome:"ADS-04",campanha:"ABO A/B",   custo:310.39,impressoes:5845, cliques:116,conversoes:15},
@@ -554,7 +577,8 @@ function derivar(x){
     txConv:     div(x.conversoes, x.cliques)!=null ? div(x.conversoes,x.cliques)*100 : null,
     custoConv:  div(x.custo, x.conversoes),
     frequencia: div(x.impressoes, x.alcance),
-    connect:    div(x.visitasLP, x.cliques)!=null ? div(x.visitasLP,x.cliques)*100 : null
+    connect:    div(x.visitasLP, x.cliques)!=null ? div(x.visitasLP,x.cliques)*100 : null,
+    custoVisita:div(x.custo, x.visitasPerfil)
   };
 }
 
@@ -631,10 +655,34 @@ async function qMeta(de,ate){
     fields:["campaign","ad_name","spend","impressions","actions_link_click",
             "actions_complete_registration","thumbnail_url",
             "instagram_permalink_url"]},"Meta Ads"));
+  /* por campanha, com o objetivo: separa cadastro (OUTCOME_SALES) de visita ao
+     perfil (OUTCOME_TRAFFIC). O Windsor não deduplica alcance por grupo, então:
+     se só um grupo gastou na janela, ele leva o alcance deduplicado da conta;
+     se os dois gastaram, cada grupo soma o alcance das suas campanhas e avisa. */
+  const camps=linhas(await chamar("Windsor.ai","get_data",{...base,
+    fields:["campaign","campaign_objective","spend","reach","impressions",
+            "actions_link_click","actions_landing_page_view",
+            "actions_complete_registration","instagram_profile_visits"]},"Meta Ads"));
+  const grupoDe=x=>{
+    const o=(x.campaign_objective||"").toUpperCase(), n=(x.campaign||"").toUpperCase();
+    if(o==="OUTCOME_TRAFFIC"||/PERFIL|VISITA/.test(n)) return "perfil";
+    return "cadastro";
+  };
+  const acc={cadastro:null,perfil:null};
+  camps.forEach(x=>{
+    const g=grupoDe(x); const t=acc[g]||(acc[g]={alcance:0,impressoes:0,cliques:0,custo:0,
+      conversoes:0,visitasLP:0,visitasPerfil:0,alcanceSomado:true});
+    t.alcance+=+x.reach||0; t.impressoes+=+x.impressions||0; t.cliques+=+x.actions_link_click||0;
+    t.custo+=+x.spend||0; t.conversoes+=+x.actions_complete_registration||0;
+    t.visitasLP+=+x.actions_landing_page_view||0; t.visitasPerfil+=+x.instagram_profile_visits||0;
+  });
+  const ativos=Object.values(acc).filter(t=>t&&t.custo>0);
+  if(ativos.length===1){ ativos[0].alcance=+tot.reach||ativos[0].alcance; ativos[0].alcanceSomado=false; }
   return {total:{alcance:+tot.reach||0,impressoes:+tot.impressions||0,
                  cliques:+tot.actions_link_click||0,custo:+tot.spend||0,
                  conversoes:+tot.actions_complete_registration||0,
                  visitasLP:+tot.actions_landing_page_view||0},
+          grupos:acc,
           /* thumb/post: a imagem externa não carrega dentro do artifact,
              então servem só de link; a miniatura visível vem de CRIATIVOS */
           criativos:r.map(x=>({nome:x.ad_name,campanha:x.campaign,custo:+x.spend||0,
@@ -734,7 +782,11 @@ async function puxar(){
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
     campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA")};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
-    criativos:(R.mA&&R.mA.criativos)||[], erro:msg("mA")};
+    criativos:(R.mA&&R.mA.criativos)||[], erro:msg("mA"),
+    grupos:{
+      cadastro:{atual:R.mA&&R.mA.grupos.cadastro, anterior:R.mB&&R.mB.grupos.cadastro},
+      perfil:  {atual:R.mA&&R.mA.grupos.perfil,   anterior:R.mB&&R.mB.grupos.perfil}
+    }};
   novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
   novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:R.cl,
     erroSessoes:msg("sA"), erroClarity:msg("cl")};
@@ -910,38 +962,50 @@ function vMeta(){
   if(!a) return semDados("Meta Ads", D.meta&&D.meta.erro);
   const cri=(D.meta.criativos||[]).map(derivar).filter(c=>c.custo>0);
 
-  let txt = `O canal alcançou <b>${num(a.alcance)}</b> pessoas diferentes e apareceu <b>${num(a.impressoes)}</b> vezes — `;
-  txt += `ou seja, cada pessoa viu o anúncio <b>${a.frequencia!=null?nf1.format(a.frequencia):"—"}</b> vezes em média. `;
-  txt += `Foram <b>${num(a.cliques)}</b> cliques no link, a <b>${brl(a.cpc)}</b> cada. `;
-  if(a.connect!=null) txt += `Desses cliques, <b>${nf1.format(a.connect)}%</b> chegaram de verdade na página — o resto desistiu no caminho. `;
-  if(a.conversoes>0){
-    txt += `O pixel registrou <b>${num(a.conversoes)}</b> cadastros, a <b>${brl(a.custoConv)}</b> cada.`;
-  } else {
-    txt += `O pixel não registrou nenhum cadastro nesta janela.`;
-  }
-  if(cri.length){
-    const bons=cri.filter(c=>c.conversoes>0).sort((x,y)=>x.custoConv-y.custoConv);
-    const zerados=cri.filter(c=>c.conversoes===0);
-    if(bons.length) txt += ` O anúncio mais eficiente foi <b>${esc(bons[0].nome)}</b>, a ${brl(bons[0].custoConv)} por cadastro.`;
-    if(zerados.length) txt += ` <b>${zerados.length}</b> ${zerados.length===1?"anúncio":"anúncios"} gastaram ${brl(zerados.reduce((s,c)=>s+c.custo,0))} sem nenhum cadastro.`;
-  }
+  /* dois grupos, como o Alysson apresenta: cadastro (conversão) e visita ao
+     perfil do Instagram (tráfego). Cada um com seus blocos e seu título. */
+  const G=(D.meta.grupos)||{};
+  const gc=G.cadastro||{}, gp=G.perfil||{};
+  const ca=derivar(gc.atual), cb=derivar(gc.anterior);
+  const pa=derivar(gp.atual), pb=derivar(gp.anterior);
+  const alcExpl=(x,y)=>(x&&x.alcanceSomado)||(y&&y.alcanceSomado)
+    ? "Pessoas diferentes que viram — soma das campanhas do grupo"
+    : "Pessoas diferentes que viram";
+  const semAtual=(g,x)=>x?"":(g&&g.nota)||"Sem investimento no período atual.";
+  const titulo=(t,sub)=>`<h3 class="gt">${t}${sub?`<small>${sub}</small>`:""}</h3>`;
+
+  const blocosCadastro = (ca||cb) ? blocos(
+    B("Alcance",num,ca&&ca.alcance,cb&&cb.alcance,alcExpl(ca,cb)) +
+    B("Impressões",num,ca&&ca.impressoes,cb&&cb.impressoes,"Vezes que o anúncio apareceu") +
+    B("Frequência",v=>v!=null?nf1.format(v):"—",ca&&ca.frequencia,cb&&cb.frequencia,"Vezes que a mesma pessoa viu","inv") +
+    B("CPM",brl,ca&&ca.cpm,cb&&cb.cpm,"Custo para aparecer mil vezes","inv") +
+    B("Cliques no link",num,ca&&ca.cliques,cb&&cb.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,ca&&ca.ctr,cb&&cb.ctr,"De 100 que viram, quantos clicaram") +
+    B("Chegaram na página",pct,ca&&ca.connect,cb&&cb.connect,"Cliques que viraram visita de verdade") +
+    B("Conversões",num,ca&&ca.conversoes,cb&&cb.conversoes,"Cadastros registrados pelo pixel") +
+    B("Tx. conversão",pct,ca&&ca.txConv,cb&&cb.txConv,"De 100 cliques, quantos viraram cadastro") +
+    B("Custo por conversão",brl,ca&&ca.custoConv,cb&&cb.custoConv,"Quanto custou cada cadastro","inv") +
+    B("Investimento",brl,ca&&ca.custo,cb&&cb.custo,"Total gasto no grupo","neutro")
+  ) : `<div class="vazio">Nenhuma campanha de cadastro rodou nos dois períodos.</div>`;
+
+  const blocosPerfil = (pa||pb) ? blocos(
+    B("Alcance",num,pa&&pa.alcance,pb&&pb.alcance,alcExpl(pa,pb)) +
+    B("Impressões",num,pa&&pa.impressoes,pb&&pb.impressoes,"Vezes que o anúncio apareceu") +
+    B("Frequência",v=>v!=null?nf1.format(v):"—",pa&&pa.frequencia,pb&&pb.frequencia,"Vezes que a mesma pessoa viu","inv") +
+    B("CPM",brl,pa&&pa.cpm,pb&&pb.cpm,"Custo para aparecer mil vezes","inv") +
+    B("Cliques no link",num,pa&&pa.cliques,pb&&pb.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,pa&&pa.ctr,pb&&pb.ctr,"De 100 que viram, quantos clicaram") +
+    B("Visitas ao perfil",num,pa&&pa.visitasPerfil,pb&&pb.visitasPerfil,"Quantas pessoas foram ao perfil do Instagram") +
+    B("Custo por visita",brl,pa&&pa.custoVisita,pb&&pb.custoVisita,"Quanto custou cada visita ao perfil","inv") +
+    B("Investimento",brl,pa&&pa.custo,pb&&pb.custo,"Total gasto no grupo","neutro")
+  ) : `<div class="vazio">Nenhuma campanha de visita ao perfil rodou nos dois períodos.</div>`;
 
   return `
-  ${blocos(
-    B("Alcance",num,a.alcance,b&&b.alcance,"Pessoas diferentes que viram") +
-    B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
-    B("Frequência",v=>v!=null?nf1.format(v):"—",a.frequencia,b&&b.frequencia,"Vezes que a mesma pessoa viu","inv") +
-    B("CPM",brl,a.cpm,b&&b.cpm,"Custo para aparecer mil vezes","inv") +
-    B("Cliques no link",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
-    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
-    B("Chegaram na página",pct,a.connect,b&&b.connect,"Cliques que viraram visita de verdade") +
-    B("Conversões",num,a.conversoes,b&&b.conversoes,"Cadastros registrados pelo pixel") +
-    B("Tx. conversão",pct,a.txConv,b&&b.txConv,"De 100 cliques, quantos viraram cadastro") +
-    B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
-    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
-  )}
-  <div class="faixa" style="margin-top:14px">${resumoCx(txt)}</div>
-  ${cri.length?`<div class="faixa">${cx(cxt("Anúncio por anúncio","Ordenados por quanto consumiram. Clique na miniatura para abrir o post.")
+  ${titulo("Meta Ads · Campanha de cadastro", semAtual(gc,ca)||"Objetivo de conversão: cadastros no site")}
+  ${blocosCadastro}
+  ${titulo("Meta Ads · Campanha de visita ao perfil do Instagram", semAtual(gp,pa)||"Objetivo de tráfego: levar pessoas ao perfil")}
+  ${blocosPerfil}
+  ${cri.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Anúncio por anúncio","Ordenados por quanto consumiram. Clique na miniatura para abrir o post.")
     + `<div class="tw"><table><thead><tr><th>Criativo</th><th>Anúncio</th><th class="r">Investimento</th>
       <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
       <th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
