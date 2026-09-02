@@ -227,6 +227,46 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .bl-seta{font-size:9px;line-height:1;margin-left:5px;vertical-align:middle;font-style:normal}
 .bl-seta.up{color:var(--bom)} .bl-seta.down{color:var(--ruim)} .bl-seta.flat{color:var(--texto-3)}
 .bl-e{font-size:11px;color:var(--texto-3);margin-top:11px;line-height:1.45}
+/* ---- visão geral: cartões por canal, barras empilhadas, tabela com destaque ---- */
+.canais{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.canal{background:var(--cartao);border:1px solid var(--borda);border-radius:16px;box-shadow:var(--sombra);
+  padding:18px 19px 16px;border-top:4px solid var(--c);display:flex;flex-direction:column;gap:14px;min-width:0}
+.canal header{display:flex;align-items:center;gap:11px}
+.canal header b{display:block;font-family:var(--fonte);font-size:14.5px;font-weight:700;color:var(--texto);line-height:1.2}
+.canal header small{display:block;font-size:10.5px;color:var(--texto-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.canal header div{min-width:0}
+.clogo{width:32px;height:32px;border-radius:9px;background:#FEFEFE;border:1px solid var(--borda);display:grid;
+  place-items:center;flex:none}
+.clogo svg{width:18px;height:18px;fill:currentColor;stroke:none;color:#000}
+.canal .k{display:block;font-family:var(--fonte);font-size:10.5px;font-weight:600;color:var(--texto-3);line-height:1.2}
+.canal .k2{display:block;font-size:11px;color:var(--texto-2);margin-top:6px}
+.canal .cinv .v{display:block;font-family:var(--fonte);font-size:clamp(20px,1.8vw,26px);font-weight:800;
+  letter-spacing:-.03em;line-height:1.1;color:var(--texto);margin:4px 0 8px;font-variant-numeric:tabular-nums}
+.canal .fx{display:block;height:8px;border-radius:99px;background:var(--trilho);overflow:hidden}
+.canal .fx i{display:block;height:100%;border-radius:99px;background:var(--c)}
+.cmini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:12px;border-top:1px solid var(--borda-2)}
+.cmini .v{display:block;font-family:var(--fonte);font-size:15px;font-weight:700;color:var(--texto);
+  margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 14px;font-size:12px;color:var(--texto-2)}
+.legenda span{display:inline-flex;align-items:center;gap:6px}
+.legenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.emp{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 0;
+  border-bottom:1px solid var(--borda-2)}
+.emp:last-child{border-bottom:none}
+.emp-r{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--texto)}
+.emp-b{display:flex;height:26px;border-radius:8px;overflow:hidden;background:var(--trilho)}
+.emp-b i{display:flex;align-items:center;justify-content:center;height:100%;min-width:0;overflow:hidden}
+.emp-b i+i{border-left:2px solid var(--cartao)}
+.emp-b em{font-style:normal;font-family:var(--fonte);font-size:11px;font-weight:700;color:#fff;
+  text-shadow:0 1px 1px rgba(0,0,0,.15)}
+.emp-t{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--texto-2);font-variant-numeric:tabular-nums;
+  white-space:nowrap;min-width:84px;text-align:right}
+.tcanal .tc{display:inline-flex;align-items:center;gap:10px}
+.tcanal td.nm .tc>span{display:block;font-size:13px;font-weight:700;color:var(--texto);margin-top:0}
+.tcanal td.nm .tc>span>span{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:1px}
+.tcanal .clogo{width:28px;height:28px;border-radius:8px} .tcanal .clogo svg{width:16px;height:16px}
+.melhor{display:inline-block;padding:2px 8px;border-radius:99px;background:var(--bom-t);color:var(--bom);font-weight:700}
+
 /* título de um grupo de blocos (ex.: as duas campanhas do Meta) */
 .gt{font-family:var(--fonte);font-size:14px;font-weight:700;color:var(--titulo);margin:0 0 11px;
   display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;letter-spacing:-.01em}
@@ -344,7 +384,7 @@ tfoot td.r{text-align:right}
   .item[aria-selected="true"]{background:#fff;color:var(--mata)}
   .imp{padding:11px 0} .imp span{display:none}
 }
-@media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)} .canais{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){
   body{padding:0}
   .app{border-radius:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
@@ -365,6 +405,7 @@ tfoot td.r{text-align:right}
   .acao{grid-template-columns:1fr;gap:12px}
   .acao-c p{grid-template-columns:1fr;gap:2px}
   .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
+  .emp{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .emp-b{grid-column:1/-1;order:3} .emp-t{min-width:0}
   .linha.larga{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .linha.larga .lt{grid-column:1/-1;order:3}
   .linha .lv{min-width:0}
 }
@@ -1227,30 +1268,76 @@ function vLP(){
 
 /* ------------------------------------------------------------ Visão geral */
 function vVisao(){
-  /* a aba mostra só a tabela por canal, a pedido: saíram os seis blocos de
-     totais e o bloco do Metabase (os números continuam em VISAO_AGOSTO). */
+  /* comparação de canais: um cartão por canal (logo, investimento, fatia e os
+     três números que importam), barras empilhadas de participação por métrica
+     e a tabela completa com o melhor valor de cada coluna destacado */
   const V=(typeof VISAO_AGOSTO!=="undefined")?VISAO_AGOSTO:null;
   if(!V) return `<div class="vazio">Sem consolidado de mês fechado.</div>`;
   const rp=V.rotulo;
-  const C=V.canais.map(derivar);
+  const COR={"Google Ads":"var(--d1)","Meta Ads":"var(--d2)","OpenAI Ads":"var(--d3)"};
+  const LOGO={"Google Ads":IC.gads,"Meta Ads":IC.metaf,"OpenAI Ads":IC.oai};
+  const C=V.canais.map(c=>({...derivar(c),custoCad:c.cadastros?c.custo/c.cadastros:null}));
   const T=derivar(C.reduce((a,c)=>({impressoes:a.impressoes+c.impressoes,cliques:a.cliques+c.cliques,
     custo:a.custo+c.custo,conversoes:a.conversoes+(c.cadastros||0)}),{impressoes:0,cliques:0,custo:0,conversoes:0}));
   const alcance=C.reduce((a,c)=>a+(c.alcance||0),0);
+  const fatia=(v,t)=>t?v/t*100:0;
+  const logo=n=>`<span class="clogo"><svg viewBox="0 0 24 24" class="marca" aria-hidden="true">${LOGO[n]||""}</svg></span>`;
 
-  return `
-  <div class="faixa">${cx(cxt("Por canal · "+rp,"Cada canal com sua fonte. Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor. Só o Meta informa alcance.")
-    + `<div class="tw"><table><thead><tr><th>Canal</th><th class="r">Investimento</th><th class="r">Alcance</th>
+  /* melhores de cada coluna: menor custo por cadastro, mais cadastros, maior CTR */
+  const melhor={
+    custoCad: Math.min(...C.filter(c=>c.custoCad!=null).map(c=>c.custoCad)),
+    cadastros: Math.max(...C.map(c=>c.cadastros||0)),
+    ctr: Math.max(...C.map(c=>c.ctr||0))
+  };
+  const mk=(c,k,fmt,v)=>`<td class="r">${v!=null&&v===melhor[k]?`<span class="melhor">${fmt(v)}</span>`:fmt(v)}</td>`;
+
+  const cartoes=`<div class="canais">${C.map(c=>`
+    <article class="canal" style="--c:${COR[c.n]}">
+      <header>${logo(c.n)}<div><b>${esc(c.n)}</b><small>${esc(c.fonte)}</small></div></header>
+      <div class="cinv"><span class="k">Investimento em ${rp.toLowerCase()}</span>
+        <span class="v">${brl(c.custo)}</span>
+        <span class="fx"><i style="width:${fatia(c.custo,T.custo).toFixed(1)}%"></i></span>
+        <span class="k2">${nf0.format(fatia(c.custo,T.custo))}% de tudo o que foi investido</span></div>
+      <div class="cmini">
+        <div><span class="k">Cadastros</span><span class="v">${num(c.cadastros)}</span></div>
+        <div><span class="k">Por cadastro</span><span class="v">${brl(c.custoCad)}</span></div>
+        <div><span class="k">Cliques</span><span class="v">${num(c.cliques)}</span></div>
+      </div>
+    </article>`).join("")}</div>`;
+
+  const metricas=[
+    ["Investimento", c=>c.custo,        T.custo,        brl],
+    ["Impressões",   c=>c.impressoes,   T.impressoes,   num],
+    ["Cliques",      c=>c.cliques,      T.cliques,      num],
+    ["Cadastros",    c=>c.cadastros||0, T.conversoes,   num]
+  ];
+  const empilhado=metricas.map(([rot,f,tot,fmt])=>`
+    <div class="emp"><span class="emp-r">${rot}</span>
+      <span class="emp-b">${C.map(c=>{const p=fatia(f(c),tot);
+        return `<i style="width:${p.toFixed(2)}%;background:${COR[c.n]}" title="${esc(c.n)}: ${fmt(f(c))} (${nf0.format(p)}%)">${p>=11?`<em>${nf0.format(p)}%</em>`:""}</i>`}).join("")}</span>
+      <span class="emp-t">${fmt(tot)}</span></div>`).join("");
+  const legenda=`<div class="legenda">${C.map(c=>`<span><i style="background:${COR[c.n]}"></i>${esc(c.n)}</span>`).join("")}</div>`;
+
+  const tabela=`<div class="tw"><table class="tcanal"><thead><tr><th>Canal</th><th class="r">Investimento</th><th class="r">Alcance</th>
       <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th><th class="r">CPC</th>
       <th class="r">Cadastros</th><th class="r">Por cadastro</th></tr></thead>
-      <tbody>${C.map(c=>`<tr><td class="nm">${esc(c.n)}<span>${esc(c.fonte)}</span></td>
+      <tbody>${C.map(c=>`<tr><td class="nm"><span class="tc">${logo(c.n)}<span>${esc(c.n)}<span>${esc(c.fonte)}</span></span></span></td>
         <td class="r">${brl(c.custo)}</td><td class="r">${c.alcance!=null?num(c.alcance):"—"}</td>
-        <td class="r">${num(c.impressoes)}</td><td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td>
-        <td class="r">${brl(c.cpc)}</td><td class="r">${num(c.cadastros)}</td>
-        <td class="r">${brl(c.cadastros?c.custo/c.cadastros:null)}</td></tr>`).join("")}</tbody>
+        <td class="r">${num(c.impressoes)}</td><td class="r">${num(c.cliques)}</td>${mk(c,"ctr",pct,c.ctr)}
+        <td class="r">${brl(c.cpc)}</td>${mk(c,"cadastros",num,c.cadastros)}${mk(c,"custoCad",brl,c.custoCad)}</tr>`).join("")}</tbody>
       <tfoot><tr><td>Total</td><td class="r">${brl(T.custo)}</td><td class="r">${num(alcance)}</td>
         <td class="r">${num(T.impressoes)}</td><td class="r">${num(T.cliques)}</td><td class="r">${pct(T.ctr)}</td>
         <td class="r">${brl(T.cpc)}</td><td class="r">${num(T.conversoes)}</td><td class="r">${brl(T.custoConv)}</td></tr></tfoot>
-      </table></div>`)}</div>`;
+      </table></div>`;
+
+  return `
+  ${tituloGrupo("Por canal · "+rp)}
+  ${cartoes}
+  <div class="faixa" style="margin-top:14px">${cx(cxt("Onde foi o dinheiro e de onde vieram os cadastros",
+      "Cada barra soma 100%. Compare a fatia de investimento de um canal com a fatia de cadastros que ele trouxe.")
+      + legenda + empilhado)}</div>
+  <div class="faixa">${cx(cxt("Todos os números","Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor. Só o Meta informa alcance. Em verde, o melhor de cada coluna.")
+      + tabela)}</div>`;
 }
 
 /* --------------------------------------------------------- Próximos passos */
