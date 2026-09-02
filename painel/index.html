@@ -1283,14 +1283,6 @@ function vVisao(){
   const fatia=(v,t)=>t?v/t*100:0;
   const logo=n=>`<span class="clogo"><svg viewBox="0 0 24 24" class="marca" aria-hidden="true">${LOGO[n]||""}</svg></span>`;
 
-  /* melhores de cada coluna: menor custo por cadastro, mais cadastros, maior CTR */
-  const melhor={
-    custoCad: Math.min(...C.filter(c=>c.custoCad!=null).map(c=>c.custoCad)),
-    cadastros: Math.max(...C.map(c=>c.cadastros||0)),
-    ctr: Math.max(...C.map(c=>c.ctr||0))
-  };
-  const mk=(c,k,fmt,v)=>`<td class="r">${v!=null&&v===melhor[k]?`<span class="melhor">${fmt(v)}</span>`:fmt(v)}</td>`;
-
   const cartoes=`<div class="canais">${C.map(c=>`
     <article class="canal" style="--c:${COR[c.n]}">
       <header>${logo(c.n)}<div><b>${esc(c.n)}</b><small>${esc(c.fonte)}</small></div></header>
@@ -1318,26 +1310,14 @@ function vVisao(){
       <span class="emp-t">${fmt(tot)}</span></div>`).join("");
   const legenda=`<div class="legenda">${C.map(c=>`<span><i style="background:${COR[c.n]}"></i>${esc(c.n)}</span>`).join("")}</div>`;
 
-  const tabela=`<div class="tw"><table class="tcanal"><thead><tr><th>Canal</th><th class="r">Investimento</th><th class="r">Alcance</th>
-      <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th><th class="r">CPC</th>
-      <th class="r">Cadastros</th><th class="r">Por cadastro</th></tr></thead>
-      <tbody>${C.map(c=>`<tr><td class="nm"><span class="tc">${logo(c.n)}<span>${esc(c.n)}<span>${esc(c.fonte)}</span></span></span></td>
-        <td class="r">${brl(c.custo)}</td><td class="r">${c.alcance!=null?num(c.alcance):"—"}</td>
-        <td class="r">${num(c.impressoes)}</td><td class="r">${num(c.cliques)}</td>${mk(c,"ctr",pct,c.ctr)}
-        <td class="r">${brl(c.cpc)}</td>${mk(c,"cadastros",num,c.cadastros)}${mk(c,"custoCad",brl,c.custoCad)}</tr>`).join("")}</tbody>
-      <tfoot><tr><td>Total</td><td class="r">${brl(T.custo)}</td><td class="r">${num(alcance)}</td>
-        <td class="r">${num(T.impressoes)}</td><td class="r">${num(T.cliques)}</td><td class="r">${pct(T.ctr)}</td>
-        <td class="r">${brl(T.cpc)}</td><td class="r">${num(T.conversoes)}</td><td class="r">${brl(T.custoConv)}</td></tr></tfoot>
-      </table></div>`;
+  /* a tabela "Todos os números" saiu a pedido — as três camadas viraram duas */
 
   return `
   ${tituloGrupo("Por canal · "+rp)}
   ${cartoes}
   <div class="faixa" style="margin-top:14px">${cx(cxt("Onde foi o dinheiro e de onde vieram os cadastros",
       "Cada barra soma 100%. Compare a fatia de investimento de um canal com a fatia de cadastros que ele trouxe.")
-      + legenda + empilhado)}</div>
-  <div class="faixa">${cx(cxt("Todos os números","Cadastros do OpenAI vêm do export do Ads Manager; os demais, do Windsor. Só o Meta informa alcance. Em verde, o melhor de cada coluna.")
-      + tabela)}</div>`;
+      + legenda + empilhado)}</div>`;
 }
 
 /* --------------------------------------------------------- Próximos passos */
