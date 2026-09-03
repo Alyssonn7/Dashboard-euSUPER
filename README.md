@@ -44,7 +44,7 @@ O painel **lembra as quatro datas e o último "Puxar dados"** no próprio navega
 não apaga nada. Quando o formato dos dados muda numa versão nova, só o resultado
 salvo é descartado — as datas ficam.
 
-## Seis seções
+## Cinco seções
 
 | Seção | O que mostra |
 |---|---|
@@ -52,13 +52,13 @@ salvo é descartado — as datas ficam.
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager (`campaigns.csv`, 17/08–31/08), a pedido: conversões, custo por conversão, taxa, páginas vistas, investimento, impressões, cliques, CTR, CPC, CPM. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
-| **Visão geral** | Agosto fechado em duas camadas: um cartão por canal (logo, investimento, fatia do total, cadastros, custo por cadastro, cliques) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
-| **Próximos passos** | Cartões de ação com "por quê" e "o que fazer" |
+| **Visão geral** | Agosto fechado em duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 
-A aba **Resumo** (cinco números, o funil e o GMV semanal) existe no código mas
-está oculta — o modelo de apresentação atual não a usa. Para reativá-la,
-remova a flag `oculta:true` da entrada `resumo` na lista `VISTAS` do
-`painel/index.html`.
+As abas **Resumo** (cinco números, o funil e o GMV semanal) e **Próximos passos**
+(cartões de ação) existem no código mas estão ocultas — o modelo de apresentação
+atual não as usa. Para reativar, remova a flag `oculta:true` da entrada
+correspondente na lista `VISTAS` do `painel/index.html`. O botão Imprimir também
+saiu a pedido.
 
 Cada bloco de métrica traz três coisas: o valor, a variação contra a janela
 anterior, e **uma linha dizendo o que aquela métrica significa** — "de 100 que

@@ -602,11 +602,6 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
       <span><b>euSUPER<span class="ex">!</span></b><small>painel da semana</small></span>
     </div>
     <div class="menu" role="tablist" id="menu"></div>
-    <button class="imp" type="button" id="btImp">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9V3.5h11V9"/>
-        <rect x="3.5" y="9" width="17" height="7.5" rx="2"/><path d="M6.5 14h11v6.5h-11z"/></svg>
-      <span>Imprimir</span>
-    </button>
   </nav>
 
   <div class="tela">
@@ -1290,11 +1285,6 @@ function vVisao(){
         <span class="v">${brl(c.custo)}</span>
         <span class="fx"><i style="width:${fatia(c.custo,T.custo).toFixed(1)}%"></i></span>
         <span class="k2">${nf0.format(fatia(c.custo,T.custo))}% de tudo o que foi investido</span></div>
-      <div class="cmini">
-        <div><span class="k">Cadastros</span><span class="v">${num(c.cadastros)}</span></div>
-        <div><span class="k">Por cadastro</span><span class="v">${brl(c.custoCad)}</span></div>
-        <div><span class="k">Cliques</span><span class="v">${num(c.cliques)}</span></div>
-      </div>
     </article>`).join("")}</div>`;
 
   const metricas=[
@@ -1364,7 +1354,7 @@ const VISTAS=[
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
   {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
-  {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,r:vPassos}
+  {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,oculta:true,r:vPassos}
 ];
 const ABAS=VISTAS.filter(v=>!v.oculta);
 
@@ -1540,7 +1530,6 @@ document.getElementById("btTema").addEventListener("click",()=>{
   const es=at==="dark"||(!at&&matchMedia("(prefers-color-scheme:dark)").matches);
   tema(es?"light":"dark");
 });
-document.getElementById("btImp").addEventListener("click",()=>window.print());
 
 desenhar();
 try{
