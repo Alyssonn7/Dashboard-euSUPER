@@ -147,9 +147,9 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 /* uma frase de estado no lugar dos chips */
 .estado-l{display:flex;align-items:flex-start;gap:8px;margin:0;font-size:12.5px;color:var(--texto-2);line-height:1.45}
 .estado-l i{width:7px;height:7px;border-radius:50%;background:var(--texto-3);flex:none;margin-top:6px}
-.estado-l.vivo i{background:var(--bom)} .estado-l.novo i{background:var(--cta)} .estado-l.mal i{background:var(--ruim)}
+.estado-l.vivo i{background:var(--bom)} .estado-l.novo i{background:var(--titulo)} .estado-l.mal i{background:var(--ruim)}
 .estado-l b{font-weight:600;color:var(--texto)}
-.estado-l small{font-size:inherit;color:var(--texto-2);opacity:.85}
+.estado-l small{font-size:inherit;color:var(--texto-2)}
 /* modo de edição: aparece ao clicar no período, some ao aplicar */
 .edicao{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:12px;border-top:1px dashed var(--borda)}
 .edicao[hidden]{display:none}
@@ -385,7 +385,7 @@ tfoot td.r{text-align:right}
   .item{justify-content:center;padding:12px 0;gap:0} .item .lbl{display:none} .item .pt{display:none}
   .item[aria-selected="true"]{background:#fff;color:var(--mata)}
 }
-@media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)} .canais{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)} .canais{grid-template-columns:minmax(0,1fr)} .per{flex:1 1 100%}}
 @media (max-width:760px){
   body{padding:0}
   .app{border-radius:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
@@ -640,17 +640,17 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="cd">
           <span class="cd-l" id="lde">Período</span>
           <div class="cd-v">
-            <input type="date" id="de" aria-label="Início do período">
+            <input type="date" id="de" min="2000-01-01" max="2099-12-31" aria-label="Início do período">
             <span class="cd-seta" aria-hidden="true">→</span>
-            <input type="date" id="ate" aria-label="Fim do período">
+            <input type="date" id="ate" min="2000-01-01" max="2099-12-31" aria-label="Fim do período">
           </div>
         </div>
         <div class="cd">
           <span class="cd-l" id="lcde">Comparar com</span>
           <div class="cd-v">
-            <input type="date" id="cde" aria-label="Início da comparação">
+            <input type="date" id="cde" min="2000-01-01" max="2099-12-31" aria-label="Início da comparação">
             <span class="cd-seta" aria-hidden="true">→</span>
-            <input type="date" id="cate" aria-label="Fim da comparação">
+            <input type="date" id="cate" min="2000-01-01" max="2099-12-31" aria-label="Fim da comparação">
           </div>
         </div>
         <div class="ed-acoes">
@@ -921,7 +921,7 @@ async function qNegocio(de,ate,cde,cate){
 
 async function puxar(){
   const de=inDe.value,ate=inAte.value,cde=inCDe.value,cate=inCAte.value;
-  if(!de||!ate||de>ate||!cde||!cate||cde>cate){
+  if(![de,ate,cde,cate].every(dataOk)||de>ate||cde>cate){
     FALHAS={periodo:{rotulo:"Período",code:"bad_request"}}; desenhar(); return;
   }
   btPuxar.disabled=true; btPuxar.classList.add("indo"); txPuxar.textContent="Puxando…";
@@ -1415,10 +1415,12 @@ const cap=t=>t?t.charAt(0).toUpperCase()+t.slice(1):t;
 /* o período escrito como se fala: mês fechado vira "Agosto de 2026"; intervalo
    vira "24 a 30 de agosto" ou "28 de julho a 3 de agosto", com o ano só quando
    não é o corrente */
-const DATA_OK=/^\d{4}-\d{2}-\d{2}$/;
-function rotuloLongo(de,ate){
-  if(!DATA_OK.test(de||"")||!DATA_OK.test(ate||"")||de>ate) return "Escolha as datas";
-  if(ehMesCalendario(de,ate)) return `${cap(MES_LONGO(de))} de ${de.slice(0,4)}`;
+const dataOk=iso=>/^\d{4}-\d{2}-\d{2}$/.test(iso||"")&&!isNaN(new Date(iso+"T12:00:00"));
+/* minusc=true escreve o mês em minúscula, para a comparação ler como parte da frase */
+function rotuloLongo(de,ate,minusc){
+  if(!dataOk(de)||!dataOk(ate)||de>ate) return "Escolha as datas";
+  const M=minusc?MES_LONGO(de):cap(MES_LONGO(de));
+  if(ehMesCalendario(de,ate)) return `${M} de ${de.slice(0,4)}`;
   const [ya,ma,da]=de.split("-"), [yb,mb,db]=ate.split("-");
   const agora=String(new Date().getFullYear());
   const anoA=ya!==agora?` de ${ya}`:"", anoB=yb!==agora?` de ${yb}`:"";
@@ -1430,10 +1432,10 @@ function pintarEstado(){
   /* a frase-título descreve a SELEÇÃO (o que o botão vai puxar); a linha de
      estado diz se a tela já corresponde a ela e de onde vieram os dados */
   const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
-  btPer.textContent=rotuloLongo(de,ate); btComp.textContent=rotuloLongo(cde,cate);
+  btPer.textContent=rotuloLongo(de,ate); btComp.textContent=rotuloLongo(cde,cate,true);
   const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
   let cls="", html="";
-  const ok=[de,ate,cde,cate].every(v=>DATA_OK.test(v))&&de<=ate&&cde<=cate;
+  const ok=[inDe,inAte,inCDe,inCAte].every(e=>dataOk(e.value)&&e.validity.valid)&&de<=ate&&cde<=cate;
   if(!ok){
     cls="mal"; html="<b>Datas incompletas.</b> O início de cada período precisa vir antes do fim.";
   } else {
@@ -1467,15 +1469,22 @@ function pintarEstado(){
   if(MCP===null) btPuxar.title="Abra o painel dentro do claude.ai para consultar ao vivo.";
 }
 
-/* modo de edição das datas: abre pelo período, fecha em Aplicar, Cancelar ou Esc */
+/* modo de edição das datas */
 let antesEd=null;
 function abrirEdicao(foco){
   antesEd=[inDe.value,inAte.value,inCDe.value,inCAte.value];
   elEd.hidden=false; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","true"));
   pintarEstado(); (foco||inDe).focus();
 }
-/* Aplicar grava as datas na memória; Cancelar/Esc devolvem as de antes de abrir */
+/* Aplicar só fecha com as quatro datas válidas e aí grava na memória;
+   Cancelar/Esc devolvem as datas de antes de abrir. Enter num campo aplica;
+   os atalhos também fecham a edição. */
 function fecharEdicao(cancelar){
+  if(!cancelar){
+    const validas=[inDe,inAte,inCDe,inCAte].every(e=>dataOk(e.value)&&e.validity.valid)
+      &&inDe.value<=inAte.value&&inCDe.value<=inCAte.value;
+    if(!validas){ pintarEstado(); return; }   /* fica aberto mostrando "Datas incompletas" */
+  }
   if(cancelar&&antesEd){ [inDe.value,inAte.value,inCDe.value,inCAte.value]=antesEd; }
   antesEd=null; elEd.hidden=true; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","false"));
   lembrarDatas(); pintarEstado();
@@ -1542,8 +1551,8 @@ function atalhoMes(){
   preencher(ini,fim,iniB,fimB);
 }
 function encaixar(){
-  const de=inDe.value,ate=inAte.value; if(!de||!ate||de>ate)return;
-  const n=Math.round((new Date(ate)-new Date(de))/86400000);
+  const de=inDe.value,ate=inAte.value; if(!dataOk(de)||!dataOk(ate)||de>ate)return;
+  const n=Math.round((new Date(ate)-new Date(de))/86400000); if(!Number.isFinite(n))return;
   inCAte.value=menos(de,1); inCDe.value=menos(inCAte.value,n);
 }
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
@@ -1565,7 +1574,7 @@ function restaurar(){
   }catch(e){}
   try{
     const dt=JSON.parse(localStorage.getItem("mia:datas")||"null");
-    if(dt&&dt.de&&dt.ate&&dt.cde&&dt.cate){
+    if(dt&&[dt.de,dt.ate,dt.cde,dt.cate].every(dataOk)){
       inDe.value=dt.de; inAte.value=dt.ate; inCDe.value=dt.cde; inCAte.value=dt.cate;
     } else if(D.aoVivo){
       inDe.value=D.periodo.atual.de; inAte.value=D.periodo.atual.ate;
