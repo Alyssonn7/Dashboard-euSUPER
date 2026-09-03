@@ -1,0 +1,622 @@
+<title>Plano do Painel Mia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --brand:#004AAD;
+  --accent:#5170FF;
+  --ok:#008A4B;
+  --warn:#A56A00;
+  --crit:#B3261E;
+  --ground:#F5F7FB;
+  --surface:#FFFFFF;
+  --surface-2:#EDF1F8;
+  --ink:#0B1729;
+  --ink-2:#3D4E66;
+  --ink-3:#6B7C94;
+  --rule:#D8E0EC;
+  --rule-2:#E9EEF6;
+  --brand-wash:#E8F0FC;
+  --ok-wash:#E4F4EC;
+  --warn-wash:#FBF1DE;
+  --crit-wash:#FBE9E7;
+  --shadow:0 1px 2px rgba(11,23,41,.05), 0 8px 24px rgba(11,23,41,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --brand:#7FA8F0;
+    --accent:#8FA4FF;
+    --ok:#4BC98A;
+    --warn:#E0AE55;
+    --crit:#F08A80;
+    --ground:#0A1120;
+    --surface:#111B2E;
+    --surface-2:#18243A;
+    --ink:#E8EEF9;
+    --ink-2:#AFBDD2;
+    --ink-3:#7E8FA8;
+    --rule:#26344C;
+    --rule-2:#1C2941;
+    --brand-wash:#13233F;
+    --ok-wash:#0F2B20;
+    --warn-wash:#2E2413;
+    --crit-wash:#331A18;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --brand:#7FA8F0;
+  --accent:#8FA4FF;
+  --ok:#4BC98A;
+  --warn:#E0AE55;
+  --crit:#F08A80;
+  --ground:#0A1120;
+  --surface:#111B2E;
+  --surface-2:#18243A;
+  --ink:#E8EEF9;
+  --ink-2:#AFBDD2;
+  --ink-3:#7E8FA8;
+  --rule:#26344C;
+  --rule-2:#1C2941;
+  --brand-wash:#13233F;
+  --ok-wash:#0F2B20;
+  --warn-wash:#2E2413;
+  --crit-wash:#331A18;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 24px 96px}
+
+/* ---------- cabeçalho ---------- */
+.masthead{
+  background:var(--brand);
+  color:#fff;
+  padding:56px 24px 48px;
+  margin-bottom:44px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .masthead{background:#0D2244}
+}
+:root[data-theme="dark"] .masthead{background:#0D2244}
+.masthead-inner{max-width:1020px;margin:0 auto}
+.eyebrow{
+  font-family:"Montserrat",sans-serif;
+  font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.72);margin:0 0 14px;
+}
+.masthead h1{
+  font-family:"Montserrat",sans-serif;
+  font-size:clamp(32px,5.4vw,50px);font-weight:800;line-height:1.08;
+  letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance;color:#fff;
+}
+.masthead p{
+  margin:0;max-width:60ch;font-size:17px;line-height:1.6;color:rgba(255,255,255,.86);
+}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:26px;
+  font-size:12.5px;color:rgba(255,255,255,.7);
+  font-family:"Montserrat",sans-serif;font-weight:600;letter-spacing:.04em;
+}
+
+/* ---------- tipografia de seção ---------- */
+section{margin:0 0 60px}
+h2{
+  font-family:"Montserrat",sans-serif;
+  font-size:25px;font-weight:700;letter-spacing:-.015em;line-height:1.22;
+  margin:0 0 8px;color:var(--ink);text-wrap:balance;
+}
+.sub{margin:0 0 26px;color:var(--ink-2);max-width:66ch;font-size:15.5px}
+h3{
+  font-family:"Montserrat",sans-serif;
+  font-size:16.5px;font-weight:700;margin:0 0 8px;color:var(--ink);letter-spacing:-.005em;
+}
+p{margin:0 0 14px;max-width:70ch}
+a{color:var(--brand);text-decoration-thickness:1px;text-underline-offset:2px}
+strong{font-weight:700;color:var(--ink)}
+code{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:.87em;background:var(--surface-2);padding:1px 5px;border-radius:4px;
+  color:var(--ink);
+}
+.section-mark{
+  display:flex;align-items:baseline;gap:12px;margin-bottom:8px;
+}
+.section-mark .n{
+  font-family:"Montserrat",sans-serif;font-weight:800;font-size:12px;
+  letter-spacing:.1em;color:var(--accent);padding-top:4px;
+}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  padding:22px 24px;box-shadow:var(--shadow);
+}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:14px}
+
+/* ---------- achados ---------- */
+.finding{
+  background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--crit);border-radius:8px;
+  padding:18px 22px;margin-bottom:12px;
+}
+.finding.warn{border-left-color:var(--warn)}
+.finding.ok{border-left-color:var(--ok)}
+.finding h3{margin-bottom:6px;font-size:15.5px}
+.finding p{margin:0;font-size:14.5px;color:var(--ink-2);max-width:none}
+.finding p + p{margin-top:8px}
+.tag{
+  display:inline-block;font-family:"Montserrat",sans-serif;font-size:10.5px;
+  font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;margin-bottom:9px;
+}
+.tag.crit{background:var(--crit-wash);color:var(--crit)}
+.tag.warn{background:var(--warn-wash);color:var(--warn)}
+.tag.ok{background:var(--ok-wash);color:var(--ok)}
+
+/* ---------- tabela ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:660px;font-size:14px}
+th{
+  font-family:"Montserrat",sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
+  text-align:left;padding:12px 16px;background:var(--surface-2);
+  border-bottom:1px solid var(--rule);white-space:nowrap;
+}
+td{padding:13px 16px;border-bottom:1px solid var(--rule-2);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:none}
+td strong{color:var(--ink)}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;font-family:"Montserrat",sans-serif;
+  font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;
+}
+.chip.ok{background:var(--ok-wash);color:var(--ok)}
+.chip.warn{background:var(--warn-wash);color:var(--warn)}
+.chip.crit{background:var(--crit-wash);color:var(--crit)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+/* ---------- mockup do painel ---------- */
+.mock{
+  background:var(--surface);border:1px solid var(--rule);border-radius:12px;
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.mock-bar{
+  background:var(--brand);color:#fff;padding:14px 20px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.mock-bar .t{font-family:"Montserrat",sans-serif;font-weight:700;font-size:15px}
+.mock-bar .d{font-size:12px;color:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+.verdict{
+  padding:18px 20px;background:var(--brand-wash);border-bottom:1px solid var(--rule);
+  font-size:14.5px;color:var(--ink);
+}
+.verdict b{color:var(--brand)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule-2)}
+.kpi{background:var(--surface);padding:16px 18px}
+.kpi .l{
+  font-family:"Montserrat",sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:7px;
+}
+.kpi .v{
+  font-family:"Montserrat",sans-serif;font-size:23px;font-weight:800;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1;
+}
+.kpi .delta{font-size:12px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums}
+.up{color:var(--ok)} .down{color:var(--crit)} .flat{color:var(--ink-3)}
+
+.funnel{padding:18px 20px 22px;border-top:1px solid var(--rule)}
+.funnel h4{
+  font-family:"Montserrat",sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 14px;
+}
+.step{display:grid;grid-template-columns:132px 1fr 108px;gap:12px;align-items:center;margin-bottom:7px}
+.step .nm{font-size:13px;color:var(--ink-2)}
+.step .bar{height:20px;border-radius:3px;background:var(--accent);min-width:3px}
+.step .vl{font-size:12.5px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-2)}
+.step.block .bar{background:var(--crit)}
+.step.block .nm{color:var(--crit);font-weight:700}
+.step.block .vl{color:var(--crit);font-weight:700}
+.src{font-size:11px;color:var(--ink-3);font-family:"Montserrat",sans-serif;font-weight:600}
+
+/* ---------- fases ---------- */
+.phase{
+  display:grid;grid-template-columns:auto 1fr;gap:18px;
+  padding:20px 0;border-top:1px solid var(--rule);
+}
+.phase:last-child{border-bottom:1px solid var(--rule)}
+.phase .idx{
+  font-family:"Montserrat",sans-serif;font-weight:800;font-size:13px;
+  color:#fff;background:var(--brand);width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px;
+}
+.phase.blocked .idx{background:var(--warn)}
+.phase h3{margin-bottom:4px}
+.phase p{font-size:14.5px;color:var(--ink-2);margin-bottom:8px}
+.deliver{
+  font-size:12.5px;color:var(--ink-3);font-family:"Montserrat",sans-serif;font-weight:600;
+  display:flex;flex-wrap:wrap;gap:6px 16px;
+}
+.deliver b{color:var(--ink-2);font-weight:700}
+
+ul{margin:0 0 14px;padding-left:20px;max-width:70ch}
+li{margin-bottom:7px;color:var(--ink-2)}
+li strong{color:var(--ink)}
+.tight li{margin-bottom:4px}
+
+.callout{
+  background:var(--brand-wash);border:1px solid var(--rule);border-radius:10px;
+  padding:20px 24px;
+}
+.callout h3{color:var(--brand)}
+.callout p:last-child{margin-bottom:0}
+
+hr.rule{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
+.foot{
+  margin-top:56px;padding-top:22px;border-top:1px solid var(--rule);
+  font-size:13px;color:var(--ink-3);
+}
+@media (max-width:640px){
+  .step{grid-template-columns:104px 1fr 84px;gap:8px}
+  .step .nm{font-size:12px}
+  .phase{grid-template-columns:1fr;gap:10px}
+}
+
+/* ---------- abas do painel ---------- */
+.tabs{
+  display:flex;gap:2px;background:var(--surface-2);padding:0 8px;
+  border-bottom:1px solid var(--rule);overflow-x:auto;
+}
+.tab{
+  font-family:"Montserrat",sans-serif;font-size:12px;font-weight:700;
+  padding:11px 14px;color:var(--ink-3);white-space:nowrap;
+  border-bottom:2px solid transparent;
+}
+.tab.active{color:var(--brand);border-bottom-color:var(--brand);background:var(--surface)}
+.tab .badge{
+  display:inline-block;margin-left:6px;font-size:10px;padding:1px 5px;border-radius:99px;
+  background:var(--warn-wash);color:var(--warn);font-weight:700;
+}
+.decided{
+  display:grid;grid-template-columns:auto 1fr;gap:14px 16px;align-items:start;
+  padding:16px 0;border-top:1px solid var(--rule);
+}
+.decided:last-of-type{border-bottom:1px solid var(--rule)}
+.decided .mark{
+  font-size:13px;font-weight:800;color:#fff;background:var(--ok);
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex:none;margin-top:3px;font-family:"Montserrat",sans-serif;
+}
+.decided h3{margin-bottom:3px;font-size:15px}
+.decided p{font-size:14.5px;color:var(--ink-2);margin:0;max-width:none}
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">Plano de construção · Mia</p>
+    <h1>Painel automático para a reunião com os founders</h1>
+    <p>Substituir a montagem manual do relatório semanal por um painel web que se atualiza sozinho, compara os períodos sozinho e escreve o veredito sozinho — para você chegar na reunião analisando, não montando slide.</p>
+    <div class="meta-row">
+      <span>29 de agosto de 2026</span>
+      <span>Base: Relatório Semanal 20/08</span>
+      <span>6 fontes testadas com dados reais</span>
+      <span>Decisões fechadas</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section>
+  <div class="section-mark"><span class="n">01</span><h2>O ponto de partida é melhor do que parece</h2></div>
+  <p class="sub">Antes de propor qualquer coisa, testei as seis fontes de dados com chamadas reais. Duas descobertas mudam o tamanho do projeto.</p>
+
+  <div class="finding ok">
+    <span class="tag ok">Metade do trabalho já está pronta</span>
+    <h3>Você já tem uma automação rodando em produção</h3>
+    <p>Existem três Routines ativas — diária às 06:05, semanal segunda às 07:00 e mensal no dia 1º às 07:30 — publicando no Slack <code>#eusuper-tráfego</code>. A diária rodou hoje com sucesso. Elas já resolvem a parte difícil: coleta no Meta Ads, Google Ads e Clarity via Windsor, evento SignUp no GA4, e a série histórica do Clarity mantida à mão em <code>serie-historica-trafego.md</code> para contornar o limite de 3 dias da API.</p>
+    <p><strong>Ou seja: o projeto não é construir um pipeline do zero.</strong> É construir as duas camadas que faltam — a superfície visual comparativa para a reunião, e os dados de produto do Metabase que transformam "relatório de tráfego" em "como o negócio está indo".</p>
+  </div>
+
+  <div class="finding ok">
+    <span class="tag ok">Os números batem</span>
+    <h3>O Google Ads reproduz o seu PDF com exatidão de centavo</h3>
+    <p>Puxei o período 12/08–20/08 e o resultado bate 100% com o slide: <strong>3.565 impressões, 242 cliques, 5 conversões, R$&nbsp;615,72</strong>. O período de comparação (05/08–11/08) e a baseline dos deltas (29/07–04/08) também batem exatamente. Isso responde a pergunta mais importante de todas: <em>dá para confiar no número na frente dos founders?</em> Dá.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">02</span><h2>Três erros que o relatório manual está levando para a reunião</h2></div>
+  <p class="sub">Não são hipóteses. Saíram da comparação entre o PDF do dia 20/08 e os dados brutos das plataformas. O painel automático corrige os três por construção — esse é o argumento mais forte a favor de fazê-lo.</p>
+
+  <div class="finding">
+    <span class="tag crit">Investimento subnotificado</span>
+    <h3>R$ 205,45 de mídia ficaram fora do relatório</h3>
+    <p>A campanha <strong>PMAX-01 (VÍDEO DUDA)</strong> gastou R$&nbsp;181,03 entre 12/08 e 20/08 e não aparece em nenhum slide. Somando a Demand Gen (R$&nbsp;24,42), o gasto real do Google Ads no período foi <strong>R$&nbsp;821,17</strong>, e não os R$&nbsp;615,72 apresentados. Qualquer conta de custo por resultado feita na reunião partiu de uma base 25% menor que a real.</p>
+  </div>
+
+  <div class="finding">
+    <span class="tag crit">Análise sobre dado quebrado</span>
+    <h3>O post-mortem da Landing Page cai em cima de uma janela sem rastreamento</h3>
+    <p>O evento <code>SignUp</code> no GA4 tem <strong>zero registros entre 15/08 e 23/08</strong> — nove dias. A janela do relatório é 12/08–20/08. A conclusão do slide "Não foi possível identificar qual alteração impactou os resultados" tem uma terceira explicação que ninguém considerou: parte da queda pode ser tracking, não performance.</p>
+  </div>
+
+  <div class="finding">
+    <span class="tag warn">Número não reproduzível</span>
+    <h3>As "5.610 visitas ao perfil a R$ 0,12" não fecham</h3>
+    <p>Nos mesmos 6 anúncios e na mesma janela, o campo <code>instagram_profile_visits</code> soma <strong>306</strong> — cerca de 18× menos. Testei janelas de atribuição diferentes e o número não muda. Todo o resto do slide de Meta bate exato (gasto R$&nbsp;654,83, 114.711 impressões, CTR 3,06%, Connect Rate 57,69%). Só essa coluna precisa ser reconciliada com o Ads Manager antes de virar KPI.</p>
+    <p>No mesmo espírito: o slide de YouTube diz "12/08–20/08" mas na verdade compara <strong>21/08 contra 20/08</strong> — um dia contra um dia.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">03</span><h2>O que cada fonte entrega de verdade</h2></div>
+  <p class="sub">Tudo abaixo foi testado com chamada real hoje, não lido em documentação. É o que define o que o painel pode e não pode prometer.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Fonte</th><th>Situação</th><th>O que entrega</th><th>Onde trava</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Google Ads</strong><br><span class="src">Windsor · 326-604-5511</span></td>
+          <td><span class="chip ok"><span class="dot"></span>Completo</span></td>
+          <td>Dia a dia por campanha, grupo, palavra-chave e termo de pesquisa. Histórico de ~13 meses. Quartis de vídeo.</td>
+          <td>YouTube vem como <code>DEMAND_GEN</code>, não "VIDEO". Buraco no histórico em nov/2025. CTR vem como fração.</td>
+        </tr>
+        <tr>
+          <td><strong>Meta Ads</strong><br><span class="src">Windsor · MIA PRINCIPAL</span></td>
+          <td><span class="chip ok"><span class="dot"></span>Completo</span></td>
+          <td>Tabela de criativos inteira, por anúncio, com miniatura. Separa Visita ao Perfil de Conversão. Connect Rate. Reproduções 25/50/100%.</td>
+          <td>Coluna "Resultados" precisa ser montada à mão por objetivo. Miniaturas expiram em ~5 dias — têm que ser espelhadas.</td>
+        </tr>
+        <tr>
+          <td><strong>Metabase</strong><br><span class="src">Mia Production</span></td>
+          <td><span class="chip ok"><span class="dot"></span>Completo</span></td>
+          <td>Funil de produto real: cadastro, onboarding, ativação de conta, agendamento, pagamento, GMV, ticket, coorte semanal, mix de profissões.</td>
+          <td>Nenhuma coluna de origem — não dá para saber de qual canal veio cada cadastro. Valores em centavos.</td>
+        </tr>
+        <tr>
+          <td><strong>GA4</strong><br><span class="src">Windsor · 511677134</span></td>
+          <td><span class="chip warn"><span class="dot"></span>Parcial</span></td>
+          <td>Sessões, canais, landing page por URL, funil de início de cadastro, cliques no CTA de WhatsApp por canal.</td>
+          <td>Cadastro não é atribuível a canal nenhum. 38% das sessões são um bucket fantasma que infla todo total.</td>
+        </tr>
+        <tr>
+          <td><strong>Clarity</strong><br><span class="src">Windsor · conta 1347</span></td>
+          <td><span class="chip warn"><span class="dot"></span>Só 3 dias</span></td>
+          <td>Scroll, tempo ativo, rage e dead clicks — com quebra por <strong>device e canal</strong>, que o relatório atual não tem.</td>
+          <td>Sem histórico e sem série temporal. Limite de ~10 chamadas por dia. Sem heatmap e sem ranking de botões.</td>
+        </tr>
+        <tr>
+          <td><strong>OpenAI Ads</strong><br><span class="src">não conectado</span></td>
+          <td><span class="chip crit"><span class="dot"></span>Bloqueado</span></td>
+          <td>Hoje só o proxy do GA4 (<code>chatgpt / paid</code>): sessões e tendência diária, que já reproduzem o gráfico do slide.</td>
+          <td>Impressões, gasto, CPC e CPA só existem dentro do Ads Manager. Destravável com uma API key.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">04</span><h2>O buraco que vale mais do que o painel</h2></div>
+
+  <div class="finding">
+    <span class="tag crit">Bloqueio estrutural</span>
+    <h3>Hoje é impossível calcular custo de aquisição por canal</h3>
+    <p>Os 190 eventos <code>SignUp</code> dos últimos 30 dias estão <strong>100% sem origem</strong> no GA4. A causa está comprovada: esses eventos chegam pelo RudderStack server-side, sem <code>session_start</code> e sem os parâmetros de origem — por isso caem todos em <code>(not set)</code>. Do outro lado, a tabela <code>professional</code> no Metabase não tem <code>utm_source</code>, <code>gclid</code> nem <code>fbclid</code>.</p>
+    <p>Não existe hoje nenhum caminho — nem no GA4, nem no banco — para dizer quantos cadastros vieram de Google, de Meta ou de OpenAI. <strong>Enquanto isso não for resolvido, "CAC por canal" e "qual canal merece mais verba" são perguntas que nenhum painel consegue responder com honestidade.</strong> O painel vai trabalhar com custo por cadastro consolidado, que é verdadeiro, e deixar explícito o que não dá para separar.</p>
+    <p>A correção é pequena e vale mais que o painel inteiro: gravar a origem no momento do cadastro, numa coluna da tabela <code>professional</code>. É a única tarefa aqui que depende de engenharia de produto.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">05</span><h2>Como o painel abre na reunião</h2></div>
+  <p class="sub">Uma aba por canal, como você pediu — a mesma divisão que o relatório de hoje já tem, só que preenchida sozinha. A primeira aba fecha a semana inteira; as outras existem para você aprofundar quando perguntarem. Como quem apresenta é você, a densidade sobe: cabe detalhe por campanha e por criativo.</p>
+
+  <div class="mock" role="img" aria-label="Maquete do painel com abas por canal, veredito, indicadores e o funil único">
+    <div class="mock-bar">
+      <span class="t">Painel Semanal</span>
+      <span class="d">22/08 – 28/08 &nbsp;vs&nbsp; 15/08 – 21/08</span>
+    </div>
+    <div class="tabs">
+      <span class="tab active">Visão geral</span>
+      <span class="tab">Google Ads</span>
+      <span class="tab">Meta Ads</span>
+      <span class="tab">OpenAI Ads</span>
+      <span class="tab">Landing Page</span>
+      <span class="tab">Negócio</span>
+      <span class="tab">Experimentos</span>
+    </div>
+    <div class="verdict">
+      <b>Veredito da semana.</b> O investimento caiu 12% e o custo por cadastro melhorou, mas o gargalo mudou de lugar: a passagem de cadastro para conta ativada continua em <b>3,6%</b> e é ela que trava o GMV, não o topo do funil. As campanhas de Visita ao Perfil foram desligadas em 22/08 — a comparação semana a semana do Meta não é maçã com maçã.
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Investimento</div><div class="v">R$ 1.284</div><div class="delta down">↓ 12,4% vs semana anterior</div></div>
+      <div class="kpi"><div class="l">Novos cadastros</div><div class="v">44</div><div class="delta down">↓ 84 &nbsp;·&nbsp; semana parcial</div></div>
+      <div class="kpi"><div class="l">Custo por cadastro</div><div class="v">R$ 29,18</div><div class="delta flat">consolidado</div></div>
+      <div class="kpi"><div class="l">Contas ativadas</div><div class="v">3,6%</div><div class="delta down">gargalo da semana</div></div>
+      <div class="kpi"><div class="l">GMV</div><div class="v">R$ 1.313</div><div class="delta up">↑ 74,8% &nbsp;·&nbsp; 38 pagamentos</div></div>
+    </div>
+    <div class="funnel">
+      <h4>Funil único — da impressão ao primeiro pagamento</h4>
+      <div class="step"><span class="nm">Impressões</span><span class="bar" style="width:100%"></span><span class="vl">128.400</span></div>
+      <div class="step"><span class="nm">Cliques</span><span class="bar" style="width:34%"></span><span class="vl">3.755</span></div>
+      <div class="step"><span class="nm">Sessões na LP</span><span class="bar" style="width:26%"></span><span class="vl">2.622</span></div>
+      <div class="step"><span class="nm">Cadastros</span><span class="bar" style="width:14%"></span><span class="vl">44</span></div>
+      <div class="step"><span class="nm">Onboarding ok</span><span class="bar" style="width:12%"></span><span class="vl">30</span></div>
+      <div class="step block"><span class="nm">Conta ativada</span><span class="bar" style="width:4%"></span><span class="vl">4 &nbsp;·&nbsp; 13%</span></div>
+      <div class="step"><span class="nm">1º pagamento</span><span class="bar" style="width:2%"></span><span class="vl">0</span></div>
+    </div>
+  </div>
+
+  <h3 style="margin:30px 0 12px">O que cada aba carrega</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Aba</th><th>Conteúdo</th><th>Fonte</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Visão geral</strong></td><td>Veredito escrito, cinco indicadores com variação semanal, funil único com o gargalo destacado, consolidado de investimento e resultado.</td><td class="src">todas</td></tr>
+        <tr><td><strong>Google Ads</strong></td><td>Dois períodos lado a lado com deltas, igual ao slide de hoje — mas com Pesquisa, PMax e Demand Gen separados, para o gasto total aparecer. Por campanha, por grupo e termos de pesquisa.</td><td class="src">Windsor · google_ads</td></tr>
+        <tr><td><strong>Meta Ads</strong></td><td>Tabela de criativos com miniatura, separada por objetivo. Gasto, alcance, CPM, CTR de link, cliques, Connect Rate, custo por resultado e reproduções 25/50/100%.</td><td class="src">Windsor · facebook</td></tr>
+        <tr><td><strong>OpenAI Ads</strong></td><td>Impressões, cliques, conversões, gasto, CPC e CPA, com a tendência diária — o mesmo gráfico que hoje é um print da plataforma.</td><td class="src">Windsor · openai_ads</td></tr>
+        <tr><td><strong>Landing Page</strong></td><td>Scroll e tempo ativo <strong>por device e por canal</strong>, rage e dead clicks, mais sessões, início de cadastro e cliques no CTA de WhatsApp por origem.</td><td class="src">Clarity + GA4</td></tr>
+        <tr><td><strong>Negócio</strong></td><td>Cadastros, conclusão de onboarding, ativação de conta, agendamentos, GMV, ticket, split PIX e cartão, coortes semanais e mix de profissões.</td><td class="src">Metabase</td></tr>
+        <tr><td><strong>Experimentos</strong></td><td>Linha do tempo do que mudou, quando, qual métrica deveria mover e o veredito. Avisa quando duas mudanças se sobrepõem na mesma janela.</td><td class="src">registro manual</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:22px">
+    <h3>Um detalhe técnico que muda a expectativa</h3>
+    <p>Você mencionou consultar cada canal pelo Windsor na hora da análise. Uma página publicada até consegue chamar conector ao vivo, mas o catálogo de capacidades desta conta hoje responde que nenhum conector está disponível para isso — então não vou prometer consulta ao vivo.</p>
+    <p>O desenho que funciona: a Routine agendada puxa tudo e grava no painel antes da reunião, e o mesmo dado fica versionado no repositório. Você abre e está pronto, sem esperar carregamento na frente dos founders. Se precisar de um número fora da janela no meio da reunião, eu puxo pelo Windsor aqui no chat na hora. Assim que a capacidade de conector ao vivo estiver liberada para a conta, dá para acrescentar um botão de atualizar sem refazer nada.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">06</span><h2>Como funciona por baixo</h2></div>
+  <p class="sub">Aproveitando o mecanismo que já está funcionando, com uma peça nova: o histórico versionado.</p>
+
+  <div class="grid3">
+    <div class="card">
+      <h3>Coleta</h3>
+      <p style="font-size:14.5px;color:var(--ink-2)">Routines agendadas chamam Windsor, Meta Ads e Metabase com os mesmos acessos que já usam hoje. Sem servidor e sem chave de API nova para gerenciar.</p>
+    </div>
+    <div class="card">
+      <h3>Histórico</h3>
+      <p style="font-size:14.5px;color:var(--ink-2)">Um snapshot diário gravado no repositório <code>dashboard</code>. É o que dá memória ao Clarity, que só devolve 3 dias, e o que permite comparar qualquer período depois.</p>
+    </div>
+    <div class="card">
+      <h3>Painel</h3>
+      <p style="font-size:14.5px;color:var(--ink-2)">Uma página publicada em URL fixa, que você abre na reunião. Republicada toda segunda com a semana fechada, e o link vai para o Slack junto.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:20px">O snapshot diário é a peça que não dá para pular. O Clarity apaga o passado — sem gravar todo dia, os dados de comportamento da LP nunca formam série, e a comparação semana a semana simplesmente não existe. Como a API do Clarity aceita cerca de dez chamadas por dia, o snapshot é orçado em três: total, por device e por canal.</p>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">07</span><h2>Ordem de construção</h2></div>
+  <p class="sub">Cada fase entrega algo utilizável sozinha. A primeira começa a acumular dado que hoje está sendo perdido todo dia.</p>
+
+  <div class="phase">
+    <span class="idx">1</span>
+    <div>
+      <h3>Ligar o snapshot diário</h3>
+      <p>Uma Routine que grava Clarity, Meta, Google e GA4 do dia no repositório. Não depende de nada e para a sangria: cada dia sem isso é um dia de comportamento da LP perdido para sempre, porque o Clarity só guarda três.</p>
+      <div class="deliver"><span><b>Entrega:</b> série histórica começando a encher</span><span><b>Depende de:</b> nada</span></div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <span class="idx">2</span>
+    <div>
+      <h3>Conectar o OpenAI Ads</h3>
+      <p>Com a API key do Ads Manager, ligo o connector no Windsor e a primeira seção do relatório passa a ser automática — impressões, gasto, CPC e CPA reais, em vez de print. Você faz a conexão pelo link do Windsor; a chave não precisa passar por aqui.</p>
+      <div class="deliver"><span><b>Entrega:</b> aba OpenAI Ads com dado real</span><span><b>Depende de:</b> a key que você disse conseguir</span></div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <span class="idx">3</span>
+    <div>
+      <h3>Painel v1 com as abas de canal</h3>
+      <p>Visão geral, Google Ads, Meta Ads, OpenAI Ads e Landing Page. Já substitui a montagem manual dos slides, e já corrige os três erros da seção 02 — a PMax entra no gasto, os períodos comparados passam a ser os mesmos de verdade, e o que não reconcilia aparece marcado em vez de virar número.</p>
+      <div class="deliver"><span><b>Entrega:</b> painel em URL fixa, publicado toda segunda</span><span><b>Depende de:</b> fase 1</span></div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <span class="idx">4</span>
+    <div>
+      <h3>Aba de negócio</h3>
+      <p>O funil do Metabase — cadastro, onboarding, ativação, agendamento, pagamento, GMV — e o funil único da Visão geral. É o que tira o relatório do território "métrica de tráfego" e leva para "como o negócio está indo".</p>
+      <div class="deliver"><span><b>Entrega:</b> funil ponta a ponta e gargalo automático</span><span><b>Depende de:</b> fase 3</span></div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <span class="idx">5</span>
+    <div>
+      <h3>Fechamento mensal, experimentos e a virada de marca</h3>
+      <p>Coortes semanais, ranking de campanhas, GMV acumulado e o registro de experimentos com veredito. Como a troca de Mia para euSUPER acontece no mês que vem, o nome da marca fica como configuração desde a fase 3 — na virada é um valor que muda, não uma reconstrução.</p>
+      <div class="deliver"><span><b>Entrega:</b> painel mensal completo</span><span><b>Depende de:</b> fases 1 a 4</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section>
+  <div class="section-mark"><span class="n">08</span><h2>Decisões fechadas</h2></div>
+  <p class="sub">O que ficou definido, e o único ponto que continua em aberto.</p>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Mia vira euSUPER no mês que vem</h3>
+      <p>É o mesmo projeto — as Routines já usam o nome novo, o produto ainda usa o antigo. O painel trata a marca como configuração desde o começo, então a virada não custa retrabalho, e o histórico não quebra no meio.</p>
+    </div>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Uma aba por canal, cada uma com o dado da própria plataforma</h3>
+      <p>Cada aba mostra o que a plataforma reporta — exatamente como o relatório de hoje faz. Isso contorna o problema de atribuição sem fingir que ele não existe: o custo por cadastro na Visão geral aparece consolidado e rotulado como tal, em vez de dividir crédito entre canais com um número que não se sustenta.</p>
+    </div>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>OpenAI Ads entra automático</h3>
+      <p>Você consegue a API key, então a seção deixa de ser print. A conexão é feita direto no Windsor por você — a chave não precisa passar pelo chat nem ficar no repositório.</p>
+    </div>
+  </div>
+
+  <div class="decided">
+    <span class="mark">✓</span>
+    <div>
+      <h3>Painel denso, feito para quem apresenta</h3>
+      <p>Como é você narrando, a tela pode carregar detalhe por campanha e por criativo sem medo. O veredito abre, mas o material de apoio fica à mão na aba do canal para quando a pergunta vier.</p>
+    </div>
+  </div>
+
+  <div class="finding warn" style="margin-top:26px">
+    <span class="tag warn">Continua em aberto</span>
+    <h3>Gravar a origem no cadastro</h3>
+    <p>As abas por canal resolvem a apresentação, mas não a pergunta "qual canal traz cadastro mais barato" — para isso a origem precisa ser gravada na tabela <code>professional</code> no momento do cadastro. É uma tarefa de engenharia de produto, pequena, e não bloqueia nada do que está acima. Vale abrir com o time quando fizer sentido.</p>
+  </div>
+</section>
+
+<div class="foot">
+  Todas as afirmações deste plano vieram de chamadas reais às APIs em 29/08/2026 — Windsor.ai (Google Ads, Meta Ads, GA4, Microsoft Clarity), Meta Ads API e Metabase. Os números do funil e do GMV são dados de produção da Mia. Nada aqui foi estimado.
+</div>
+
+</div>
