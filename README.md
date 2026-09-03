@@ -22,10 +22,11 @@ trocam quando a migração de marca chegar ao produto.
 
 ## Como usar
 
-1. Escolha o **Período** e o **Comparar com** na barra de cima — ou use os
-   atalhos **Semana fechada** e **Mês fechado**, que preenchem as quatro datas.
-   Mexer no período principal reencaixa a comparação na janela anterior de
-   mesmo tamanho.
+1. A barra de cima diz o que está na tela: "**Agosto de 2026** comparado com
+   **Julho de 2026**". Clique no período para abrir a edição das quatro datas
+   (Aplicar datas fecha; Cancelar ou Esc desfaz), ou use os atalhos **Semana
+   passada** e **Mês passado**. Mexer no período principal reencaixa a
+   comparação na janela anterior de mesmo tamanho.
 2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
 
 A análise mensal é o mesmo fluxo: "Mês fechado" põe o último mês-calendário
@@ -35,9 +36,10 @@ acusar janelas de tamanhos diferentes. O histórico das fontes alcança o fim de
 2025, então dá para comparar qualquer par de meses desde então (com um buraco
 conhecido em novembro/2025 no Google Ads).
 
-A barra de estado, embaixo das datas, diz sempre se o que está na tela é o
+A linha de estado, embaixo da frase, diz sempre se o que está na tela é o
 retrato gravado no arquivo, o resultado da consulta que você acabou de fazer, ou
-uma consulta anterior salva no navegador.
+uma consulta anterior salva no navegador — e avisa em laranja quando as datas
+escolhidas ainda não foram puxadas.
 
 O painel **lembra as quatro datas e o último "Puxar dados"** no próprio navegador
 (localStorage): fechar a página, atualizar, ou receber uma versão nova do painel
