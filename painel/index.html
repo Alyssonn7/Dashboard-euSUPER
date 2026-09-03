@@ -102,10 +102,6 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .item .pt{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#fff;opacity:0}
 .item[aria-selected="true"] .pt{opacity:1}
 .item:focus-visible{outline:2px solid #fff;outline-offset:1px}
-.imp{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;
-  border:none;background:#fff;cursor:pointer;font-family:var(--fonte);
-  font-size:12.5px;font-weight:700;color:var(--mata)}
-.imp svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round}
 
 .tela{background:var(--tela);display:grid;grid-template-columns:minmax(0,1fr);
   grid-template-rows:auto minmax(0,1fr);min-width:0;overflow:hidden}
@@ -131,14 +127,16 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .cd input[type=date]:focus-visible{outline:none}
 .cd-seta{color:var(--texto-3);font-size:12px}
 /* a barra como frase: período em destaque, comparação discreta, edição sob demanda */
-.per{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0;margin-right:auto}
-.per button{font-family:var(--fonte);border:none;background:none;padding:0 0 3px;cursor:pointer;
-  color:inherit;border-bottom:2px dotted transparent;line-height:1.1;text-align:left;
-  transition:border-color .15s}
-.per button:hover,.per button[aria-expanded="true"]{border-bottom-color:var(--texto-3)}
+.per{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0;flex:1 1 280px;
+  margin-right:auto;align-self:center}
+/* o pontilhado discreto em repouso diz "isto se edita"; escurece no hover e aberto */
+.per button{font-family:var(--fonte);border:none;background:none;padding:0 0 2px;cursor:pointer;
+  color:inherit;border-bottom:2px dotted color-mix(in srgb,var(--texto-3) 55%,transparent);
+  line-height:1.15;text-align:left;transition:border-color .15s}
+.per button:hover,.per button[aria-expanded="true"]{border-bottom-color:var(--texto-2)}
 .per button:focus-visible{outline:2px solid var(--mata);outline-offset:3px;border-radius:4px}
 .per .p1{font-size:clamp(19px,1.7vw,24px);font-weight:800;letter-spacing:-.03em;color:var(--titulo)}
-.per .lig{font-size:13px;color:var(--texto-3);font-weight:500}
+.per .lig{font-size:13px;color:var(--texto-2);font-weight:500}
 .per .p2{font-size:clamp(15px,1.3vw,18px);font-weight:700;letter-spacing:-.02em;color:var(--texto-2)}
 .atalhos{display:flex;gap:4px}
 .atalhos button{font-family:var(--fonte);font-size:12.5px;font-weight:600;color:var(--texto-2);background:none;
@@ -151,17 +149,17 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .estado-l i{width:7px;height:7px;border-radius:50%;background:var(--texto-3);flex:none;margin-top:6px}
 .estado-l.vivo i{background:var(--bom)} .estado-l.novo i{background:var(--cta)} .estado-l.mal i{background:var(--ruim)}
 .estado-l b{font-weight:600;color:var(--texto)}
-.estado-l small{font-size:inherit;color:var(--texto-3)}
+.estado-l small{font-size:inherit;color:var(--texto-2);opacity:.85}
 /* modo de edição: aparece ao clicar no período, some ao aplicar */
 .edicao{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:12px;border-top:1px dashed var(--borda)}
 .edicao[hidden]{display:none}
 .ed-acoes{display:flex;gap:6px}
-.edicao .ok{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--mata);background:none;
+.edicao .ok{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--titulo);background:none;
   border:1px solid var(--borda);border-radius:9px;padding:9px 13px;cursor:pointer}
 .edicao .ok:hover{background:var(--tela)}
-.edicao .cancelar{font-family:var(--fonte);font-size:12.5px;font-weight:600;color:var(--texto-3);background:none;
+.edicao .cancelar{font-family:var(--fonte);font-size:12.5px;font-weight:600;color:var(--texto-2);background:none;
   border:1px solid transparent;border-radius:9px;padding:9px 11px;cursor:pointer}
-.edicao .cancelar:hover{color:var(--texto-2)}
+.edicao .cancelar:hover{color:var(--texto);border-color:var(--borda)}
 .edicao .ok:focus-visible,.edicao .cancelar:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
 .puxar{font-family:var(--fonte);font-size:13px;font-weight:700;
   padding:11px 20px;border-radius:10px;border:none;background:var(--cta);color:#fff;
@@ -386,7 +384,6 @@ tfoot td.r{text-align:right}
   .logo{padding:0} .logo span:not(.b){display:none}
   .item{justify-content:center;padding:12px 0;gap:0} .item .lbl{display:none} .item .pt{display:none}
   .item[aria-selected="true"]{background:#fff;color:var(--mata)}
-  .imp{padding:11px 0} .imp span{display:none}
 }
 @media (max-width:1080px){.faixa.dois{grid-template-columns:minmax(0,1fr)} .canais{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){
@@ -395,10 +392,10 @@ tfoot td.r{text-align:right}
   .lado{flex-direction:row;gap:9px;padding:10px 11px;overflow-x:auto;overflow-y:hidden}
   .menu{flex-direction:row;flex:none;gap:4px}
   .item{padding:10px 12px;white-space:nowrap;justify-content:flex-start}
-  .item .lbl{display:inline} .imp{display:none}
+  .item .lbl{display:inline}
   .consulta{padding:12px 14px 10px;gap:10px}
   .cd{flex:1 1 100%} .cd input[type=date]{width:auto;flex:1;min-width:0}
-  .per{flex:1 1 100%} .per .p1{font-size:20px} .per .p2{font-size:16px}
+  .per{flex:1 1 100%} .per .p1{font-size:19px} .per .p2{font-size:15px}
   .atalhos{flex:1 1 auto} .atalhos button{flex:1;padding:10px 0}
   .ed-acoes{flex:1 1 100%} .ed-acoes button{flex:1}
   .puxar{flex:1 1 100%;justify-content:center}
@@ -414,12 +411,13 @@ tfoot td.r{text-align:right}
   .linha.larga{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .linha.larga .lt{grid-column:1/-1;order:3}
   .linha .lv{min-width:0}
 }
+@media (max-width:360px){.cd-v{flex-wrap:wrap}}
 @media print{
   html,body{height:auto;overflow:visible} body{background:#fff;padding:0}
   #main{overflow:visible!important;padding:0}
   .app{box-shadow:none;border-radius:0;display:block;height:auto}
   .lado,.puxar,.ic,.ferram,.atalhos,.edicao{display:none!important}
-  .cd{border:none;padding:0;background:#fff}
+  .estado-l small{display:none}
   .tela{display:block;overflow:visible;background:#fff}
   .consulta{border:none;padding:0 0 14px}
   .cx{break-inside:avoid;box-shadow:none}
@@ -642,7 +640,7 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="cd">
           <span class="cd-l" id="lde">Período</span>
           <div class="cd-v">
-            <input type="date" id="de" aria-labelledby="lde" aria-label="Início do período">
+            <input type="date" id="de" aria-label="Início do período">
             <span class="cd-seta" aria-hidden="true">→</span>
             <input type="date" id="ate" aria-label="Fim do período">
           </div>
@@ -650,7 +648,7 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="cd">
           <span class="cd-l" id="lcde">Comparar com</span>
           <div class="cd-v">
-            <input type="date" id="cde" aria-labelledby="lcde" aria-label="Início da comparação">
+            <input type="date" id="cde" aria-label="Início da comparação">
             <span class="cd-seta" aria-hidden="true">→</span>
             <input type="date" id="cate" aria-label="Fim da comparação">
           </div>
@@ -958,6 +956,7 @@ async function puxar(){
   novo.negocio={atual:(R.ng&&R.ng.atual)||null, anterior:(R.ng&&R.ng.anterior)||null,
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
+  novo.falhouTudo = tarefas.every(([k])=>FALHAS[k]);
   D=novo; guardarVivo(novo); lembrarDatas();
   btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
   desenhar();
@@ -1413,10 +1412,12 @@ const elEstado=document.getElementById("estado"), elEd=document.getElementById("
 const btPer=document.getElementById("btPer"), btComp=document.getElementById("btComp");
 const MES_LONGO=iso=>new Date(iso+"T12:00:00").toLocaleDateString("pt-BR",{month:"long"});
 const cap=t=>t?t.charAt(0).toUpperCase()+t.slice(1):t;
-/* o período escrito como se fala: "Agosto de 2026", "24 a 30 de agosto",
-   "28 de julho a 3 de agosto" — o ano só aparece quando não é o corrente */
+/* o período escrito como se fala: mês fechado vira "Agosto de 2026"; intervalo
+   vira "24 a 30 de agosto" ou "28 de julho a 3 de agosto", com o ano só quando
+   não é o corrente */
+const DATA_OK=/^\d{4}-\d{2}-\d{2}$/;
 function rotuloLongo(de,ate){
-  if(!de||!ate||de>ate) return "Escolha as datas";
+  if(!DATA_OK.test(de||"")||!DATA_OK.test(ate||"")||de>ate) return "Escolha as datas";
   if(ehMesCalendario(de,ate)) return `${cap(MES_LONGO(de))} de ${de.slice(0,4)}`;
   const [ya,ma,da]=de.split("-"), [yb,mb,db]=ate.split("-");
   const agora=String(new Date().getFullYear());
@@ -1432,24 +1433,30 @@ function pintarEstado(){
   btPer.textContent=rotuloLongo(de,ate); btComp.textContent=rotuloLongo(cde,cate);
   const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
   let cls="", html="";
-  const ok=de&&ate&&cde&&cate&&de<=ate&&cde<=cate;
+  const ok=[de,ate,cde,cate].every(v=>DATA_OK.test(v))&&de<=ate&&cde<=cate;
   if(!ok){
     cls="mal"; html="<b>Datas incompletas.</b> O início de cada período precisa vir antes do fim.";
   } else {
     const naTela = D.periodo.atual.de===de && D.periodo.atual.ate===ate &&
                    D.periodo.anterior.de===cde && D.periodo.anterior.ate===cate;
-    if(!naTela){
-      cls="novo"; html="<b>Datas novas.</b> Clique em Puxar dados para atualizar o painel.";
+    const d1=dias(de,ate), d2=dias(cde,cate);
+    const doisMeses=ehMesCalendario(de,ate)&&ehMesCalendario(cde,cate);
+    const desiguais=!doisMeses&&d1!==d2;
+    const tam = doisMeses ? "Dois meses fechados."
+              : d1===d2 ? `${d1} dias em cada período.`
+              : `Atenção: períodos de tamanhos diferentes, ${d1} e ${d2} dias.`;
+    if(!elEd.hidden){
+      html=`Ajuste as datas e clique em Aplicar datas. ${esc(tam)}`; cls=desiguais?"mal":"";
+    } else if(!naTela){
+      cls=desiguais?"mal":"novo";
+      html=`<b>Datas novas.</b> Clique em Puxar dados para atualizar o painel. ${esc(tam)}`;
+    } else if(D.aoVivo&&D.falhouTudo){
+      cls="mal"; html="<b>A consulta não trouxe dados de nenhuma fonte.</b> Veja o aviso em cada aba e tente de novo.";
     } else {
-      const d1=dias(de,ate), d2=dias(cde,cate);
-      const doisMeses=ehMesCalendario(de,ate)&&ehMesCalendario(cde,cate);
-      const tam = doisMeses ? "Dois meses fechados."
-                : d1===d2 ? `${d1} dias em cada período.`
-                : `Períodos de tamanhos diferentes: ${d1} e ${d2} dias.`;
       const fonte = D.aoVivo
         ? (D.restaurado ? `${cap(D.puxadoEm)} e salvo neste navegador.` : `Dados ao vivo (${D.puxadoEm}).`)
         : `Retrato gravado em ${D.puxadoEm.replace(" (gravado)","")}.`;
-      cls = (!doisMeses&&d1!==d2) ? "mal" : (D.aoVivo&&!D.restaurado ? "vivo" : "");
+      cls = desiguais ? "mal" : (D.aoVivo&&!D.restaurado ? "vivo" : "");
       html=`${esc(fonte)} ${esc(tam)}`;
     }
   }
@@ -1462,17 +1469,22 @@ function pintarEstado(){
 
 /* modo de edição das datas: abre pelo período, fecha em Aplicar, Cancelar ou Esc */
 let antesEd=null;
-function abrirEdicao(){
+function abrirEdicao(foco){
   antesEd=[inDe.value,inAte.value,inCDe.value,inCAte.value];
   elEd.hidden=false; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","true"));
-  inDe.focus();
+  pintarEstado(); (foco||inDe).focus();
 }
+/* Aplicar grava as datas na memória; Cancelar/Esc devolvem as de antes de abrir */
 function fecharEdicao(cancelar){
-  if(cancelar&&antesEd){ [inDe.value,inAte.value,inCDe.value,inCAte.value]=antesEd; lembrarDatas(); }
+  if(cancelar&&antesEd){ [inDe.value,inAte.value,inCDe.value,inCAte.value]=antesEd; }
   antesEd=null; elEd.hidden=true; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","false"));
-  pintarEstado();
+  lembrarDatas(); pintarEstado();
 }
-[btPer,btComp].forEach(b=>b.addEventListener("click",()=>elEd.hidden?abrirEdicao():fecharEdicao(false)));
+btPer.addEventListener("click",()=>elEd.hidden?abrirEdicao(inDe):fecharEdicao(false));
+btComp.addEventListener("click",()=>elEd.hidden?abrirEdicao(inCDe):fecharEdicao(false));
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&!elEd.hidden&&!elEd.contains(e.target)){fecharEdicao(true);btPer.focus();}
+});
 document.getElementById("btAplicar").addEventListener("click",()=>{fecharEdicao(false);btPer.focus();});
 document.getElementById("btCancelar").addEventListener("click",()=>{fecharEdicao(true);btPer.focus();});
 elEd.addEventListener("keydown",e=>{
@@ -1506,8 +1518,6 @@ function ehMesCalendario(de,ate){
   const ultimo=new Date(b.getFullYear(),b.getMonth()+1,0).getDate();
   return b.getDate()===ultimo;
 }
-const nomeMes=iso=>{const d=new Date(iso+"T12:00:00");
-  return d.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})};
 
 function preencher(de,ate,cde,cate){
   inDe.value=isoLocal(de); inAte.value=isoLocal(ate);
@@ -1567,8 +1577,8 @@ function restaurar(){
 inDe.value=RETRATO.periodo.atual.de;   inAte.value=RETRATO.periodo.atual.ate;
 inCDe.value=RETRATO.periodo.anterior.de; inCAte.value=RETRATO.periodo.anterior.ate;
 restaurar();
-[inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();lembrarDatas();pintarEstado()}));
-[inCDe,inCAte].forEach(e=>e.addEventListener("change",()=>{lembrarDatas();pintarEstado()}));
+[inDe,inAte].forEach(e=>e.addEventListener("change",()=>{encaixar();pintarEstado()}));
+[inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
 btPuxar.addEventListener("click",puxar);
 document.getElementById("btSemana").addEventListener("click",atalhoSemana);
 document.getElementById("btMes").addEventListener("click",atalhoMes);

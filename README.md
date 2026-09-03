@@ -29,7 +29,7 @@ trocam quando a migração de marca chegar ao produto.
    comparação na janela anterior de mesmo tamanho.
 2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
 
-A análise mensal é o mesmo fluxo: "Mês fechado" põe o último mês-calendário
+A análise mensal é o mesmo fluxo: "Mês passado" põe o último mês-calendário
 completo contra o anterior. Comparar meses de durações diferentes (setembro tem
 30 dias, agosto 31) é esperado — a linha de estado nomeia os meses em vez de
 acusar janelas de tamanhos diferentes. O histórico das fontes alcança o fim de
