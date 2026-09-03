@@ -330,7 +330,7 @@ tbody td.r{text-align:right}
 tbody td.nm{font-family:var(--fonte);font-weight:700;color:var(--texto)}
 /* miniatura do criativo na tabela de anúncios */
 td.cr{width:100px;padding-right:12px}
-td.cr a{display:inline-block;line-height:0;border-radius:14px}
+td.cr a{display:inline-block;line-height:0;border-radius:14px;text-decoration:none}
 td.cr a:focus-visible{outline:2px solid var(--mata);outline-offset:2px}
 .cr-img{width:88px;height:88px;border-radius:14px;object-fit:cover;display:block;
   border:1px solid var(--borda)}
@@ -338,6 +338,24 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .cr-ph{width:88px;height:88px;border-radius:14px;background:var(--trilho);display:grid;
   place-items:center;font-family:var(--fonte);font-size:10px;font-weight:700;
   color:var(--texto-3);border:1px dashed var(--borda)}
+/* quadradinho do post do Instagram — a miniatura real do post entra embutida
+   depois da primeira consulta, como as do Meta */
+.ig-ph{font-size:9px;letter-spacing:.03em;line-height:1.25;text-align:center;padding:0 4px}
+/* passo a passo da conexao do Instagram */
+.pig{list-style:none;margin:2px 0 0;padding:0;counter-reset:pig}
+.pig li{position:relative;padding:0 0 0 35px;margin-bottom:15px;counter-increment:pig;
+  font-size:13px;color:var(--texto-2);line-height:1.55}
+.pig li:last-child{margin-bottom:0}
+.pig li::before{content:counter(pig);position:absolute;left:0;top:-1px;width:24px;height:24px;
+  border-radius:50%;background:var(--trilho);color:var(--mata);display:grid;place-items:center;
+  font-family:var(--fonte);font-size:12px;font-weight:700}
+.pig b{display:block;font-family:var(--fonte);color:var(--texto);font-size:13px;
+  font-weight:700;margin-bottom:2px}
+.pig b.i{display:inline;font-size:inherit;color:inherit;margin:0}
+.pig a.lk{display:inline-block;margin-top:7px;font-weight:700;color:var(--cta);
+  text-decoration:none;border-bottom:1.5px solid var(--cta)}
+.pig a.lk:hover{opacity:.8}
+.pig a.lk:focus-visible{outline:2px solid var(--mata);outline-offset:3px;border-radius:3px}
 tbody td.nm span{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:2px}
 tbody tr:last-child td{border-bottom:none}
 tfoot td{padding:12px;border-top:1px solid var(--borda);font-weight:600;color:var(--texto);
@@ -435,6 +453,11 @@ tfoot td.r{text-align:right}
 const RETRATO = {
   puxadoEm:"31/08/2026 (gravado)", aoVivo:false,
   periodo:{atual:{de:"2026-08-24",ate:"2026-08-30"},anterior:{de:"2026-08-17",ate:"2026-08-23"}},
+
+  /* Instagram organico: ainda nao ha numero nenhum — o conector do Windsor so
+     passa a responder depois que a conta for ligada. Ate la a aba mostra o
+     passo a passo da conexao e a previa dos blocos, tudo com travessao. */
+  instagram:{atual:null, anterior:null, posts:[], perfil:null, erro:null},
 
   google:{
     atual:   {impressoes:12718, cliques:218, custo:551.16,  conversoes:20},
@@ -854,6 +877,61 @@ async function qMeta(de,ate){
             .sort((a,b)=>b.custo-a.custo)};
 }
 
+/* Instagram organico — conector "instagram" do Windsor (Instagram Insights).
+   Sem pino de conta: so existe um perfil e o id muda a cada reconexao.
+   Uma chamada por janela COM a data como dimensao: o Windsor devolve uma linha
+   por dia e junta as duas tabelas de insight diario pela data. Somar dia a dia
+   e exato para contagem (visualizacoes, curtidas, novos seguidores) e e SOMA
+   para alcance e contas engajadas — o Instagram so entrega esses dois por dia
+   e nao existe alcance deduplicado de periodo na API. Os blocos dizem isso. */
+async function qInsta(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
+    fields:["date","reach","views","follower_count","accounts_engaged",
+            "total_interactions","likes","comments","saves","shares",
+            "profile_links_taps"],
+    date_from:de,date_to:ate},"Instagram"));
+  if(!r.length) return null;   /* sem linha nenhuma nao invento zero */
+  return {dias:r.length,
+    alcance:soma(r,x=>x.reach), visualizacoes:soma(r,x=>x.views),
+    novosSeguidores:soma(r,x=>x.follower_count),
+    contasEngajadas:soma(r,x=>x.accounts_engaged),
+    interacoes:soma(r,x=>x.total_interactions),
+    curtidas:soma(r,x=>x.likes), comentarios:soma(r,x=>x.comments),
+    salvamentos:soma(r,x=>x.saves), compartilhamentos:soma(r,x=>x.shares),
+    toquesLinks:soma(r,x=>x.profile_links_taps)};
+}
+/* posts publicados na janela: media_info junta com media_insights pelo id */
+async function qInstaPosts(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
+    fields:["media_id","timestamp","media_type","media_product_type","media_caption",
+            "media_permalink","media_reach","media_views","media_engagement",
+            "media_like_count","media_comments_count","media_saved","media_shares",
+            "media_follows"],
+    date_from:de,date_to:ate},"Instagram · posts"));
+  return r.map(x=>({id:x.media_id,quando:x.timestamp||"",tipo:x.media_type||"",
+    superficie:x.media_product_type||"",legenda:x.media_caption||"",
+    post:x.media_permalink||"",
+    alcance:+x.media_reach||0, visualizacoes:+x.media_views||0,
+    interacoes:+x.media_engagement||0, curtidas:+x.media_like_count||0,
+    comentarios:+x.media_comments_count||0, salvamentos:+x.media_saved||0,
+    compartilhamentos:+x.media_shares||0, seguidores:+x.media_follows||0}))
+   .sort((a,b)=>b.alcance-a.alcance);
+}
+/* seguidores: o Instagram NAO devolve historico, so a contagem do momento —
+   por isso este numero nao acompanha o periodo e o bloco avisa */
+async function qInstaPerfil(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
+    fields:["date","username","followers_count","follows_count","media_count"],
+    date_from:de,date_to:ate},"Instagram · perfil"));
+  const com=r.filter(x=>x.followers_count!=null)
+             .sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
+  const l=com[com.length-1]||r[0]; if(!l) return null;
+  return {usuario:l.username||"",
+          seguidores:l.followers_count!=null?+l.followers_count:null,
+          seguindo:l.follows_count!=null?+l.follows_count:null,
+          totalPosts:l.media_count!=null?+l.media_count:null};
+}
+
 async function qOpenai(de,ate){
   /* sem filtro de conta: o id muda a cada reconexão e só existe uma conta */
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"openai_ads",
@@ -931,6 +1009,8 @@ async function puxar(){
     ["mA",()=>qMeta(de,ate)],     ["mB",()=>qMeta(cde,cate)],
     ["oA",()=>qOpenai(de,ate)],   ["oB",()=>qOpenai(cde,cate)],
     ["sA",()=>qSessoes(de,ate)],  ["sB",()=>qSessoes(cde,cate)],
+    ["iA",()=>qInsta(de,ate)],    ["iB",()=>qInsta(cde,cate)],
+    ["iP",()=>qInstaPosts(de,ate)], ["iU",()=>qInstaPerfil(de,ate)],
     ["ng",()=>qNegocio(de,ate,cde,cate)]   /* qClarity() saiu: a Landing Page é só o export mensal */
   ];
   const R={};
@@ -953,6 +1033,8 @@ async function puxar(){
     }};
   novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
   novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:null, erroSessoes:msg("sA")};
+  novo.instagram={atual:R.iA||null, anterior:R.iB||null, posts:R.iP||[],
+    perfil:R.iU||null, erro:msg("iA")||msg("iP")||msg("iU")};
   novo.negocio={atual:(R.ng&&R.ng.atual)||null, anterior:(R.ng&&R.ng.anterior)||null,
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
@@ -1209,6 +1291,118 @@ function vMeta(){
             "Os três anúncios que mais levaram gente ao perfil pelo menor custo por visita. Clique na miniatura para abrir o post.")}`;
 }
 
+/* --------------------------------------------------------------- Instagram */
+/* Orgânico, do conector "instagram" do Windsor (Instagram Insights da conta
+   comercial). Enquanto a conta não estiver ligada a aba mostra o passo a passo
+   da conexão e a prévia dos blocos com travessão — a mesma tela vira painel
+   sozinha no primeiro "Puxar dados" depois da ligação. */
+const INSTA_CONECTAR="https://onboard.windsor.ai/connect?connector=instagram&client=CLAUDE&next=/instagram/authorize";
+
+function derivarIG(x){
+  if(!x) return null;
+  return {...x,
+    frequencia:  div(x.visualizacoes, x.alcance),
+    engajamento: div(x.interacoes, x.alcance)!=null ? div(x.interacoes,x.alcance)*100 : null
+  };
+}
+const tipoIG=p=>{
+  const t=(p.tipo||"").toUpperCase(), sf=(p.superficie||"").toUpperCase();
+  if(sf==="REELS"||t==="REEL") return "Reel";
+  if(t==="CAROUSEL_ALBUM") return "Carrossel";
+  if(sf==="STORY") return "Story";
+  if(t==="VIDEO") return "Vídeo";
+  return "Foto";
+};
+const quandoIG=p=>{
+  const d=p.quando?new Date(p.quando):null;
+  return (!d||isNaN(d))?"":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+};
+/* a imagem do post vem de domínio externo e o artifact bloqueia — por enquanto
+   um quadradinho com o tipo, que abre o post no Instagram. Depois da conexão
+   as miniaturas entram embutidas, do mesmo jeito que as do Meta. */
+function celPostIG(p){
+  const miolo=`<span class="cr-ph ig-ph" aria-hidden="true">${esc(tipoIG(p).toUpperCase())}</span>`;
+  return `<td class="cr">${p.post?`<a href="${esc(p.post)}" target="_blank" rel="noopener"
+    title="Abrir o post no Instagram">${miolo}</a>`:miolo}</td>`;
+}
+function cardConexaoIG(motivo){
+  const outroErro = motivo && !/instagram account|add your accounts|not connected|não está adicionado/i.test(motivo);
+  return cx(cxt("Instagram · aguardando conexão",
+    "A aba já está montada. Assim que o perfil entrar no Windsor, o botão <b>Puxar dados</b> preenche tudo isto na mesma consulta dos outros canais — nada mais precisa mudar aqui.",
+    "3 passos")
+  + `<ol class="pig">
+      <li><b>Abrir a conexão no Windsor</b>Entre com a mesma conta Windsor que já serve o painel — a do Google Ads, do Meta e do OpenAI.
+        <a class="lk" href="${INSTA_CONECTAR}" target="_blank" rel="noopener">Conectar o Instagram no Windsor →</a></li>
+      <li><b>Autorizar o perfil da euSUPER!</b>O Instagram só entrega métricas de conta <b class="i">Comercial</b> ou de <b class="i">Criador</b> vinculada a uma página do Facebook. Se o perfil ainda for pessoal, a troca é em Configurações → Tipo de conta, e só depois disso a autorização funciona.</li>
+      <li><b>Voltar aqui e clicar em Puxar dados</b>São quatro consultas novas: o perfil dia a dia nas duas janelas, os posts do período e a contagem de seguidores.</li>
+    </ol>`
+  + (outroErro?`<p class="falhou"><b>O Windsor respondeu</b>${esc(motivo)}</p>`:""));
+}
+
+function vInstagram(){
+  const IG=D.instagram||{};
+  const a=derivarIG(IG.atual), b=derivarIG(IG.anterior);
+  const pf=IG.perfil||null, posts=IG.posts||[];
+  const faltando=!a;   /* sem número no período atual = ainda não conectado */
+
+  const sub = faltando
+    ? "Prévia — os números entram na primeira consulta depois da conexão"
+    : (pf&&pf.usuario?`Perfil @${esc(pf.usuario)}`:"Perfil conectado no Windsor")
+      + (posts.length?` · ${posts.length} ${posts.length===1?"post publicado":"posts publicados"} no período`:"");
+
+  const g1=blocos(
+    B1("Seguidores agora",num,pf&&pf.seguidores,
+      "Total de seguidores no momento da consulta. O Instagram não devolve histórico de seguidores — por isso este número não acompanha o período escolhido.","Agora") +
+    B("Alcance",num,a&&a.alcance,b&&b.alcance,
+      "Pessoas alcançadas somando dia a dia: quem viu em dois dias conta duas vezes. O Instagram só entrega alcance por dia, não existe alcance fechado de período.") +
+    B("Visualizações",num,a&&a.visualizacoes,b&&b.visualizacoes,
+      "Vezes que o conteúdo apareceu. É a métrica que substituiu as impressões no Instagram.") +
+    B("Frequência",v=>v!=null?nf1.format(v):"—",a&&a.frequencia,b&&b.frequencia,
+      "Vezes que a mesma pessoa viu o conteúdo","inv") +
+    B("Novos seguidores",num,a&&a.novosSeguidores,b&&b.novosSeguidores,
+      "Contas que passaram a seguir o perfil dentro do período") +
+    B("Contas que interagiram",num,a&&a.contasEngajadas,b&&b.contasEngajadas,
+      "Contas diferentes que curtiram, comentaram, salvaram ou compartilharam — também somadas por dia") +
+    B("Toques nos links do perfil",num,a&&a.toquesLinks,b&&b.toquesLinks,
+      "Cliques no site, no e-mail ou no telefone que ficam na bio")
+  );
+
+  const g2=blocos(
+    B("Interações totais",num,a&&a.interacoes,b&&b.interacoes,
+      "Curtidas, comentários, salvamentos e compartilhamentos somados") +
+    B("Taxa de engajamento",pct,a&&a.engajamento,b&&b.engajamento,
+      "De 100 pessoas alcançadas, quantas interagiram") +
+    B("Curtidas",num,a&&a.curtidas,b&&b.curtidas,"Curtidas em posts, reels e vídeos") +
+    B("Comentários",num,a&&a.comentarios,b&&b.comentarios,"Comentários deixados no conteúdo") +
+    B("Salvamentos",num,a&&a.salvamentos,b&&b.salvamentos,
+      "Guardaram o post para ver depois — o sinal mais forte de interesse") +
+    B("Compartilhamentos",num,a&&a.compartilhamentos,b&&b.compartilhamentos,
+      "Mandaram para alguém ou repostaram no story")
+  );
+
+  const L=posts.slice(0,5);
+  const tabela = L.length
+    ? `<div class="tw"><table><thead><tr><th>Post</th><th>Tipo</th>
+        <th class="r">Alcance</th><th class="r">Visualizações</th><th class="r">Interações</th>
+        <th class="r">Salvos</th><th class="r">Novos seguidores</th></tr></thead>
+       <tbody>${L.map(p=>`<tr>${celPostIG(p)}<td class="nm">${esc(tipoIG(p))}<span>${esc(quandoIG(p))}</span></td>
+        <td class="r">${num(p.alcance)}</td><td class="r">${num(p.visualizacoes)}</td>
+        <td class="r">${num(p.interacoes)}</td><td class="r">${num(p.salvamentos)}</td>
+        <td class="r">${num(p.seguidores)}</td></tr>`).join("")}</tbody></table></div>`
+    : `<div class="vazio">${faltando
+        ? "Os posts do período entram aqui na primeira consulta depois da conexão."
+        : "Nenhum post publicado no período."}</div>`;
+
+  return `
+  ${faltando?cardConexaoIG(IG.erro):""}
+  ${tituloGrupo("Instagram · Alcance e audiência",sub)}
+  ${g1}
+  ${tituloGrupo("Instagram · Interações","O que as pessoas fizeram com o conteúdo publicado")}
+  ${g2}
+  <div class="faixa" style="margin-top:14px">${cx(cxt("Instagram · Posts do período · top 5",
+      "Os cinco posts que mais alcançaram gente no período. Clique no quadradinho para abrir o post no Instagram.")+tabela)}</div>`;
+}
+
 /* ------------------------------------------------------------- OpenAI Ads */
 function vOpenai(){
   /* a aba mostra SÓ o export do Ads Manager, a pedido: é a única fonte com
@@ -1361,6 +1555,16 @@ const IC={
        '<circle cx="4.75" cy="17.8" r="2.75" fill="#34A853"/>',
   metaf:'<path fill="#0081FB" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.499-1.56a2.926 2.926 0 0 1 1.122-.258z"/>',
   oai:'<path fill="#000" transform="translate(1.44 1.44) scale(.88)" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.073zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.0615v5.5826a4.504 4.504 0 0 1-4.4945 4.4849zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>',
+  /* logo oficial do Instagram: o glifo do contorno arredondado, a lente e o
+     ponto, no gradiente da marca (amarelo → laranja → magenta → roxo).
+     Vai com fundo branco (chip:true) — o roxo sumiria no azul do menu. */
+  insta:'<defs><radialGradient id="igG" cx=".3" cy="1.06" r="1.15">'+
+    '<stop offset="0" stop-color="#FED576"/><stop offset=".26" stop-color="#F47133"/>'+
+    '<stop offset=".61" stop-color="#BC3081"/><stop offset="1" stop-color="#4C63D2"/>'+
+    '</radialGradient></defs><g fill="url(#igG)">'+
+    '<path d="M12 3.96c2.62 0 2.93.01 3.96.06.96.04 1.47.2 1.82.34.46.18.78.39 1.12.73.34.34.55.66.73 1.12.13.35.3.86.34 1.82.05 1.03.06 1.34.06 3.96s-.01 2.93-.06 3.96c-.04.96-.21 1.47-.34 1.82-.18.46-.39.78-.73 1.12-.34.34-.66.55-1.12.73-.35.13-.86.3-1.82.34-1.03.05-1.34.06-3.96.06s-2.93-.01-3.96-.06c-.96-.04-1.47-.21-1.82-.34a3.02 3.02 0 0 1-1.12-.73 3.02 3.02 0 0 1-.73-1.12c-.14-.35-.3-.86-.34-1.82-.05-1.03-.06-1.34-.06-3.96s.01-2.93.06-3.96c.04-.96.2-1.47.34-1.82.18-.46.39-.78.73-1.12.34-.34.66-.55 1.12-.73.35-.14.86-.3 1.82-.34C9.07 3.97 9.38 3.96 12 3.96Zm0-1.77c-2.66 0-3 .012-4.04.06-1.05.048-1.76.213-2.39.454a4.83 4.83 0 0 0-1.74 1.135A4.83 4.83 0 0 0 2.69 5.57c-.24.63-.41 1.34-.45 2.39-.05 1.04-.06 1.38-.06 4.04s.01 3 .06 4.04c.04 1.05.21 1.76.45 2.39.25.65.58 1.2 1.13 1.74a4.83 4.83 0 0 0 1.74 1.14c.63.24 1.34.4 2.39.45 1.04.05 1.38.06 4.04.06s3-.01 4.04-.06c1.05-.05 1.76-.21 2.39-.45a4.83 4.83 0 0 0 1.74-1.14 4.83 4.83 0 0 0 1.13-1.74c.24-.63.41-1.34.45-2.39.05-1.04.06-1.38.06-4.04s-.01-3-.06-4.04c-.04-1.05-.21-1.76-.45-2.39a4.83 4.83 0 0 0-1.13-1.74 4.83 4.83 0 0 0-1.74-1.135c-.63-.241-1.34-.406-2.39-.454-1.04-.048-1.38-.06-4.04-.06Z"/>'+
+    '<path d="M12 6.96a5.04 5.04 0 1 0 0 10.08 5.04 5.04 0 0 0 0-10.08Zm0 8.31a3.27 3.27 0 1 1 0-6.54 3.27 3.27 0 0 1 0 6.54Z"/>'+
+    '<circle cx="17.24" cy="6.76" r="1.18"/></g>'
 };
 const VISTAS=[
   /* oculta:true tira a aba do painel sem apagar o código dela —
@@ -1369,6 +1573,7 @@ const VISTAS=[
   {id:"google",nome:"Google Ads", ic:"gads",    marca:true, chip:true, r:vGoogle},
   {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
+  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, r:vInstagram},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
   {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
   {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,oculta:true,r:vPassos}
@@ -1558,7 +1763,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-02b";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-03-insta";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
