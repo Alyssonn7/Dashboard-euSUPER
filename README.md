@@ -53,7 +53,7 @@ salvo é descartado — as datas ficam.
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager (`campaigns.csv`, 17/08–31/08), a pedido: conversões, custo por conversão, taxa, páginas vistas, investimento, impressões, cliques, CTR, CPC, CPM. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
-| **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. Enquanto o perfil não estiver conectado no Windsor, a aba mostra o passo a passo da ligação e a prévia dos blocos |
+| **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
 | **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
 | **Visão geral** | Agosto fechado em duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 
@@ -106,17 +106,18 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Google Ads | Windsor · `google_ads` · conta 326-604-5511 | `get_data` |
 | Meta Ads | Windsor · `facebook` · conta 604915332642452 | `get_data` |
 | OpenAI Ads | Windsor · `openai_ads` (sem pino de conta — o id muda a cada reconexão) | `get_data` |
-| Instagram orgânico | Windsor · `instagram` (sem pino de conta — só existe um perfil) | `get_data` |
+| Instagram orgânico | Windsor · `instagram` · @usemiaapp (17841476511713959; sem pino de conta — só existe um perfil) | `get_data` |
 | Visitas na página | Windsor · `googleanalytics4` · propriedade 511677134 | `get_data` |
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dezessete chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
+São **dezoito chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
 três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
 no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
-perfil; e uma por anúncio para a tabela), o Instagram × quatro (o perfil dia a
-dia nas duas janelas, os posts do período e a contagem de seguidores), mais um
-SQL que devolve as duas janelas. O Clarity não é mais consultado ao vivo — a
+perfil; e uma por anúncio para a tabela), o Instagram × cinco (o perfil dia a
+dia nas duas janelas, os posts do período, a contagem de seguidores e os novos
+seguidores — esta última cobre as duas janelas de uma vez e é separada de
+propósito, veja abaixo), mais um SQL que devolve as duas janelas. O Clarity não é mais consultado ao vivo — a
 Landing Page é só o export.
 
 No Meta, o alcance de cada grupo só é deduplicado quando aquele grupo foi o
@@ -135,16 +136,31 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 - **Microsoft Clarity** só devolve os últimos 3 dias pela API. Por isso a Landing
   Page usa o export mensal do painel do Clarity e não consulta a API ao vivo. O GA4
   continua sendo consultado, mas não aparece na Landing Page — a aba é 100% Clarity.
-- **Instagram orgânico** não fecha alcance por período: a API só entrega alcance
-  e contas engajadas **por dia**, então o número do período é a soma dos dias e
-  quem viu em dois dias conta duas vezes — os blocos dizem isso na linha de
-  explicação. O total de seguidores vem sem histórico: é a contagem do momento da
-  consulta, não do fim do período. As impressões foram substituídas por
-  **visualizações** pelo próprio Instagram. Stories só existem por 24 horas, então
-  não entram em relatório de mês fechado. E a miniatura de cada post vem de
-  domínio externo, que o artifact bloqueia: por enquanto o quadradinho traz o tipo
-  do post e abre o post no Instagram; as miniaturas entram embutidas depois da
-  primeira consulta, como as do Meta.
+- **Instagram orgânico** tem cinco limites, todos confirmados contra a API em
+  04/09/2026 e todos ditos na tela:
+  - **Alcance não fecha por período.** A API só entrega alcance e contas
+    engajadas **por dia**, então o número do período é a soma dos dias e quem viu
+    em dois dias conta duas vezes. Não existe alcance deduplicado de período,
+    diferente do Meta Ads.
+  - **O alcance é da conta, não só do orgânico.** Nos dias de campanha ele sobe
+    muito acima do alcance somado dos posts (7.146 num dia em que os posts
+    alcançaram 63), então lê-se como alcance da conta.
+  - **Novos seguidores só dos últimos 30 dias.** `follower_count` é recusado para
+    qualquer janela mais antiga que isso, e derruba a consulta inteira junto — por
+    isso ele vai numa chamada separada, que cobre as duas janelas de uma vez. Se
+    falhar, só aquele bloco fica com travessão e diz por quê.
+  - **Seguidores sem histórico.** É a contagem do momento da consulta, não do fim
+    do período; o bloco se chama "Seguidores agora" por isso.
+  - **Salvamentos podem ser negativos.** O Instagram desconta quem tirou o
+    salvamento: a janela 17–23/08 fechou em −1.
+
+  Além disso: as impressões foram substituídas por **visualizações** pelo próprio
+  Instagram; **stories** só existem por 24 horas, então não entram em relatório de
+  mês fechado; **seguidor ganho por post** não é medido em reels (vem nulo, e a
+  coluna mostra travessão em vez de zero); e a miniatura de cada post vem de
+  domínio externo, que o artifact bloqueia — o quadradinho traz o tipo do post e
+  abre o post no Instagram, e as miniaturas entram embutidas quando valer a pena,
+  como as do Meta.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 

@@ -454,10 +454,45 @@ const RETRATO = {
   puxadoEm:"31/08/2026 (gravado)", aoVivo:false,
   periodo:{atual:{de:"2026-08-24",ate:"2026-08-30"},anterior:{de:"2026-08-17",ate:"2026-08-23"}},
 
-  /* Instagram organico: ainda nao ha numero nenhum — o conector do Windsor so
-     passa a responder depois que a conta for ligada. Ate la a aba mostra o
-     passo a passo da conexao e a previa dos blocos, tudo com travessao. */
-  instagram:{atual:null, anterior:null, posts:[], perfil:null, erro:null},
+  /* Instagram organico, conta @usemiaapp (id 17841476511713959), ligada no
+     Windsor em 04/09/2026 e puxada no mesmo dia. Alcance e contas engajadas sao
+     SOMA dos dias — o Instagram so entrega os dois por dia. Salvamentos da
+     janela anterior fecha em -1: naquela semana mais gente tirou o salvamento
+     do que salvou. Os seguidores sao a contagem do momento da consulta, sem
+     historico. */
+  instagram:{
+    atual:   {dias:7, alcance:8966, visualizacoes:11212, novosSeguidores:14,
+              contasEngajadas:83, interacoes:120, curtidas:95, comentarios:0,
+              salvamentos:8, compartilhamentos:3, toquesLinks:0},
+    anterior:{dias:7, alcance:3738, visualizacoes:4914,  novosSeguidores:8,
+              contasEngajadas:40, interacoes:71,  curtidas:53, comentarios:7,
+              salvamentos:-1, compartilhamentos:0, toquesLinks:0},
+    perfil:{usuario:"usemiaapp", seguidores:1082, seguindo:45, totalPosts:90},
+    /* posts de 24-30/08, do maior alcance para o menor. seguidores:null nos
+       reels porque o Instagram nao mede seguidor ganho neles */
+    posts:[
+      {quando:"2026-08-28T21:00:06+0000",tipo:"REELS",superficie:"REELS",
+       post:"https://www.instagram.com/reel/DcmRybBhDQf/",
+       alcance:98,visualizacoes:126,interacoes:11,curtidas:9,comentarios:0,
+       salvamentos:1,compartilhamentos:0,seguidores:null},
+      {quando:"2026-08-25T19:00:04+0000",tipo:"REELS",superficie:"REELS",
+       post:"https://www.instagram.com/reel/DceVpS6Bilh/",
+       alcance:56,visualizacoes:93,interacoes:11,curtidas:7,comentarios:0,
+       salvamentos:1,compartilhamentos:1,seguidores:null},
+      {quando:"2026-08-28T19:40:43+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
+       post:"https://www.instagram.com/p/DcmIrkLlQbg/",
+       alcance:34,visualizacoes:125,interacoes:6,curtidas:4,comentarios:0,
+       salvamentos:0,compartilhamentos:0,seguidores:0},
+      {quando:"2026-08-28T23:05:01+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
+       post:"https://www.instagram.com/p/DcmgGVjlRj3/",
+       alcance:26,visualizacoes:68,interacoes:6,curtidas:4,comentarios:0,
+       salvamentos:1,compartilhamentos:0,seguidores:0},
+      {quando:"2026-08-28T22:00:03+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
+       post:"https://www.instagram.com/p/DcmYo2yFUIp/",
+       alcance:24,visualizacoes:59,interacoes:4,curtidas:2,comentarios:0,
+       salvamentos:0,compartilhamentos:0,seguidores:0}
+    ],
+    erro:null, erroSeguidores:null},
 
   google:{
     atual:   {impressoes:12718, cliques:218, custo:551.16,  conversoes:20},
@@ -886,19 +921,32 @@ async function qMeta(de,ate){
    e nao existe alcance deduplicado de periodo na API. Os blocos dizem isso. */
 async function qInsta(de,ate){
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
-    fields:["date","reach","views","follower_count","accounts_engaged",
+    fields:["date","reach","views","accounts_engaged",
             "total_interactions","likes","comments","saves","shares",
             "profile_links_taps"],
     date_from:de,date_to:ate},"Instagram"));
   if(!r.length) return null;   /* sem linha nenhuma nao invento zero */
   return {dias:r.length,
     alcance:soma(r,x=>x.reach), visualizacoes:soma(r,x=>x.views),
-    novosSeguidores:soma(r,x=>x.follower_count),
+    novosSeguidores:null,   /* chega da chamada separada, em puxar() */
     contasEngajadas:soma(r,x=>x.accounts_engaged),
     interacoes:soma(r,x=>x.total_interactions),
     curtidas:soma(r,x=>x.likes), comentarios:soma(r,x=>x.comments),
     salvamentos:soma(r,x=>x.saves), compartilhamentos:soma(r,x=>x.shares),
     toquesLinks:soma(r,x=>x.profile_links_taps)};
+}
+/* Novos seguidores vem SOZINHO, numa chamada que cobre as duas janelas de uma
+   vez (a separacao e feita aqui pela data). Motivo: o Instagram recusa o campo
+   follower_count para qualquer janela que passe de 30 dias atras e derruba a
+   consulta inteira junto — isolado, se ele falhar o resto da aba continua. */
+async function qInstaSeguidores(de,ate,cde,cate){
+  const ini=[de,cde].sort()[0], fim=[ate,cate].sort()[1];
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
+    fields:["date","follower_count"],date_from:ini,date_to:fim},
+    "Instagram · novos seguidores"));
+  const janela=(a,b)=>{const f=r.filter(x=>x.date>=a&&x.date<=b);
+    return f.length?soma(f,x=>x.follower_count):null};
+  return {atual:janela(de,ate), anterior:janela(cde,cate)};
 }
 /* posts publicados na janela: media_info junta com media_insights pelo id */
 async function qInstaPosts(de,ate){
@@ -914,7 +962,10 @@ async function qInstaPosts(de,ate){
     alcance:+x.media_reach||0, visualizacoes:+x.media_views||0,
     interacoes:+x.media_engagement||0, curtidas:+x.media_like_count||0,
     comentarios:+x.media_comments_count||0, salvamentos:+x.media_saved||0,
-    compartilhamentos:+x.media_shares||0, seguidores:+x.media_follows||0}))
+    compartilhamentos:+x.media_shares||0,
+    /* o Instagram nao mede seguidores ganhos em reels: vem nulo e fica travessao,
+       nao zero — zero diria "medimos e deu nada", o que seria mentira */
+    seguidores:x.media_follows==null?null:+x.media_follows}))
    .sort((a,b)=>b.alcance-a.alcance);
 }
 /* seguidores: o Instagram NAO devolve historico, so a contagem do momento —
@@ -1011,6 +1062,7 @@ async function puxar(){
     ["sA",()=>qSessoes(de,ate)],  ["sB",()=>qSessoes(cde,cate)],
     ["iA",()=>qInsta(de,ate)],    ["iB",()=>qInsta(cde,cate)],
     ["iP",()=>qInstaPosts(de,ate)], ["iU",()=>qInstaPerfil(de,ate)],
+    ["iS",()=>qInstaSeguidores(de,ate,cde,cate)],
     ["ng",()=>qNegocio(de,ate,cde,cate)]   /* qClarity() saiu: a Landing Page é só o export mensal */
   ];
   const R={};
@@ -1033,8 +1085,11 @@ async function puxar(){
     }};
   novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
   novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:null, erroSessoes:msg("sA")};
+  if(R.iA&&R.iS) R.iA.novosSeguidores=R.iS.atual;
+  if(R.iB&&R.iS) R.iB.novosSeguidores=R.iS.anterior;
   novo.instagram={atual:R.iA||null, anterior:R.iB||null, posts:R.iP||[],
-    perfil:R.iU||null, erro:msg("iA")||msg("iP")||msg("iU")};
+    perfil:R.iU||null, erro:msg("iA")||msg("iP")||msg("iU"),
+    erroSeguidores:msg("iS")};
   novo.negocio={atual:(R.ng&&R.ng.atual)||null, anterior:(R.ng&&R.ng.anterior)||null,
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
@@ -1078,7 +1133,10 @@ function rotuloPer(p){
    respeitando métricas em que cair é bom (modo "inv") */
 function B(rot,fmt,a,b,expl,modo){
   let seta="";
-  if(a!=null && b!=null && a!==b){
+  /* a comparacao e feita sobre o valor JA formatado: se os dois numeros
+     aparecem iguais na tela (1,3 e 1,3, arredondados de 1,25 e 1,31), uma seta
+     contradiria o que esta escrito */
+  if(a!=null && b!=null && fmt(a)!==fmt(b)){
     const subiu=a>b;
     const bom = modo==="neutro" ? null : (modo==="inv" ? !subiu : subiu);
     const cls = bom==null ? "flat" : (bom ? "up" : "down");
@@ -1307,7 +1365,7 @@ function derivarIG(x){
 }
 const tipoIG=p=>{
   const t=(p.tipo||"").toUpperCase(), sf=(p.superficie||"").toUpperCase();
-  if(sf==="REELS"||t==="REEL") return "Reel";
+  if(sf==="REELS"||t==="REELS"||t==="REEL") return "Reel";
   if(t==="CAROUSEL_ALBUM") return "Carrossel";
   if(sf==="STORY") return "Story";
   if(t==="VIDEO") return "Vídeo";
@@ -1354,13 +1412,15 @@ function vInstagram(){
     B1("Seguidores agora",num,pf&&pf.seguidores,
       "Total de seguidores no momento da consulta. O Instagram não devolve histórico de seguidores — por isso este número não acompanha o período escolhido.","Agora") +
     B("Alcance",num,a&&a.alcance,b&&b.alcance,
-      "Pessoas alcançadas somando dia a dia: quem viu em dois dias conta duas vezes. O Instagram só entrega alcance por dia, não existe alcance fechado de período.") +
+      "Alcance da conta somado dia a dia: quem viu em dois dias conta duas vezes — o Instagram não entrega alcance fechado de período. Nos dias de campanha ele sobe muito acima do alcance dos posts, então leia como alcance da conta, não só do orgânico.") +
     B("Visualizações",num,a&&a.visualizacoes,b&&b.visualizacoes,
       "Vezes que o conteúdo apareceu. É a métrica que substituiu as impressões no Instagram.") +
     B("Frequência",v=>v!=null?nf1.format(v):"—",a&&a.frequencia,b&&b.frequencia,
       "Vezes que a mesma pessoa viu o conteúdo","inv") +
     B("Novos seguidores",num,a&&a.novosSeguidores,b&&b.novosSeguidores,
-      "Contas que passaram a seguir o perfil dentro do período") +
+      IG.erroSeguidores
+        ? "O Instagram só entrega novos seguidores dos últimos 30 dias — para uma janela mais antiga que isso o número não existe."
+        : "Contas que passaram a seguir o perfil dentro do período") +
     B("Contas que interagiram",num,a&&a.contasEngajadas,b&&b.contasEngajadas,
       "Contas diferentes que curtiram, comentaram, salvaram ou compartilharam — também somadas por dia") +
     B("Toques nos links do perfil",num,a&&a.toquesLinks,b&&b.toquesLinks,
@@ -1371,11 +1431,11 @@ function vInstagram(){
     B("Interações totais",num,a&&a.interacoes,b&&b.interacoes,
       "Curtidas, comentários, salvamentos e compartilhamentos somados") +
     B("Taxa de engajamento",pct,a&&a.engajamento,b&&b.engajamento,
-      "De 100 pessoas alcançadas, quantas interagiram") +
+      "Interações divididas pelo alcance. Como o alcance soma os dias e conta os dias de campanha, a taxa sai baixa: serve para comparar um período com o outro, não como número absoluto") +
     B("Curtidas",num,a&&a.curtidas,b&&b.curtidas,"Curtidas em posts, reels e vídeos") +
     B("Comentários",num,a&&a.comentarios,b&&b.comentarios,"Comentários deixados no conteúdo") +
     B("Salvamentos",num,a&&a.salvamentos,b&&b.salvamentos,
-      "Guardaram o post para ver depois — o sinal mais forte de interesse") +
+      "Guardaram o post para ver depois — o sinal mais forte de interesse. O Instagram desconta quem tirou o salvamento, então num período de poucas ações o saldo pode ficar negativo.") +
     B("Compartilhamentos",num,a&&a.compartilhamentos,b&&b.compartilhamentos,
       "Mandaram para alguém ou repostaram no story")
   );
@@ -1384,7 +1444,7 @@ function vInstagram(){
   const tabela = L.length
     ? `<div class="tw"><table><thead><tr><th>Post</th><th>Tipo</th>
         <th class="r">Alcance</th><th class="r">Visualizações</th><th class="r">Interações</th>
-        <th class="r">Salvos</th><th class="r">Novos seguidores</th></tr></thead>
+        <th class="r">Salvos</th><th class="r">Seguiu depois</th></tr></thead>
        <tbody>${L.map(p=>`<tr>${celPostIG(p)}<td class="nm">${esc(tipoIG(p))}<span>${esc(quandoIG(p))}</span></td>
         <td class="r">${num(p.alcance)}</td><td class="r">${num(p.visualizacoes)}</td>
         <td class="r">${num(p.interacoes)}</td><td class="r">${num(p.salvamentos)}</td>
@@ -1400,7 +1460,8 @@ function vInstagram(){
   ${tituloGrupo("Instagram · Interações","O que as pessoas fizeram com o conteúdo publicado")}
   ${g2}
   <div class="faixa" style="margin-top:14px">${cx(cxt("Instagram · Posts do período · top 5",
-      "Os cinco posts que mais alcançaram gente no período. Clique no quadradinho para abrir o post no Instagram.")+tabela)}</div>`;
+      "Os cinco posts que mais alcançaram gente no período. Clique no quadradinho para abrir o post no Instagram. "+
+      "Em <b>Seguiu depois</b> o travessão é dos reels: o Instagram não mede seguidor ganho neles.")+tabela)}</div>`;
 }
 
 /* ------------------------------------------------------------- OpenAI Ads */
@@ -1763,7 +1824,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-03-insta";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-04-insta";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
