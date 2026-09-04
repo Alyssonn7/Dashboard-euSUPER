@@ -36,6 +36,11 @@ acusar janelas de tamanhos diferentes. O histórico das fontes alcança o fim de
 2025, então dá para comparar qualquer par de meses desde então (com um buraco
 conhecido em novembro/2025 no Google Ads).
 
+Um aviso sobre o dia corrente: se a janela escolhida terminar **hoje**, o último
+dia vem incompleto (em 04/09, às 14h, o Instagram tinha 511 de alcance contra
+~3.000 de um dia fechado). Os atalhos **Semana passada** e **Mês passado** sempre
+usam períodos fechados, então no fluxo normal isso não aparece.
+
 A linha de estado, embaixo da frase, diz sempre se o que está na tela é o
 retrato gravado no arquivo, o resultado da consulta que você acabou de fazer, ou
 uma consulta anterior salva no navegador — e avisa em laranja quando as datas
@@ -153,6 +158,11 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
     do período; o bloco se chama "Seguidores agora" por isso.
   - **Salvamentos podem ser negativos.** O Instagram desconta quem tirou o
     salvamento: a janela 17–23/08 fechou em −1.
+  - **Métrica de post não se recorta por data.** A janela escolhida decide quais
+    posts entram na tabela (pela data de publicação), mas o alcance, as
+    visualizações e as interações de cada post são o total acumulado até o
+    momento da consulta. Conferido: pedir só 28/08 devolve o mesmo alcance 98
+    do reel que pedir agosto inteiro. O card diz isso.
 
   Além disso: as impressões foram substituídas por **visualizações** pelo próprio
   Instagram; **stories** só existem por 24 horas, então não entram em relatório de
