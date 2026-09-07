@@ -49,6 +49,10 @@
 }
 
 *{box-sizing:border-box}
+/* o hidden tem de vencer qualquer display do componente (.cd e flex, por
+   exemplo). O wrapper do artifact publicado ja faz isso; o arquivo solto nao,
+   e sem esta linha o campo de comparacao nao sumia fora do claude.ai */
+[hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:hidden;
   font-family:var(--fonte);
@@ -161,6 +165,21 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
   border:1px solid transparent;border-radius:9px;padding:9px 11px;cursor:pointer}
 .edicao .cancelar:hover{color:var(--texto);border-color:var(--borda)}
 .edicao .ok:focus-visible,.edicao .cancelar:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
+/* liga/desliga a comparacao: sem ela o painel mostra um periodo so */
+.cmp{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  font-family:var(--fonte);font-size:12.5px;font-weight:600;color:var(--texto-2);
+  background:var(--tela);border:1px solid var(--borda);border-radius:11px;padding:9px 13px;
+  white-space:nowrap;user-select:none}
+.cmp:hover{border-color:var(--texto-3);color:var(--texto)}
+.cmp input{width:15px;height:15px;margin:0;accent-color:var(--mata);cursor:pointer;flex:none}
+.cmp:has(input:checked){color:var(--texto);border-color:var(--mata)}
+.cmp:focus-within{box-shadow:0 0 0 3px color-mix(in srgb, var(--mata) 14%, transparent)}
+/* botao que abre a edicao das datas — sem ele o pontilhado do periodo era a
+   unica pista de que as datas se editam, e nao era pista suficiente */
+.atalhos .abrir{display:inline-flex;align-items:center;gap:6px}
+.atalhos .abrir svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.atalhos button[aria-expanded="true"]{background:var(--tela);border-color:var(--mata);color:var(--titulo)}
 .puxar{font-family:var(--fonte);font-size:13px;font-weight:700;
   padding:11px 20px;border-radius:10px;border:none;background:var(--cta);color:#fff;
   cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
@@ -672,15 +691,22 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="per">
           <button type="button" class="p1" id="btPer" title="Mudar as datas"
             aria-expanded="false" aria-controls="edicao">—</button>
-          <span class="lig">comparado com</span>
+          <span class="lig" id="lig">comparado com</span>
           <button type="button" class="p2" id="btComp" title="Mudar as datas"
             aria-expanded="false" aria-controls="edicao">—</button>
         </div>
         <div class="atalhos" role="group" aria-label="Períodos prontos">
           <button type="button" id="btSemana"
             title="Última semana fechada, de segunda a domingo, contra a anterior">Semana passada</button>
+          <button type="button" id="btMesAtual"
+            title="Do dia 1 deste mês até ontem, contra o mesmo trecho do mês passado">Este mês</button>
           <button type="button" id="btMes"
             title="Último mês fechado contra o mês anterior">Mês passado</button>
+          <button type="button" class="abrir" id="btAbrir" aria-expanded="false"
+            aria-controls="edicao" title="Escolher as datas na mão">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="4.6" width="17.6"
+              height="16.2" rx="2.4"/><path d="M3.2 9.4h17.6M8 3.2v3M16 3.2v3"/></svg>
+            Escolher datas</button>
         </div>
         <button class="puxar" type="button" id="btPuxar">
           <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
@@ -703,7 +729,11 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
             <input type="date" id="ate" min="2000-01-01" max="2099-12-31" aria-label="Fim do período">
           </div>
         </div>
-        <div class="cd">
+        <label class="cmp" for="cbComp">
+          <input type="checkbox" id="cbComp" checked>
+          <span>Comparar com outro período</span>
+        </label>
+        <div class="cd" id="cdComp">
           <span class="cd-l" id="lcde">Comparar com</span>
           <div class="cd-v">
             <input type="date" id="cde" min="2000-01-01" max="2099-12-31" aria-label="Início da comparação">
@@ -803,6 +833,10 @@ function derivar(x){
 
 let D = JSON.parse(JSON.stringify(RETRATO));
 let FALHAS = {};
+/* comparar=false poe o painel em "um periodo so": a barra vira uma frase
+   simples, os blocos ficam de uma coluna e a consulta cai de dezoito para dez
+   chamadas. Fica guardado no navegador junto com as datas. */
+let comparar = true;
 
 /* ---------------------------------------------------------------- consulta */
 const CONSERTO = {
@@ -940,13 +974,14 @@ async function qInsta(de,ate){
    follower_count para qualquer janela que passe de 30 dias atras e derruba a
    consulta inteira junto — isolado, se ele falhar o resto da aba continua. */
 async function qInstaSeguidores(de,ate,cde,cate){
-  const ini=[de,cde].sort()[0], fim=[ate,cate].sort()[1];
+  const cmp=!!(cde&&cate);
+  const ini=cmp?[de,cde].sort()[0]:de, fim=cmp?[ate,cate].sort()[1]:ate;
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"instagram",
     fields:["date","follower_count"],date_from:ini,date_to:fim},
     "Instagram · novos seguidores"));
   const janela=(a,b)=>{const f=r.filter(x=>x.date>=a&&x.date<=b);
     return f.length?soma(f,x=>x.follower_count):null};
-  return {atual:janela(de,ate), anterior:janela(cde,cate)};
+  return {atual:janela(de,ate), anterior:cmp?janela(cde,cate):null};
 }
 /* posts publicados na janela: media_info junta com media_insights pelo id */
 async function qInstaPosts(de,ate){
@@ -1019,8 +1054,12 @@ async function qClarity(){
 }
 
 function sqlNegocio(de,ate,cde,cate){
-  return `WITH j AS (SELECT 'atual'::text AS janela, DATE '${de}' AS de, DATE '${ate}' AS ate
-  UNION ALL SELECT 'anterior', DATE '${cde}', DATE '${cate}'),
+  /* sem comparacao a CTE tem uma linha so — nao invento uma janela anterior */
+  const j = (cde&&cate)
+    ? `SELECT 'atual'::text AS janela, DATE '${de}' AS de, DATE '${ate}' AS ate
+  UNION ALL SELECT 'anterior', DATE '${cde}', DATE '${cate}'`
+    : `SELECT 'atual'::text AS janela, DATE '${de}' AS de, DATE '${ate}' AS ate`;
+  return `WITH j AS (${j}),
 teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id)
 SELECT j.janela,
  (SELECT count(*) FROM professional p WHERE p.deleted_at IS NULL
@@ -1050,21 +1089,30 @@ async function qNegocio(de,ate,cde,cate){
 
 async function puxar(){
   const de=inDe.value,ate=inAte.value,cde=inCDe.value,cate=inCAte.value;
-  if(![de,ate,cde,cate].every(dataOk)||de>ate||cde>cate){
+  const cmp=comparar;
+  const validas = cmp ? [de,ate,cde,cate].every(dataOk)&&de<=ate&&cde<=cate
+                      : [de,ate].every(dataOk)&&de<=ate;
+  if(!validas){
     FALHAS={periodo:{rotulo:"Período",code:"bad_request"}}; desenhar(); return;
   }
   btPuxar.disabled=true; btPuxar.classList.add("indo"); txPuxar.textContent="Puxando…";
   FALHAS={};
+  /* as janelas "B" só entram quando há comparação: dez chamadas em vez de
+     dezoito. qClarity() saiu: a Landing Page é só o export mensal */
   const tarefas=[
-    ["gA",()=>qGoogle(de,ate)],   ["gB",()=>qGoogle(cde,cate)],
-    ["mA",()=>qMeta(de,ate)],     ["mB",()=>qMeta(cde,cate)],
-    ["oA",()=>qOpenai(de,ate)],   ["oB",()=>qOpenai(cde,cate)],
-    ["sA",()=>qSessoes(de,ate)],  ["sB",()=>qSessoes(cde,cate)],
-    ["iA",()=>qInsta(de,ate)],    ["iB",()=>qInsta(cde,cate)],
+    ["gA",()=>qGoogle(de,ate)],
+    ["mA",()=>qMeta(de,ate)],
+    ["oA",()=>qOpenai(de,ate)],
+    ["sA",()=>qSessoes(de,ate)],
+    ["iA",()=>qInsta(de,ate)],
     ["iP",()=>qInstaPosts(de,ate)], ["iU",()=>qInstaPerfil(de,ate)],
-    ["iS",()=>qInstaSeguidores(de,ate,cde,cate)],
-    ["ng",()=>qNegocio(de,ate,cde,cate)]   /* qClarity() saiu: a Landing Page é só o export mensal */
+    ["iS",()=>qInstaSeguidores(de,ate,cmp?cde:null,cmp?cate:null)],
+    ["ng",()=>qNegocio(de,ate,cmp?cde:null,cmp?cate:null)]
   ];
+  if(cmp) tarefas.push(
+    ["gB",()=>qGoogle(cde,cate)], ["mB",()=>qMeta(cde,cate)],
+    ["oB",()=>qOpenai(cde,cate)], ["sB",()=>qSessoes(cde,cate)],
+    ["iB",()=>qInsta(cde,cate)]);
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
     try{ R[k]=await f() }catch(e){ R[k]=null; FALHAS[k]=e }
@@ -1074,7 +1122,7 @@ async function puxar(){
   const ag=new Date(), z=n=>String(n).padStart(2,"0");
   novo.aoVivo=true;
   novo.puxadoEm=`consultado em ${z(ag.getDate())}/${z(ag.getMonth()+1)} às ${z(ag.getHours())}:${z(ag.getMinutes())}`;
-  novo.periodo={atual:{de,ate},anterior:{de:cde,ate:cate}};
+  novo.periodo={atual:{de,ate},anterior:cmp?{de:cde,ate:cate}:null};
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
     campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA")};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
@@ -1678,6 +1726,10 @@ function abrir(id){
 
 const elEstado=document.getElementById("estado"), elEd=document.getElementById("edicao");
 const btPer=document.getElementById("btPer"), btComp=document.getElementById("btComp");
+const elLig=document.getElementById("lig"), cdComp=document.getElementById("cdComp");
+const cbComp=document.getElementById("cbComp"), btAbrir=document.getElementById("btAbrir");
+/* os tres controles que abrem a edicao compartilham o aria-expanded */
+const ABRIDORES=[btPer,btComp,btAbrir];
 const MES_LONGO=iso=>new Date(iso+"T12:00:00").toLocaleDateString("pt-BR",{month:"long"});
 const cap=t=>t?t.charAt(0).toUpperCase()+t.slice(1):t;
 /* o período escrito como se fala: mês fechado vira "Agosto de 2026"; intervalo
@@ -1701,20 +1753,33 @@ function pintarEstado(){
      estado diz se a tela já corresponde a ela e de onde vieram os dados */
   const de=inDe.value, ate=inAte.value, cde=inCDe.value, cate=inCAte.value;
   btPer.textContent=rotuloLongo(de,ate); btComp.textContent=rotuloLongo(cde,cate,true);
+  /* sem comparação a barra é uma frase de um período só: o "comparado com" e a
+     segunda data saem da tela, e o campo de comparação sai da edição */
+  elLig.hidden=!comparar; btComp.hidden=!comparar;
+  cdComp.hidden=!comparar; cbComp.checked=comparar;
   const dias=(a,b)=>Math.round((new Date(b)-new Date(a))/86400000)+1;
   let cls="", html="";
-  const ok=[inDe,inAte,inCDe,inCAte].every(e=>dataOk(e.value)&&e.validity.valid)&&de<=ate&&cde<=cate;
+  const campos=comparar?[inDe,inAte,inCDe,inCAte]:[inDe,inAte];
+  const ok=campos.every(e=>dataOk(e.value)&&e.validity.valid)&&de<=ate&&(!comparar||cde<=cate);
   if(!ok){
     cls="mal"; html="<b>Datas incompletas.</b> O início de cada período precisa vir antes do fim.";
   } else {
+    const pa=D.periodo.anterior;
     const naTela = D.periodo.atual.de===de && D.periodo.atual.ate===ate &&
-                   D.periodo.anterior.de===cde && D.periodo.anterior.ate===cate;
-    const d1=dias(de,ate), d2=dias(cde,cate);
-    const doisMeses=ehMesCalendario(de,ate)&&ehMesCalendario(cde,cate);
-    const desiguais=!doisMeses&&d1!==d2;
-    const tam = doisMeses ? "Dois meses fechados."
-              : d1===d2 ? `${d1} dias em cada período.`
-              : `Atenção: períodos de tamanhos diferentes, ${d1} e ${d2} dias.`;
+      (comparar ? (!!pa && pa.de===cde && pa.ate===cate) : !pa);
+    const d1=dias(de,ate);
+    let tam, desiguais=false;
+    if(!comparar){
+      tam = ehMesCalendario(de,ate) ? "Um mês fechado, sem comparação."
+          : `${d1} ${d1===1?"dia":"dias"}, sem comparação.`;
+    } else {
+      const d2=dias(cde,cate);
+      const doisMeses=ehMesCalendario(de,ate)&&ehMesCalendario(cde,cate);
+      desiguais=!doisMeses&&d1!==d2;
+      tam = doisMeses ? "Dois meses fechados."
+          : d1===d2 ? `${d1} dias em cada período.`
+          : `Atenção: períodos de tamanhos diferentes, ${d1} e ${d2} dias.`;
+    }
     if(!elEd.hidden){
       html=`Ajuste as datas e clique em Aplicar datas. ${esc(tam)}`; cls=desiguais?"mal":"";
     } else if(!naTela){
@@ -1741,7 +1806,7 @@ function pintarEstado(){
 let antesEd=null;
 function abrirEdicao(foco){
   antesEd=[inDe.value,inAte.value,inCDe.value,inCAte.value];
-  elEd.hidden=false; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","true"));
+  elEd.hidden=false; ABRIDORES.forEach(b=>b.setAttribute("aria-expanded","true"));
   pintarEstado(); (foco||inDe).focus();
 }
 /* Aplicar só fecha com as quatro datas válidas e aí grava na memória;
@@ -1749,16 +1814,27 @@ function abrirEdicao(foco){
    os atalhos também fecham a edição. */
 function fecharEdicao(cancelar){
   if(!cancelar){
-    const validas=[inDe,inAte,inCDe,inCAte].every(e=>dataOk(e.value)&&e.validity.valid)
-      &&inDe.value<=inAte.value&&inCDe.value<=inCAte.value;
+    const usados=comparar?[inDe,inAte,inCDe,inCAte]:[inDe,inAte];
+    const validas=usados.every(e=>dataOk(e.value)&&e.validity.valid)
+      &&inDe.value<=inAte.value&&(!comparar||inCDe.value<=inCAte.value);
     if(!validas){ pintarEstado(); return; }   /* fica aberto mostrando "Datas incompletas" */
   }
   if(cancelar&&antesEd){ [inDe.value,inAte.value,inCDe.value,inCAte.value]=antesEd; }
-  antesEd=null; elEd.hidden=true; [btPer,btComp].forEach(b=>b.setAttribute("aria-expanded","false"));
+  antesEd=null; elEd.hidden=true; ABRIDORES.forEach(b=>b.setAttribute("aria-expanded","false"));
   lembrarDatas(); pintarEstado();
 }
 btPer.addEventListener("click",()=>elEd.hidden?abrirEdicao(inDe):fecharEdicao(false));
 btComp.addEventListener("click",()=>elEd.hidden?abrirEdicao(inCDe):fecharEdicao(false));
+btAbrir.addEventListener("click",()=>elEd.hidden?abrirEdicao(inDe):fecharEdicao(false));
+cbComp.addEventListener("change",()=>{
+  comparar=cbComp.checked;
+  /* religar sempre reencaixa a janela anterior de mesmo tamanho: enquanto a
+     comparação estava desligada o período pode ter mudado, e manter a janela
+     velha compararia com um intervalo sem relação nenhuma. A edição está
+     aberta, então dá para ajustar em seguida. */
+  if(comparar) encaixar();
+  lembrarDatas(); pintarEstado();
+});
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&!elEd.hidden&&!elEd.contains(e.target)){fecharEdicao(true);btPer.focus();}
 });
@@ -1796,9 +1872,10 @@ function ehMesCalendario(de,ate){
   return b.getDate()===ultimo;
 }
 
-function preencher(de,ate,cde,cate){
+function preencher(de,ate,cde,cate,cmp){
   inDe.value=isoLocal(de); inAte.value=isoLocal(ate);
   inCDe.value=isoLocal(cde); inCAte.value=isoLocal(cate);
+  if(cmp!==undefined) comparar=cmp;   /* os atalhos são todos comparativos */
   if(!elEd.hidden) fecharEdicao(false);
   lembrarDatas(); pintarEstado();
 }
@@ -1808,7 +1885,7 @@ function atalhoSemana(){
   const ini=new Date(fim);  ini.setDate(fim.getDate()-6);
   const fimB=new Date(ini); fimB.setDate(ini.getDate()-1);
   const iniB=new Date(fimB); iniB.setDate(fimB.getDate()-6);
-  preencher(ini,fim,iniB,fimB);
+  preencher(ini,fim,iniB,fimB,true);
 }
 function atalhoMes(){
   const hoje=new Date();
@@ -1816,9 +1893,23 @@ function atalhoMes(){
   const ini=new Date(fim.getFullYear(),fim.getMonth(),1);
   const fimB=new Date(ini.getFullYear(),ini.getMonth(),0);
   const iniB=new Date(fimB.getFullYear(),fimB.getMonth(),1);
-  preencher(ini,fim,iniB,fimB);
+  preencher(ini,fim,iniB,fimB,true);
+}
+/* "Este mês": do dia 1 até ONTEM, contra o mesmo trecho do mês passado. Comparar
+   um mês correndo com um mês fechado inteiro daria uma queda que não existe. */
+function atalhoMesAtual(){
+  const h=new Date();
+  /* meia-noite local nos dois: com new Date(hoje) a hora do dia entrava na
+     conta de dias e a janela de comparacao saia um dia maior */
+  const fim=new Date(h.getFullYear(),h.getMonth(),h.getDate()-1);
+  const ini=new Date(fim.getFullYear(),fim.getMonth(),1);
+  const n=Math.round((fim-ini)/86400000);
+  const iniB=new Date(ini.getFullYear(),ini.getMonth()-1,1);
+  const fimB=new Date(iniB); fimB.setDate(iniB.getDate()+n);
+  preencher(ini,fim,iniB,fimB,true);
 }
 function encaixar(){
+  if(!comparar) return;
   const de=inDe.value,ate=inAte.value; if(!dataOk(de)||!dataOk(ate)||de>ate)return;
   const n=Math.round((new Date(ate)-new Date(de))/86400000); if(!Number.isFinite(n))return;
   inCAte.value=menos(de,1); inCDe.value=menos(inCAte.value,n);
@@ -1830,7 +1921,7 @@ const VERSAO_DADOS="2026-09-04-insta";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
-    {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value}))}catch(e){}
+    {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value,cmp:comparar}))}catch(e){}
 }
 function guardarVivo(d){
   try{localStorage.setItem("mia:vivo",JSON.stringify({v:VERSAO_DADOS,d}))}catch(e){}
@@ -1844,9 +1935,13 @@ function restaurar(){
     const dt=JSON.parse(localStorage.getItem("mia:datas")||"null");
     if(dt&&[dt.de,dt.ate,dt.cde,dt.cate].every(dataOk)){
       inDe.value=dt.de; inAte.value=dt.ate; inCDe.value=dt.cde; inCAte.value=dt.cate;
+      if(typeof dt.cmp==="boolean") comparar=dt.cmp;
     } else if(D.aoVivo){
       inDe.value=D.periodo.atual.de; inAte.value=D.periodo.atual.ate;
-      inCDe.value=D.periodo.anterior.de; inCAte.value=D.periodo.anterior.ate;
+      if(D.periodo.anterior){
+        inCDe.value=D.periodo.anterior.de; inCAte.value=D.periodo.anterior.ate;
+      }
+      comparar=!!D.periodo.anterior;
     }
   }catch(e){}
 }
@@ -1859,6 +1954,7 @@ restaurar();
 btPuxar.addEventListener("click",puxar);
 document.getElementById("btSemana").addEventListener("click",atalhoSemana);
 document.getElementById("btMes").addEventListener("click",atalhoMes);
+document.getElementById("btMesAtual").addEventListener("click",atalhoMesAtual);
 
 const SOL='<circle cx="12" cy="12" r="4.4"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/>';
 const LUA='<path d="M20 14.5A8.4 8.4 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>';

@@ -23,11 +23,25 @@ trocam quando a migração de marca chegar ao produto.
 ## Como usar
 
 1. A barra de cima diz o que está na tela: "**Agosto de 2026** comparado com
-   **Julho de 2026**". Clique no período para abrir a edição das quatro datas
-   (Aplicar datas fecha; Cancelar ou Esc desfaz), ou use os atalhos **Semana
-   passada** e **Mês passado**. Mexer no período principal reencaixa a
+   **julho de 2026**". Clique em **Escolher datas** (ou no próprio período) para
+   abrir a edição — Aplicar datas fecha, Cancelar ou Esc desfaz. Os atalhos são
+   **Semana passada**, **Este mês** (do dia 1 até ontem, contra o mesmo trecho do
+   mês passado) e **Mês passado**. Mexer no período principal reencaixa a
    comparação na janela anterior de mesmo tamanho.
 2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
+
+### Dois modos: com comparação e sem
+
+Dentro da edição há a caixa **Comparar com outro período**. Ligada (o padrão), o
+painel funciona como sempre: cada bloco mostra os dois números lado a lado com a
+seta de variação. Desligada, o painel passa a mostrar **um período só** — a barra
+vira uma frase simples ("1 a 6 de setembro"), os blocos ficam de uma coluna, sem
+seta, e a consulta cai de dezoito para **onze chamadas**. Serve para olhar uma
+semana, um punhado de dias ou um mês isolado sem inventar uma base de comparação.
+
+O modo fica guardado no navegador junto com as datas. Religar a comparação
+reencaixa a janela anterior de mesmo tamanho, porque o período pode ter mudado
+enquanto ela estava desligada — a edição continua aberta para ajustar.
 
 A análise mensal é o mesmo fluxo: "Mês passado" põe o último mês-calendário
 completo contra o anterior. Comparar meses de durações diferentes (setembro tem
@@ -116,7 +130,8 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dezoito chamadas** por consulta: Google, OpenAI e GA4 × duas janelas, o Meta ×
+São **dezoito chamadas** por consulta com comparação (onze sem ela, que dispensa
+as janelas de comparação): Google, OpenAI e GA4 × duas janelas, o Meta ×
 três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
 no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
 perfil; e uma por anúncio para a tabela), o Instagram × cinco (o perfil dia a
