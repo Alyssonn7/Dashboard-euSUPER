@@ -1567,7 +1567,6 @@ function vLP(){
   const rot=Z?{a:A.rotulo,b:Z.rotulo}:null;
   const g=(x,f)=>x?f(x):null;
   const bl=(r,fm,f,e,m)=>B(r,fm,g(A,f),g(Z,f),e,m,rot);
-  const novos=x=>x.sessoes?x.sessoesNovos/x.sessoes*100:null;
   const vel=v=>v!=null?nf0.format(v)+"/100":"—";
 
   /* as duas janelas têm tamanhos diferentes: o export novo do Clarity começou
@@ -1583,20 +1582,20 @@ function vLP(){
   const maxO=Math.max(1,...origens.map(o=>o.s));
   const totO=origens.reduce((x,o)=>x+o.s,0);
 
+  /* cinco métricas, a pedido: volume, a ação que importa, duas de atenção e a
+     velocidade. Visitantes novos, cliques em "Entrar" e "no celular" saíram da
+     tela — os campos continuam em CLARITY_SEMANAS, então voltam num minuto. */
   return `
   ${tituloGrupo("Landing Page · semana a semana (Microsoft Clarity)",
-      "Export do painel do Clarity — a API só devolve os últimos 3 dias, então estas datas não vêm ao vivo")}
+      "Cinco números, do export do painel do Clarity")}
   ${aviso}
   ${blocos(
-    bl("Visitas",num,x=>x.sessoes,"Vezes que alguém abriu a página") +
-    bl("Visitantes novos",pct,novos,"Das visitas, quantas eram de quem nunca tinha entrado","neutro") +
-    bl("Rolagem média",pct,x=>x.scroll,"Até onde descem na página: 16% é só a primeira tela") +
-    bl("Tempo ativo",seg,x=>x.tempoAtivo,"Tempo realmente mexendo na página") +
-    bl("Cliques de saída",pct,x=>x.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)","neutro") +
-    bl("Cliques em “Entrar”",pct,x=>x.cliqueLoginPct,"Visitas que clicaram para fazer login") +
-    bl("No celular",pct,x=>x.mobilePct,"Soma dos navegadores de celular dividida pelas visitas — este export não traz o corte por dispositivo","neutro") +
-    bl("Velocidade",vel,x=>x.desempenho.pontuacao,
-       `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(A.desempenho.lcpSeg)}s (o ideal é até 2,5s)`)
+    bl("Visitas",num,x=>x.sessoes,"Quantas vezes a página foi aberta") +
+    bl("Seguiram para o produto",pct,x=>x.cliqueSaidaPct,
+       "De 100 visitas, quantas clicaram num link que sai da página") +
+    bl("Rolagem média",pct,x=>x.scroll,"Até onde a pessoa desce: 16% é só a primeira tela") +
+    bl("Tempo ativo",seg,x=>x.tempoAtivo,"Segundos realmente mexendo na página") +
+    bl("Velocidade",vel,x=>x.desempenho.pontuacao,"Nota do Clarity, de 0 a 100")
   )}
   <div class="faixa" style="margin-top:14px">
     ${cx(cxt("De onde vieram as visitas",
