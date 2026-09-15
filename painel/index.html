@@ -611,7 +611,9 @@ const CLARITY_SEMANAS={
       {n:"Busca no Google",s:691,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
       {n:"Instagram",s:372,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
       {n:"Facebook",s:213,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
-      {n:"WhatsApp",s:47,d:"Abriu um link compartilhado em conversa no WhatsApp"},
+      /* referenciador cru: l.wl.co, o redirecionador de links do WhatsApp (Meta).
+         Ele nao identifica a conversa — nem o Clarity nem o GA conseguem. */
+      {n:"WhatsApp",s:47,d:"Tocou no link dentro do WhatsApp: o time mandando para um lead, um cliente compartilhando ou um grupo. O WhatsApp não diz qual conversa foi. Não é anúncio — é envio direto e boca a boca."},
       {n:"App da Mia",s:34,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
       {n:"A própria página",s:13,d:"Navegou de uma parte da página para outra"},
       {n:"Threads",s:4,d:"Clicou em link no Threads"}
