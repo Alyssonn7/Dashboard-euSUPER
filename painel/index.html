@@ -1104,15 +1104,21 @@ async function puxar(){
     ["mA",()=>qMeta(de,ate)],
     ["oA",()=>qOpenai(de,ate)],
     ["sA",()=>qSessoes(de,ate)],
-    ["iA",()=>qInsta(de,ate)],
-    ["iP",()=>qInstaPosts(de,ate)], ["iU",()=>qInstaPerfil(de,ate)],
-    ["iS",()=>qInstaSeguidores(de,ate,cmp?cde:null,cmp?cate:null)],
     ["ng",()=>qNegocio(de,ate,cmp?cde:null,cmp?cate:null)]
   ];
+  /* aba oculta não desenha nada, então consultá-la seria gasto puro: as cinco
+     chamadas do Instagram só entram enquanto a aba estiver visível. Basta tirar
+     o oculta:true da lista VISTAS para elas voltarem. */
+  if(visivel("insta")){
+    tarefas.push(
+      ["iA",()=>qInsta(de,ate)],
+      ["iP",()=>qInstaPosts(de,ate)], ["iU",()=>qInstaPerfil(de,ate)],
+      ["iS",()=>qInstaSeguidores(de,ate,cmp?cde:null,cmp?cate:null)]);
+    if(cmp) tarefas.push(["iB",()=>qInsta(cde,cate)]);
+  }
   if(cmp) tarefas.push(
     ["gB",()=>qGoogle(cde,cate)], ["mB",()=>qMeta(cde,cate)],
-    ["oB",()=>qOpenai(cde,cate)], ["sB",()=>qSessoes(cde,cate)],
-    ["iB",()=>qInsta(cde,cate)]);
+    ["oB",()=>qOpenai(cde,cate)], ["sB",()=>qSessoes(cde,cate)]);
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
     try{ R[k]=await f() }catch(e){ R[k]=null; FALHAS[k]=e }
@@ -1684,12 +1690,13 @@ const VISTAS=[
   {id:"google",nome:"Google Ads", ic:"gads",    marca:true, chip:true, r:vGoogle},
   {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
-  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, r:vInstagram},
+  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, oculta:true, r:vInstagram},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
   {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
   {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,oculta:true,r:vPassos}
 ];
 const ABAS=VISTAS.filter(v=>!v.oculta);
+const visivel=id=>ABAS.some(v=>v.id===id);
 
 const menu=document.getElementById("menu"), main=document.getElementById("main");
 ABAS.forEach((v,i)=>{

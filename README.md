@@ -76,8 +76,8 @@ salvo é descartado — as datas ficam.
 | **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
 | **Visão geral** | Agosto fechado em duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 
-As abas **Resumo** (cinco números, o funil e o GMV semanal) e **Próximos passos**
-(cartões de ação) existem no código mas estão ocultas — o modelo de apresentação
+As abas **Resumo** (cinco números, o funil e o GMV semanal), **Instagram** e
+**Próximos passos** (cartões de ação) existem no código mas estão ocultas — o modelo de apresentação
 atual não as usa. Para reativar, remova a flag `oculta:true` da entrada
 correspondente na lista `VISTAS` do `painel/index.html`. O botão Imprimir também
 saiu a pedido.
@@ -130,8 +130,10 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dezoito chamadas** por consulta com comparação (onze sem ela, que dispensa
-as janelas de comparação): Google, OpenAI e GA4 × duas janelas, o Meta ×
+Com a aba Instagram oculta são **treze chamadas** por consulta com comparação
+(sete sem ela). As cinco do Instagram só entram enquanto a aba estiver visível —
+aba oculta não desenha nada, então consultá-la seria gasto puro. Com ela visível
+são dezoito com comparação e onze sem: Google, OpenAI e GA4 × duas janelas, o Meta ×
 três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
 no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
 perfil; e uma por anúncio para a tabela), o Instagram × cinco (o perfil dia a
