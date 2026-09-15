@@ -470,8 +470,12 @@ tfoot td.r{text-align:right}
    por conversão são calculados na hora, para não haver número que não fecha.
    ========================================================================= */
 const RETRATO = {
-  puxadoEm:"31/08/2026 (gravado)", aoVivo:false,
-  periodo:{atual:{de:"2026-08-24",ate:"2026-08-30"},anterior:{de:"2026-08-17",ate:"2026-08-23"}},
+  puxadoEm:"15/09/2026 (gravado)", aoVivo:false,
+  periodo:{atual:{de:"2026-09-08",ate:"2026-09-14"},anterior:{de:"2026-09-01",ate:"2026-09-07"}},
+  /* carimbo do retrato: quando ele muda, o painel adota UMA vez o período
+     gravado aqui, mesmo que o navegador tenha datas salvas. Depois disso as
+     datas que você escolher voltam a mandar, como antes. */
+  carimbo:"2026-09-15-semanal",
 
   /* Instagram organico, conta @usemiaapp (id 17841476511713959), ligada no
      Windsor em 04/09/2026 e puxada no mesmo dia. Alcance e contas engajadas sao
@@ -513,63 +517,53 @@ const RETRATO = {
     ],
     erro:null, erroSeguidores:null},
 
+  /* Google Ads · Windsor, conta 326-604-5511, puxado em 15/09/2026.
+     Só a CAMPANHA PRINCIPAL (1), de Pesquisa, rodou nas duas semanas. */
   google:{
-    atual:   {impressoes:12718, cliques:218, custo:551.16,  conversoes:20},
-    anterior:{impressoes:29110, cliques:832, custo:871.46,  conversoes:0},
+    atual:   {impressoes:9446, cliques:765, custo:1950.5717, conversoes:96},
+    anterior:{impressoes:3210, cliques:247, custo:497.4305,  conversoes:43},
     campanhas:[
-      {nome:"Pesquisa",        impressoes:1959,  cliques:164, custo:449.18, conversoes:20},
-      {nome:"YouTube",         impressoes:10759, cliques:54,  custo:101.98, conversoes:0},
-      {nome:"Performance Max", impressoes:0,     cliques:0,   custo:0,      conversoes:0}
+      {nome:"Pesquisa", impressoes:9446, cliques:765, custo:1950.5717, conversoes:96}
     ]
   },
+  /* Meta Ads · Windsor, conta 604915332642452, puxado em 15/09/2026.
+     Uma campanha só nas duas semanas — ABO - TESTE A/B (CONVERSÃO), objetivo
+     OUTCOME_SALES, portanto grupo de cadastro. Nenhuma campanha de visita ao
+     perfil rodou. Como o grupo de cadastro foi o único a gastar, o alcance
+     dele é o da conta, já deduplicado (alcanceSomado:false). */
   meta:{
-    atual:   {alcance:12737, impressoes:40124, cliques:557,  custo:1133.11, conversoes:24, visitasLP:349},
-    anterior:{alcance:24012, impressoes:33088, cliques:1122, custo:480.38,  conversoes:0,  visitasLP:84},
-    /* por objetivo de campanha (Windsor · campaign_objective): OUTCOME_SALES é a
-       campanha de cadastro, OUTCOME_TRAFFIC é a de visita ao perfil do Instagram.
-       Alcance: na janela atual só o grupo de cadastro rodou, então vale o alcance
-       deduplicado da conta; na anterior os dois rodaram e o alcance de cada grupo
-       é a soma das campanhas dele (quem viu duas campanhas conta duas vezes). */
+    atual:   {alcance:29104, impressoes:39030, cliques:588, custo:1006.98, conversoes:84, visitasLP:415},
+    anterior:{alcance:24847, impressoes:35368, cliques:523, custo:991.93,  conversoes:76, visitasLP:368},
     grupos:{
       cadastro:{
-        atual:   {alcance:12737, impressoes:40125, cliques:557, custo:1133.18, conversoes:24, visitasLP:349, visitasPerfil:57, alcanceSomado:false},
-        anterior:{alcance:4047,  impressoes:6191,  cliques:135, custo:298.90,  conversoes:0,  visitasLP:82,  visitasPerfil:35, alcanceSomado:true}
+        atual:   {alcance:29104, impressoes:39030, cliques:588, custo:1006.98, conversoes:84, visitasLP:415, visitasPerfil:87,  alcanceSomado:false},
+        anterior:{alcance:24847, impressoes:35368, cliques:523, custo:991.93,  conversoes:76, visitasLP:368, visitasPerfil:100, alcanceSomado:false}
       },
       perfil:{
-        atual:   null,
-        anterior:{alcance:22840, impressoes:26897, cliques:987, custo:181.48, conversoes:0, visitasLP:2, visitasPerfil:50, alcanceSomado:true},
-        nota:"As seis campanhas de visita ao perfil foram desligadas em 24/08 — por isso não há número no período atual."
+        atual:null, anterior:null,
+        nota:"Nenhuma campanha de visita ao perfil rodou nestas duas semanas — as seis foram desligadas em 24/08."
       }
     },
-    /* anúncios da janela atual (repuxados em 02/09 com objetivo e visitas ao perfil) */
     criativos:[
-      {nome:"ADS01-EXISTENTE",campanha:"CONVERSÃO 01-DUDA",objetivo:"OUTCOME_SALES",custo:357.40,impressoes:3156, cliques:240,conversoes:7, visitasPerfil:7},
-      {nome:"ADS-04",campanha:"ABO A/B",   objetivo:"OUTCOME_SALES",custo:310.52,impressoes:5847, cliques:116,conversoes:15,visitasPerfil:7},
-      {nome:"ADS-02",campanha:"CBO SIGNUP",objetivo:"OUTCOME_SALES",custo:206.62,impressoes:8110, cliques:61, conversoes:0, visitasPerfil:23},
-      {nome:"ADS-01",campanha:"CBO SIGNUP",objetivo:"OUTCOME_SALES",custo:108.09,impressoes:20782,cliques:93, conversoes:1, visitasPerfil:14},
-      {nome:"ADS-05",campanha:"ABO A/B",   objetivo:"OUTCOME_SALES",custo:61.06, impressoes:803,  cliques:26, conversoes:1, visitasPerfil:1},
-      {nome:"ADS-03",campanha:"ABO A/B",   objetivo:"OUTCOME_SALES",custo:42.07, impressoes:614,  cliques:8,  conversoes:0, visitasPerfil:4},
-      {nome:"ADS-02",campanha:"ABO A/B",   objetivo:"OUTCOME_SALES",custo:37.91, impressoes:663,  cliques:7,  conversoes:0, visitasPerfil:1},
-      {nome:"ADS-01",campanha:"ABO A/B",   objetivo:"OUTCOME_SALES",custo:9.51,  impressoes:150,  cliques:6,  conversoes:0, visitasPerfil:0}
+      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:1006.98,impressoes:39030,cliques:588,conversoes:84,visitasPerfil:87,
+       post:"https://www.instagram.com/p/Dcl4auGgA2o/"}
     ],
-    /* anúncios da janela de comparação: é daqui que sai o top 3 de visita ao
-       perfil enquanto essas campanhas estiverem desligadas */
+    /* na semana de 01–07/09 os outros quatro anúncios do teste A/B gastaram
+       centavos antes de serem pausados; ADS-04 levou praticamente tudo */
     criativosAnt:[
-      {nome:"ADS-01",   campanha:"[VISITA AO PERFIL] [1]",objetivo:"OUTCOME_TRAFFIC",custo:50.27,impressoes:6535,cliques:194,conversoes:0,visitasPerfil:7},
-      {nome:"ADS-02",   campanha:"[VISITA AO PERFIL] [2]",objetivo:"OUTCOME_TRAFFIC",custo:24.12,impressoes:6189,cliques:161,conversoes:0,visitasPerfil:7},
-      {nome:"ADS-03",   campanha:"[VISITA AO PERFIL] [3]",objetivo:"OUTCOME_TRAFFIC",custo:26.20,impressoes:4775,cliques:172,conversoes:0,visitasPerfil:17},
-      {nome:"ADS-04",   campanha:"[VISITA AO PERFIL] [4]",objetivo:"OUTCOME_TRAFFIC",custo:26.24,impressoes:3943,cliques:136,conversoes:0,visitasPerfil:7},
-      {nome:"ADS-05",   campanha:"[VISITA AO PERFIL] [5]",objetivo:"OUTCOME_TRAFFIC",custo:27.60,impressoes:2656,cliques:160,conversoes:0,visitasPerfil:7},
-      {nome:"CARROSSEL",campanha:"[VISITA AO PERFIL] [6]",objetivo:"OUTCOME_TRAFFIC",custo:27.05,impressoes:2799,cliques:164,conversoes:0,visitasPerfil:5},
-      {nome:"ADS01-EXISTENTE",campanha:"CONVERSÃO 01-DUDA",objetivo:"OUTCOME_SALES",custo:149.86,impressoes:2738,cliques:78,conversoes:0,visitasPerfil:13},
-      {nome:"ADS-02",   campanha:"CBO SIGNUP",objetivo:"OUTCOME_SALES",custo:89.31,impressoes:1502,cliques:33,conversoes:0,visitasPerfil:14},
-      {nome:"ADS-01",   campanha:"CBO SIGNUP",objetivo:"OUTCOME_SALES",custo:59.73,impressoes:1951,cliques:24,conversoes:0,visitasPerfil:8}
+      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:991.38,impressoes:35355,cliques:523,conversoes:76,visitasPerfil:100},
+      {nome:"ADS-02",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.24,impressoes:2,cliques:0,conversoes:0,visitasPerfil:0},
+      {nome:"ADS-03",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.17,impressoes:6,cliques:0,conversoes:0,visitasPerfil:0},
+      {nome:"ADS-05",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.09,impressoes:4,cliques:0,conversoes:0,visitasPerfil:0},
+      {nome:"ADS-01",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.05,impressoes:1,cliques:0,conversoes:0,visitasPerfil:0}
     ]
   },
+  /* entrega do Windsor nas duas semanas (sem conversão — o conector não tem
+     esse campo). A aba OpenAI mostra o export; isto aqui só alimenta o Resumo,
+     que está oculto. */
   openai:{
-    atual:   {impressoes:9905,  cliques:163, custo:199.27, conversoes:null},
-    anterior:{impressoes:38068, cliques:972, custo:524.83, conversoes:null},
-    nota:"O canal ficou pausado de 24 a 28/08 e voltou em 29/08 — por isso a semana atual é bem menor que a anterior."
+    atual:   {impressoes:25095, cliques:568, custo:617.89, conversoes:null},
+    anterior:{impressoes:26811, cliques:579, custo:734.84, conversoes:null}
   },
 
   lp:{
@@ -601,38 +595,65 @@ const RETRATO = {
    do Windsor não tem esse campo. NÃO muda com "Puxar dados"; para atualizar,
    é preciso um export novo. */
 const OPENAI_MANAGER={
-  arquivo:"campaigns.csv", enviadoEm:"02/09/2026", cobertura:"17/08–31/08",
-  rotulo:"Agosto", campanhas:[
-    {nome:"[CAMPANHA DE SIGNUP]",     status:"active", inicio:"2026-08-17", orcamentoDia:50,
-     impressoes:32883, cliques:921, conversoes:97, paginasVistas:915, custo:493.82},
-    {nome:"[CAMPANHA DE SIGNUP] [02]",status:"active", inicio:"2026-08-21", orcamentoDia:50,
-     impressoes:19508, cliques:336, conversoes:20, paginasVistas:270, custo:315.57}
-  ]
+  arquivos:["OpenAI_Ads_0109_0709.csv","OpenAI_Ads_0809_1409.csv"], enviadoEm:"15/09/2026",
+  /* conferido contra o Windsor em 15/09: impressões e cliques batem exatamente
+     nas quatro linhas; o gasto difere em um centavo por campanha, que é
+     arredondamento do export. Só as conversões são informação nova — o
+     conector openai_ads não tem campo de conversão. */
+  atual:{ rotulo:"08/09–14/09", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:11681, cliques:312, conversoes:32, custo:264.15},
+    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:13414, cliques:256, conversoes:22, custo:353.72}
+  ]},
+  anterior:{ rotulo:"01/09–07/09", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:14077, cliques:295, conversoes:30, custo:360.73},
+    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:12734, cliques:284, conversoes:23, custo:374.11}
+  ]}
 };
 
 /* Export do Microsoft Clarity (projeto "LP Mia (Principal)"), enviado pelo Alysson
    em 02/09/2026, cobrindo 01–31/08. A aba Landing Page é 100% Clarity — sem GA4.
    NÃO muda com "Puxar dados"; para atualizar, é preciso um export novo. */
-const CLARITY_AGOSTO={
-  arquivo:"Clarity_LP_Mia_Principal_Painel_09022026_10_28.csv", enviadoEm:"02/09/2026",
-  projeto:"LP Mia (Principal)", cobertura:"01/08–31/08", rotulo:"Agosto",
-  sessoes:3159, sessoesBot:327, usuarios:2745, sessoesNovos:2875, sessoesRetorno:284,
-  paginasPorSessao:1.20, scroll:15.99, tempoAtivo:40, tempoTotal:80,
-  rageClicksPct:0.41, deadClicksPct:4.87, botaoDireitoPct:5.57,
-  cliqueSaidaPct:23.14, cliqueLoginPct:5.38, mobilePct:84.56,
-  desempenho:{pontuacao:72.5, lcpSeg:3.95, inpMs:398, cls:0.002}, errosJs:55,
-  /* referenciadores agrupados (facebook = l.facebook + m.facebook + facebook.com;
-     WhatsApp = l.wl.co; Lovable = ferramenta em que a página foi construída) */
-  origens:[
-    {n:"Busca no Google",s:520,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
-    {n:"Facebook",s:293,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
-    {n:"Instagram",s:236,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
-    {n:"YouTube",s:187,d:"Clicou em link ou anúncio dentro do YouTube"},
-    {n:"Lovable (ferramenta de desenvolvimento)",s:137,d:"Acessos de quem estava construindo a página — não são visitantes"},
-    {n:"App da Mia",s:90,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
-    {n:"WhatsApp",s:71,d:"Abriu um link compartilhado em conversa no WhatsApp"},
-    {n:"Banners do Google",s:31,d:"Anúncios em imagem do Google Ads espalhados por outros sites"}
-  ]
+const CLARITY_SEMANAS={
+  projeto:"LP Mia (Principal)", enviadoEm:"15/09/2026",
+  arquivos:["Clarity_LP0109_0709.csv","Clarity_LP0809_1409.csv"],
+  /* ATENÇÃO à janela do export novo: o Clarity gravou "09/07 00:00 – 09/14
+     23:59", ou seja 07 a 14/09 — oito dias, e o dia 07/09 também está no
+     export anterior. A comparação é 8 dias contra 7, com um dia repetido.
+     Por isso a aba mostra o aviso e a média por dia ao lado do total. */
+  atual:{
+    rotulo:"07/09–14/09", dias:8, sessoes:2137, sessoesBot:117,
+    usuarios:1917, sessoesNovos:1968, sessoesRetorno:169,
+    paginasPorSessao:1.1998, scroll:16.45, tempoAtivo:29, tempoTotal:60,
+    rageClicksPct:0.09, deadClicksPct:2.81, botaoDireitoPct:6.22,
+    cliqueSaidaPct:26.53, cliqueLoginPct:6.36,
+    /* o Clarity não exporta o corte por dispositivo: esta é a soma dos
+       navegadores de celular dividida pelas sessões (1.870 de 2.137) */
+    mobilePct:87.51,
+    desempenho:{pontuacao:68.87, lcpSeg:4.685, inpMs:496, cls:0.002}, errosJs:71,
+    origens:[
+      {n:"Busca no Google",s:691,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
+      {n:"Instagram",s:372,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
+      {n:"Facebook",s:213,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
+      {n:"WhatsApp",s:47,d:"Abriu um link compartilhado em conversa no WhatsApp"},
+      {n:"App da Mia",s:34,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
+      {n:"A própria página",s:13,d:"Navegou de uma parte da página para outra"},
+      {n:"Threads",s:4,d:"Clicou em link no Threads"}
+    ]
+  },
+  anterior:{
+    rotulo:"01/09–07/09", dias:7, sessoes:1298, sessoesBot:92,
+    usuarios:1189, sessoesNovos:1198, sessoesRetorno:100,
+    paginasPorSessao:1.2419, scroll:17.6, tempoAtivo:37, tempoTotal:72,
+    rageClicksPct:0, deadClicksPct:3.54, botaoDireitoPct:6.55,
+    cliqueSaidaPct:26.58, cliqueLoginPct:6.09,
+    mobilePct:90.37,   /* 1.173 de 1.298 */
+    desempenho:{pontuacao:73, lcpSeg:4.288, inpMs:360, cls:0.001}, errosJs:44,
+    origens:[
+      {n:"Instagram",s:288},{n:"Busca no Google",s:228},{n:"Facebook",s:182},
+      {n:"App da Mia",s:17},{n:"A própria página",s:16},{n:"WhatsApp",s:14},
+      {n:"Threads",s:4}
+    ]
+  }
 };
 
 /* Visão geral de agosto: os três canais de anúncio somados + a base do produto.
@@ -640,21 +661,16 @@ const CLARITY_AGOSTO={
    OpenAI: Windsor para entrega e export do Ads Manager para cadastros (17–31/08,
    quando as campanhas existiram). Metabase: mesmo SQL do painel, 01–31/08 vs
    01–31/07. Fechado em 02/09/2026; NÃO muda com "Puxar dados". */
-const VISAO_AGOSTO={
-  rotulo:"Agosto", cobertura:"01/08–31/08", fechadoEm:"02/09/2026",
+const VISAO_SEMANA={
+  rotulo:"08/09–14/09", cobertura:"08/09–14/09", fechadoEm:"15/09/2026",
   canais:[
     {n:"Google Ads", fonte:"Windsor · google_ads",
-     alcance:null,   impressoes:54556,  cliques:1892, custo:3382.95, cadastros:88},
+     alcance:null,  impressoes:9446,  cliques:765, custo:1950.57, cadastros:96},
     {n:"Meta Ads",   fonte:"Windsor · facebook · alcance deduplicado da conta",
-     alcance:142623, impressoes:278044, cliques:7305, custo:2847.72, cadastros:39},
+     alcance:29104, impressoes:39030, cliques:588, custo:1006.98, cadastros:84},
     {n:"OpenAI Ads", fonte:"Windsor (entrega) + export do Ads Manager (cadastros)",
-     alcance:null,   impressoes:52391,  cliques:1257, custo:809.39,  cadastros:117}
-  ],
-  metabase:{
-    rotuloAnt:"julho",
-    atual:   {cadastros:341, onboarding:291, contasAtivas:22, pagamentos:96, gmv:4815.55},
-    anterior:{cadastros:285, onboarding:233, contasAtivas:14, pagamentos:63, gmv:5372.10}
-  }
+     alcance:null,  impressoes:25095, cliques:568, custo:617.87,  cadastros:54}
+  ]
 };
 
 const CONTAS = {google:"326-604-5511", meta:"604915332642452", ga4:"511677134",
@@ -1185,7 +1201,7 @@ function rotuloPer(p){
    e o de comparação à direita, cada um com seu rótulo e seu número real. A seta
    pequena ao lado do número atual diz se melhorou (verde) ou piorou (laranja),
    respeitando métricas em que cair é bom (modo "inv") */
-function B(rot,fmt,a,b,expl,modo){
+function B(rot,fmt,a,b,expl,modo,rotulos){
   let seta="";
   /* a comparacao e feita sobre o valor JA formatado: se os dois numeros
      aparecem iguais na tela (1,3 e 1,3, arredondados de 1,25 e 1,31), uma seta
@@ -1197,12 +1213,16 @@ function B(rot,fmt,a,b,expl,modo){
     seta=`<i class="bl-seta ${cls}" title="${subiu?"Subiu":"Caiu"} em relação ao período de comparação">${subiu?"▲":"▼"}</i>`;
   }
   const per=(D&&D.periodo)||{};
-  const la=rotuloPer(per.atual)||"Atual", lb=rotuloPer(per.anterior)||"Anterior";
+  /* rotulos: bloco que vem de um export tem janela própria e não a do painel —
+     a Landing Page, por exemplo, cobre 07 a 14/09 enquanto a barra diz 08 a 14 */
+  const dois = rotulos ? true : !!per.anterior;
+  const la = rotulos ? rotulos.a : (rotuloPer(per.atual)||"Atual");
+  const lb = rotulos ? rotulos.b : (rotuloPer(per.anterior)||"Anterior");
   return `<div class="bl">
     <div class="bl-r">${rot}</div>
-    <div class="bl-2${per.anterior?"":" so"}">
-      <span class="bl-k atual">${la}</span>${per.anterior?`<span class="bl-k">${lb}</span>`:""}
-      <span class="bl-v">${fmt(a)}${seta}</span>${per.anterior?`<span class="bl-v2">${fmt(b)}</span>`:""}
+    <div class="bl-2${dois?"":" so"}">
+      <span class="bl-k atual">${la}</span>${dois?`<span class="bl-k">${lb}</span>`:""}
+      <span class="bl-v">${fmt(a)}${seta}</span>${dois?`<span class="bl-v2">${fmt(b)}</span>`:""}
     </div>
     ${expl?`<div class="bl-e">${expl}</div>`:""}
   </div>`;
@@ -1523,69 +1543,83 @@ function vInstagram(){
 /* ------------------------------------------------------------- OpenAI Ads */
 function vOpenai(){
   /* a aba mostra SÓ o export do Ads Manager, a pedido: é a única fonte com
-     conversão e não faz sentido misturar com a entrega parcial do Windsor.
-     A consulta ao vivo do canal continua existindo para as outras contas. */
+     conversão do canal. Os rótulos das colunas são os do export, não os da
+     barra, porque a janela do arquivo é que manda aqui. */
   const M=(typeof OPENAI_MANAGER!=="undefined")?OPENAI_MANAGER:null;
-  let exportado="";
-  if(M && M.campanhas && M.campanhas.length){
-    const C=M.campanhas.map(derivar);
-    const t=derivar(C.reduce((s,c)=>({impressoes:s.impressoes+c.impressoes,cliques:s.cliques+c.cliques,
-      conversoes:s.conversoes+c.conversoes,custo:s.custo+c.custo,visitasLP:s.visitasLP+(c.paginasVistas||0)}),
-      {impressoes:0,cliques:0,conversoes:0,custo:0,visitasLP:0}));
-    const rp=M.rotulo||M.cobertura;
-    exportado=`
-    ${tituloGrupo("OpenAI Ads · Conversões de "+rp.toLowerCase()+" (export do Ads Manager)")}
-    ${blocos(
-      B1("Conversões",num,t.conversoes,"Cadastros registrados pelo Ads Manager",rp) +
-      B1("Custo por conversão",brl,t.custoConv,"Quanto custou cada cadastro",rp) +
-      B1("Tx. conversão",pct,t.txConv,"De 100 cliques, quantos viraram cadastro",rp) +
-      B1("Páginas vistas",num,t.visitasLP,"Cliques que carregaram a página",rp) +
-      B1("Chegaram na página",pct,t.connect,"Cliques que viraram visita de verdade",rp) +
-      B1("Investimento",brl,t.custo,"Total gasto no canal em "+rp.toLowerCase(),rp) +
-      B1("Impressões",num,t.impressoes,"Vezes que o anúncio apareceu",rp) +
-      B1("Cliques",num,t.cliques,"Quantas pessoas clicaram",rp) +
-      B1("CTR",pct,t.ctr,"De 100 que viram, quantos clicaram",rp) +
-      B1("CPC",brl,t.cpc,"Quanto custou cada clique",rp) +
-      B1("CPM",brl,t.cpm,"Custo para aparecer mil vezes",rp)
-    )}
-    `;
-  }
-
-  return exportado || `<div class="vazio">Sem export do Ads Manager carregado para este canal.</div>`;
+  if(!M||!M.atual) return `<div class="vazio">Sem export do Ads Manager carregado para este canal.</div>`;
+  const totalDe=l=>derivar(l.reduce((x,c)=>({impressoes:x.impressoes+c.impressoes,
+    cliques:x.cliques+c.cliques, conversoes:x.conversoes+c.conversoes, custo:x.custo+c.custo}),
+    {impressoes:0,cliques:0,conversoes:0,custo:0}));
+  const a=totalDe(M.atual.campanhas), z=M.anterior?totalDe(M.anterior.campanhas):null;
+  const rot=z?{a:M.atual.rotulo,b:M.anterior.rotulo}:null;
+  const bl=(r,f,k,e,m)=>B(r,f,a[k],z&&z[k],e,m,rot);
+  return `
+  ${tituloGrupo("OpenAI Ads · semana a semana (export do Ads Manager)",
+      "Conferido contra o Windsor em 15/09: impressões e cliques batem exatamente, o gasto difere um centavo por campanha (arredondamento do export). Só as conversões são informação nova.")}
+  ${blocos(
+    bl("Conversões",num,"conversoes","Cadastros registrados pelo Ads Manager") +
+    bl("Custo por conversão",brl,"custoConv","Quanto custou cada cadastro","inv") +
+    bl("Tx. conversão",pct,"txConv","De 100 cliques, quantos viraram cadastro") +
+    bl("Investimento",brl,"custo","Total gasto no canal","neutro") +
+    bl("Impressões",num,"impressoes","Vezes que o anúncio apareceu") +
+    bl("Cliques",num,"cliques","Quantas pessoas clicaram") +
+    bl("CTR",pct,"ctr","De 100 que viram, quantos clicaram") +
+    bl("CPC",brl,"cpc","Quanto custou cada clique","inv") +
+    bl("CPM",brl,"cpm","Custo para aparecer mil vezes","inv")
+  )}
+  <p class="proc">O export novo não traz mais a coluna de páginas vistas, então
+  os blocos "Páginas vistas" e "Chegaram na página" saíram desta janela.</p>`;
 }
 
 /* ------------------------------------------------------------ Landing Page */
 function vLP(){
-  /* a aba mostra só o que o Alysson pediu: oito blocos do export mensal do
-     Clarity e de onde vieram as visitas. Nada de GA4, nada de "últimos 3 dias". */
-  const K=(typeof CLARITY_AGOSTO!=="undefined")?CLARITY_AGOSTO:null;
-  if(!K) return `<div class="vazio">Sem export do Clarity carregado.</div>`;
-  const rp=K.rotulo;
-  const novosPct=K.sessoes?K.sessoesNovos/K.sessoes*100:null;
-  /* acessos de quem estava construindo a página (Lovable) não são visitantes */
-  const origens=K.origens.filter(o=>!/lovable/i.test(o.n));
-  const maxO=Math.max(...origens.map(o=>o.s));
-  const totO=origens.reduce((a,o)=>a+o.s,0);
+  /* oito blocos do Clarity, semana contra semana, mais de onde vieram as
+     visitas. Nada de GA4. Os rótulos são os do export: a janela do arquivo
+     não é exatamente a da barra, e mentir sobre isso seria pior. */
+  const K=(typeof CLARITY_SEMANAS!=="undefined")?CLARITY_SEMANAS:null;
+  if(!K||!K.atual) return `<div class="vazio">Sem export do Clarity carregado.</div>`;
+  const A=K.atual, Z=K.anterior||null;
+  const rot=Z?{a:A.rotulo,b:Z.rotulo}:null;
+  const g=(x,f)=>x?f(x):null;
+  const bl=(r,fm,f,e,m)=>B(r,fm,g(A,f),g(Z,f),e,m,rot);
+  const novos=x=>x.sessoes?x.sessoesNovos/x.sessoes*100:null;
+  const vel=v=>v!=null?nf0.format(v)+"/100":"—";
+
+  /* as duas janelas têm tamanhos diferentes: o export novo do Clarity começou
+     em 07/09 e não em 08/09. Dizer isso é mais útil que esconder. */
+  const aviso=(Z&&A.dias!==Z.dias)?`<p class="aviso"><b>As duas janelas não têm o mesmo tamanho.</b>
+    O export novo do Clarity veio de ${esc(A.rotulo)} — ${A.dias} dias, não 7 — e o dia 07/09
+    aparece nos dois arquivos. Por isso a variação de visitas está inflada: por dia são
+    <b>${nf0.format(A.sessoes/A.dias)}</b> contra <b>${nf0.format(Z.sessoes/Z.dias)}</b>.
+    As médias (rolagem, tempo, percentuais) não sofrem com isso. Reexportando 08–14/09 eu troco em minutos.</p>`:"";
+
+  const antes={}; (Z&&Z.origens||[]).forEach(o=>{antes[o.n]=o.s});
+  const origens=A.origens||[];
+  const maxO=Math.max(1,...origens.map(o=>o.s));
+  const totO=origens.reduce((x,o)=>x+o.s,0);
+
   return `
-  ${tituloGrupo("Landing Page · "+rp+" (Microsoft Clarity)")}
+  ${tituloGrupo("Landing Page · semana a semana (Microsoft Clarity)",
+      "Export do painel do Clarity — a API só devolve os últimos 3 dias, então estas datas não vêm ao vivo")}
+  ${aviso}
   ${blocos(
-    B1("Visitas",num,K.sessoes,"Vezes que alguém abriu a página no mês",rp) +
-    B1("Visitantes novos",pct,novosPct,"Das visitas, quantas eram de quem nunca tinha entrado",rp) +
-    B1("Rolagem média",pct,K.scroll,"Até onde descem na página: 16% é só a primeira tela",rp) +
-    B1("Tempo ativo",seg,K.tempoAtivo,"Tempo realmente mexendo na página",rp) +
-    B1("Cliques de saída",pct,K.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)",rp) +
-    B1("Cliques em “Entrar”",pct,K.cliqueLoginPct,"Visitas que clicaram para fazer login",rp) +
-    B1("No celular",pct,K.mobilePct,"Visitas vindas de celular",rp) +
-    B1("Velocidade",v=>v!=null?nf0.format(v)+"/100":"—",K.desempenho.pontuacao,
-       `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(K.desempenho.lcpSeg)}s (o ideal é até 2,5s)`,rp)
+    bl("Visitas",num,x=>x.sessoes,"Vezes que alguém abriu a página") +
+    bl("Visitantes novos",pct,novos,"Das visitas, quantas eram de quem nunca tinha entrado","neutro") +
+    bl("Rolagem média",pct,x=>x.scroll,"Até onde descem na página: 16% é só a primeira tela") +
+    bl("Tempo ativo",seg,x=>x.tempoAtivo,"Tempo realmente mexendo na página") +
+    bl("Cliques de saída",pct,x=>x.cliqueSaidaPct,"Visitas com clique que leva para fora da página (ex.: abrir o app)","neutro") +
+    bl("Cliques em “Entrar”",pct,x=>x.cliqueLoginPct,"Visitas que clicaram para fazer login") +
+    bl("No celular",pct,x=>x.mobilePct,"Soma dos navegadores de celular dividida pelas visitas — este export não traz o corte por dispositivo","neutro") +
+    bl("Velocidade",vel,x=>x.desempenho.pontuacao,
+       `Nota do Clarity. O conteúdo principal aparece em ${nf2.format(A.desempenho.lcpSeg)}s (o ideal é até 2,5s)`)
   )}
   <div class="faixa" style="margin-top:14px">
     ${cx(cxt("De onde vieram as visitas",
-        "Por onde a pessoa chegou até a página. Número de visitas em "+rp.toLowerCase()+" e a fatia de cada origem.")
+        "Por onde a pessoa chegou até a página em "+esc(A.rotulo)+", com o número da semana anterior ao lado.")
       + origens.map(o=>`<div class="linha larga"><span class="lo"><b>${esc(o.n)}</b><small>${esc(o.d||"")}</small></span>
         <span class="lt"><span class="lf" style="width:${(o.s/maxO*100).toFixed(1)}%;background:var(--d1)"></span></span>
-        <span class="lv">${num(o.s)}<small>${totO?nf0.format(o.s/totO*100):"—"}%</small></span></div>`).join("")
-      + `<p class="proc">Visitas que chegaram digitando o endereço ou por link sem identificação não aparecem aqui — por isso a soma é menor que o total de visitas do mês.</p>`)}
+        <span class="lv">${num(o.s)}<small>${totO?nf0.format(o.s/totO*100):"—"}% · antes ${antes[o.n]!=null?num(antes[o.n]):"—"}</small></span></div>`).join("")
+      + `<p class="proc">Visitas que chegaram digitando o endereço ou por link sem identificação não aparecem aqui — por isso a soma é menor que o total de visitas. Os acessos do Lovable (a ferramenta em que a página foi construída) foram tirados: não são visitantes.</p>`)}
   </div>`;
 }
 
@@ -1594,8 +1628,8 @@ function vVisao(){
   /* comparação de canais: um cartão por canal (logo, investimento, fatia e os
      três números que importam), barras empilhadas de participação por métrica
      e a tabela completa com o melhor valor de cada coluna destacado */
-  const V=(typeof VISAO_AGOSTO!=="undefined")?VISAO_AGOSTO:null;
-  if(!V) return `<div class="vazio">Sem consolidado de mês fechado.</div>`;
+  const V=(typeof VISAO_SEMANA!=="undefined")?VISAO_SEMANA:null;
+  if(!V) return `<div class="vazio">Sem consolidado da semana.</div>`;
   const rp=V.rotulo;
   const COR={"Google Ads":"var(--d1)","Meta Ads":"var(--d2)","OpenAI Ads":"var(--d3)"};
   const LOGO={"Google Ads":IC.gads,"Meta Ads":IC.metaf,"OpenAI Ads":IC.oai};
@@ -1924,11 +1958,12 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-04-insta";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-15-semanal";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
-    {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value,cmp:comparar}))}catch(e){}
+    {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value,cmp:comparar,
+     carimbo:RETRATO.carimbo}))}catch(e){}
 }
 function guardarVivo(d){
   try{localStorage.setItem("mia:vivo",JSON.stringify({v:VERSAO_DADOS,d}))}catch(e){}
@@ -1940,9 +1975,16 @@ function restaurar(){
   }catch(e){}
   try{
     const dt=JSON.parse(localStorage.getItem("mia:datas")||"null");
-    if(dt&&[dt.de,dt.ate,dt.cde,dt.cate].every(dataOk)){
+    /* datas salvas de um retrato anterior não mandam no retrato novo: quando o
+       carimbo muda, o painel adota UMA vez o período gravado. Depois disso o
+       que você escolher volta a valer, como sempre. */
+    const mesmoRetrato = dt && dt.carimbo===RETRATO.carimbo;
+    if(dt&&mesmoRetrato&&[dt.de,dt.ate,dt.cde,dt.cate].every(dataOk)){
       inDe.value=dt.de; inAte.value=dt.ate; inCDe.value=dt.cde; inCAte.value=dt.cate;
       if(typeof dt.cmp==="boolean") comparar=dt.cmp;
+    } else if(dt&&!mesmoRetrato){
+      comparar=!!RETRATO.periodo.anterior;   /* os campos já vêm do RETRATO */
+      lembrarDatas();
     } else if(D.aoVivo){
       inDe.value=D.periodo.atual.de; inAte.value=D.periodo.atual.ate;
       if(D.periodo.anterior){

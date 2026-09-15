@@ -60,10 +60,16 @@ retrato gravado no arquivo, o resultado da consulta que você acabou de fazer, o
 uma consulta anterior salva no navegador — e avisa em laranja quando as datas
 escolhidas ainda não foram puxadas.
 
-O painel **lembra as quatro datas e o último "Puxar dados"** no próprio navegador
-(localStorage): fechar a página, atualizar, ou receber uma versão nova do painel
-não apaga nada. Quando o formato dos dados muda numa versão nova, só o resultado
-salvo é descartado — as datas ficam.
+O painel **lembra as quatro datas, o modo de comparação e o último "Puxar
+dados"** no próprio navegador (localStorage): fechar a página, atualizar, ou
+receber uma versão nova do painel não apaga nada. Quando o formato dos dados muda
+numa versão nova, só o resultado salvo é descartado — as datas ficam.
+
+A exceção é o **carimbo do retrato** (`RETRATO.carimbo`): quando um retrato novo é
+gravado com um período diferente, o painel adota esse período **uma vez**, mesmo
+que o navegador tenha datas salvas — senão um retrato recém-fechado abriria com as
+datas de outra semana. Depois dessa primeira vez as datas que você escolher voltam
+a mandar.
 
 ## Seis seções
 
@@ -71,10 +77,10 @@ salvo é descartado — as datas ficam.
 |---|---|
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
-| **OpenAI Ads** | Só o export do Ads Manager (`campaigns.csv`, 17/08–31/08), a pedido: conversões, custo por conversão, taxa, páginas vistas, investimento, impressões, cliques, CTR, CPC, CPM. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
+| **OpenAI Ads** | Só o export do Ads Manager, a pedido — agora **semana contra semana** (08–14/09 contra 01–07/09): conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. Os blocos de páginas vistas saíram porque o export novo não traz mais essa coluna. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
-| **Landing Page** | 100% Microsoft Clarity, do export mensal: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas. Só isso, a pedido |
-| **Visão geral** | Agosto fechado em duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
+| **Landing Page** | 100% Microsoft Clarity, do export do painel, **semana contra semana**: visitas, visitantes novos, rolagem média, tempo ativo, cliques de saída, cliques em "Entrar", no celular e velocidade — mais de onde vieram as visitas, com o número da semana anterior ao lado. Só isso, a pedido |
+| **Visão geral** | A semana fechada (08–14/09) em duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 
 As abas **Resumo** (cinco números, o funil e o GMV semanal), **Instagram** e
 **Próximos passos** (cartões de ação) existem no código mas estão ocultas — o modelo de apresentação
@@ -92,21 +98,29 @@ a apresentação aos founders não usa.
 
 ## Dados de mês fechado que vêm de export (não do botão)
 
-Três blocos do painel são **fechamentos de mês** carregados de arquivos, e não
-mudam com "Puxar dados": as conversões do OpenAI Ads (`OPENAI_MANAGER`), a aba
-Landing Page (`CLARITY_AGOSTO`) e a aba Visão geral (`VISAO_AGOSTO`). Cada um
-diz na tela de onde veio e que período cobre. Para virar o mês, mande os exports
-novos (CSV de campanhas do Ads Manager e CSV do painel do Clarity) e peça a
-atualização — a Visão geral eu fecho com os mesmos Windsor e Metabase do painel.
+Três blocos do painel são **fechamentos de período** carregados de arquivos, e
+não mudam com "Puxar dados": as conversões do OpenAI Ads (`OPENAI_MANAGER`), a
+aba Landing Page (`CLARITY_SEMANAS`) e a aba Visão geral (`VISAO_SEMANA`). Cada
+um diz na tela de onde veio e que período cobre. Para virar a semana ou o mês,
+mande os exports novos (CSV de campanhas do Ads Manager e CSV do painel do
+Clarity) e peça a atualização — a Visão geral eu fecho com o mesmo Windsor do
+painel.
+
+**Cuidado com a janela do export do Clarity.** Na virada de 15/09 o arquivo da
+semana nova veio marcado `09/07 00:00 – 09/14 23:59`, ou seja 07 a 14/09: oito
+dias, com o dia 07/09 repetido no arquivo anterior. O painel não corrige isso —
+ele **avisa na tela**, mostra os rótulos reais de cada export nas colunas e põe a
+média por dia ao lado, que é a leitura justa. Ao exportar, confira se a data
+inicial é mesmo a que você quer.
 
 ### Conversões do OpenAI Ads
 
 O conector `openai_ads` do Windsor não tem campo de conversão. Por isso o painel
-carrega um **export do Ads Manager** (`campaigns.csv`) na constante
-`OPENAI_MANAGER` do `painel/index.html`, com as campanhas de agosto. O export
-foi conferido dia a dia no Windsor: impressões, cliques e gasto de cada campanha
-batem no centavo com a soma de 17/08 a 31/08 — só as conversões são informação
-nova. Esse bloco **não muda com "Puxar dados"**; para atualizar, exporte o CSV
+carrega um **export do Ads Manager** na constante `OPENAI_MANAGER` do
+`painel/index.html`, com uma janela em `atual` e outra em `anterior`. Cada export
+é conferido contra o Windsor antes de entrar: em 15/09, nas quatro linhas das duas
+semanas, impressões e cliques bateram exatamente e o gasto diferiu um centavo por
+campanha (arredondamento do export) — só as conversões são informação nova. Esse bloco **não muda com "Puxar dados"**; para atualizar, exporte o CSV
 de campanhas do Ads Manager e peça a atualização da constante.
 
 ## Nada de métrica guardada pela metade
