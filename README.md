@@ -71,6 +71,13 @@ que o navegador tenha datas salvas — senão um retrato recém-fechado abriria 
 datas de outra semana. Depois dessa primeira vez as datas que você escolher voltam
 a mandar.
 
+O resultado salvo (`mia:vivo`) é guardado sob uma chave que junta `VERSAO_DADOS` e
+o carimbo, então **um retrato novo descarta sozinho o resultado velho**. Isso
+existe porque o contrário deu problema uma vez: com a aba Instagram oculta, um
+"Puxar dados" gravou junto o retrato do Instagram daquele momento; quando a aba
+voltou com dados novos, o resultado salvo continuou válido e mostrava os números
+de agosto por baixo dos rótulos de setembro.
+
 ## Seis seções
 
 | Seção | O que mostra |

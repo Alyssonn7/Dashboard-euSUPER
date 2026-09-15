@@ -1959,20 +1959,26 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-15-semanal";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-15-insta";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
     {de:inDe.value,ate:inAte.value,cde:inCDe.value,cate:inCAte.value,cmp:comparar,
      carimbo:RETRATO.carimbo}))}catch(e){}
 }
+/* a chave junta a versão do formato E o carimbo do retrato. Sem o carimbo,
+   um retrato novo (dados de outra semana) podia ficar escondido atrás de um
+   resultado salvo antes dele — foi o que aconteceu quando a aba do Instagram
+   voltou: o resultado salvo trazia o retrato de agosto por baixo dos rótulos
+   de setembro. Agora qualquer retrato novo descarta o resultado velho sozinho. */
+const CHAVE_VIVO=()=>VERSAO_DADOS+"|"+RETRATO.carimbo;
 function guardarVivo(d){
-  try{localStorage.setItem("mia:vivo",JSON.stringify({v:VERSAO_DADOS,d}))}catch(e){}
+  try{localStorage.setItem("mia:vivo",JSON.stringify({v:CHAVE_VIVO(),d}))}catch(e){}
 }
 function restaurar(){
   try{
     const s=JSON.parse(localStorage.getItem("mia:vivo")||"null");
-    if(s&&s.v===VERSAO_DADOS&&s.d&&s.d.periodo&&s.d.periodo.atual){ D=s.d; D.restaurado=true; }
+    if(s&&s.v===CHAVE_VIVO()&&s.d&&s.d.periodo&&s.d.periodo.atual){ D=s.d; D.restaurado=true; }
   }catch(e){}
   try{
     const dt=JSON.parse(localStorage.getItem("mia:datas")||"null");
