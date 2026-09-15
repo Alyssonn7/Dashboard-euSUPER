@@ -477,44 +477,21 @@ const RETRATO = {
      datas que você escolher voltam a mandar, como antes. */
   carimbo:"2026-09-15-semanal",
 
-  /* Instagram organico, conta @usemiaapp (id 17841476511713959), ligada no
-     Windsor em 04/09/2026 e puxada no mesmo dia. Alcance e contas engajadas sao
-     SOMA dos dias — o Instagram so entrega os dois por dia. Salvamentos da
-     janela anterior fecha em -1: naquela semana mais gente tirou o salvamento
-     do que salvou. Os seguidores sao a contagem do momento da consulta, sem
-     historico. */
+  /* Instagram organico, conta @usemiaapp (17841476511713959), puxado do Windsor
+     em 15/09/2026 para as duas semanas do painel. Alcance e contas engajadas
+     sao SOMA dos dias — o Instagram so entrega os dois por dia. Nenhum post foi
+     publicado em nenhuma das duas semanas: o ultimo saiu em 28/08, e o perfil
+     segue com 90 publicacoes. O alcance mesmo assim subiu, o que e coerente com
+     o anuncio rodando em colocacao do Instagram. */
   instagram:{
-    atual:   {dias:7, alcance:8966, visualizacoes:11212, novosSeguidores:14,
-              contasEngajadas:83, interacoes:120, curtidas:95, comentarios:0,
-              salvamentos:8, compartilhamentos:3, toquesLinks:0},
-    anterior:{dias:7, alcance:3738, visualizacoes:4914,  novosSeguidores:8,
-              contasEngajadas:40, interacoes:71,  curtidas:53, comentarios:7,
-              salvamentos:-1, compartilhamentos:0, toquesLinks:0},
-    perfil:{usuario:"usemiaapp", seguidores:1082, seguindo:45, totalPosts:90},
-    /* posts de 24-30/08, do maior alcance para o menor. seguidores:null nos
-       reels porque o Instagram nao mede seguidor ganho neles */
-    posts:[
-      {quando:"2026-08-28T21:00:06+0000",tipo:"REELS",superficie:"REELS",
-       post:"https://www.instagram.com/reel/DcmRybBhDQf/",
-       alcance:98,visualizacoes:126,interacoes:11,curtidas:9,comentarios:0,
-       salvamentos:1,compartilhamentos:0,seguidores:null},
-      {quando:"2026-08-25T19:00:04+0000",tipo:"REELS",superficie:"REELS",
-       post:"https://www.instagram.com/reel/DceVpS6Bilh/",
-       alcance:56,visualizacoes:93,interacoes:11,curtidas:7,comentarios:0,
-       salvamentos:1,compartilhamentos:1,seguidores:null},
-      {quando:"2026-08-28T19:40:43+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
-       post:"https://www.instagram.com/p/DcmIrkLlQbg/",
-       alcance:34,visualizacoes:125,interacoes:6,curtidas:4,comentarios:0,
-       salvamentos:0,compartilhamentos:0,seguidores:0},
-      {quando:"2026-08-28T23:05:01+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
-       post:"https://www.instagram.com/p/DcmgGVjlRj3/",
-       alcance:26,visualizacoes:68,interacoes:6,curtidas:4,comentarios:0,
-       salvamentos:1,compartilhamentos:0,seguidores:0},
-      {quando:"2026-08-28T22:00:03+0000",tipo:"CAROUSEL_ALBUM",superficie:"FEED",
-       post:"https://www.instagram.com/p/DcmYo2yFUIp/",
-       alcance:24,visualizacoes:59,interacoes:4,curtidas:2,comentarios:0,
-       salvamentos:0,compartilhamentos:0,seguidores:0}
-    ],
+    atual:   {dias:7, alcance:27340, visualizacoes:30233, novosSeguidores:42,
+              contasEngajadas:261, interacoes:294, curtidas:237, comentarios:3,
+              salvamentos:18, compartilhamentos:13, toquesLinks:0},
+    anterior:{dias:7, alcance:22853, visualizacoes:25863, novosSeguidores:59,
+              contasEngajadas:248, interacoes:271, curtidas:224, comentarios:6,
+              salvamentos:19, compartilhamentos:8,  toquesLinks:0},
+    perfil:{usuario:"usemiaapp", seguidores:1157, seguindo:45, totalPosts:90},
+    posts:[],   /* nenhuma publicacao nas duas semanas */
     erro:null, erroSeguidores:null},
 
   /* Google Ads · Windsor, conta 326-604-5511, puxado em 15/09/2026.
@@ -1748,7 +1725,7 @@ const VISTAS=[
   {id:"google",nome:"Google Ads", ic:"gads",    marca:true, chip:true, r:vGoogle},
   {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
-  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, oculta:true, r:vInstagram},
+  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, r:vInstagram},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
   {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
   {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,oculta:true,r:vPassos}
