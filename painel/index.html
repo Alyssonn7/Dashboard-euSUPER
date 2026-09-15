@@ -661,29 +661,23 @@ const CLARITY_SEMANAS={
    OpenAI: Windsor para entrega e export do Ads Manager para cadastros (17–31/08,
    quando as campanhas existiram). Metabase: mesmo SQL do painel, 01–31/08 vs
    01–31/07. Fechado em 02/09/2026; NÃO muda com "Puxar dados". */
+/* Visao geral: a JANELA CHEIA das duas semanas, 01 a 14/09 — nao a semana de
+   cima. Puxado do Windsor em 15/09 pedindo o periodo inteiro de uma vez, e nao
+   somando as duas semanas: o alcance do Meta nao se soma. Deduplicado a conta
+   deu 45.321; somar as duas semanas daria 53.951 e contaria duas vezes as 8.630
+   pessoas que viram nas duas. Gasto, impressoes e cliques conferem com a soma.
+   Os cadastros do OpenAI vem do export do Ads Manager (o conector nao tem o
+   campo); entrega e gasto conferidos contra o Windsor, com dois centavos de
+   arredondamento no total. */
 const VISAO_SEMANA={
-  rotulo:"08/09–14/09", cobertura:"08/09–14/09", fechadoEm:"15/09/2026",
+  rotulo:"01/09–14/09", cobertura:"01/09–14/09", fechadoEm:"15/09/2026",
   canais:[
     {n:"Google Ads", fonte:"Windsor · google_ads",
-     alcance:null,  impressoes:9446,  cliques:765, custo:1950.57, cadastros:96},
+     alcance:null,  impressoes:12656, cliques:1012, custo:2448.0022, cadastros:139},
     {n:"Meta Ads",   fonte:"Windsor · facebook · alcance deduplicado da conta",
-     alcance:29104, impressoes:39030, cliques:588, custo:1006.98, cadastros:84},
+     alcance:45321, impressoes:74399, cliques:1111, custo:1998.91,   cadastros:160},
     {n:"OpenAI Ads", fonte:"Windsor (entrega) + export do Ads Manager (cadastros)",
-     alcance:null,  impressoes:25095, cliques:568, custo:617.87,  cadastros:54}
-  ]
-};
-
-/* Acumulado das duas semanas do painel (01 a 14/09) nos tres canais de anuncio.
-   So contagem bruta fica aqui: o total e o custo medio por cadastro sao somados
-   e divididos na hora, como o resto do painel. Google e Meta vem do Windsor;
-   as conversoes do OpenAI vem do export do Ads Manager, unica fonte do canal
-   que tem esse campo. Cada canal e a soma das suas duas semanas. */
-const VISAO_ACUM={
-  rotulo:"01/09–14/09", fechadoEm:"15/09/2026",
-  canais:[
-    {n:"Google Ads", custo:2448.0022, conversoes:139},
-    {n:"Meta Ads",   custo:1998.91,   conversoes:160},
-    {n:"OpenAI Ads", custo:1352.71,   conversoes:107}
+     alcance:null,  impressoes:51906, cliques:1147, custo:1352.71,   cadastros:107}
   ]
 };
 
@@ -1678,24 +1672,20 @@ function vVisao(){
 
   /* a tabela "Todos os números" saiu a pedido — as três camadas viraram duas */
 
-  /* bloco de acumulado, acima dos cartões por canal: as duas semanas juntas */
-  const AC=(typeof VISAO_ACUM!=="undefined")?VISAO_ACUM:null;
-  let acumulado="";
-  if(AC&&AC.canais&&AC.canais.length){
-    const conv=AC.canais.reduce((x,c)=>x+(c.conversoes||0),0);
-    const gasto=AC.canais.reduce((x,c)=>x+(c.custo||0),0);
-    const porCanal=AC.canais.map(c=>`${esc(c.n.replace(" Ads",""))} ${num(c.conversoes)}`).join(" · ");
-    acumulado=`
-    ${tituloGrupo("Conversões · "+AC.rotulo,"As duas semanas somadas, nos três canais de anúncio")}
+  /* bloco de acumulado, acima dos cartões por canal. Sai do MESMO T que
+     alimenta as barras, então os dois nunca podem discordar: T.conversoes é a
+     soma dos cadastros dos canais e T.custoConv já é o custo dividido por ela. */
+  const porCanal=C.map(c=>`${esc(c.n.replace(" Ads",""))} ${num(c.cadastros)}`).join(" · ");
+  const acumulado=`
+    ${tituloGrupo("Conversões · "+rp,"Os três canais de anúncio somados no período inteiro")}
     ${blocos(
-      B1("Conversões",num,conv,
+      B1("Conversões",num,T.conversoes,
         `Soma do que cada plataforma se atribui — ${porCanal}. Quem passou por dois canais antes de se cadastrar pode estar contado duas vezes.`,
-        AC.rotulo) +
-      B1("Custo médio por cadastro",brl,conv?gasto/conv:null,
-        `Tudo o que foi investido nos três canais (${brl(gasto)}) dividido pelas conversões`,
-        AC.rotulo)
+        rp) +
+      B1("Custo médio por cadastro",brl,T.custoConv,
+        `Tudo o que foi investido nos três canais (${brl(T.custo)}) dividido pelas conversões`,
+        rp)
     )}`;
-  }
 
   return `
   ${acumulado}
