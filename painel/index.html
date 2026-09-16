@@ -513,8 +513,13 @@ const RETRATO = {
        A lista de concorrentes vem do relatorio de leilao do Google, que o
        Windsor expoe SO como dominio: nenhuma metrica por concorrente. */
     leilao:{
-      atual:   {parcela:18.08, orcamento:1.84, classificacao:79.91, topo:13.65},
-      anterior:{parcela:11.96, orcamento:0,    classificacao:87.98, topo:10.19},
+      /* topoQuando e primeiro sao % das impressoes QUE APARECERAM (onde o
+         anuncio ficou), nao parcela do disponivel. A janela anterior foi
+         ponderada pelas impressoes de cada dia — media simples de razao mente.
+         O Google aposentou a "posicao media" em 2019; estas duas sao o que
+         existe hoje para responder "em que posicao eu apareco". */
+      atual:   {parcela:18.08, orcamento:1.84, classificacao:79.91, topoQuando:74.44, primeiro:18.01},
+      anterior:{parcela:11.96, orcamento:0,    classificacao:87.98, topoQuando:66.97, primeiro:11.69},
       concorrentes:["trinks.com","reservio.com","agendin.com.br","gendo.com.br",
         "simplesagenda.com.br","minhaagendavirtual.com.br","guruagenda.com.br",
         "orlina.com.br","bitrix24.com.br","monday.com","clickup.com","kommo.com",
@@ -935,14 +940,18 @@ async function qLeilao(de,ate){
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"google_ads",
     accounts:[CONTAS.google],
     fields:["search_impression_share","search_budget_lost_impression_share",
-            "search_rank_lost_impression_share","search_top_impression_share"],
+            "search_rank_lost_impression_share",
+            "top_impression_percentage","absolute_top_impression_percentage"],
     date_from:de,date_to:ate},"Google Ads · leilão"));
-  const x=r[0]; if(!x) return null;
-  const p=v=>v==null?null:+v*100;
-  return {parcela:p(x.search_impression_share),
-          orcamento:p(x.search_budget_lost_impression_share),
-          classificacao:p(x.search_rank_lost_impression_share),
-          topo:p(x.search_top_impression_share)};
+  if(!r.length) return null;
+  /* sem dimensão o Windsor devolve o valor agregado no meio de linhas nulas:
+     pegar r[0] trazia null. Vale a primeira linha que tem o campo preenchido. */
+  const p=k=>{const l=r.find(x=>x[k]!=null); return l?+l[k]*100:null};
+  return {parcela:p("search_impression_share"),
+          orcamento:p("search_budget_lost_impression_share"),
+          classificacao:p("search_rank_lost_impression_share"),
+          topoQuando:p("top_impression_percentage"),
+          primeiro:p("absolute_top_impression_percentage")};
 }
 /* Quem apareceu nas mesmas buscas. O Windsor expõe o domínio do relatório de
    leilão, mas NENHUMA das métricas que o acompanham — sobreposição, taxa de
@@ -1364,7 +1373,7 @@ function vGoogle(){
   const la=L&&L.atual, lb=L&&L.anterior;
   const doms=(L&&L.concorrentes)||[];
   const leilao = !la ? "" : `
-  ${tituloGrupo("Google Ads · Disputa no leilão","Quanto da busca disponível o anúncio está ganhando, e por que perde o resto")}
+  ${tituloGrupo("Google Ads · Disputa no leilão","Quanto da busca o anúncio ganha, por que perde o resto e em que posição aparece")}
   ${blocos(
     B("Parcela de impressões",pctIS,la.parcela,lb&&lb.parcela,
       "De todas as buscas em que o anúncio podia aparecer, em quantas ele apareceu") +
@@ -1372,8 +1381,10 @@ function vGoogle(){
       "Não apareceu porque ficou atrás dos concorrentes — o Google pesa lance e qualidade do anúncio","inv") +
     B("Perdido por orçamento",pctIS,la.orcamento,lb&&lb.orcamento,
       "Não apareceu porque a verba do dia tinha acabado","inv") +
-    B("No topo da página",pctIS,la.topo,lb&&lb.topo,
-      "Das buscas em que podia aparecer no topo, em quantas apareceu lá")
+    B("Quando apareceu, ficou no topo",pctIS,la.topoQuando,lb&&lb.topoQuando,
+      "Das vezes que o anúncio apareceu, quantas foram acima dos resultados da busca") +
+    B("Quando apareceu, ficou em 1º",pctIS,la.primeiro,lb&&lb.primeiro,
+      "Das vezes que o anúncio apareceu, quantas foram na primeira posição, antes de todos os concorrentes")
   )}
   ${doms.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Quem disputou as mesmas buscas",
       "Anunciantes que apareceram nas buscas em que a euSUPER! também apareceu, no período.",""+doms.length+" domínios")
@@ -2042,7 +2053,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-16-leilao";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-16-posicao";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(

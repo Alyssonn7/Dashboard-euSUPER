@@ -82,7 +82,7 @@ de agosto por baixo dos rótulos de setembro.
 
 | Seção | O que mostra |
 |---|---|
-| **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento, a tabela por campanha — e o grupo **Disputa no leilão**: parcela de impressões, perdido por classificação, perdido por orçamento, no topo da página, mais a lista de domínios que apareceram nas mesmas buscas |
+| **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento, a tabela por campanha — e o grupo **Disputa no leilão**: parcela de impressões, perdido por classificação, perdido por orçamento e, para a posição, "quando apareceu, ficou no topo" e "ficou em 1º" — mais a lista de domínios que apareceram nas mesmas buscas |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager, a pedido — agora **semana contra semana** (08–14/09 contra 01–07/09): conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. Os blocos de páginas vistas saíram porque o export novo não traz mais essa coluna. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
@@ -222,6 +222,15 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
   das métricas que o acompanham — sobreposição, taxa de superação, parcela de
   cada concorrente. O próprio Google recusa a combinação ("unsupported
   metrics"), e esses números existem apenas dentro do painel do Google Ads.
+  Sobre **posição**: a *posição média* foi aposentada pelo Google em 2019 e não
+  existe no conector. O que responde "em que posição eu apareço" são
+  `top_impression_percentage` e `absolute_top_impression_percentage` — das
+  impressões que o anúncio **recebeu**, quantas ficaram acima dos resultados da
+  busca e quantas ficaram em primeiro. Não confundir com as *parcelas* de topo,
+  que têm outro denominador (o disponível, não o recebido). São razões: o valor
+  do período é ponderado pelas impressões de cada dia, nunca a média simples dos
+  dias. Sem dimensão o Windsor devolve o agregado no meio de linhas nulas, então
+  a consulta pega a primeira linha preenchida de cada campo.
   Cuidado com o **valor-sentinela**: abaixo de 10% a API devolve `0,0999` e
   acima de 90% devolve `0,9`. Conferido dia a dia — o "topo absoluto" veio
   `0,0999` nos sete dias enquanto os outros variavam. O painel escreve "menos de
