@@ -360,6 +360,11 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 /* quadradinho do post do Instagram — a miniatura real do post entra embutida
    depois da primeira consulta, como as do Meta */
 .ig-ph{font-size:9px;letter-spacing:.03em;line-height:1.25;text-align:center;padding:0 4px}
+/* dominios que disputaram as mesmas buscas */
+.doms{display:flex;flex-wrap:wrap;gap:7px;margin:0}
+.doms span{font-family:var(--fonte);font-size:12px;font-weight:600;color:var(--texto-2);
+  background:var(--tela);border:1px solid var(--borda);border-radius:9px;padding:6px 11px;
+  font-variant-numeric:tabular-nums}
 /* passo a passo da conexao do Instagram */
 .pig{list-style:none;margin:2px 0 0;padding:0;counter-reset:pig}
 .pig li{position:relative;padding:0 0 0 35px;margin-bottom:15px;counter-increment:pig;
@@ -501,7 +506,21 @@ const RETRATO = {
     anterior:{impressoes:3210, cliques:247, custo:497.4305,  conversoes:43},
     campanhas:[
       {nome:"Pesquisa", impressoes:9446, cliques:765, custo:1950.5717, conversoes:96}
-    ]
+    ],
+    /* Disputa no leilao, puxado do Windsor em 16/09. Parcela de impressoes vem
+       sem dimensao de campanha (e razao, nao contagem). Os tres primeiros somam
+       ~100%: apareceu + perdeu por orcamento + perdeu por classificacao.
+       A lista de concorrentes vem do relatorio de leilao do Google, que o
+       Windsor expoe SO como dominio: nenhuma metrica por concorrente. */
+    leilao:{
+      atual:   {parcela:18.08, orcamento:1.84, classificacao:79.91, topo:13.65},
+      anterior:{parcela:11.96, orcamento:0,    classificacao:87.98, topo:10.19},
+      concorrentes:["trinks.com","reservio.com","agendin.com.br","gendo.com.br",
+        "simplesagenda.com.br","minhaagendavirtual.com.br","guruagenda.com.br",
+        "orlina.com.br","bitrix24.com.br","monday.com","clickup.com","kommo.com",
+        "salesforce.com","atlassian.com","apple.com","google.com","top10.com"],
+      erro:null
+    }
   },
   /* Meta Ads · Windsor, conta 604915332642452, puxado em 15/09/2026.
      Uma campanha só nas duas semanas — ABO - TESTE A/B (CONVERSÃO), objetivo
@@ -763,6 +782,16 @@ const num=v=>v==null?"—":nf0.format(v);
 const brl=v=>v==null?"—":"R$ "+nf2.format(v);
 const pct=v=>v==null?"—":nf2.format(v).replace(",00","")+"%";
 const seg=v=>v==null?"—":num(v)+"s";
+/* O Google não entrega parcela de impressões com precisão nas pontas: abaixo de
+   10% ele devolve 0,0999 e acima de 90% devolve 0,9. Conferido dia a dia — o
+   "topo absoluto" veio 0,0999 nos sete dias enquanto os outros variavam.
+   Escrever "9,99%" seria inventar precisão que a fonte não deu. */
+const pctIS=v=>{
+  if(v==null) return "—";
+  if(Math.abs(v-9.99)<0.006)  return "menos de 10%";
+  if(Math.abs(v-90)<0.006)    return "mais de 90%";
+  return pct(v);
+};
 const dm=iso=>{if(!iso)return"";const[a,m,d]=iso.split("-");return `${d}/${m}`};
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const div=(a,b)=>(a==null||!b)?null:a/b;
@@ -898,6 +927,32 @@ async function qGoogle(de,ate){
   return {total:{impressoes:soma(r,x=>x.impressions),cliques:soma(r,x=>x.clicks),
                  custo:soma(r,x=>x.cost),conversoes:soma(r,x=>x.conversions)},
           campanhas:Object.values(m).sort((a,b)=>b.custo-a.custo)};
+}
+
+/* Parcela de impressões — a disputa no leilão. Vem SEM dimensão de campanha:
+   é razão, não contagem, e somar razão por campanha daria número sem sentido. */
+async function qLeilao(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"google_ads",
+    accounts:[CONTAS.google],
+    fields:["search_impression_share","search_budget_lost_impression_share",
+            "search_rank_lost_impression_share","search_top_impression_share"],
+    date_from:de,date_to:ate},"Google Ads · leilão"));
+  const x=r[0]; if(!x) return null;
+  const p=v=>v==null?null:+v*100;
+  return {parcela:p(x.search_impression_share),
+          orcamento:p(x.search_budget_lost_impression_share),
+          classificacao:p(x.search_rank_lost_impression_share),
+          topo:p(x.search_top_impression_share)};
+}
+/* Quem apareceu nas mesmas buscas. O Windsor expõe o domínio do relatório de
+   leilão, mas NENHUMA das métricas que o acompanham — sobreposição, taxa de
+   superação, parcela do concorrente. O próprio Google recusa a combinação
+   ("unsupported metrics"). Ou seja: dá para dizer QUEM disputa, nunca QUANTO. */
+async function qConcorrentes(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"google_ads",
+    accounts:[CONTAS.google], fields:["auction_insight_domain"],
+    date_from:de,date_to:ate},"Google Ads · concorrentes"));
+  return r.map(x=>x.auction_insight_domain).filter(Boolean);
 }
 
 async function qMeta(de,ate){
@@ -1103,7 +1158,8 @@ async function puxar(){
   /* as janelas "B" só entram quando há comparação: dez chamadas em vez de
      dezoito. qClarity() saiu: a Landing Page é só o export mensal */
   const tarefas=[
-    ["gA",()=>qGoogle(de,ate)],
+    ["gA",()=>qGoogle(de,ate)],   ["lA",()=>qLeilao(de,ate)],
+    ["lC",()=>qConcorrentes(de,ate)],
     ["mA",()=>qMeta(de,ate)],
     ["oA",()=>qOpenai(de,ate)],
     ["sA",()=>qSessoes(de,ate)],
@@ -1120,7 +1176,7 @@ async function puxar(){
     if(cmp) tarefas.push(["iB",()=>qInsta(cde,cate)]);
   }
   if(cmp) tarefas.push(
-    ["gB",()=>qGoogle(cde,cate)], ["mB",()=>qMeta(cde,cate)],
+    ["gB",()=>qGoogle(cde,cate)], ["lB",()=>qLeilao(cde,cate)], ["mB",()=>qMeta(cde,cate)],
     ["oB",()=>qOpenai(cde,cate)], ["sB",()=>qSessoes(cde,cate)]);
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
@@ -1133,7 +1189,9 @@ async function puxar(){
   novo.puxadoEm=`consultado em ${z(ag.getDate())}/${z(ag.getMonth()+1)} às ${z(ag.getHours())}:${z(ag.getMinutes())}`;
   novo.periodo={atual:{de,ate},anterior:cmp?{de:cde,ate:cate}:null};
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
-    campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA")};
+    campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA"),
+    leilao:{atual:R.lA||null, anterior:R.lB||null,
+            concorrentes:R.lC||[], erro:msg("lA")||msg("lC")}};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
     criativos:(R.mA&&R.mA.criativos)||[], criativosAnt:(R.mB&&R.mB.criativos)||[], erro:msg("mA"),
     grupos:{
@@ -1299,6 +1357,29 @@ function vGoogle(){
   /* o cartão "O que esses números dizem" saiu desta aba a pedido do Alysson
      (comentário no painel, 02/09) — não entra na apresentação aos founders */
 
+  /* Disputa no leilão. Quatro números e a lista de quem apareceu nas mesmas
+     buscas. O Google não entrega número POR concorrente por API — nem o Windsor
+     nem ninguém: o relatório de leilão só devolve o domínio. O card diz isso. */
+  const L=(D.google&&D.google.leilao)||null;
+  const la=L&&L.atual, lb=L&&L.anterior;
+  const doms=(L&&L.concorrentes)||[];
+  const leilao = !la ? "" : `
+  ${tituloGrupo("Google Ads · Disputa no leilão","Quanto da busca disponível o anúncio está ganhando, e por que perde o resto")}
+  ${blocos(
+    B("Parcela de impressões",pctIS,la.parcela,lb&&lb.parcela,
+      "De todas as buscas em que o anúncio podia aparecer, em quantas ele apareceu") +
+    B("Perdido por classificação",pctIS,la.classificacao,lb&&lb.classificacao,
+      "Não apareceu porque ficou atrás dos concorrentes — o Google pesa lance e qualidade do anúncio","inv") +
+    B("Perdido por orçamento",pctIS,la.orcamento,lb&&lb.orcamento,
+      "Não apareceu porque a verba do dia tinha acabado","inv") +
+    B("No topo da página",pctIS,la.topo,lb&&lb.topo,
+      "Das buscas em que podia aparecer no topo, em quantas apareceu lá")
+  )}
+  ${doms.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Quem disputou as mesmas buscas",
+      "Anunciantes que apareceram nas buscas em que a euSUPER! também apareceu, no período.",""+doms.length+" domínios")
+    + `<p class="doms">${doms.map(d=>`<span>${esc(d)}</span>`).join("")}</p>`
+    + `<p class="proc">O Google só entrega a <b>lista</b> de domínios por API — a sobreposição, a taxa de superação e a parcela de cada concorrente existem apenas dentro do painel do Google Ads, em "Estatísticas de leilão". Por isso aqui não há número por concorrente.</p>`)}</div>`:""}`;
+
   return `
   ${blocos(
     B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
@@ -1318,7 +1399,8 @@ function vGoogle(){
         <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
         <td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td>
         <td class="r">${num(c.conversoes)}</td><td class="r">${brl(c.custoConv)}</td></tr>`).join("")}</tbody>
-      </table></div>`)}</div>`:""}`;
+      </table></div>`)}</div>`:""}
+  ${leilao}`;
 }
 
 /* --------------------------------------------------------------- Meta Ads */
@@ -1960,7 +2042,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-15-insta";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-16-leilao";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(

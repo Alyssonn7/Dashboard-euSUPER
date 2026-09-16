@@ -82,7 +82,7 @@ de agosto por baixo dos rótulos de setembro.
 
 | Seção | O que mostra |
 |---|---|
-| **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento — mais a tabela por campanha |
+| **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento, a tabela por campanha — e o grupo **Disputa no leilão**: parcela de impressões, perdido por classificação, perdido por orçamento, no topo da página, mais a lista de domínios que apareceram nas mesmas buscas |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager, a pedido — agora **semana contra semana** (08–14/09 contra 01–07/09): conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. Os blocos de páginas vistas saíram porque o export novo não traz mais essa coluna. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
@@ -156,7 +156,7 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dezoito chamadas** por consulta com comparação (onze sem ela). As cinco do
+São **vinte e uma chamadas** por consulta com comparação (treze sem ela). As cinco do
 Instagram só entram enquanto a aba estiver visível — aba oculta não desenha nada,
 então consultá-la seria gasto puro, e com ela escondida a consulta cai para treze
 e sete: Google, OpenAI e GA4 × duas janelas, o Meta ×
@@ -214,6 +214,18 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
   domínio externo, que o artifact bloqueia — o quadradinho traz o tipo do post e
   abre o post no Instagram, e as miniaturas entram embutidas quando valer a pena,
   como as do Meta.
+- **Estatísticas de leilão do Google** saem pela metade. A *parcela de
+  impressões* vem inteira (quanto da busca disponível o anúncio ganhou, e se
+  perdeu por orçamento ou por classificação) e é puxada **sem dimensão de
+  campanha**, porque é razão e não contagem. Já o relatório de concorrentes só
+  devolve o **domínio**: o Windsor expõe `auction_insight_domain`, mas nenhuma
+  das métricas que o acompanham — sobreposição, taxa de superação, parcela de
+  cada concorrente. O próprio Google recusa a combinação ("unsupported
+  metrics"), e esses números existem apenas dentro do painel do Google Ads.
+  Cuidado com o **valor-sentinela**: abaixo de 10% a API devolve `0,0999` e
+  acima de 90% devolve `0,9`. Conferido dia a dia — o "topo absoluto" veio
+  `0,0999` nos sete dias enquanto os outros variavam. O painel escreve "menos de
+  10%" em vez de fingir 9,99%.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 
