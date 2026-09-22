@@ -475,96 +475,102 @@ tfoot td.r{text-align:right}
    por conversão são calculados na hora, para não haver número que não fecha.
    ========================================================================= */
 const RETRATO = {
-  puxadoEm:"15/09/2026 (gravado)", aoVivo:false,
-  periodo:{atual:{de:"2026-09-08",ate:"2026-09-14"},anterior:{de:"2026-09-01",ate:"2026-09-07"}},
+  puxadoEm:"22/09/2026 (gravado)", aoVivo:false,
+  periodo:{atual:{de:"2026-09-15",ate:"2026-09-21"},anterior:{de:"2026-09-08",ate:"2026-09-14"}},
   /* carimbo do retrato: quando ele muda, o painel adota UMA vez o período
      gravado aqui, mesmo que o navegador tenha datas salvas. Depois disso as
      datas que você escolher voltam a mandar, como antes. */
-  carimbo:"2026-09-15-semanal",
+  carimbo:"2026-09-22-semanal",
 
-  /* Instagram organico, conta @usemiaapp (17841476511713959), puxado do Windsor
-     em 15/09/2026 para as duas semanas do painel. Alcance e contas engajadas
-     sao SOMA dos dias — o Instagram so entrega os dois por dia. Nenhum post foi
-     publicado em nenhuma das duas semanas: o ultimo saiu em 28/08, e o perfil
-     segue com 90 publicacoes. O alcance mesmo assim subiu, o que e coerente com
-     o anuncio rodando em colocacao do Instagram. */
+  /* Instagram organico, conta @usemiaapp (17841476511713959), puxado em
+     22/09/2026. Alcance e contas engajadas sao SOMA dos dias. Um post publicado
+     na semana (reel de 16/09) — o perfil foi de 90 para 91 publicacoes.
+     Os novos seguidores de 08-14 subiram de 42 para 51: o dia 14 marcava 0 na
+     consulta da semana passada e maturou para 9. O dia 21 marca 0 agora, pelo
+     mesmo motivo, e deve subir. */
   instagram:{
-    atual:   {dias:7, alcance:27340, visualizacoes:30233, novosSeguidores:42,
+    atual:   {dias:7, alcance:38477, visualizacoes:44821, novosSeguidores:38,
+              contasEngajadas:336, interacoes:383, curtidas:300, comentarios:2,
+              salvamentos:40, compartilhamentos:9, toquesLinks:0},
+    anterior:{dias:7, alcance:27340, visualizacoes:30233, novosSeguidores:51,
               contasEngajadas:261, interacoes:294, curtidas:237, comentarios:3,
               salvamentos:18, compartilhamentos:13, toquesLinks:0},
-    anterior:{dias:7, alcance:22853, visualizacoes:25863, novosSeguidores:59,
-              contasEngajadas:248, interacoes:271, curtidas:224, comentarios:6,
-              salvamentos:19, compartilhamentos:8,  toquesLinks:0},
-    perfil:{usuario:"usemiaapp", seguidores:1157, seguindo:45, totalPosts:90},
-    posts:[],   /* nenhuma publicacao nas duas semanas */
+    perfil:{usuario:"usemiaapp", seguidores:1195, seguindo:45, totalPosts:91},
+    posts:[
+      {quando:"2026-09-16T14:49:24+0000",tipo:"REELS",superficie:"REELS",
+       post:"https://www.instagram.com/reel/DdWiHNOMvlo/",
+       alcance:131,visualizacoes:165,interacoes:10,curtidas:8,comentarios:0,
+       salvamentos:0,compartilhamentos:0,seguidores:null}
+    ],
     erro:null, erroSeguidores:null},
 
-  /* Google Ads · Windsor, conta 326-604-5511, puxado em 15/09/2026.
-     Só a CAMPANHA PRINCIPAL (1), de Pesquisa, rodou nas duas semanas. */
+  /* Google Ads · Windsor, conta 326-604-5511, puxado em 22/09/2026.
+     A CAMPANHA PRINCIPAL (1), de Pesquisa, e a unica que gasta. */
   google:{
-    atual:   {impressoes:9446, cliques:765, custo:1950.5717, conversoes:96},
-    anterior:{impressoes:3210, cliques:247, custo:497.4305,  conversoes:43},
+    atual:   {impressoes:4505, cliques:427, custo:1234.4372, conversoes:65},
+    anterior:{impressoes:9446, cliques:765, custo:1950.5717, conversoes:96},
     campanhas:[
-      {nome:"Pesquisa", impressoes:9446, cliques:765, custo:1950.5717, conversoes:96}
+      {nome:"Pesquisa", impressoes:4505, cliques:427, custo:1234.4372, conversoes:65}
     ],
-    /* Disputa no leilao, puxado do Windsor em 16/09. Parcela de impressoes vem
-       sem dimensao de campanha (e razao, nao contagem). Os tres primeiros somam
-       ~100%: apareceu + perdeu por orcamento + perdeu por classificacao.
-       A lista de concorrentes vem do relatorio de leilao do Google, que o
-       Windsor expoe SO como dominio: nenhuma metrica por concorrente. */
+    /* Disputa no leilao. O perdido por ORCAMENTO saltou de 2,3% para 38,9%:
+       a verba diaria passou a travar a entrega, e e por isso que impressoes e
+       gasto cairam quase pela metade. O perdido por classificacao melhorou
+       muito no mesmo periodo (79,6% -> 49,2%). */
     leilao:{
-      /* topoQuando e primeiro sao % das impressoes QUE APARECERAM (onde o
-         anuncio ficou), nao parcela do disponivel. A janela anterior foi
-         ponderada pelas impressoes de cada dia — media simples de razao mente.
-         O Google aposentou a "posicao media" em 2019; estas duas sao o que
-         existe hoje para responder "em que posicao eu apareco". */
-      atual:   {parcela:18.08, orcamento:1.84, classificacao:79.91, topoQuando:74.44, primeiro:18.01},
-      anterior:{parcela:11.96, orcamento:0,    classificacao:87.98, topoQuando:66.97, primeiro:11.69},
+      atual:   {parcela:11.88, orcamento:38.90, classificacao:49.22, topoQuando:73.54, primeiro:16.20},
+      anterior:{parcela:18.07, orcamento:2.32,  classificacao:79.61, topoQuando:74.44, primeiro:18.01},
       concorrentes:["trinks.com","reservio.com","agendin.com.br","gendo.com.br",
         "simplesagenda.com.br","minhaagendavirtual.com.br","guruagenda.com.br",
-        "orlina.com.br","bitrix24.com.br","monday.com","clickup.com","kommo.com",
-        "salesforce.com","atlassian.com","apple.com","google.com","top10.com"],
+        "iclinic.com.br","agende-me.com","bellesoftware.com.br","planifai.com.br",
+        "sistemabeauty.com.br","bitrix24.com.br","monday.com","clickup.com",
+        "salesforce.com","apple.com","google.com","top10.com"],
       erro:null
     }
   },
-  /* Meta Ads · Windsor, conta 604915332642452, puxado em 15/09/2026.
-     Uma campanha só nas duas semanas — ABO - TESTE A/B (CONVERSÃO), objetivo
-     OUTCOME_SALES, portanto grupo de cadastro. Nenhuma campanha de visita ao
-     perfil rodou. Como o grupo de cadastro foi o único a gastar, o alcance
-     dele é o da conta, já deduplicado (alcanceSomado:false). */
+  /* Meta Ads · Windsor, conta 604915332642452, puxado em 22/09/2026.
+     Quatro campanhas na semana nova (ABO - TESTE A/B, [CAMPANHA DE VENDA],
+     [MOTION CLAUDE] e MOTION - V.2), todas OUTCOME_SALES, portanto todas no
+     grupo de cadastro. Nenhuma de visita ao perfil. Como so esse grupo gastou,
+     o alcance dele e o da conta, ja deduplicado. Os numeros de 08-14 foram
+     repuxados: o Meta fecha com atraso e o gasto subiu de 1.006,98 para
+     1.007,13. */
   meta:{
-    atual:   {alcance:29104, impressoes:39030, cliques:588, custo:1006.98, conversoes:84, visitasLP:415},
-    anterior:{alcance:24847, impressoes:35368, cliques:523, custo:991.93,  conversoes:76, visitasLP:368},
+    atual:   {alcance:37973, impressoes:59316, cliques:803, custo:1666.53, conversoes:105, visitasLP:563},
+    anterior:{alcance:29104, impressoes:39039, cliques:588, custo:1007.13, conversoes:84,  visitasLP:415},
     grupos:{
       cadastro:{
-        atual:   {alcance:29104, impressoes:39030, cliques:588, custo:1006.98, conversoes:84, visitasLP:415, visitasPerfil:87,  alcanceSomado:false},
-        anterior:{alcance:24847, impressoes:35368, cliques:523, custo:991.93,  conversoes:76, visitasLP:368, visitasPerfil:100, alcanceSomado:false}
+        atual:   {alcance:37973, impressoes:59316, cliques:803, custo:1666.53, conversoes:105, visitasLP:563, visitasPerfil:117, alcanceSomado:false},
+        anterior:{alcance:29104, impressoes:39039, cliques:588, custo:1007.13, conversoes:84,  visitasLP:415, visitasPerfil:87,  alcanceSomado:false}
       },
       perfil:{
         atual:null, anterior:null,
-        nota:"Nenhuma campanha de visita ao perfil rodou nestas duas semanas — as seis foram desligadas em 24/08."
+        nota:"Nenhuma campanha de visita ao perfil rodou nestas duas semanas."
       }
     },
     criativos:[
-      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:1006.98,impressoes:39030,cliques:588,conversoes:84,visitasPerfil:87,
-       post:"https://www.instagram.com/p/Dcl4auGgA2o/"}
+      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:966.75,impressoes:36699,cliques:501,conversoes:68,visitasPerfil:79,
+       post:"https://www.instagram.com/p/Dcl4auGgA2o/"},
+      {nome:"ADS-03",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:354.90,impressoes:16125,cliques:204,conversoes:26,visitasPerfil:23,
+       post:"https://www.instagram.com/p/DdaTQKEAMbb/"},
+      {nome:"MOTION V.2",campanha:"MOTION - V.2",objetivo:"OUTCOME_SALES",custo:211.88,impressoes:3722,cliques:65,conversoes:9,visitasPerfil:9,
+       post:"https://www.instagram.com/p/DdejuKsARc6/"},
+      {nome:"MOTION-01",campanha:"[MOTION CLAUDE]",objetivo:"OUTCOME_SALES",custo:119.27,impressoes:2209,cliques:27,conversoes:2,visitasPerfil:3,
+       post:"https://www.instagram.com/p/DdVJyBHAwKN/"},
+      {nome:"ADS-01",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:9.37,impressoes:446,cliques:5,conversoes:0,visitasPerfil:2,
+       post:"https://www.instagram.com/p/DdaTSLzAPTH/"},
+      {nome:"ADS-02",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:4.36,impressoes:115,cliques:1,conversoes:0,visitasPerfil:1,
+       post:"https://www.instagram.com/p/DdaTRlEAwif/"}
     ],
-    /* na semana de 01–07/09 os outros quatro anúncios do teste A/B gastaram
-       centavos antes de serem pausados; ADS-04 levou praticamente tudo */
     criativosAnt:[
-      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:991.38,impressoes:35355,cliques:523,conversoes:76,visitasPerfil:100},
-      {nome:"ADS-02",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.24,impressoes:2,cliques:0,conversoes:0,visitasPerfil:0},
-      {nome:"ADS-03",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.17,impressoes:6,cliques:0,conversoes:0,visitasPerfil:0},
-      {nome:"ADS-05",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.09,impressoes:4,cliques:0,conversoes:0,visitasPerfil:0},
-      {nome:"ADS-01",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:0.05,impressoes:1,cliques:0,conversoes:0,visitasPerfil:0}
+      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:1007.13,impressoes:39039,cliques:588,conversoes:84,visitasPerfil:87}
     ]
   },
-  /* entrega do Windsor nas duas semanas (sem conversão — o conector não tem
-     esse campo). A aba OpenAI mostra o export; isto aqui só alimenta o Resumo,
-     que está oculto. */
+
+  /* entrega do Windsor nas duas semanas (sem conversao). So o Resumo, oculto,
+     usa isto. */
   openai:{
-    atual:   {impressoes:25095, cliques:568, custo:617.89, conversoes:null},
-    anterior:{impressoes:26811, cliques:579, custo:734.84, conversoes:null}
+    atual:   {impressoes:26517, cliques:507, custo:604.02, conversoes:null},
+    anterior:{impressoes:25095, cliques:568, custo:617.87, conversoes:null}
   },
 
   lp:{
@@ -596,18 +602,20 @@ const RETRATO = {
    do Windsor não tem esse campo. NÃO muda com "Puxar dados"; para atualizar,
    é preciso um export novo. */
 const OPENAI_MANAGER={
-  arquivos:["OpenAI_Ads_0109_0709.csv","OpenAI_Ads_0809_1409.csv"], enviadoEm:"15/09/2026",
-  /* conferido contra o Windsor em 15/09: impressões e cliques batem exatamente
-     nas quatro linhas; o gasto difere em um centavo por campanha, que é
-     arredondamento do export. Só as conversões são informação nova — o
-     conector openai_ads não tem campo de conversão. */
-  atual:{ rotulo:"08/09–14/09", campanhas:[
-    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:11681, cliques:312, conversoes:32, custo:264.15},
-    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:13414, cliques:256, conversoes:22, custo:353.72}
+  arquivos:["Semana_0809_-_1409_OpenAI_Ads.csv","Semana_1509_-_2109_OpenAI_Ads.csv"],
+  enviadoEm:"22/09/2026",
+  /* ATENCAO: as conversoes de 08-14/09 MUDARAM entre um export e outro. O
+     arquivo da semana passada dizia 54 no total; o desta semana, para a mesma
+     janela, diz 63. Nao e erro: e conversao que chega com atraso e o Ads
+     Manager reatribui ao dia do clique. O painel usa sempre o export mais
+     recente. A campanha [02] esta pausada. */
+  atual:{ rotulo:"15/09–21/09", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:16577, cliques:364, conversoes:43, custo:357.41},
+    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:9940,  cliques:143, conversoes:10, custo:246.61}
   ]},
-  anterior:{ rotulo:"01/09–07/09", campanhas:[
-    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:14077, cliques:295, conversoes:30, custo:360.73},
-    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:12734, cliques:284, conversoes:23, custo:374.11}
+  anterior:{ rotulo:"08/09–14/09", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:11681, cliques:312, conversoes:36, custo:264.15},
+    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:13414, cliques:256, conversoes:27, custo:353.72}
   ]}
 };
 
@@ -615,45 +623,40 @@ const OPENAI_MANAGER={
    em 02/09/2026, cobrindo 01–31/08. A aba Landing Page é 100% Clarity — sem GA4.
    NÃO muda com "Puxar dados"; para atualizar, é preciso um export novo. */
 const CLARITY_SEMANAS={
-  projeto:"LP Mia (Principal)", enviadoEm:"15/09/2026",
-  arquivos:["Clarity_LP0109_0709.csv","Clarity_LP0809_1409.csv"],
-  /* ATENÇÃO à janela do export novo: o Clarity gravou "09/07 00:00 – 09/14
-     23:59", ou seja 07 a 14/09 — oito dias, e o dia 07/09 também está no
-     export anterior. A comparação é 8 dias contra 7, com um dia repetido.
-     Por isso a aba mostra o aviso e a média por dia ao lado do total. */
+  projeto:"LP Mia (Principal)", enviadoEm:"22/09/2026",
+  arquivos:["Clarity_LP_Mia_Principal_09-22-2026_08_57.csv",
+            "Clarity_LP_Mia_Principal_09-22-2026_08_58.csv"],
+  /* De novo a janela do export novo veio um dia a mais: o Clarity gravou
+     "09/14 00:00 - 09/21 23:59", ou seja 14 a 21/09 — oito dias, com o dia 14
+     tambem dentro do export anterior. O de 08-14 veio certo desta vez. */
   atual:{
-    rotulo:"07/09–14/09", dias:8, sessoes:2137, sessoesBot:117,
-    usuarios:1917, sessoesNovos:1968, sessoesRetorno:169,
-    paginasPorSessao:1.1998, scroll:16.45, tempoAtivo:29, tempoTotal:60,
-    rageClicksPct:0.09, deadClicksPct:2.81, botaoDireitoPct:6.22,
-    cliqueSaidaPct:26.53, cliqueLoginPct:6.36,
-    /* o Clarity não exporta o corte por dispositivo: esta é a soma dos
-       navegadores de celular dividida pelas sessões (1.870 de 2.137) */
-    mobilePct:87.51,
-    desempenho:{pontuacao:68.87, lcpSeg:4.685, inpMs:496, cls:0.002}, errosJs:71,
+    rotulo:"14/09–21/09", dias:8, sessoes:2623, sessoesBot:136,
+    usuarios:2413, sessoesNovos:2449, sessoesRetorno:174,
+    paginasPorSessao:1.1914, scroll:15.48, tempoAtivo:27, tempoTotal:59,
+    rageClicksPct:0, deadClicksPct:3.05, botaoDireitoPct:6.10,
+    cliqueSaidaPct:23.45, cliqueLoginPct:6.48,
+    mobilePct:88.18,   /* 2.313 de 2.623 navegadores de celular */
+    desempenho:{pontuacao:70.58, lcpSeg:5.048, inpMs:304, cls:0.002}, errosJs:74,
     origens:[
-      {n:"Busca no Google",s:691,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
-      {n:"Instagram",s:372,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
-      {n:"Facebook",s:213,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
-      /* referenciador cru: l.wl.co, o redirecionador de links do WhatsApp (Meta).
-         Ele nao identifica a conversa — nem o Clarity nem o GA conseguem. */
-      {n:"WhatsApp",s:47,d:"Tocou no link dentro do WhatsApp: o time mandando para um lead, um cliente compartilhando ou um grupo. O WhatsApp não diz qual conversa foi. Não é anúncio — é envio direto e boca a boca."},
-      {n:"App da Mia",s:34,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
-      {n:"A própria página",s:13,d:"Navegou de uma parte da página para outra"},
-      {n:"Threads",s:4,d:"Clicou em link no Threads"}
+      {n:"Busca no Google",s:506,d:"Pesquisou no Google e clicou — inclui os anúncios de busca do Google Ads"},
+      {n:"Instagram",s:495,d:"Clicou em link no Instagram: anúncios, link da bio ou stories"},
+      {n:"Facebook",s:273,d:"Clicou em link no Facebook: anúncios do Meta Ads, posts ou o app"},
+      {n:"WhatsApp",s:37,d:"Tocou no link dentro do WhatsApp: o time mandando para um lead, um cliente compartilhando ou um grupo. O WhatsApp não diz qual conversa foi. Não é anúncio — é envio direto e boca a boca."},
+      {n:"App da Mia",s:31,d:"Já estava logado no app (web.miaapp.com.br) e voltou para a página"},
+      {n:"A própria página",s:15,d:"Navegou de uma parte da página para outra"}
     ]
   },
   anterior:{
-    rotulo:"01/09–07/09", dias:7, sessoes:1298, sessoesBot:92,
-    usuarios:1189, sessoesNovos:1198, sessoesRetorno:100,
-    paginasPorSessao:1.2419, scroll:17.6, tempoAtivo:37, tempoTotal:72,
-    rageClicksPct:0, deadClicksPct:3.54, botaoDireitoPct:6.55,
-    cliqueSaidaPct:26.58, cliqueLoginPct:6.09,
-    mobilePct:90.37,   /* 1.173 de 1.298 */
-    desempenho:{pontuacao:73, lcpSeg:4.288, inpMs:360, cls:0.001}, errosJs:44,
+    rotulo:"08/09–14/09", dias:7, sessoes:1895, sessoesBot:105,
+    usuarios:1689, sessoesNovos:1736, sessoesRetorno:159,
+    paginasPorSessao:1.1852, scroll:16.27, tempoAtivo:28, tempoTotal:57,
+    rageClicksPct:0.11, deadClicksPct:2.85, botaoDireitoPct:5.96,
+    cliqueSaidaPct:26.70, cliqueLoginPct:6.60,
+    mobilePct:87.07,   /* 1.650 de 1.895 */
+    desempenho:{pontuacao:68.26, lcpSeg:4.726, inpMs:496, cls:0.002}, errosJs:64,
     origens:[
-      {n:"Instagram",s:288},{n:"Busca no Google",s:228},{n:"Facebook",s:182},
-      {n:"App da Mia",s:17},{n:"A própria página",s:16},{n:"WhatsApp",s:14},
+      {n:"Busca no Google",s:647},{n:"Instagram",s:328},{n:"Facebook",s:177},
+      {n:"WhatsApp",s:47},{n:"App da Mia",s:30},{n:"A própria página",s:13},
       {n:"Threads",s:4}
     ]
   }
@@ -672,15 +675,20 @@ const CLARITY_SEMANAS={
    Os cadastros do OpenAI vem do export do Ads Manager (o conector nao tem o
    campo); entrega e gasto conferidos contra o Windsor, com dois centavos de
    arredondamento no total. */
+/* Visao geral: a JANELA CHEIA das duas semanas, 08 a 21/09. Puxada pedindo o
+   periodo inteiro de uma vez, nunca somando as semanas — o alcance do Meta nao
+   se soma: deduplicado deu 55.198, e somar as duas semanas daria 67.077,
+   contando duas vezes as 11.879 pessoas que viram nas duas. Gasto, impressoes,
+   cliques e cadastros conferem com a soma. */
 const VISAO_SEMANA={
-  rotulo:"01/09–14/09", cobertura:"01/09–14/09", fechadoEm:"15/09/2026",
+  rotulo:"08/09–21/09", cobertura:"08/09–21/09", fechadoEm:"22/09/2026",
   canais:[
     {n:"Google Ads", fonte:"Windsor · google_ads",
-     alcance:null,  impressoes:12656, cliques:1012, custo:2448.0022, cadastros:139},
+     alcance:null,  impressoes:13951, cliques:1192, custo:3185.0089, cadastros:161},
     {n:"Meta Ads",   fonte:"Windsor · facebook · alcance deduplicado da conta",
-     alcance:45321, impressoes:74399, cliques:1111, custo:1998.91,   cadastros:160},
+     alcance:55198, impressoes:98355, cliques:1391, custo:2673.66,   cadastros:189},
     {n:"OpenAI Ads", fonte:"Windsor (entrega) + export do Ads Manager (cadastros)",
-     alcance:null,  impressoes:51906, cliques:1147, custo:1352.71,   cadastros:107}
+     alcance:null,  impressoes:51612, cliques:1075, custo:1221.89,   cadastros:116}
   ]
 };
 
@@ -2053,7 +2061,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-16-posicao";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-22-semanal";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
