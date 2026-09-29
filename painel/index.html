@@ -1754,10 +1754,6 @@ function vLP(){
      nao passa pelo pct(), que colaria um "%" que nao faz sentido aqui */
   const por100=p=>p.exibicoes?p.toques/p.exibicoes*100:null;
   const n2=v=>v==null?"—":nf2.format(v).replace(",00","");
-  /* bloco lado a lado do Clarity: a pagina B fica na coluna de destaque e a A
-     na de comparacao, entao a seta mede B contra A — igual ao resto do painel,
-     que poe o periodo atual a esquerda */
-  const Bc=(rot,fmt,b_,a_,expl,modo)=>B(rot,fmt,b_,a_,expl,modo,{a:"Página B",b:"Página A"});
 
   const cartao=(p,vence)=>`
     <div class="abc${vence?" vence":""}">
@@ -1798,14 +1794,6 @@ function vLP(){
     ${cx(cxt("O que o Clarity mostrou dentro da página",
       "Onde a pessoa toca depois de chegar. Microsoft Clarity, "+esc(T.clarity.rotulo)+
       " — um export por página.", T.clarity.dias+" dias")
-      + blocos(
-        Bc("Toques no botão principal",pct,Bp.maisTocado.pct,A.maisTocado.pct,
-           "De todos os toques da página, quantos foram no botão mais tocado. Quanto maior, mais a página conduz para uma ação só") +
-        Bc("Toques a cada 100 visitas",n2,por100(Bp),por100(A),
-           "A página A recebe MAIS toque por visita e mesmo assim converte menos — toque não é cadastro","neutro") +
-        Bc("Visitas no período",num,Bp.exibicoes,A.exibicoes,
-           "Volume de cada página no Clarity. São tamanhos diferentes, então compare as proporções acima, nunca estes números","neutro")
-      )
       + `<div class="apr"><b>O que esse teste ensinou</b><ul>
         <li><b>Um botão dominante ganha da página cheia de opções.</b> Na página B,
         ${pct(Bp.ctaTotal/Bp.toques*100)} dos toques foram em algum botão de criar link —
