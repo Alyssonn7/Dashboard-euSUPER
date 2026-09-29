@@ -86,7 +86,7 @@ de agosto por baixo dos rótulos de setembro.
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
 | **OpenAI Ads** | Só o export do Ads Manager, a pedido — agora **semana contra semana** (08–14/09 contra 01–07/09): conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. Os blocos de páginas vistas saíram porque o export novo não traz mais essa coluna. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
 | **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
-| **Landing Page** | 100% Microsoft Clarity, do export do painel, **semana contra semana**, enxuta a pedido para **cinco métricas**: visitas, seguiram para o produto, rolagem média, tempo ativo e velocidade — mais de onde vieram as visitas, com o número da semana anterior ao lado. Visitantes novos, cliques em "Entrar" e "no celular" saíram da tela, mas os campos continuam em `CLARITY_SEMANAS` e voltam removendo uma linha do render |
+| **Landing Page** | O **teste A/B das duas páginas**: `miaapp.com.br` (A) contra `lp1.miaapp.com.br` (B), com uma captura de cada página embutida, a **taxa de conversão por canal** nos três gerenciadores de anúncio e o **comportamento dentro da página** pelo Clarity (exibições, toques e concentração no botão mais tocado). B venceu nos três canais. A versão anterior da aba — Clarity semana contra semana, cinco métricas e de onde vieram as visitas — continua inteira em `vLPSemanal()`, com os dados em `CLARITY_SEMANAS`: volta trocando `r:vLP` por `r:vLPSemanal` na lista `VISTAS` |
 | **Visão geral** | Cobre a **janela cheia** do painel (01–14/09), não a semana de cima. Um bloco de acumulado no topo com as conversões somadas e o custo médio por cadastro; abaixo, duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 
 As abas **Resumo** (cinco números, o funil e o GMV semanal) e **Próximos passos**
@@ -214,6 +214,19 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
   domínio externo, que o artifact bloqueia — o quadradinho traz o tipo do post e
   abre o post no Instagram, e as miniaturas entram embutidas quando valer a pena,
   como as do Meta.
+- **O teste A/B mistura duas fontes, e a aba diz isso.** As taxas de conversão
+  por canal são **números informados**, lidos por Alysson em cada gerenciador de
+  anúncio: não há export delas no repositório, e nada no painel as recalcula. Já
+  exibições e toques vêm de dois exports do Clarity, um por página, e cobrem
+  **23–28/09 — seis dias**, contra os sete do teste de anúncios. Por isso as duas
+  coisas ficam em blocos separados e os volumes nunca somam com os dos
+  gerenciadores. A página A recebeu mais tráfego que a B, então só as colunas de
+  proporção se comparam. A leitura de que a página B converte mais porque
+  concentra os toques num único CTA está marcada na tela como **leitura**, não como
+  medição: o Clarity mede toque, não cadastro.
+- **As capturas das duas páginas vão embutidas em base64** (JPEG, ~125 KB no
+  total). O artifact bloqueia imagem de domínio externo, então um `src` apontando
+  para o site não apareceria.
 - **Origem do cadastro** não existe em lugar nenhum. Por isso o custo por cadastro
   aparece consolidado, e não por canal.
 
