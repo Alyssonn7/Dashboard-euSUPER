@@ -380,6 +380,13 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .abi img{width:100%;display:block}
 .abi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;pointer-events:none;
   background:linear-gradient(to bottom,rgba(0,0,0,0),var(--cartao))}
+/* o que o teste ensinou */
+.apr{background:var(--bom-t);border:1px solid var(--bom);border-radius:12px;padding:16px 18px;margin-top:15px}
+.apr>b{display:block;font-family:var(--fonte);font-size:12px;font-weight:800;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--bom);margin-bottom:10px}
+.apr ul{margin:0;padding-left:17px;display:grid;gap:9px}
+.apr li{font-size:12.5px;line-height:1.55;color:var(--texto-2)}
+.apr li b{color:var(--texto);font-weight:700}
 /* comparativo por canal */
 .abcan{display:grid;grid-template-columns:104px minmax(0,1fr) 116px;gap:12px;align-items:center;
   padding:12px 0;border-top:1px solid var(--borda)}
@@ -1745,7 +1752,12 @@ function vLP(){
   const maxTx=Math.max(...T.canais.map(c=>Math.max(c.a,c.b)));
   /* toques a cada 100 exibicoes: numero puro, nao porcentagem — por isso
      nao passa pelo pct(), que colaria um "%" que nao faz sentido aqui */
-  const por100=p=>p.exibicoes?nf2.format(p.toques/p.exibicoes*100).replace(",00",""):"—";
+  const por100=p=>p.exibicoes?p.toques/p.exibicoes*100:null;
+  const n2=v=>v==null?"—":nf2.format(v).replace(",00","");
+  /* bloco lado a lado do Clarity: a pagina B fica na coluna de destaque e a A
+     na de comparacao, entao a seta mede B contra A — igual ao resto do painel,
+     que poe o periodo atual a esquerda */
+  const Bc=(rot,fmt,b_,a_,expl,modo)=>B(rot,fmt,b_,a_,expl,modo,{a:"Página B",b:"Página A"});
 
   const cartao=(p,vence)=>`
     <div class="abc${vence?" vence":""}">
@@ -1783,27 +1795,33 @@ function vLP(){
       + `<p class="proc">O teste dividiu o mesmo tráfego entre as duas páginas, então a comparação é direta: o anúncio, o público e a semana foram os mesmos — o que mudou foi a página.</p>`)}
   </div>
   <div class="faixa">
-    ${cx(cxt("O que as pessoas fizeram dentro da página",
-      "Microsoft Clarity, "+esc(T.clarity.rotulo)+" — "+T.clarity.dias+" dias, um export por página.","Clarity")
-      + `<div class="tw"><table><thead><tr><th>Página</th><th class="r">Exibições</th>
-        <th class="r">Toques</th><th class="r">Toques a cada 100 exibições</th>
-        <th class="r">Concentração no botão mais tocado</th></tr></thead><tbody>
-        ${[[A,false],[Bp,true]].map(([p,v])=>`<tr><td class="nm">${esc(p.rot)} · ${esc(p.url)}
-          ${p.maisTocado.id?`<span>${esc(p.maisTocado.nome)}</span>`:`<span>elemento sem id no export</span>`}</td>
-          <td class="r">${num(p.exibicoes)}</td><td class="r">${num(p.toques)}</td>
-          <td class="r">${por100(p)}</td>
-          <td class="r">${pct(p.maisTocado.pct)}</td></tr>`).join("")}
-        </tbody></table></div>`
-      + `<p class="proc"><b>Leitura:</b> na página B, ${pct(Bp.maisTocado.pct)} de todos os toques
-      caíram num único botão — o "criar meu link" do topo — e ${pct(Bp.ctaTotal/Bp.toques*100)} em algum
-      dos cinco botões de criar link. Na página A o elemento mais tocado fica em ${pct(A.maisTocado.pct)}
-      e os toques se espalham por menu, imagem do topo, FAQ e WhatsApp. É a explicação mais provável
-      para a diferença de conversão, não uma medição dela.</p>`
-      + `<p class="proc">Duas ressalvas de honestidade: o export do Clarity cobre ${T.clarity.dias} dias
-      (${esc(T.clarity.rotulo)}) e o teste de anúncios rodou ${T.diasAnuncio}, então os volumes aqui não
-      batem com os dos gerenciadores; e a página A recebeu mais tráfego total, por isso compare as
-      colunas de proporção, nunca as de volume. Os botões da página B têm identificador próprio no
-      código, o que faz o Clarity nomeá-los; os da A não têm, e aparecem como caminho de CSS.</p>`)}
+    ${cx(cxt("O que o Clarity mostrou dentro da página",
+      "Onde a pessoa toca depois de chegar. Microsoft Clarity, "+esc(T.clarity.rotulo)+
+      " — um export por página.", T.clarity.dias+" dias")
+      + blocos(
+        Bc("Toques no botão principal",pct,Bp.maisTocado.pct,A.maisTocado.pct,
+           "De todos os toques da página, quantos foram no botão mais tocado. Quanto maior, mais a página conduz para uma ação só") +
+        Bc("Toques a cada 100 visitas",n2,por100(Bp),por100(A),
+           "A página A recebe MAIS toque por visita e mesmo assim converte menos — toque não é cadastro","neutro") +
+        Bc("Visitas no período",num,Bp.exibicoes,A.exibicoes,
+           "Volume de cada página no Clarity. São tamanhos diferentes, então compare as proporções acima, nunca estes números","neutro")
+      )
+      + `<div class="apr"><b>O que esse teste ensinou</b><ul>
+        <li><b>Um botão dominante ganha da página cheia de opções.</b> Na página B,
+        ${pct(Bp.ctaTotal/Bp.toques*100)} dos toques foram em algum botão de criar link —
+        ${pct(Bp.maisTocado.pct)} num só, o do topo. Na página A o elemento mais tocado não passa de
+        ${pct(A.maisTocado.pct)}, e o resto se divide entre menu, imagem do topo, FAQ e WhatsApp.</li>
+        <li><b>Mais toque não é melhor.</b> A página A tem mais toque por visita
+        (${n2(por100(A))} contra ${n2(por100(Bp))}) e ainda assim perdeu nos três canais. O que conta não é
+        quantos toques a página recebe, é para onde eles vão.</li>
+        <li><b>O que dá para levar para a página principal:</b> um botão claro no topo, repetido ao
+        longo da página, e menos caminhos competindo com ele.</li>
+      </ul></div>`
+      + `<p class="proc"><b>Como ler:</b> o Clarity mede <b>toque</b>, não cadastro. A concentração no
+      botão é a explicação mais provável para a diferença de conversão, não uma medição dela.
+      O export cobre ${T.clarity.dias} dias (${esc(T.clarity.rotulo)}) e o teste de anúncios rodou
+      ${T.diasAnuncio}, então os volumes daqui não batem com os dos gerenciadores. Foram
+      ${num(Bp.toques)} toques na B e ${num(A.toques)} na A.</p>`)}
   </div>`;
 }
 
