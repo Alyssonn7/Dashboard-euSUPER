@@ -1740,7 +1740,12 @@ function vLP(){
   const T=(typeof AB_LP!=="undefined")?AB_LP:null;
   if(!T) return `<div class="vazio">Sem dados do teste A/B carregados.</div>`;
   const A=T.paginas.a, Bp=T.paginas.b;
-  const pp=v=>(v>0?"+":"")+nf2.format(v).replace(",00","")+" p.p.";
+  /* "pontos" por extenso em vez de "p.p." a pedido: a sigla travava a leitura
+     na apresentacao. E a diferenca crua entre as duas porcentagens — 20,88
+     menos 14,71 da 6,17 pontos — enquanto o "42% melhor" embaixo e a mesma
+     diferenca vista em proporcao. */
+  const pp=v=>{const t=nf2.format(v).replace(",00","");
+    return (v>0?"+":"")+t+(Math.abs(v)===1?" ponto":" pontos")};
   const rel=(x,y)=>(y/x-1)*100;
   const venceu=T.canais.filter(c=>c.b>c.a).length;
   const maxTx=Math.max(...T.canais.map(c=>Math.max(c.a,c.b)));
