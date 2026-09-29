@@ -376,16 +376,10 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .absel{margin-left:auto;flex:none;font-family:var(--fonte);font-size:10.5px;font-weight:700;
   color:var(--bom);background:var(--bom-t);border-radius:999px;padding:4px 10px;white-space:nowrap}
 .abi{position:relative;border:1px solid var(--borda);border-radius:12px;overflow:hidden;
-  background:var(--tela);max-height:360px}
+  background:var(--tela);max-height:430px}
 .abi img{width:100%;display:block}
 .abi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;pointer-events:none;
   background:linear-gradient(to bottom,rgba(0,0,0,0),var(--cartao))}
-.abtx{display:flex;gap:8px;flex-wrap:wrap}
-.abtx div{flex:1 1 92px;background:var(--tela);border:1px solid var(--borda);border-radius:10px;padding:9px 11px}
-.abtx b{display:block;font-family:var(--fonte);font-size:17px;font-weight:800;color:var(--texto);
-  font-variant-numeric:tabular-nums;line-height:1.15}
-.abtx small{display:block;font-size:10px;color:var(--texto-3);margin-top:2px}
-.abc.vence .abtx b{color:var(--bom)}
 /* comparativo por canal */
 .abcan{display:grid;grid-template-columns:104px minmax(0,1fr) 116px;gap:12px;align-items:center;
   padding:12px 0;border-top:1px solid var(--borda)}
@@ -1761,8 +1755,6 @@ function vLP(){
         ${vence?`<span class="absel">venceu nos 3 canais</span>`:""}
       </div>
       <div class="abi"><img src="${p.img}" alt="Página ${esc(p.rot)} — ${esc(p.url)}" loading="lazy"></div>
-      <div class="abtx">${T.canais.map(c=>`<div>
-        <b>${pct(vence?c.b:c.a)}</b><small>${esc(c.n.replace(" Ads",""))}</small></div>`).join("")}</div>
     </div>`;
 
   const linhaCanal=c=>`
