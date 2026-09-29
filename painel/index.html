@@ -475,7 +475,7 @@ const RETRATO = {
   /* carimbo do retrato: quando ele muda, o painel adota UMA vez o período
      gravado aqui, mesmo que o navegador tenha datas salvas. Depois disso as
      datas que você escolher voltam a mandar, como antes. */
-  carimbo:"2026-09-29-manual",
+  carimbo:"2026-09-29-manual-oai",
 
   /* Instagram organico, conta @usemiaapp (17841476511713959), puxado em
      22/09/2026. Alcance e contas engajadas sao SOMA dos dias. Um post publicado
@@ -605,24 +605,24 @@ const RETRATO = {
    do Windsor não tem esse campo. NÃO muda com "Puxar dados"; para atualizar,
    é preciso um export novo. */
 const OPENAI_MANAGER={
-  arquivos:["Semana_0809_-_1409_OpenAI_Ads.csv","Semana_1509_-_2109_OpenAI_Ads.csv"],
-  enviadoEm:"22/09/2026",
-  desatualizado:"Esta aba ainda está na comparação anterior (15/09–21/09 contra 08/09–14/09), não na que está na barra. O export novo ainda não chegou — quando chegar, eu atualizo.",
-  /* ATENCAO: as conversoes de 08-14/09 MUDARAM entre um export e outro. O
-     arquivo da semana passada dizia 54 no total; o desta semana, para a mesma
-     janela, diz 63. Nao e erro: e conversao que chega com atraso e o Ads
-     Manager reatribui ao dia do clique. O painel usa sempre o export mais
-     recente. A campanha [02] esta pausada. */
-  atual:{ rotulo:"15/09–21/09", campanhas:[
+  arquivos:["OpenAI_Ads_1509_-_2109.csv","OpenAI_Ads_2209_-_2809.csv"],
+  enviadoEm:"29/09/2026",
+  /* CONFERENCIA DE REATRIBUICAO: o export de 15-21 enviado agora veio IDENTICO
+     ao que ja estava guardado (16.577/364/43/R$ 357,41 e 9.940/143/10/R$ 246,61).
+     Ou seja, desta vez o Ads Manager nao reatribuiu nada — diferente do que
+     aconteceu com 08-14/09, que subiu de 54 para 63 conversoes entre dois
+     exports. O painel continua usando sempre o arquivo mais recente.
+     CAMPANHAS QUE NAO RODARAM ficam de fora da lista, porque so somariam zero:
+     "- Page Luy" em 15-21 (estreou em 22-28) e "[02]" em 22-28 (foi pausada). */
+  atual:{ rotulo:"22/09–28/09", campanhas:[
+    {nome:"[CAMPANHA DE SIGNUP]",           impressoes:41370, cliques:709, conversoes:61, custo:965.93},
+    {nome:"[CAMPANHA DE SIGNUP] - Page Luy",impressoes:14664, cliques:234, conversoes:26, custo:399.60}
+  ]},
+  anterior:{ rotulo:"15/09–21/09", campanhas:[
     {nome:"[CAMPANHA DE SIGNUP]",     impressoes:16577, cliques:364, conversoes:43, custo:357.41},
     {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:9940,  cliques:143, conversoes:10, custo:246.61}
-  ]},
-  anterior:{ rotulo:"08/09–14/09", campanhas:[
-    {nome:"[CAMPANHA DE SIGNUP]",     impressoes:11681, cliques:312, conversoes:36, custo:264.15},
-    {nome:"[CAMPANHA DE SIGNUP] [02]",impressoes:13414, cliques:256, conversoes:27, custo:353.72}
   ]}
 };
-
 /* Export do Microsoft Clarity (projeto "LP Mia (Principal)"), enviado pelo Alysson
    em 02/09/2026, cobrindo 01–31/08. A aba Landing Page é 100% Clarity — sem GA4.
    NÃO muda com "Puxar dados"; para atualizar, é preciso um export novo. */
@@ -686,18 +686,29 @@ const CLARITY_SEMANAS={
    contando duas vezes as 11.879 pessoas que viram nas duas. Gasto, impressoes,
    cliques e cadastros conferem com a soma. */
 const VISAO_SEMANA={
-  rotulo:"08/09–21/09", cobertura:"08/09–21/09", fechadoEm:"22/09/2026",
-  desatualizado:"Este consolidado ainda cobre 08/09–21/09. Ele fecha quando o export do OpenAI Ads da semana nova chegar.",
+  rotulo:"15/09–28/09", cobertura:"15/09–28/09", fechadoEm:"29/09/2026",
+  /* CONSOLIDADO DE DUAS SEMANAS, somando 15-21 e 22-28 de cada canal.
+     GOOGLE: o investimento e o da CONTA INTEIRA (R$ 1.233,64 + R$ 2.088,96),
+     porque aqui a pergunta e para onde foi o dinheiro. Ja impressoes e cliques
+     sao so da PESQUISA: em 22-28 voltou uma campanha de YouTube, e no YouTube
+     uma "interacao" e engajamento com o video, nao clique — somar os 3.884 aos
+     cliques distorceria a barra de cliques. Os 173 cadastros vieram todos da
+     Pesquisa, entao nao ha o que separar.
+     META: o alcance ficou NULO. O alcance deduplicado da conta vinha do Windsor,
+     que esta com as leituras pausadas; o export so traz alcance por campanha, e
+     somar campanha com campanha (ainda por cima em duas semanas) conta a mesma
+     pessoa varias vezes. Preferi nao mostrar numero a mostrar um inflado.
+     OPENAI: impressoes, cliques e investimento agora tambem saem do export, nao
+     mais do Windsor. */
   canais:[
-    {n:"Google Ads", fonte:"Windsor · google_ads",
-     alcance:null,  impressoes:13951, cliques:1192, custo:3185.0089, cadastros:161},
-    {n:"Meta Ads",   fonte:"Windsor · facebook · alcance deduplicado da conta",
-     alcance:55198, impressoes:98355, cliques:1391, custo:2673.66,   cadastros:189},
-    {n:"OpenAI Ads", fonte:"Windsor (entrega) + export do Ads Manager (cadastros)",
-     alcance:null,  impressoes:51612, cliques:1075, custo:1221.89,   cadastros:116}
+    {n:"Google Ads", fonte:"Export do Ads · investimento da conta inteira; impressões e cliques só da Pesquisa",
+     alcance:null,  impressoes:11914,  cliques:1046, custo:3322.60, cadastros:173},
+    {n:"Meta Ads",   fonte:"Export do Ads Manager por campanha · alcance indisponível sem o Windsor",
+     alcance:null,  impressoes:132131, cliques:1804, custo:3436.40, cadastros:245},
+    {n:"OpenAI Ads", fonte:"Export do Ads Manager",
+     alcance:null,  impressoes:82551,  cliques:1450, custo:1969.55, cadastros:140}
   ]
 };
-
 const CONTAS = {google:"326-604-5511", meta:"604915332642452", ga4:"511677134",
                 clarity:"1347", metabaseDb:4};
 const IDS_TESTE = "1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
@@ -1630,7 +1641,7 @@ function vOpenai(){
   return `
   ${avisoJanela(M)}
   ${tituloGrupo("OpenAI Ads · semana a semana (export do Ads Manager)",
-      "Conferido contra o Windsor em 15/09: impressões e cliques batem exatamente, o gasto difere um centavo por campanha (arredondamento do export). Só as conversões são informação nova.")}
+      "Duas semanas do export do Ads Manager. O de 15–21 foi reenviado agora e veio idêntico ao anterior — nenhuma conversão foi reatribuída desta vez.")}
   ${blocos(
     bl("Conversões",num,"conversoes","Cadastros registrados pelo Ads Manager") +
     bl("Custo por conversão",brl,"custoConv","Quanto custou cada cadastro","inv") +
@@ -2053,7 +2064,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-29-manual";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-29-manual-oai";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
