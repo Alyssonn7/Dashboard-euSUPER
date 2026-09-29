@@ -518,9 +518,17 @@ const RETRATO = {
       atual:   {impressoes:21866, cliques:4504, custo:2088.96, conversoes:107},
       anterior:{impressoes:4505,  cliques:426,  custo:1233.64, conversoes:66}
     },
+    /* as linhas de campanha do export, nao as linhas "Total: <tipo>".
+       Tres campanhas gastaram: duas de Pesquisa e uma de YouTube. Somadas,
+       as duas de Pesquisa dao o funil acima (1.130,28 + 721,24 = 1.851,52
+       contra 1.851,51 do total — um centavo de arredondamento do export). */
     campanhas:[
-      {nome:"Pesquisa", impressoes:7409,  cliques:620,   custo:1851.51, conversoes:107},
-      {nome:"YouTube",  impressoes:14457, cliques:3884,  custo:237.45,  conversoes:0}
+      {nome:"CAMPANHA PRINCIPAL (1)", tipo:"Pesquisa",
+       impressoes:4531,  cliques:393,  custo:1130.28, conversoes:58},
+      {nome:"CAMPANHA PRINCIPAL (1) [PESQUISA - LP1 - LUY]", tipo:"Pesquisa",
+       impressoes:2878,  cliques:227,  custo:721.24,  conversoes:49},
+      {nome:"YT - Motion Horizontal V.1", tipo:"YouTube · Geração de demanda",
+       impressoes:14457, cliques:3884, custo:237.45,  conversoes:0}
     ],
   },
   /* Meta Ads — do export do Ads Manager por CAMPANHA (o Windsor esta pausado).
@@ -1373,11 +1381,11 @@ function vGoogle(){
          extraTxt,"neutro") : "")
   )}
   ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha",
-    "Só as que gastaram no período. No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa.")
+    "Só as que gastaram no período — as duas de Pesquisa somadas dão o funil acima. No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa.")
     + `<div class="tw"><table><thead><tr><th>Campanha</th><th class="r">Investimento</th>
       <th class="r">Impressões</th><th class="r">Interações</th><th class="r">Taxa</th>
       <th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
-      <tbody>${camp.map(c=>`<tr><td class="nm">${esc(c.nome)}</td>
+      <tbody>${camp.map(c=>`<tr><td class="nm">${esc(c.nome)}${c.tipo?`<span>${esc(c.tipo)}</span>`:""}</td>
         <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
         <td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td>
         <td class="r">${num(c.conversoes)}</td><td class="r">${brl(c.custoConv)}</td></tr>`).join("")}</tbody>
