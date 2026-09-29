@@ -1354,6 +1354,9 @@ function vGoogle(){
   const a=derivar(D.google&&D.google.atual), b=derivar(D.google&&D.google.anterior);
   if(!a) return semDados("Google Ads", D.google&&D.google.erro);
   const camp=(D.google.campanhas||[]).map(derivar).filter(c=>c.custo>0);
+  /* a tabela e de UMA janela so (a atual), diferente dos blocos de cima que
+     mostram as duas lado a lado — por isso a data vai no titulo dela */
+  const rpG=rotuloPer(D.periodo&&D.periodo.atual);
 
   /* o cartão "O que esses números dizem" saiu desta aba a pedido do Alysson
      (comentário no painel, 02/09) — não entra na apresentação aos founders */
@@ -1380,7 +1383,7 @@ function vGoogle(){
     (ct ? B("Investimento total no Google",brl,ct.atual&&ct.atual.custo,ct.anterior&&ct.anterior.custo,
          extraTxt,"neutro") : "")
   )}
-  ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha",
+  ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha"+(rpG?" · "+rpG:""),
     "Só as que gastaram no período — as duas de Pesquisa somadas dão o funil acima. No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa.")
     + `<div class="tw"><table><thead><tr><th>Campanha</th><th class="r">Investimento</th>
       <th class="r">Impressões</th><th class="r">Interações</th><th class="r">Taxa</th>
