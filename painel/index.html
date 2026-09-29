@@ -1,4 +1,4 @@
-<title>Painel euSUPER!</title>
+<title>Painel Tráfego Pago</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
@@ -922,7 +922,22 @@ async function chamar(server,tool,input,rotulo){
     }
   }
 }
-const linhas=p=>(p&&Array.isArray(p.result))?p.result:[];
+/* O Windsor NÃO falha quando o plano não cobre as contas conectadas: ele devolve
+   a resposta inteira ZERADA e enfia o aviso dentro de um campo de texto (o nome
+   da campanha, o id da conta). Sem esta checagem o painel mostraria "Dados ao
+   vivo" com tudo em zero, que é pior do que não mostrar nada. Aqui isso vira
+   falha explícita, e cada aba mostra o aviso em vez de número falso. */
+const WINDSOR_PAUSADO=/not your real numbers|reads are paused/i;
+const linhas=p=>{
+  const r=(p&&Array.isArray(p.result))?p.result:[];
+  for(const x of r) for(const k in x){
+    if(typeof x[k]==="string" && WINDSOR_PAUSADO.test(x[k]))
+      throw {code:"tool_error", message:"O Windsor pausou as leituras da conta: o plano é o Free, "+
+        "que cobre 1 conta conectada, e há 6 conectadas. Enquanto isso a API devolve tudo zerado. "+
+        "Resolva em onboard.windsor.ai — desconectar contas ou assinar um plano — e puxe de novo."};
+  }
+  return r;
+};
 const soma=(a,f)=>a.reduce((s,x)=>s+(Number(f(x))||0),0);
 
 async function qGoogle(de,ate){
@@ -1226,6 +1241,10 @@ async function puxar(){
     erro:msg("ng")};
   novo.gmvSemanal=RETRATO.gmvSemanal; novo.passos=RETRATO.passos;
   novo.falhouTudo = tarefas.every(([k])=>FALHAS[k]);
+  /* quantas fontes falharam: dizer "Dados ao vivo" com cinco abas quebradas
+     porque uma sexta respondeu seria enganoso */
+  novo.falharam = tarefas.filter(([k])=>FALHAS[k]).length;
+  novo.fontes = tarefas.length;
   D=novo; guardarVivo(novo); lembrarDatas();
   btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
   desenhar();
@@ -1615,8 +1634,17 @@ function vInstagram(){
         ? "Os posts do período entram aqui na primeira consulta depois da conexão."
         : "Nenhum post publicado no período."}</div>`;
 
+  /* nem toda falta de número é falta de conexão: quando o erro é outro (o
+     Windsor pausado, por exemplo), mostrar o passo a passo da ligação daria o
+     diagnóstico errado — a conta está ligada, quem barrou foi o plano */
+  const ehConexao = !IG.erro || /instagram account|add your accounts|not connected|não está adicionado/i.test(IG.erro);
+  const cabeca = !faltando ? ""
+    : ehConexao ? cardConexaoIG(IG.erro)
+    : cx(cxt("Instagram · não foi possível ler","A consulta falhou; os blocos abaixo ficam com travessão.")
+        + `<p class="falhou"><b>O Windsor respondeu</b>${esc(IG.erro)}</p>`);
+
   return `
-  ${faltando?cardConexaoIG(IG.erro):""}
+  ${cabeca}
   ${tituloGrupo("Instagram · Alcance e audiência",sub)}
   ${g1}
   ${tituloGrupo("Instagram · Interações","O que as pessoas fizeram com o conteúdo publicado")}
@@ -1931,6 +1959,9 @@ function pintarEstado(){
       html=`<b>Datas novas.</b> Clique em Puxar dados para atualizar o painel. ${esc(tam)}`;
     } else if(D.aoVivo&&D.falhouTudo){
       cls="mal"; html="<b>A consulta não trouxe dados de nenhuma fonte.</b> Veja o aviso em cada aba e tente de novo.";
+    } else if(D.aoVivo&&D.falharam>0){
+      cls="mal";
+      html=`<b>${D.falharam} de ${D.fontes} consultas falharam.</b> O que está na tela pode estar incompleto — veja o aviso nas abas. ${esc(tam)}`;
     } else {
       const fonte = D.aoVivo
         ? (D.restaurado ? `${cap(D.puxadoEm)} e salvo neste navegador.` : `Dados ao vivo (${D.puxadoEm}).`)

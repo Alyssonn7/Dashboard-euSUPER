@@ -240,6 +240,16 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
 
 ## Quando uma fonte falha
 
+**O Windsor não avisa quando o plano trava as leituras.** Em 29/09/2026 a conta
+`mia_marketing` estava no plano **Free** (1 conta conectada permitida) com **6
+conectadas**, e a API passou a responder com **tudo zerado**, escondendo o aviso
+dentro de um campo de texto (o nome da campanha, o id da conta). Sem tratamento,
+o painel mostraria "Dados ao vivo" com zero em todos os blocos — pior do que não
+mostrar nada. A função `linhas()` agora procura esse aviso em qualquer campo de
+texto da resposta e transforma em falha explícita, e a linha de estado passou a
+dizer **quantas das consultas falharam**, não só quando todas falham.
+
+
 Cada bloco falha sozinho e mostra o que fazer — conexão expirada, conector não
 adicionado, permissão negada, limite de chamadas, erro da plataforma de origem.
 Os outros blocos continuam na tela.
