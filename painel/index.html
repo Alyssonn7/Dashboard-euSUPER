@@ -504,32 +504,32 @@ const RETRATO = {
     ],
     erro:null, erroSeguidores:null},
 
-  /* Google Ads — do export "Relatorio de campanha" do proprio Google Ads
-     (o Windsor esta com as leituras pausadas pelo plano). Numeros da linha
-     "Total: Conta". Conferido contra o Windsor na semana 15-21, que ainda
-     tinha dado: impressoes identicas, gasto com 80 centavos de diferenca e
-     conversoes 66 contra 65 (maturaram no export mais novo).
-     ATENCAO ao que o Google chama de "Interacoes": em Pesquisa e clique, mas
-     em Geracao de demanda (YouTube) conta tambem engajamento com o video. Em
-     22-28 o YouTube voltou e levou 14.457 impressoes com 3.884 interacoes, o
-     que infla o total — por isso a aba nomeia o bloco de Interacoes, nao de
-     Cliques. */
+  /* Google Ads — do export "Relatorio de campanha" do proprio Google Ads.
+     A BASE DO FUNIL E "Total: Pesquisa", nao "Total: conta". Motivo: em 22-28 a
+     campanha de YouTube voltou e a linha de conta soma 3.884 engajamentos de
+     video aos 620 cliques de Pesquisa. As 107 conversoes vieram TODAS da
+     Pesquisa, entao dividir por 4.504 dava 2,38% de taxa de conversao — numero
+     sem sentido, e diferente dos 17,26% que o gerenciador mostra. Com a base em
+     Pesquisa todos os indices batem com o painel do Google: CTR 8,37%, custo por
+     conversao R$ 17,30, taxa 17,26%.
+     O dinheiro do YouTube nao some: contaTotal guarda a conta inteira e a aba
+     mostra um bloco de investimento total, dizendo quanto foi para o YouTube
+     sem trazer conversao. Em 15-21 nao houve YouTube, entao Pesquisa e conta
+     sao a mesma coisa e a comparacao e direta. */
   google:{
-    atual:   {impressoes:21866, cliques:4504, custo:2088.96, conversoes:107},
-    anterior:{impressoes:4505,  cliques:426,  custo:1233.64, conversoes:66},
+    atual:   {impressoes:7409, cliques:620, custo:1851.51, conversoes:107},
+    anterior:{impressoes:4505, cliques:426, custo:1233.64, conversoes:66},
+    contaTotal:{
+      atual:   {impressoes:21866, cliques:4504, custo:2088.96, conversoes:107},
+      anterior:{impressoes:4505,  cliques:426,  custo:1233.64, conversoes:66}
+    },
     campanhas:[
       {nome:"Pesquisa", impressoes:7409,  cliques:620,   custo:1851.51, conversoes:107},
       {nome:"YouTube",  impressoes:14457, cliques:3884,  custo:237.45,  conversoes:0}
     ],
-    /* O export traz DUAS metricas de leilao, as duas sobre a parte de cima da
-       busca: quanto do topo se perdeu por classificacao e quanto por orcamento.
-       Nao traz a parcela de impressoes nem a posicao, que vinham do Windsor —
-       por isso esses tres blocos sairam desta semana. Os dois que ficaram sao
-       da mesma fonte nas duas janelas, entao comparam. */
     leilao:{
       atual:   {classifTopo:79.94, orcamTopo:5.67},
       anterior:{classifTopo:52.33, orcamTopo:38.91},
-      /* lista da ultima leitura do Windsor que funcionou, em 15-21/09 */
       concorrentes:["trinks.com","reservio.com","agendin.com.br","gendo.com.br",
         "simplesagenda.com.br","minhaagendavirtual.com.br","guruagenda.com.br",
         "iclinic.com.br","agende-me.com","bellesoftware.com.br","planifai.com.br",
@@ -1432,21 +1432,32 @@ function vGoogle(){
     + `<p class="doms">${doms.map(d=>`<span>${esc(d)}</span>`).join("")}</p>`
     + `<p class="proc">O Google só entrega a <b>lista</b> de domínios por API — a sobreposição, a taxa de superação e a parcela de cada concorrente existem apenas dentro do painel do Google Ads, em "Estatísticas de leilão". Por isso aqui não há número por concorrente.</p>`)}</div>`:""}`;
 
+  /* o funil vem da Pesquisa, que e onde estao as conversoes; a conta inteira
+     aparece no bloco de investimento total para o dinheiro do YouTube nao sumir */
+  const ct=D.google&&D.google.contaTotal;
+  const extra=(ct&&ct.atual)?(ct.atual.custo-a.custo):0;
+  const extraTxt = extra>0.005
+    ? `Inclui ${brl(extra)} em campanhas fora da Pesquisa (YouTube), que não trouxeram conversão`
+    : "Toda a verba do período foi para a Pesquisa";
+
   return `
+  ${tituloGrupo("Google Ads · Pesquisa","Onde estão todas as conversões do canal — os índices batem com o gerenciador")}
   ${blocos(
     B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
-    B("Interações",num,a.cliques,b&&b.cliques,
-      "Cliques na Pesquisa; no YouTube conta também engajamento com o vídeo, então não é só clique") +
-    B("Taxa de interação",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos interagiram") +
-    B("Custo por interação",brl,a.cpc,b&&b.cpc,"Quanto custou cada interação","inv") +
+    B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
+    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
+    B("CPC",brl,a.cpc,b&&b.cpc,"Quanto custou cada clique","inv") +
     B("Conversões",num,a.conversoes,b&&b.conversoes,"Cadastros que o Google atribuiu") +
     B("Tx. conversão",pct,a.txConv,b&&b.txConv,"De 100 cliques, quantos viraram cadastro") +
     B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
-    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto no canal","neutro")
+    B("Investimento",brl,a.custo,b&&b.custo,"Total gasto na Pesquisa","neutro") +
+    (ct ? B("Investimento total no Google",brl,ct.atual&&ct.atual.custo,ct.anterior&&ct.anterior.custo,
+         extraTxt,"neutro") : "")
   )}
-  ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha","Só as que gastaram no período.")
+  ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha",
+    "Só as que gastaram no período. No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa.")
     + `<div class="tw"><table><thead><tr><th>Campanha</th><th class="r">Investimento</th>
-      <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
+      <th class="r">Impressões</th><th class="r">Interações</th><th class="r">Taxa</th>
       <th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
       <tbody>${camp.map(c=>`<tr><td class="nm">${esc(c.nome)}</td>
         <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
