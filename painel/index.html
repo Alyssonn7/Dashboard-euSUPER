@@ -375,11 +375,12 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .abn small{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400}
 .absel{margin-left:auto;flex:none;font-family:var(--fonte);font-size:10.5px;font-weight:700;
   color:var(--bom);background:var(--bom-t);border-radius:999px;padding:4px 10px;white-space:nowrap}
-.abi{position:relative;border:1px solid var(--borda);border-radius:12px;overflow:hidden;
-  background:var(--tela);max-height:430px}
-.abi img{width:100%;display:block}
-.abi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(0,0,0,0),var(--cartao))}
+/* a captura entra INTEIRA: nada de recorte com esmaecimento. Quem manda e a
+   altura — a imagem encolhe proporcionalmente ate caber, e sobra margem dos
+   lados em vez de faltar pagina embaixo. */
+.abi{border:1px solid var(--borda);border-radius:12px;background:var(--tela);
+  display:flex;justify-content:center;padding:12px}
+.abi img{display:block;width:auto;height:auto;max-width:100%;max-height:600px;border-radius:6px}
 /* mapas de calor do Clarity, lado a lado */
 .hm{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:2px 0 4px}
 @media(max-width:700px){.hm{grid-template-columns:1fr}}
@@ -390,11 +391,9 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .hmc.vence .hml{background:var(--bom)}
 .hmn{font-family:var(--fonte);font-weight:700;font-size:12.5px;color:var(--texto);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hmi{position:relative;border:1px solid var(--borda);border-radius:12px;overflow:hidden;
-  background:var(--tela);max-height:460px}
-.hmi img{width:100%;display:block}
-.hmi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:56px;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(0,0,0,0),var(--cartao))}
+.hmi{border:1px solid var(--borda);border-radius:12px;background:var(--tela);
+  display:flex;justify-content:center;padding:12px}
+.hmi img{display:block;width:auto;height:auto;max-width:100%;max-height:600px;border-radius:6px}
 .hmd{font-size:11.5px;line-height:1.5;color:var(--texto-2)}
 .hmd b{color:var(--texto);font-weight:700}
 /* o que o teste ensinou */
