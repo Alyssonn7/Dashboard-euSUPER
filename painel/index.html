@@ -1778,14 +1778,6 @@ function vLP(){
   ${tituloGrupo("Landing Page · teste A/B",
      "Duas páginas recebendo os mesmos anúncios nos três canais, por "+T.diasAnuncio+" dias")}
   <div class="ab">${cartao(A,false)}${cartao(Bp,true)}</div>
-  ${blocos(
-    B1("Placar",v=>v,venceu+" a "+(T.canais.length-venceu),
-       "Em quantos dos três canais a página B converteu mais que a A","7 dias de teste") +
-    B1("Maior diferença",pp,Math.max(...T.canais.map(c=>c.b-c.a)),
-       "A distância entre B e A no canal em que B mais se destacou, em pontos percentuais","7 dias de teste") +
-    B1("Menor diferença",pp,Math.min(...T.canais.map(c=>c.b-c.a)),
-       "A distância entre B e A no canal em que B menos se destacou — mesmo aqui ela ganhou","7 dias de teste")
-  )}
   <div class="faixa">
     ${cx(cxt("Taxa de conversão por canal",
       "De 100 pessoas que clicaram no anúncio e chegaram na página, quantas se cadastraram. Números informados por você, tirados de cada gerenciador de anúncios.",
