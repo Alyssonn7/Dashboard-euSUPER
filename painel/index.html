@@ -475,12 +475,12 @@ tfoot td.r{text-align:right}
    por conversão são calculados na hora, para não haver número que não fecha.
    ========================================================================= */
 const RETRATO = {
-  puxadoEm:"22/09/2026 (gravado)", aoVivo:false,
-  periodo:{atual:{de:"2026-09-15",ate:"2026-09-21"},anterior:{de:"2026-09-08",ate:"2026-09-14"}},
+  puxadoEm:"29/09/2026 (gravado)", aoVivo:false,
+  periodo:{atual:{de:"2026-09-22",ate:"2026-09-28"},anterior:{de:"2026-09-15",ate:"2026-09-21"}},
   /* carimbo do retrato: quando ele muda, o painel adota UMA vez o período
      gravado aqui, mesmo que o navegador tenha datas salvas. Depois disso as
      datas que você escolher voltam a mandar, como antes. */
-  carimbo:"2026-09-22-semanal",
+  carimbo:"2026-09-29-manual",
 
   /* Instagram organico, conta @usemiaapp (17841476511713959), puxado em
      22/09/2026. Alcance e contas engajadas sao SOMA dos dias. Um post publicado
@@ -504,43 +504,59 @@ const RETRATO = {
     ],
     erro:null, erroSeguidores:null},
 
-  /* Google Ads · Windsor, conta 326-604-5511, puxado em 22/09/2026.
-     A CAMPANHA PRINCIPAL (1), de Pesquisa, e a unica que gasta. */
+  /* Google Ads — do export "Relatorio de campanha" do proprio Google Ads
+     (o Windsor esta com as leituras pausadas pelo plano). Numeros da linha
+     "Total: Conta". Conferido contra o Windsor na semana 15-21, que ainda
+     tinha dado: impressoes identicas, gasto com 80 centavos de diferenca e
+     conversoes 66 contra 65 (maturaram no export mais novo).
+     ATENCAO ao que o Google chama de "Interacoes": em Pesquisa e clique, mas
+     em Geracao de demanda (YouTube) conta tambem engajamento com o video. Em
+     22-28 o YouTube voltou e levou 14.457 impressoes com 3.884 interacoes, o
+     que infla o total — por isso a aba nomeia o bloco de Interacoes, nao de
+     Cliques. */
   google:{
-    atual:   {impressoes:4505, cliques:427, custo:1234.4372, conversoes:65},
-    anterior:{impressoes:9446, cliques:765, custo:1950.5717, conversoes:96},
+    atual:   {impressoes:21866, cliques:4504, custo:2088.96, conversoes:107},
+    anterior:{impressoes:4505,  cliques:426,  custo:1233.64, conversoes:66},
     campanhas:[
-      {nome:"Pesquisa", impressoes:4505, cliques:427, custo:1234.4372, conversoes:65}
+      {nome:"Pesquisa", impressoes:7409,  cliques:620,   custo:1851.51, conversoes:107},
+      {nome:"YouTube",  impressoes:14457, cliques:3884,  custo:237.45,  conversoes:0}
     ],
-    /* Disputa no leilao. O perdido por ORCAMENTO saltou de 2,3% para 38,9%:
-       a verba diaria passou a travar a entrega, e e por isso que impressoes e
-       gasto cairam quase pela metade. O perdido por classificacao melhorou
-       muito no mesmo periodo (79,6% -> 49,2%). */
+    /* O export traz DUAS metricas de leilao, as duas sobre a parte de cima da
+       busca: quanto do topo se perdeu por classificacao e quanto por orcamento.
+       Nao traz a parcela de impressoes nem a posicao, que vinham do Windsor —
+       por isso esses tres blocos sairam desta semana. Os dois que ficaram sao
+       da mesma fonte nas duas janelas, entao comparam. */
     leilao:{
-      atual:   {parcela:11.88, orcamento:38.90, classificacao:49.22, topoQuando:73.54, primeiro:16.20},
-      anterior:{parcela:18.07, orcamento:2.32,  classificacao:79.61, topoQuando:74.44, primeiro:18.01},
+      atual:   {classifTopo:79.94, orcamTopo:5.67},
+      anterior:{classifTopo:52.33, orcamTopo:38.91},
+      /* lista da ultima leitura do Windsor que funcionou, em 15-21/09 */
       concorrentes:["trinks.com","reservio.com","agendin.com.br","gendo.com.br",
         "simplesagenda.com.br","minhaagendavirtual.com.br","guruagenda.com.br",
         "iclinic.com.br","agende-me.com","bellesoftware.com.br","planifai.com.br",
         "sistemabeauty.com.br","bitrix24.com.br","monday.com","clickup.com",
         "salesforce.com","apple.com","google.com","top10.com"],
+      concorrentesDe:"15/09–21/09",
       erro:null
     }
   },
-  /* Meta Ads · Windsor, conta 604915332642452, puxado em 22/09/2026.
-     Quatro campanhas na semana nova (ABO - TESTE A/B, [CAMPANHA DE VENDA],
-     [MOTION CLAUDE] e MOTION - V.2), todas OUTCOME_SALES, portanto todas no
-     grupo de cadastro. Nenhuma de visita ao perfil. Como so esse grupo gastou,
-     o alcance dele e o da conta, ja deduplicado. Os numeros de 08-14 foram
-     repuxados: o Meta fecha com atraso e o gasto subiu de 1.006,98 para
-     1.007,13. */
+  /* Meta Ads — do export do Ads Manager por CAMPANHA (o Windsor esta pausado).
+     Conferido contra o Windsor em 15-21: cliques e resultados identicos, gasto
+     e impressoes com diferenca de centavos.
+     ALCANCE: o export nao traz linha de conta, so por campanha. O numero aqui e
+     a SOMA das campanhas nas DUAS janelas — quem viu duas campanhas conta duas
+     vezes. Em 15-21 o Windsor deduplicado dava 37.973 contra 46.867 somados;
+     mantive somado nos dois lados para a comparacao valer, com alcanceSomado
+     ligado para a tela avisar.
+     CRIATIVOS: o export veio por campanha, nao por anuncio — porCampanha liga o
+     aviso no card do top 3. */
   meta:{
-    atual:   {alcance:37973, impressoes:59316, cliques:803, custo:1666.53, conversoes:105, visitasLP:563},
-    anterior:{alcance:29104, impressoes:39039, cliques:588, custo:1007.13, conversoes:84,  visitasLP:415},
+    atual:   {alcance:57395, impressoes:72809, cliques:1001, custo:1769.64, conversoes:140, visitasLP:738},
+    anterior:{alcance:46867, impressoes:59322, cliques:803,  custo:1666.76, conversoes:105, visitasLP:563},
+    porCampanha:true,
     grupos:{
       cadastro:{
-        atual:   {alcance:37973, impressoes:59316, cliques:803, custo:1666.53, conversoes:105, visitasLP:563, visitasPerfil:117, alcanceSomado:false},
-        anterior:{alcance:29104, impressoes:39039, cliques:588, custo:1007.13, conversoes:84,  visitasLP:415, visitasPerfil:87,  alcanceSomado:false}
+        atual:   {alcance:57395, impressoes:72809, cliques:1001, custo:1769.64, conversoes:140, visitasLP:738, visitasPerfil:0, alcanceSomado:true},
+        anterior:{alcance:46867, impressoes:59322, cliques:803,  custo:1666.76, conversoes:105, visitasLP:563, visitasPerfil:0, alcanceSomado:true}
       },
       perfil:{
         atual:null, anterior:null,
@@ -548,21 +564,16 @@ const RETRATO = {
       }
     },
     criativos:[
-      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:966.75,impressoes:36699,cliques:501,conversoes:68,visitasPerfil:79,
-       post:"https://www.instagram.com/p/Dcl4auGgA2o/"},
-      {nome:"ADS-03",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:354.90,impressoes:16125,cliques:204,conversoes:26,visitasPerfil:23,
-       post:"https://www.instagram.com/p/DdaTQKEAMbb/"},
-      {nome:"MOTION V.2",campanha:"MOTION - V.2",objetivo:"OUTCOME_SALES",custo:211.88,impressoes:3722,cliques:65,conversoes:9,visitasPerfil:9,
-       post:"https://www.instagram.com/p/DdejuKsARc6/"},
-      {nome:"MOTION-01",campanha:"[MOTION CLAUDE]",objetivo:"OUTCOME_SALES",custo:119.27,impressoes:2209,cliques:27,conversoes:2,visitasPerfil:3,
-       post:"https://www.instagram.com/p/DdVJyBHAwKN/"},
-      {nome:"ADS-01",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:9.37,impressoes:446,cliques:5,conversoes:0,visitasPerfil:2,
-       post:"https://www.instagram.com/p/DdaTSLzAPTH/"},
-      {nome:"ADS-02",campanha:"[CAMPANHA DE VENDA]",objetivo:"OUTCOME_SALES",custo:4.36,impressoes:115,cliques:1,conversoes:0,visitasPerfil:1,
-       post:"https://www.instagram.com/p/DdaTRlEAwif/"}
+      {nome:"ABO - TESTE A/B (CONVERSÃO)",campanha:"",objetivo:"OUTCOME_SALES",custo:655.11,impressoes:27983,cliques:403,conversoes:59,visitasPerfil:0},
+      {nome:"[CAMPANHA DE VENDA]",campanha:"",objetivo:"OUTCOME_SALES",custo:448.07,impressoes:22995,cliques:299,conversoes:39,visitasPerfil:0},
+      {nome:"ABO - TESTE A/B (CONVERSÃO) (Page luy)",campanha:"",objetivo:"OUTCOME_SALES",custo:413.26,impressoes:17259,cliques:242,conversoes:36,visitasPerfil:0},
+      {nome:"MOTION - V.2",campanha:"",objetivo:"OUTCOME_SALES",custo:253.20,impressoes:4572,cliques:57,conversoes:6,visitasPerfil:0}
     ],
     criativosAnt:[
-      {nome:"ADS-04",campanha:"ABO - TESTE A/B (CONVERSÃO)",objetivo:"OUTCOME_SALES",custo:1007.13,impressoes:39039,cliques:588,conversoes:84,visitasPerfil:87}
+      {nome:"ABO - TESTE A/B (CONVERSÃO)",campanha:"",objetivo:"OUTCOME_SALES",custo:966.77,impressoes:36700,cliques:501,conversoes:68,visitasPerfil:0},
+      {nome:"[CAMPANHA DE VENDA]",campanha:"",objetivo:"OUTCOME_SALES",custo:368.71,impressoes:16689,cliques:210,conversoes:26,visitasPerfil:0},
+      {nome:"MOTION - V.2",campanha:"",objetivo:"OUTCOME_SALES",custo:212.01,impressoes:3724,cliques:65,conversoes:9,visitasPerfil:0},
+      {nome:"[MOTION CLAUDE]",campanha:"",objetivo:"OUTCOME_SALES",custo:119.27,impressoes:2209,cliques:27,conversoes:2,visitasPerfil:0}
     ]
   },
 
@@ -604,6 +615,7 @@ const RETRATO = {
 const OPENAI_MANAGER={
   arquivos:["Semana_0809_-_1409_OpenAI_Ads.csv","Semana_1509_-_2109_OpenAI_Ads.csv"],
   enviadoEm:"22/09/2026",
+  desatualizado:"Esta aba ainda está na comparação anterior (15/09–21/09 contra 08/09–14/09), não na que está na barra. O export novo ainda não chegou — quando chegar, eu atualizo.",
   /* ATENCAO: as conversoes de 08-14/09 MUDARAM entre um export e outro. O
      arquivo da semana passada dizia 54 no total; o desta semana, para a mesma
      janela, diz 63. Nao e erro: e conversao que chega com atraso e o Ads
@@ -624,6 +636,7 @@ const OPENAI_MANAGER={
    NÃO muda com "Puxar dados"; para atualizar, é preciso um export novo. */
 const CLARITY_SEMANAS={
   projeto:"LP Mia (Principal)", enviadoEm:"22/09/2026",
+  desatualizado:"Esta aba ainda está na comparação anterior (15/09–21/09 contra 08/09–14/09), não na que está na barra. O export novo ainda não chegou — quando chegar, eu atualizo.",
   arquivos:["Clarity_LP_Mia_Principal_09-22-2026_08_57.csv",
             "Clarity_LP_Mia_Principal_09-22-2026_08_58.csv"],
   /* De novo a janela do export novo veio um dia a mais: o Clarity gravou
@@ -682,6 +695,7 @@ const CLARITY_SEMANAS={
    cliques e cadastros conferem com a soma. */
 const VISAO_SEMANA={
   rotulo:"08/09–21/09", cobertura:"08/09–21/09", fechadoEm:"22/09/2026",
+  desatualizado:"Este consolidado ainda cobre 08/09–21/09. Ele fecha quando o export do OpenAI Ads da semana nova chegar.",
   canais:[
     {n:"Google Ads", fonte:"Windsor · google_ads",
      alcance:null,  impressoes:13951, cliques:1192, custo:3185.0089, cadastros:161},
@@ -1309,6 +1323,8 @@ function B(rot,fmt,a,b,expl,modo,rotulos){
   </div>`;
 }
 const blocos=h=>`<div class="blocos">${h}</div>`;
+/* faixa amarela para uma aba que ficou numa janela diferente da barra */
+const avisoJanela=o=>(o&&o.desatualizado)?`<p class="aviso"><b>Atenção à janela.</b> ${esc(o.desatualizado)}</p>`:"";
 
 function semDados(rotulo,motivo){
   return cx(cxt(rotulo,"Este canal não trouxe dados nesta janela.")
@@ -1400,30 +1416,29 @@ function vGoogle(){
   const la=L&&L.atual, lb=L&&L.anterior;
   const doms=(L&&L.concorrentes)||[];
   const leilao = !la ? "" : `
-  ${tituloGrupo("Google Ads · Disputa no leilão","Quanto da busca o anúncio ganha, por que perde o resto e em que posição aparece")}
+  ${tituloGrupo("Google Ads · Disputa no leilão","Por que o anúncio deixou de aparecer na parte de cima da busca")}
   ${blocos(
-    B("Parcela de impressões",pctIS,la.parcela,lb&&lb.parcela,
-      "De todas as buscas em que o anúncio podia aparecer, em quantas ele apareceu") +
-    B("Perdido por classificação",pctIS,la.classificacao,lb&&lb.classificacao,
-      "Não apareceu porque ficou atrás dos concorrentes — o Google pesa lance e qualidade do anúncio","inv") +
-    B("Perdido por orçamento",pctIS,la.orcamento,lb&&lb.orcamento,
-      "Não apareceu porque a verba do dia tinha acabado","inv") +
-    B("Quando apareceu, ficou no topo",pctIS,la.topoQuando,lb&&lb.topoQuando,
-      "Das vezes que o anúncio apareceu, quantas foram acima dos resultados da busca") +
-    B("Quando apareceu, ficou em 1º",pctIS,la.primeiro,lb&&lb.primeiro,
-      "Das vezes que o anúncio apareceu, quantas foram na primeira posição, antes de todos os concorrentes")
+    B("Topo perdido por classificação",pctIS,la.classifTopo,lb&&lb.classifTopo,
+      "Das buscas em que podia aparecer no topo, quanto se perdeu por ficar atrás dos concorrentes — o Google pesa lance e qualidade","inv") +
+    B("Topo perdido por orçamento",pctIS,la.orcamTopo,lb&&lb.orcamTopo,
+      "Das buscas em que podia aparecer no topo, quanto se perdeu porque a verba do dia acabou","inv")
   )}
+  <p class="proc">A parcela de impressões e a posição do anúncio saíram desta semana: vinham do
+  Windsor, que está com as leituras pausadas. O export do Google Ads traz só estas duas — e as
+  duas janelas vêm dele, então comparam entre si.</p>
   ${doms.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Quem disputou as mesmas buscas",
-      "Anunciantes que apareceram nas buscas em que a euSUPER! também apareceu, no período.",""+doms.length+" domínios")
+      "Anunciantes que apareceram nas mesmas buscas. Lista da última leitura do Windsor que funcionou"+
+      (L.concorrentesDe?", em "+esc(L.concorrentesDe):"")+".",""+doms.length+" domínios")
     + `<p class="doms">${doms.map(d=>`<span>${esc(d)}</span>`).join("")}</p>`
     + `<p class="proc">O Google só entrega a <b>lista</b> de domínios por API — a sobreposição, a taxa de superação e a parcela de cada concorrente existem apenas dentro do painel do Google Ads, em "Estatísticas de leilão". Por isso aqui não há número por concorrente.</p>`)}</div>`:""}`;
 
   return `
   ${blocos(
     B("Impressões",num,a.impressoes,b&&b.impressoes,"Vezes que o anúncio apareceu") +
-    B("Cliques",num,a.cliques,b&&b.cliques,"Quantas pessoas clicaram") +
-    B("CTR",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos clicaram") +
-    B("CPC",brl,a.cpc,b&&b.cpc,"Quanto custou cada clique","inv") +
+    B("Interações",num,a.cliques,b&&b.cliques,
+      "Cliques na Pesquisa; no YouTube conta também engajamento com o vídeo, então não é só clique") +
+    B("Taxa de interação",pct,a.ctr,b&&b.ctr,"De 100 que viram, quantos interagiram") +
+    B("Custo por interação",brl,a.cpc,b&&b.cpc,"Quanto custou cada interação","inv") +
     B("Conversões",num,a.conversoes,b&&b.conversoes,"Cadastros que o Google atribuiu") +
     B("Tx. conversão",pct,a.txConv,b&&b.txConv,"De 100 cliques, quantos viraram cadastro") +
     B("Custo por conversão",brl,a.custoConv,b&&b.custoConv,"Quanto custou cada cadastro","inv") +
@@ -1507,10 +1522,11 @@ function vMeta(){
   const cardTop=(g,tit,sub)=>{
     const {lista,nota}=escolher(g); const L=top3(lista,g);
     const c1=g==="cadastro"?"Conversões":"Visitas ao perfil", c2=g==="cadastro"?"Por conversão":"Por visita";
-    const corpo=L.length?`<div class="tw"><table><thead><tr><th>Criativo</th><th>Anúncio</th><th class="r">Investimento</th>
+    const porCamp=!!(D.meta&&D.meta.porCampanha);
+    const corpo=L.length?`<div class="tw"><table><thead><tr>${porCamp?"":"<th>Criativo</th>"}<th>${porCamp?"Campanha":"Anúncio"}</th><th class="r">Investimento</th>
       <th class="r">Impressões</th><th class="r">Cliques</th><th class="r">CTR</th>
       <th class="r">${c1}</th><th class="r">${c2}</th></tr></thead>
-      <tbody>${L.map(c=>`<tr>${celCriativo(c)}<td class="nm">${esc(c.nome)}<span>${esc(c.campanha||"")}</span></td>
+      <tbody>${L.map(c=>`<tr>${porCamp?"":celCriativo(c)}<td class="nm">${esc(c.nome)}<span>${esc(c.campanha||"")}</span></td>
         <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
         <td class="r">${num(c.cliques)}</td><td class="r">${pct(c.ctr)}</td>
         <td class="r">${num(g==="cadastro"?c.conversoes:c.visitasPerfil)}</td>
@@ -1522,8 +1538,11 @@ function vMeta(){
   return `
   ${titulo("Meta Ads · Campanha de cadastro", semAtual(gc,ca)||"Objetivo de conversão: cadastros no site")}
   ${blocosCadastro}
-  ${cardTop("cadastro","Meta Ads · Criativos de conversão · top 3",
-            "Os três anúncios de cadastro mais eficientes: menor custo por conversão. Clique na miniatura para abrir o post.")}
+  ${cardTop("cadastro",
+            (D.meta&&D.meta.porCampanha)?"Meta Ads · Campanhas de conversão · top 3":"Meta Ads · Criativos de conversão · top 3",
+            (D.meta&&D.meta.porCampanha)
+              ? "As três campanhas de cadastro mais eficientes: menor custo por conversão. O export desta semana veio por campanha, não por anúncio — para voltar a ver criativo por criativo, exporte do Ads Manager com a divisão por anúncio."
+              : "Os três anúncios de cadastro mais eficientes: menor custo por conversão. Clique na miniatura para abrir o post.")}
   ${titulo("Meta Ads · Campanha de visita ao perfil do Instagram", semAtual(gp,pa)||"Objetivo de tráfego: levar pessoas ao perfil")}
   ${blocosPerfil}
   ${cardTop("perfil","Meta Ads · Criativos de visita ao perfil · top 3",
@@ -1670,6 +1689,7 @@ function vOpenai(){
   const rot=z?{a:M.atual.rotulo,b:M.anterior.rotulo}:null;
   const bl=(r,f,k,e,m)=>B(r,f,a[k],z&&z[k],e,m,rot);
   return `
+  ${avisoJanela(M)}
   ${tituloGrupo("OpenAI Ads · semana a semana (export do Ads Manager)",
       "Conferido contra o Windsor em 15/09: impressões e cliques batem exatamente, o gasto difere um centavo por campanha (arredondamento do export). Só as conversões são informação nova.")}
   ${blocos(
@@ -1717,6 +1737,7 @@ function vLP(){
      velocidade. Visitantes novos, cliques em "Entrar" e "no celular" saíram da
      tela — os campos continuam em CLARITY_SEMANAS, então voltam num minuto. */
   return `
+  ${avisoJanela(K)}
   ${tituloGrupo("Landing Page · semana a semana (Microsoft Clarity)",
       "Cinco números, do export do painel do Clarity")}
   ${aviso}
@@ -1795,6 +1816,7 @@ function vVisao(){
     )}`;
 
   return `
+  ${avisoJanela(V)}
   ${acumulado}
   ${tituloGrupo("Por canal · "+rp)}
   ${cartoes}
@@ -1855,7 +1877,7 @@ const VISTAS=[
   {id:"google",nome:"Google Ads", ic:"gads",    marca:true, chip:true, r:vGoogle},
   {id:"meta",  nome:"Meta Ads",   ic:"metaf",   marca:true, chip:true, r:vMeta},
   {id:"openai",nome:"OpenAI Ads", ic:"oai",     marca:true, chip:true, r:vOpenai},
-  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, r:vInstagram},
+  {id:"insta", nome:"Instagram",  ic:"insta",   marca:true, chip:true, oculta:true, r:vInstagram},
   {id:"lp",    nome:"Landing Page",ic:"cartao", marca:true, r:vLP},
   {id:"visao", nome:"Visão geral", ic:"grafico",marca:true, r:vVisao},
   {id:"passos",nome:"Próximos passos",ic:"checklist",marca:true,oculta:true,r:vPassos}
@@ -2092,7 +2114,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-22-semanal";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-09-29-manual";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
