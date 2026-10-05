@@ -1023,7 +1023,7 @@ const RETENTAVEL=new Set(["server_unavailable","rate_limited"]);
 let MCP;
 /* fora do viewer do claude.ai a página não tem window.claude — não pode derrubar o resto */
 ((window.claude && window.claude.use) ? window.claude.use("mcp") : Promise.resolve(null))
-  .then(m=>{MCP=m;pintarEstado()}).catch(()=>{MCP=null;pintarEstado()});
+  .then(m=>{MCP=m;pintarEstado();autoPuxar()}).catch(()=>{MCP=null;pintarEstado()});
 const espera=ms=>new Promise(r=>setTimeout(r,ms));
 
 /* Em out/2026 o get_data do Windsor virou ASSÍNCRONO: a primeira resposta pode
@@ -1245,12 +1245,20 @@ async function qInstaPerfil(de,ate){
 }
 
 async function qOpenai(de,ate){
-  /* sem filtro de conta: o id muda a cada reconexão e só existe uma conta */
+  /* sem filtro de conta: o id muda a cada reconexão e só existe uma conta.
+     CONVERSÕES: o conector ganhou o campo "conversions" (conversão pós-clique).
+     Conferido em 05/10 contra o export do Ads Manager: 61+26 = 87 em 22-28/09 e
+     43+10 = 53 em 15-21/09, iguais campanha por campanha. Impressões e cliques
+     idênticos; o gasto difere um ou dois centavos (arredondamento do export).
+     Com isso a aba deixou de depender do CSV. */
   const r=linhas(await chamar("Windsor.ai","get_data",{connector:"openai_ads",
-    fields:["campaign","impressions","clicks","spend"],
+    fields:["campaign","impressions","clicks","spend","conversions"],
     date_from:de,date_to:ate},"OpenAI Ads"));
   return {total:{impressoes:soma(r,x=>x.impressions),cliques:soma(r,x=>x.clicks),
-                 custo:soma(r,x=>x.spend),conversoes:null}};
+                 custo:soma(r,x=>x.spend),conversoes:soma(r,x=>x.conversions)},
+          campanhas:r.map(x=>({nome:x.campaign,impressoes:+x.impressions||0,cliques:+x.clicks||0,
+            custo:+x.spend||0,conversoes:+x.conversions||0})).filter(c=>c.custo>0)
+            .sort((a,b)=>b.custo-a.custo)};
 }
 
 async function qSessoes(de,ate){
@@ -1313,7 +1321,36 @@ async function qNegocio(de,ate,cde,cate){
   return {atual:ler("atual"),anterior:ler("anterior")};
 }
 
+/* PUXAR SOZINHO. O painel consulta o Windsor ao abrir e sempre que as datas
+   mudam (Aplicar, Enter, atalhos). Não consulta de novo se o que está na tela já
+   é das mesmas datas e tem menos de FRESCO_MS. Uma consulta de cada vez: se as
+   datas mudarem no meio, a seguinte roda assim que a atual termina. */
+const FRESCO_MS=30*60*1000;
+let puxando=false, puxarDeNovo=false;
+function selecaoNaTela(){
+  const pa=D.periodo&&D.periodo.anterior;
+  return !!D.periodo && D.periodo.atual.de===inDe.value && D.periodo.atual.ate===inAte.value &&
+    (comparar ? (!!pa && pa.de===inCDe.value && pa.ate===inCAte.value) : !pa);
+}
+function autoPuxar(){
+  if(!MCP) return;
+  if(puxando){ puxarDeNovo=true; return; }
+  const fresco = D.aoVivo && D.ts && (Date.now()-D.ts) < FRESCO_MS;
+  if(fresco && selecaoNaTela()) return;
+  puxar();
+}
 async function puxar(){
+  if(puxando){ puxarDeNovo=true; return; }
+  /* finally: se algo inesperado quebrar no meio, a trava não fica presa e o
+     painel continua podendo consultar */
+  try{ await puxarAgora(); }
+  finally{
+    if(puxando){ puxando=false; btPuxar.disabled=false; btPuxar.classList.remove("indo");
+      txPuxar.textContent="Puxar dados"; pintarEstado(); }
+  }
+  if(puxarDeNovo){ puxarDeNovo=false; if(!selecaoNaTela()) puxar(); }
+}
+async function puxarAgora(){
   const de=inDe.value,ate=inAte.value,cde=inCDe.value,cate=inCAte.value;
   const cmp=comparar;
   const validas = cmp ? [de,ate,cde,cate].every(dataOk)&&de<=ate&&cde<=cate
@@ -1321,6 +1358,7 @@ async function puxar(){
   if(!validas){
     FALHAS={periodo:{rotulo:"Período",code:"bad_request"}}; desenhar(); return;
   }
+  puxando=true; pintarEstado();
   btPuxar.disabled=true; btPuxar.classList.add("indo"); txPuxar.textContent="Puxando…";
   FALHAS={};
   /* as janelas "B" só entram quando há comparação: sem ela são seis chamadas,
@@ -1331,9 +1369,12 @@ async function puxar(){
   const tarefas=[
     ["gA",()=>qGoogle(de,ate)],
     ["mA",()=>qMeta(de,ate)],
-    ["oA",()=>qOpenai(de,ate)],
-    ["ng",()=>qNegocio(de,ate,cmp?cde:null,cmp?cate:null)]
+    ["oA",()=>qOpenai(de,ate)]
   ];
+  /* o Metabase (cadastros, onboarding, GMV) só alimenta o Resumo, que está
+     oculto: consultar sem mostrar seria gasto puro e, numa consulta automática,
+     uma falha dele viraria aviso à toa. Volta junto com a aba. */
+  if(visivel("resumo")) tarefas.push(["ng",()=>qNegocio(de,ate,cmp?cde:null,cmp?cate:null)]);
   /* aba oculta não desenha nada, então consultá-la seria gasto puro: as cinco
      chamadas do Instagram só entram enquanto a aba estiver visível. Basta tirar
      o oculta:true da lista VISTAS para elas voltarem. */
@@ -1354,7 +1395,7 @@ async function puxar(){
 
   const novo=JSON.parse(JSON.stringify(RETRATO));
   const ag=new Date(), z=n=>String(n).padStart(2,"0");
-  novo.aoVivo=true;
+  novo.aoVivo=true; novo.ts=Date.now();
   novo.puxadoEm=`consultado em ${z(ag.getDate())}/${z(ag.getMonth()+1)} às ${z(ag.getHours())}:${z(ag.getMinutes())}`;
   novo.periodo={atual:{de,ate},anterior:cmp?{de:cde,ate:cate}:null};
   /* cliquesReais: pela API o campo "clicks" é clique de verdade também no
@@ -1362,14 +1403,15 @@ async function puxar(){
      YouTube conta engajamento com o vídeo (3.884). A tabela muda o rótulo. */
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
     contaTotal:{atual:(R.gA&&R.gA.conta)||null, anterior:(R.gB&&R.gB.conta)||null},
-    campanhas:(R.gA&&R.gA.campanhas)||[], cliquesReais:true, erro:msg("gA")};
+    campanhas:(R.gA&&R.gA.campanhas)||[], cliquesReais:true, erro:msg("gA")||msg("gB")};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
-    criativos:(R.mA&&R.mA.criativos)||[], criativosAnt:(R.mB&&R.mB.criativos)||[], erro:msg("mA"),
+    criativos:(R.mA&&R.mA.criativos)||[], criativosAnt:(R.mB&&R.mB.criativos)||[], erro:msg("mA")||msg("mB"),
     grupos:{
       cadastro:{atual:R.mA&&R.mA.grupos.cadastro, anterior:R.mB&&R.mB.grupos.cadastro},
       perfil:  {atual:R.mA&&R.mA.grupos.perfil,   anterior:R.mB&&R.mB.grupos.perfil}
     }};
-  novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
+  novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total,
+    campanhas:(R.oA&&R.oA.campanhas)||[], erro:msg("oA")||msg("oB")};
   /* GA4 fora da consulta: o Resumo (oculto) lê null e mostra travessão */
   novo.lp={sessoes:null, clarity:null, erroSessoes:null};
   if(R.iA&&R.iS) R.iA.novosSeguidores=R.iS.atual;
@@ -1386,6 +1428,7 @@ async function puxar(){
   novo.falharam = tarefas.filter(([k])=>FALHAS[k]).length;
   novo.fontes = tarefas.length;
   D=novo; guardarVivo(novo); lembrarDatas();
+  puxando=false;
   btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
   desenhar();
 }
@@ -1833,8 +1876,29 @@ function vInstagram(){
 
 /* ------------------------------------------------------------- OpenAI Ads */
 function vOpenai(){
-  /* a aba mostra SÓ o export do Ads Manager, a pedido: é a única fonte com
-     conversão do canal. Os rótulos das colunas são os do export, não os da
+  /* AO VIVO: desde 05/10 o Windsor entrega conversão do OpenAI, então a aba sai
+     da consulta como Google e Meta — os mesmos nove blocos, com as datas da barra.
+     O export do Ads Manager (OPENAI_MANAGER) fica como reserva: aparece só
+     quando ainda não houve consulta (fora do claude.ai, ou antes da primeira). */
+  if(D.aoVivo){
+    const a=derivar(D.openai&&D.openai.atual), z=derivar(D.openai&&D.openai.anterior);
+    if(!a) return semDados("OpenAI Ads", D.openai&&D.openai.erro);
+    const bv=(r,f,k,e,m)=>B(r,f,a[k],z&&z[k],e,m);
+    return `
+  ${tituloGrupo("OpenAI Ads","Ao vivo pelo Windsor — os mesmos números do Ads Manager")}
+  ${blocos(
+    bv("Conversões",num,"conversoes","Cadastros registrados pelo Ads Manager") +
+    bv("Custo por conversão",brl,"custoConv","Quanto custou cada cadastro","inv") +
+    bv("Tx. conversão",pct,"txConv","De 100 cliques, quantos viraram cadastro") +
+    bv("Investimento",brl,"custo","Total gasto no canal","neutro") +
+    bv("Impressões",num,"impressoes","Vezes que o anúncio apareceu") +
+    bv("Cliques",num,"cliques","Quantas pessoas clicaram") +
+    bv("CTR",pct,"ctr","De 100 que viram, quantos clicaram") +
+    bv("CPC",brl,"cpc","Quanto custou cada clique","inv") +
+    bv("CPM",brl,"cpm","Custo para aparecer mil vezes","inv")
+  )}`;
+  }
+  /* RESERVA: o export do Ads Manager. Os rótulos das colunas são os do export, não os da
      barra, porque a janela do arquivo é que manda aqui. */
   const M=(typeof OPENAI_MANAGER!=="undefined")?OPENAI_MANAGER:null;
   if(!M||!M.atual) return `<div class="vazio">Sem export do Ads Manager carregado para este canal.</div>`;
@@ -2004,12 +2068,51 @@ function vLPSemanal(){
 }
 
 /* ------------------------------------------------------------ Visão geral */
+/* VISÃO GERAL AO VIVO: sai dos MESMOS números que as abas Google, Meta e
+   OpenAI mostram — não de uma consulta própria —, então nunca discorda delas.
+   Período: quando a janela de comparação termina na véspera do início da atual
+   (duas semanas seguidas, dois meses seguidos), soma as duas, como foi pedido
+   ("o valor cheio do dia 01 ao dia 14"). Quando não são vizinhas, somar não faz
+   sentido e vale só a janela atual.
+   Google: o investimento é o da CONTA INTEIRA (o bloco "Investimento total no
+   Google"); impressões, cliques e cadastros são da PESQUISA (o funil da aba).
+   Um canal sem dado não entra pela metade: sai da conta e a tela diz qual. */
+function visaoAoVivo(){
+  const p=D.periodo, pa=p.anterior;
+  const vizinhas = !!pa && menos(p.atual.de,1)===pa.ate;
+  const rotulo = vizinhas ? `${dm(pa.de)}–${dm(p.atual.ate)}` : rotuloPer(p.atual);
+  const janelas=o=>{
+    if(!o||!o.atual) return null;
+    if(vizinhas && !o.anterior) return null;
+    return vizinhas ? [o.atual,o.anterior] : [o.atual];
+  };
+  const s=(l,k)=>l.reduce((t,x)=>t+(+(x&&x[k])||0),0);
+  const canais=[], fora=[];
+  const g=janelas(D.google), ct=D.google&&D.google.contaTotal;
+  const gc=ct&&ct.atual ? (vizinhas ? (ct.anterior?[ct.atual,ct.anterior]:null) : [ct.atual]) : g;
+  if(g&&gc) canais.push({n:"Google Ads",
+    fonte:"Windsor · ao vivo · investimento da conta inteira; impressões e cliques da Pesquisa",
+    alcance:null, impressoes:s(g,"impressoes"), cliques:s(g,"cliques"),
+    custo:s(gc,"custo"), cadastros:s(g,"conversoes")});
+  else fora.push(["Google Ads", D.google&&D.google.erro]);
+  for(const [n,o] of [["Meta Ads",D.meta],["OpenAI Ads",D.openai]]){
+    const l=janelas(o);
+    if(l) canais.push({n, fonte:"Windsor · ao vivo", alcance:null,
+      impressoes:s(l,"impressoes"), cliques:s(l,"cliques"), custo:s(l,"custo"), cadastros:s(l,"conversoes")});
+    else fora.push([n, o&&o.erro]);
+  }
+  return {rotulo, canais,
+    fora: fora.length ? "Ficou de fora desta conta: "+fora.map(([n,e])=>n+(e?" ("+e+")":"")).join("; ")+
+      ". Os totais abaixo são só dos canais que responderam." : null};
+}
 function vVisao(){
   /* comparação de canais: um cartão por canal (logo, investimento, fatia e os
      três números que importam), barras empilhadas de participação por métrica
      e a tabela completa com o melhor valor de cada coluna destacado */
-  const V=(typeof VISAO_SEMANA!=="undefined")?VISAO_SEMANA:null;
-  if(!V) return `<div class="vazio">Sem consolidado da semana.</div>`;
+  /* ao vivo: calculada das abas; sem consulta: o consolidado gravado */
+  const V = D.aoVivo ? visaoAoVivo()
+          : (typeof VISAO_SEMANA!=="undefined")?VISAO_SEMANA:null;
+  if(!V||!V.canais.length) return `<div class="vazio">${V&&V.fora?esc(V.fora):"Sem consolidado da semana."}</div>`;
   const rp=V.rotulo;
   const COR={"Google Ads":"var(--d1)","Meta Ads":"var(--d2)","OpenAI Ads":"var(--d3)"};
   const LOGO={"Google Ads":IC.gads,"Meta Ads":IC.metaf,"OpenAI Ads":IC.oai};
@@ -2060,7 +2163,7 @@ function vVisao(){
     )}`;
 
   return `
-  ${avisoJanela(V)}
+  ${V.fora?`<p class="aviso"><b>Conta incompleta.</b> ${esc(V.fora)}</p>`:avisoJanela(V)}
   ${acumulado}
   ${tituloGrupo("Por canal · "+rp)}
   ${cartoes}
@@ -2225,9 +2328,14 @@ function pintarEstado(){
     }
     if(!elEd.hidden){
       html=`Ajuste as datas e clique em Aplicar datas. ${esc(tam)}`; cls=desiguais?"mal":"";
+    } else if(puxando){
+      cls="novo";
+      html=`<b>Atualizando…</b> Consultando Google Ads, Meta Ads e OpenAI Ads no Windsor. ${esc(tam)}`;
     } else if(!naTela){
       cls=desiguais?"mal":"novo";
-      html=`<b>Datas novas.</b> Clique em Puxar dados para atualizar o painel. ${esc(tam)}`;
+      html = MCP
+        ? `<b>Datas novas.</b> A consulta começa sozinha — ou clique em Puxar dados. ${esc(tam)}`
+        : `<b>Datas novas.</b> Abra o painel dentro do claude.ai para consultar estas datas. ${esc(tam)}`;
     } else if(D.aoVivo&&D.falhouTudo){
       cls="mal"; html="<b>A consulta não trouxe dados de nenhuma fonte.</b> Veja o aviso em cada aba e tente de novo.";
     } else if(D.aoVivo&&D.falharam>0){
@@ -2244,7 +2352,7 @@ function pintarEstado(){
   if(MCP===null) html+=` <small>A consulta ao vivo só funciona com o painel aberto dentro do claude.ai.</small>`;
   elEstado.className="estado-l"+(cls?" "+cls:"");
   elEstado.querySelector("span").innerHTML=html;
-  btPuxar.disabled=(MCP===null);
+  btPuxar.disabled=(MCP===null)||puxando;
   if(MCP===null) btPuxar.title="Abra o painel dentro do claude.ai para consultar ao vivo.";
 }
 
@@ -2268,6 +2376,7 @@ function fecharEdicao(cancelar){
   if(cancelar&&antesEd){ [inDe.value,inAte.value,inCDe.value,inCAte.value]=antesEd; }
   antesEd=null; elEd.hidden=true; ABRIDORES.forEach(b=>b.setAttribute("aria-expanded","false"));
   lembrarDatas(); pintarEstado();
+  if(!cancelar) autoPuxar();
 }
 btPer.addEventListener("click",()=>elEd.hidden?abrirEdicao(inDe):fecharEdicao(false));
 btComp.addEventListener("click",()=>elEd.hidden?abrirEdicao(inCDe):fecharEdicao(false));
@@ -2324,6 +2433,7 @@ function preencher(de,ate,cde,cate,cmp){
   if(cmp!==undefined) comparar=cmp;   /* os atalhos são todos comparativos */
   if(!elEd.hidden) fecharEdicao(false);
   lembrarDatas(); pintarEstado();
+  autoPuxar();
 }
 function atalhoSemana(){
   const hoje=new Date(); const dow=(hoje.getDay()+6)%7;      /* 0 = segunda */
@@ -2363,7 +2473,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-09-29-manual-oai";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-10-05-auto";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(

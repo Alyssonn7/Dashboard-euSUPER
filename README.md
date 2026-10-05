@@ -28,7 +28,17 @@ trocam quando a migração de marca chegar ao produto.
    **Semana passada**, **Este mês** (do dia 1 até ontem, contra o mesmo trecho do
    mês passado) e **Mês passado**. Mexer no período principal reencaixa a
    comparação na janela anterior de mesmo tamanho.
-2. Clique em **Puxar dados**. O painel consulta as fontes ao vivo e se redesenha.
+2. **Não precisa clicar em nada.** Aberto dentro do claude.ai, o painel consulta
+   Google Ads, Meta Ads e OpenAI Ads no Windsor **sozinho** — ao abrir e sempre que
+   as datas mudam (Aplicar, Enter ou um atalho). A linha de estado mostra
+   "Atualizando…" enquanto consulta. Se o que está na tela já é das mesmas datas e
+   tem menos de 30 minutos, ele não consulta de novo. **Puxar dados** continua lá
+   para forçar uma consulta na hora.
+
+   Fora do claude.ai não há consulta: aparece o último retrato gravado.
+
+   **Landing Page continua manual**: os dados do Clarity e do teste A/B chegam
+   por arquivo e entram no painel à mão.
 
 ### Dois modos: com comparação e sem
 
@@ -84,10 +94,10 @@ de agosto por baixo dos rótulos de setembro.
 |---|---|
 | **Google Ads** | Impressões, cliques, CTR, CPC, conversões, taxa de conversão, custo por conversão, investimento total no Google e a tabela por campanha. O funil tem como base **Total: Pesquisa**, não a linha de conta: as conversões saem todas da Pesquisa, e quando há campanha de YouTube no ar a linha de conta soma engajamentos de vídeo aos cliques e afunda a taxa de conversão. O dinheiro do YouTube não some — aparece no bloco de investimento total e na tabela por campanha |
 | **Meta Ads** | Dois grupos, por objetivo de campanha: **Campanha de cadastro** (alcance, impressões, frequência, CPM, cliques no link, CTR, chegaram na página, conversões, taxa, custo por conversão, investimento) e **Campanha de visita ao perfil do Instagram** (alcance, impressões, frequência, CPM, cliques, CTR, visitas ao perfil, custo por visita, investimento) — e, abaixo de cada grupo, o **top 3 de criativos** dele (menor custo por conversão / por visita), com a miniatura de cada anúncio |
-| **OpenAI Ads** | Só o export do Ads Manager, a pedido — agora **semana contra semana** (08–14/09 contra 01–07/09): conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. Os blocos de páginas vistas saíram porque o export novo não traz mais essa coluna. A tabela por campanha e a entrega ao vivo do Windsor não aparecem nesta aba, a pedido |
+| **OpenAI Ads** | **Ao vivo pelo Windsor** desde 05/10, com as datas da barra: conversões, custo por conversão, taxa, investimento, impressões, cliques, CTR, CPC e CPM. O export do Ads Manager (`OPENAI_MANAGER`) ficou só de reserva, para quando não há consulta. A tabela por campanha não aparece nesta aba, a pedido |
 | **Instagram** | Orgânico, do conector `instagram` do Windsor (Instagram Insights). Alcance, visualizações, frequência, novos seguidores, contas que interagiram, toques nos links do perfil e seguidores agora — mais interações totais, taxa de engajamento, curtidas, comentários, salvamentos e compartilhamentos, e o **top 5 de posts** do período. O perfil **@usemiaapp** foi ligado no Windsor em 04/09/2026 e a aba já lê ao vivo; se a conexão cair, ela volta a mostrar o passo a passo da ligação |
 | **Landing Page** | O **teste A/B das duas páginas**: `miaapp.com.br` (A) contra `lp1.miaapp.com.br` (B), com uma captura de cada página embutida, a **taxa de conversão por canal** nos três gerenciadores de anúncio e o **comportamento dentro da página** pelo Clarity: os dois **mapas de calor** lado a lado e a caixa **“O que esse teste ensinou”**, com a leitura em três frases e os números dentro do texto. Os blocos soltos de toques saíram a pedido — os campos continuam em `AB_LP`. B venceu nos três canais. A versão anterior da aba — Clarity semana contra semana, cinco métricas e de onde vieram as visitas — continua inteira em `vLPSemanal()`, com os dados em `CLARITY_SEMANAS`: volta trocando `r:vLP` por `r:vLPSemanal` na lista `VISTAS` |
-| **Visão geral** | Cobre a **janela cheia** do painel (01–14/09), não a semana de cima. Um bloco de acumulado no topo com as conversões somadas e o custo médio por cadastro; abaixo, duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
+| **Visão geral** | **Calculada das três abas de anúncio** a cada consulta — nunca discorda delas. Quando as duas janelas são vizinhas (duas semanas seguidas), cobre a **janela cheia** (ex.: 15–28/09); quando não são, só a atual. Google entra com o investimento da conta inteira e impressões, cliques e cadastros da Pesquisa, como na aba dele. Canal que falhar não entra pela metade: sai da conta e a tela diz qual e por quê. Um bloco de acumulado no topo com as conversões somadas e o custo médio por cadastro; abaixo, duas camadas: um cartão por canal (logo, investimento e fatia do total) e barras empilhadas de 100% por métrica mostrando onde foi o dinheiro e de onde vieram os cadastros. A tabela completa e o bloco do Metabase saíram a pedido |
 | **Outros** | Registro do que foi montado fora dos anúncios. Hoje traz o **fluxo de atendimento automático do WhatsApp**, feito no ManyChat: o passo a passo em cinco itens (condição de horário → resposta → vídeos → áudio depois de 7 minutos → conversa marcada como aberta) e a captura da tela do construtor. Não é métrica: o ManyChat não está conectado a nenhuma fonte de dados do painel, e a aba diz isso |
 
 As abas **Resumo** (cinco números, o funil e o GMV semanal) e **Próximos passos**
@@ -104,10 +114,16 @@ legível para quem não vive de tráfego.
 O cartão **"O que esses números dizem"** foi retirado de todas as abas a pedido —
 a apresentação aos founders não usa.
 
-## Dados de mês fechado que vêm de export (não do botão)
+## O que ainda vem de arquivo
 
-Três blocos do painel são **fechamentos de período** carregados de arquivos, e
-não mudam com "Puxar dados": as conversões do OpenAI Ads (`OPENAI_MANAGER`), a
+**Desde 05/10 só a Landing Page é manual** (teste A/B em `AB_LP`, Clarity semanal
+em `CLARITY_SEMANAS`). OpenAI Ads e Visão geral passaram a sair da consulta ao
+vivo; `OPENAI_MANAGER` e `VISAO_SEMANA` ficaram como **reserva**, mostrados só
+quando não há consulta (fora do claude.ai). O texto abaixo é o histórico de como
+esses blocos eram fechados.
+
+Três blocos do painel eram **fechamentos de período** carregados de arquivos, e
+não mudavam com "Puxar dados": as conversões do OpenAI Ads (`OPENAI_MANAGER`), a
 aba Landing Page (`CLARITY_SEMANAS`) e a aba Visão geral (`VISAO_SEMANA`). Cada
 um diz na tela de onde veio e que período cobre. Para virar a semana ou o mês,
 mande os exports novos (CSV de campanhas do Ads Manager e CSV do painel do
@@ -128,7 +144,13 @@ inicial é mesmo a que você quer.
 
 ### Conversões do OpenAI Ads
 
-O conector `openai_ads` do Windsor não tem campo de conversão. Por isso o painel
+**Atualização de 05/10:** o conector ganhou o campo `conversions`. Conferido
+contra o export do Ads Manager campanha por campanha: 61+26 = 87 em 22–28/09 e
+43+10 = 53 em 15–21/09, iguais; impressões e cliques idênticos; gasto com um ou
+dois centavos de diferença. A aba passou a sair da consulta. O resto desta seção
+é histórico.
+
+Até 05/10 o conector `openai_ads` do Windsor não tinha campo de conversão. Por isso o painel
 carrega um **export do Ads Manager** na constante `OPENAI_MANAGER` do
 `painel/index.html`, com uma janela em `atual` e outra em `anterior`. Cada export
 é conferido contra o Windsor antes de entrar: em 15/09, nas quatro linhas das duas
