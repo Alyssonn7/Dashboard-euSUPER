@@ -255,6 +255,17 @@ e o painel foi ajustado para os dois:
 - O aviso de plano pausado agora usa os números **da própria resposta** ("há 5 fontes
   e o plano Basic cobre 3") em vez de texto fixo.
 
+**O caminho ao vivo do Google passou a usar a mesma base do retrato gravado.** Até
+05/10 o `qGoogle()` somava todas as campanhas no funil e agrupava a tabela por tipo
+de campanha — os dois erros que já tinham sido corrigidos no retrato. Com o YouTube
+no ar, isso derrubava a taxa de conversão de 22–28/09 de 17,26% (a do gerenciador)
+para 14,48%. Agora o funil é só a Pesquisa, a conta inteira vai para o bloco de
+investimento total e a tabela lista as campanhas pelo nome. Pela API o campo de
+cliques é clique de verdade também no YouTube (119, contra 3.884 “interações” no
+export), então numa consulta ao vivo a coluna se chama **Cliques** e a ressalva do
+YouTube some. Conferido contra os dois exports: a Pesquisa bate até o centavo nas
+duas semanas.
+
 Testado com um Windsor simulado no navegador: os oito formatos de resposta e o
 botão "Puxar dados" inteiro com o Google desconectado e Meta/OpenAI devolvendo os
 números reais de 22–28/09.

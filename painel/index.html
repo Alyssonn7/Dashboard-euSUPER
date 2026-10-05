@@ -1100,15 +1100,26 @@ async function qGoogle(de,ate){
     accounts:[CONTAS.google],
     fields:["campaign","advertising_channel_type","impressions","clicks","cost","conversions"],
     date_from:de,date_to:ate},"Google Ads"));
-  const rot=t=>t==="SEARCH"?"Pesquisa":t==="PERFORMANCE_MAX"?"Performance Max":
-              t==="DEMAND_GEN"?"YouTube":(t||"Outra");
+  /* MESMA BASE DO RETRATO GRAVADO (ver o comentário em RETRATO.google):
+     - o funil (total) é só a PESQUISA, onde estão as conversões. Somar o
+       YouTube derrubava a taxa de conversão de 17,26% para 14,48% em 22-28/09
+       e o painel deixava de bater com o gerenciador;
+     - a conta inteira vai em "conta", para o bloco de investimento total;
+     - a tabela é por CAMPANHA, com o tipo embaixo — não por tipo de campanha,
+       que juntava as duas de Pesquisa numa linha só.
+     Conferido em 05/10 contra os exports: Pesquisa de 22-28 e de 15-21 bate
+     até o centavo (o centavo que faltava no export era arredondamento). */
+  const tipo=t=>t==="SEARCH"?"Pesquisa":t==="PERFORMANCE_MAX"?"Performance Max":
+              t==="DEMAND_GEN"?"YouTube \u00b7 Gera\u00e7\u00e3o de demanda":t==="VIDEO"?"YouTube \u00b7 V\u00eddeo":(t||"Outra");
+  const tot=l=>({impressoes:soma(l,x=>x.impressions),cliques:soma(l,x=>x.clicks),
+                 custo:soma(l,x=>x.cost),conversoes:soma(l,x=>x.conversions)});
   const m={};
-  r.forEach(x=>{const k=rot(x.advertising_channel_type);
-    m[k]=m[k]||{nome:k,impressoes:0,cliques:0,custo:0,conversoes:0};
+  r.forEach(x=>{const k=x.campaign||"(sem nome)";
+    m[k]=m[k]||{nome:k,tipo:tipo(x.advertising_channel_type),impressoes:0,cliques:0,custo:0,conversoes:0};
     m[k].impressoes+=+x.impressions||0; m[k].cliques+=+x.clicks||0;
     m[k].custo+=+x.cost||0; m[k].conversoes+=+x.conversions||0;});
-  return {total:{impressoes:soma(r,x=>x.impressions),cliques:soma(r,x=>x.clicks),
-                 custo:soma(r,x=>x.cost),conversoes:soma(r,x=>x.conversions)},
+  return {total:tot(r.filter(x=>x.advertising_channel_type==="SEARCH")),
+          conta:tot(r),
           campanhas:Object.values(m).sort((a,b)=>b.custo-a.custo)};
 }
 
@@ -1346,8 +1357,12 @@ async function puxar(){
   novo.aoVivo=true;
   novo.puxadoEm=`consultado em ${z(ag.getDate())}/${z(ag.getMonth()+1)} às ${z(ag.getHours())}:${z(ag.getMinutes())}`;
   novo.periodo={atual:{de,ate},anterior:cmp?{de:cde,ate:cate}:null};
+  /* cliquesReais: pela API o campo "clicks" é clique de verdade também no
+     YouTube (119 em 22-28/09). No export a coluna é "Interações", que no
+     YouTube conta engajamento com o vídeo (3.884). A tabela muda o rótulo. */
   novo.google={atual:R.gA&&R.gA.total, anterior:R.gB&&R.gB.total,
-    campanhas:(R.gA&&R.gA.campanhas)||[], erro:msg("gA")};
+    contaTotal:{atual:(R.gA&&R.gA.conta)||null, anterior:(R.gB&&R.gB.conta)||null},
+    campanhas:(R.gA&&R.gA.campanhas)||[], cliquesReais:true, erro:msg("gA")};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
     criativos:(R.mA&&R.mA.criativos)||[], criativosAnt:(R.mB&&R.mB.criativos)||[], erro:msg("mA"),
     grupos:{
@@ -1584,9 +1599,11 @@ function vGoogle(){
          extraTxt,"neutro") : "")
   )}
   ${camp.length?`<div class="faixa" style="margin-top:14px">${cx(cxt("Por campanha"+(rpG?" · "+rpG:""),
-    "Só as que gastaram no período — as duas de Pesquisa somadas dão o funil acima. No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa.")
+    "Só as que gastaram no período — as de Pesquisa somadas dão o funil acima."+
+    ((!D.google.cliquesReais && camp.some(c=>c.tipo&&c.tipo!=="Pesquisa"))
+      ? " No YouTube uma interação é engajamento com o vídeo, não clique — por isso a taxa dele não se compara com a da Pesquisa." : ""))
     + `<div class="tw"><table><thead><tr><th>Campanha</th><th class="r">Investimento</th>
-      <th class="r">Impressões</th><th class="r">Interações</th><th class="r">Taxa</th>
+      <th class="r">Impressões</th><th class="r">${D.google.cliquesReais?"Cliques":"Interações"}</th><th class="r">Taxa</th>
       <th class="r">Conversões</th><th class="r">Por conversão</th></tr></thead>
       <tbody>${camp.map(c=>`<tr><td class="nm">${esc(c.nome)}${c.tipo?`<span>${esc(c.tipo)}</span>`:""}</td>
         <td class="r">${brl(c.custo)}</td><td class="r">${num(c.impressoes)}</td>
