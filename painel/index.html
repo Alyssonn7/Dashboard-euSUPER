@@ -1026,10 +1026,26 @@ let MCP;
   .then(m=>{MCP=m;pintarEstado()}).catch(()=>{MCP=null;pintarEstado()});
 const espera=ms=>new Promise(r=>setTimeout(r,ms));
 
+/* Em out/2026 o get_data do Windsor virou ASSÍNCRONO: a primeira resposta pode
+   vir {status:"pending", job_id, poll_after_seconds} sem nenhum dado. Repetir a
+   MESMA chamada devolve o mesmo job — e, quando termina, {status:"done", data}.
+   Conferido em 05/10: pending na primeira, done na segunda, mesmo job_id. Sem
+   esta espera o painel leria "nada" e somaria zero. */
+const NA_FILA=new Set(["pending","queued","running","processing"]);
+const naFila=p=>!!(p&&NA_FILA.has(String(p.status||"").toLowerCase()));
 async function chamar(server,tool,input,rotulo){
   if(!MCP) throw {code:"capability_disabled",rotulo};
   for(let t=0;t<2;t++){
-    try{ return (await MCP.callTool(server,tool,input,{cache:{refresh:true}})).payload; }
+    try{
+      let p=(await MCP.callTool(server,tool,input,{cache:{refresh:true}})).payload;
+      for(let k=0; server==="Windsor.ai" && naFila(p) && k<12; k++){
+        await espera(Math.min(Math.max((+p.poll_after_seconds||5)*1000,2000),15000));
+        p=(await MCP.callTool(server,tool,input,{cache:{refresh:true}})).payload;
+      }
+      if(server==="Windsor.ai" && naFila(p))
+        throw {code:"timeout",message:"O Windsor não terminou a consulta a tempo. Puxe de novo em um minuto."};
+      return p;
+    }
     catch(e){
       const cod=e&&e.code;
       if(t===1 || !(e&&e.retryable===true || RETENTAVEL.has(cod)))
@@ -1044,13 +1060,36 @@ async function chamar(server,tool,input,rotulo){
    vivo" com tudo em zero, que é pior do que não mostrar nada. Aqui isso vira
    falha explícita, e cada aba mostra o aviso em vez de número falso. */
 const WINDSOR_PAUSADO=/not your real numbers|reads are paused/i;
+/* o aviso traz os numeros: "you have 5 data sources connected and your Basic
+   plan includes 3". A mensagem usa os numeros DA RESPOSTA, nao numero fixo —
+   a versao anterior dizia "plano Free, 1 conta" e ficou errada quando o plano mudou */
+function avisoPausado(txt){
+  const m=String(txt).match(/have (\d+) data sources? connected and your (\w+) plan includes (\d+)/i);
+  return m
+    ? `O Windsor pausou as leituras: há ${m[1]} fontes conectadas e o plano ${m[2]} cobre ${m[3]}. `+
+      `Enquanto isso a API devolve tudo zerado. Desconecte ${(+m[1])-(+m[3])} em onboard.windsor.ai e puxe de novo.`
+    : "O Windsor pausou as leituras da conta: há mais fontes conectadas do que o plano cobre. "+
+      "Enquanto isso a API devolve tudo zerado. Resolva em onboard.windsor.ai e puxe de novo.";
+}
+/* erro que o Windsor devolve DENTRO da resposta ({error:"..."}), sem falhar a
+   chamada. Os dois que ja apareceram ganham traducao; o resto passa como veio. */
+function erroWindsor(txt){
+  const t=String(txt);
+  let m=t.match(/No (\w+) accounts are configured/i);
+  if(m) return `O conector ${m[1]} não tem conta selecionada no Windsor. Conecte de novo em onboard.windsor.ai e marque a conta.`;
+  if(/permission to access customer/i.test(t))
+    return "O Windsor perdeu a permissão de ler a conta do Google Ads. Reconecte o Google Ads em onboard.windsor.ai.";
+  return "O Windsor recusou a consulta: "+t;
+}
 const linhas=p=>{
-  const r=(p&&Array.isArray(p.result))?p.result:[];
+  if(p && typeof p.error==="string") throw {code:"tool_error", message:erroWindsor(p.error)};
+  /* formato novo: {status:"done", data:[...]}; formato antigo: {result:[...]} */
+  const r = (p&&Array.isArray(p.data)) ? p.data : (p&&Array.isArray(p.result)) ? p.result : null;
+  /* resposta sem lista nenhuma NAO vira zero: zero e numero, e aqui nao ha numero */
+  if(!r) throw {code:"tool_error", message:"O Windsor respondeu num formato que o painel não reconhece. Nenhum número foi mostrado, para não inventar zero."};
   for(const x of r) for(const k in x){
     if(typeof x[k]==="string" && WINDSOR_PAUSADO.test(x[k]))
-      throw {code:"tool_error", message:"O Windsor pausou as leituras da conta: o plano é o Free, "+
-        "que cobre 1 conta conectada, e há 6 conectadas. Enquanto isso a API devolve tudo zerado. "+
-        "Resolva em onboard.windsor.ai — desconectar contas ou assinar um plano — e puxe de novo."};
+      throw {code:"tool_error", message:avisoPausado(x[k])};
   }
   return r;
 };
@@ -1273,13 +1312,15 @@ async function puxar(){
   }
   btPuxar.disabled=true; btPuxar.classList.add("indo"); txPuxar.textContent="Puxando…";
   FALHAS={};
-  /* as janelas "B" só entram quando há comparação: sem ela são cinco chamadas,
-     com ela nove. qClarity() saiu: a Landing Page é só o export mensal */
+  /* as janelas "B" só entram quando há comparação: sem ela são seis chamadas,
+     com ela onze (o Meta faz três por janela). qClarity() saiu: a Landing Page é
+     só o export. qSessoes() (GA4) saiu em 05/10: o plano Basic do Windsor cobre
+     três fontes e o GA4 foi desconectado — ele só alimentava o Resumo, que está
+     oculto. A função continua escrita; volta pondo as duas linhas de novo aqui. */
   const tarefas=[
     ["gA",()=>qGoogle(de,ate)],
     ["mA",()=>qMeta(de,ate)],
     ["oA",()=>qOpenai(de,ate)],
-    ["sA",()=>qSessoes(de,ate)],
     ["ng",()=>qNegocio(de,ate,cmp?cde:null,cmp?cate:null)]
   ];
   /* aba oculta não desenha nada, então consultá-la seria gasto puro: as cinco
@@ -1294,7 +1335,7 @@ async function puxar(){
   }
   if(cmp) tarefas.push(
     ["gB",()=>qGoogle(cde,cate)], ["mB",()=>qMeta(cde,cate)],
-    ["oB",()=>qOpenai(cde,cate)], ["sB",()=>qSessoes(cde,cate)]);
+    ["oB",()=>qOpenai(cde,cate)]);
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
     try{ R[k]=await f() }catch(e){ R[k]=null; FALHAS[k]=e }
@@ -1314,7 +1355,8 @@ async function puxar(){
       perfil:  {atual:R.mA&&R.mA.grupos.perfil,   anterior:R.mB&&R.mB.grupos.perfil}
     }};
   novo.openai={atual:R.oA&&R.oA.total, anterior:R.oB&&R.oB.total, erro:msg("oA")};
-  novo.lp={sessoes:{atual:R.sA,anterior:R.sB}, clarity:null, erroSessoes:msg("sA")};
+  /* GA4 fora da consulta: o Resumo (oculto) lê null e mostra travessão */
+  novo.lp={sessoes:null, clarity:null, erroSessoes:null};
   if(R.iA&&R.iS) R.iA.novosSeguidores=R.iS.atual;
   if(R.iB&&R.iS) R.iB.novosSeguidores=R.iS.anterior;
   novo.instagram={atual:R.iA||null, anterior:R.iB||null, posts:R.iP||[],

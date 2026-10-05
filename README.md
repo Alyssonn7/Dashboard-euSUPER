@@ -36,7 +36,7 @@ Dentro da edição há a caixa **Comparar com outro período**. Ligada (o padrã
 painel funciona como sempre: cada bloco mostra os dois números lado a lado com a
 seta de variação. Desligada, o painel passa a mostrar **um período só** — a barra
 vira uma frase simples ("1 a 6 de setembro"), os blocos ficam de uma coluna, sem
-seta, e a consulta cai de dezoito para **onze chamadas**. Serve para olhar uma
+seta, e a consulta cai de onze para **seis chamadas**. Serve para olhar uma
 semana, um punhado de dias ou um mês isolado sem inventar uma base de comparação.
 
 O modo fica guardado no navegador junto com as datas. Religar a comparação
@@ -152,22 +152,18 @@ travessão: 24 conversões contra zero é a história, não um dado ausente.
 | Google Ads | Windsor · `google_ads` · conta 326-604-5511 | `get_data` |
 | Meta Ads | Windsor · `facebook` · conta 604915332642452 | `get_data` |
 | OpenAI Ads | Windsor · `openai_ads` (sem pino de conta — o id muda a cada reconexão) | `get_data` |
-| Instagram orgânico | Windsor · `instagram` · @usemiaapp (17841476511713959; sem pino de conta — só existe um perfil) | `get_data` |
-| Visitas na página | Windsor · `googleanalytics4` · propriedade 511677134 | `get_data` |
-| Comportamento na página | Windsor · `microsoft_clarity` · conta 1347 | `get_data` |
+| Instagram orgânico | ~~Windsor · `instagram`~~ — **desconectado em 05/10** (aba oculta) | — |
+| Visitas na página | ~~Windsor · `googleanalytics4`~~ — **desconectado em 05/10**, só alimentava o Resumo oculto | — |
+| Comportamento na página | ~~Windsor · `microsoft_clarity`~~ — **desconectado em 05/10**; a Landing Page usa o export | — |
 | Cadastros, onboarding, pagamentos, GMV | Metabase · Mia Production | `execute_sql` |
 
-São **dezoito chamadas** por consulta com comparação (onze sem ela). As cinco do
-Instagram só entram enquanto a aba estiver visível — aba oculta não desenha nada,
-então consultá-la seria gasto puro, e com ela escondida a consulta cai para treze
-e sete: Google, OpenAI e GA4 × duas janelas, o Meta ×
-três chamadas por janela (uma sem dimensão, para o alcance vir deduplicado como
-no Ads Manager; uma por campanha com o objetivo, que separa cadastro de visita ao
-perfil; e uma por anúncio para a tabela), o Instagram × cinco (o perfil dia a
-dia nas duas janelas, os posts do período, a contagem de seguidores e os novos
-seguidores — esta última cobre as duas janelas de uma vez e é separada de
-propósito, veja abaixo), mais um SQL que devolve as duas janelas. O Clarity não é mais consultado ao vivo — a
-Landing Page é só o export.
+São **onze chamadas** por consulta com comparação (seis sem ela): Google e OpenAI × duas
+janelas, o Meta × três chamadas por janela (uma sem dimensão, para o alcance vir
+deduplicado como no Ads Manager; uma por campanha com o objetivo, que separa cadastro
+de visita ao perfil; e uma por anúncio para a tabela), mais um SQL que devolve as duas
+janelas. Desde 05/10 o plano Basic do Windsor cobre três fontes, e ficaram só os três
+canais de anúncio: GA4, Instagram e Clarity saíram da consulta. As funções continuam
+escritas (`qSessoes`, `qInsta*`) e voltam quando a fonte for reconectada.
 
 No Meta, o alcance de cada grupo só é deduplicado quando aquele grupo foi o
 único a gastar na janela (aí vale o alcance da conta). Quando os dois grupos
@@ -183,8 +179,8 @@ O GMV por semana é série gravada — as seis semanas não vêm da consulta.
   manual do Ads Manager (seção acima). E a API recusa janelas que terminam hoje:
   o fim tem que ser até ontem, no fuso da conta de anúncio.
 - **Microsoft Clarity** só devolve os últimos 3 dias pela API. Por isso a Landing
-  Page usa o export mensal do painel do Clarity e não consulta a API ao vivo. O GA4
-  continua sendo consultado, mas não aparece na Landing Page — a aba é 100% Clarity.
+  Page usa o export do painel do Clarity e não consulta a API ao vivo. O GA4 saiu
+  da consulta em 05/10, quando foi desconectado do Windsor.
 - **Instagram orgânico** tem cinco limites, todos confirmados contra a API em
   04/09/2026 e todos ditos na tela:
   - **Alcance não fecha por período.** A API só entrega alcance e contas
@@ -241,6 +237,27 @@ o painel mostraria "Dados ao vivo" com zero em todos os blocos — pior do que n
 mostrar nada. A função `linhas()` agora procura esse aviso em qualquer campo de
 texto da resposta e transforma em falha explícita, e a linha de estado passou a
 dizer **quantas das consultas falharam**, não só quando todas falham.
+
+**Em 05/10/2026 a conta passou para o plano Basic** (3 fontes) e foram desconectados
+GA4, Instagram e Clarity. No mesmo dia o `get_data` do Windsor **mudou de formato**,
+e o painel foi ajustado para os dois:
+
+- A resposta passou de `{result:[...]}` para `{status:"done", data:[...]}`. O
+  `linhas()` antigo só lia `result`, então leria lista vazia e **somaria zero** — o
+  mesmo número falso que o aviso de plano produzia. Agora lê os dois, e resposta sem
+  lista nenhuma vira falha, nunca zero.
+- A primeira resposta pode vir `{status:"pending", poll_after_seconds}` sem dado
+  nenhum. O `chamar()` repete a **mesma** chamada (o Windsor devolve o mesmo job) até
+  `done`, com teto de 12 tentativas.
+- Erros agora também chegam **dentro** da resposta (`{error:"..."}`) em vez de falhar a
+  chamada. Os dois que já apareceram ganham tradução — conta não selecionada e
+  permissão do Google Ads perdida.
+- O aviso de plano pausado agora usa os números **da própria resposta** ("há 5 fontes
+  e o plano Basic cobre 3") em vez de texto fixo.
+
+Testado com um Windsor simulado no navegador: os oito formatos de resposta e o
+botão "Puxar dados" inteiro com o Google desconectado e Meta/OpenAI devolvendo os
+números reais de 22–28/09.
 
 
 Cada bloco falha sozinho e mostra o que fazer — conexão expirada, conector não
