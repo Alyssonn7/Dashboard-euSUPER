@@ -274,20 +274,18 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .cmini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:12px;border-top:1px solid var(--borda-2)}
 .cmini .v{display:block;font-family:var(--fonte);font-size:15px;font-weight:700;color:var(--texto);
   margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.legenda{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 14px;font-size:12px;color:var(--texto-2)}
-.legenda span{display:inline-flex;align-items:center;gap:6px}
-.legenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
-.emp{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 0;
-  border-bottom:1px solid var(--borda-2)}
-.emp:last-child{border-bottom:none}
-.emp-r{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--texto)}
-.emp-b{display:flex;height:26px;border-radius:8px;overflow:hidden;background:var(--trilho)}
-.emp-b i{display:flex;align-items:center;justify-content:center;height:100%;min-width:0;overflow:hidden}
-.emp-b i+i{border-left:2px solid var(--cartao)}
-.emp-b em{font-style:normal;font-family:var(--fonte);font-size:11px;font-weight:700;color:#fff;
+.inv-b{display:flex;height:34px;border-radius:10px;overflow:hidden;background:var(--trilho);margin:6px 0 16px}
+.inv-b i{display:flex;align-items:center;justify-content:center;height:100%;min-width:0;overflow:hidden}
+.inv-b i+i{border-left:2px solid var(--cartao)}
+.inv-b em{font-style:normal;font-family:var(--fonte);font-size:12px;font-weight:800;color:#fff;
   text-shadow:0 1px 1px rgba(0,0,0,.15)}
-.emp-t{font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--texto-2);font-variant-numeric:tabular-nums;
-  white-space:nowrap;min-width:84px;text-align:right}
+.inv-l{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.inv-l div{display:flex;align-items:flex-start;gap:9px;min-width:0}
+.inv-l i{width:10px;height:10px;border-radius:3px;flex:none;margin-top:4px}
+.inv-l b{display:block;font-family:var(--fonte);font-size:12.5px;font-weight:700;color:var(--texto)}
+.inv-l small{display:block;font-family:var(--fonte);font-size:15px;font-weight:800;color:var(--texto);
+  font-variant-numeric:tabular-nums;margin-top:3px}
+.inv-l em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--texto-3);margin-left:4px}
 .tcanal .tc{display:inline-flex;align-items:center;gap:10px}
 .tcanal td.nm .tc>span{display:block;font-size:13px;font-weight:700;color:var(--texto);margin-top:0}
 .tcanal td.nm .tc>span>span{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;margin-top:1px}
@@ -528,7 +526,7 @@ tfoot td.r{text-align:right}
   .acao{grid-template-columns:1fr;gap:12px}
   .acao-c p{grid-template-columns:1fr;gap:2px}
   .linha{grid-template-columns:86px minmax(0,1fr) auto;gap:8px}
-  .emp{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .emp-b{grid-column:1/-1;order:3} .emp-t{min-width:0}
+  .inv-l{grid-template-columns:1fr;gap:10px}
   .linha.larga{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px} .linha.larga .lt{grid-column:1/-1;order:3}
   .linha .lv{min-width:0}
 }
@@ -2302,18 +2300,13 @@ function vVisao(){
       </div>
     </article>`).join("")}</div>`;
 
-  const metricas=[
-    ["Investimento", c=>c.custo,        T.custo,        brl],
-    ["Impressões",   c=>c.impressoes,   T.impressoes,   num],
-    ["Cliques",      c=>c.cliques,      T.cliques,      num],
-    ["Cadastros",    c=>c.cadastros||0, T.conversoes,   num]
-  ];
-  const empilhado=metricas.map(([rot,f,tot,fmt])=>`
-    <div class="emp"><span class="emp-r">${rot}</span>
-      <span class="emp-b">${C.map(c=>{const p=fatia(f(c),tot);
-        return `<i style="width:${p.toFixed(2)}%;background:${COR[c.n]}" title="${esc(c.n)}: ${fmt(f(c))} (${nf0.format(p)}%)">${p>=11?`<em>${nf0.format(p)}%</em>`:""}</i>`}).join("")}</span>
-      <span class="emp-t">${fmt(tot)}</span></div>`).join("");
-  const legenda=`<div class="legenda">${C.map(c=>`<span><i style="background:${COR[c.n]}"></i>${esc(c.n)}</span>`).join("")}</div>`;
+  /* "Onde foi o dinheiro": só o investimento, a pedido (06/10) — impressões,
+     cliques e cadastros saíram deste bloco. Uma barra que soma 100% e, embaixo,
+     o valor em reais e a fatia de cada canal. */
+  const barraInv=`<div class="inv-b">${C.map(c=>{const p=fatia(c.custo,T.custo);
+      return `<i style="width:${p.toFixed(2)}%;background:${COR[c.n]}" title="${esc(c.n)}: ${brl(c.custo)} (${nf0.format(p)}%)">${p>=8?`<em>${nf0.format(p)}%</em>`:""}</i>`}).join("")}</div>
+    <div class="inv-l">${C.map(c=>`<div><i style="background:${COR[c.n]}"></i>
+      <span><b>${esc(c.n)}</b><small>${brl(c.custo)}<em>${nf0.format(fatia(c.custo,T.custo))}%</em></small></span></div>`).join("")}</div>`;
 
   /* a tabela "Todos os números" saiu a pedido — as três camadas viraram duas */
 
@@ -2340,9 +2333,9 @@ function vVisao(){
   <p class="proc" style="border-top:0;margin-top:8px;padding-top:0">Alcance (pessoas únicas) só existe no Meta:
   o Google não informa alcance em campanhas de Pesquisa e o OpenAI não informa em nenhuma — nos dois entra
   impressões. No Google, CTR e custo por conversão são da Pesquisa, como na aba do canal.</p>
-  <div class="faixa" style="margin-top:14px">${cx(cxt("Onde foi o dinheiro e de onde vieram os cadastros",
-      "Cada barra soma 100%. Compare a fatia de investimento de um canal com a fatia de cadastros que ele trouxe.")
-      + legenda + empilhado)}</div>`;
+  <div class="faixa" style="margin-top:14px">${cx(cxt("Onde foi o dinheiro",
+      "Como o investimento de "+esc(rp)+" se dividiu entre os três canais.", brl(T.custo))
+      + barraInv)}</div>`;
 }
 
 /* --------------------------------------------------------- Próximos passos */
