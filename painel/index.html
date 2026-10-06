@@ -264,6 +264,12 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .canal .cinv .v{display:block;font-family:var(--fonte);font-size:clamp(20px,1.8vw,26px);font-weight:800;
   letter-spacing:-.03em;line-height:1.1;color:var(--texto);margin:4px 0 8px;font-variant-numeric:tabular-nums}
 .canal .fx{display:block;height:8px;border-radius:99px;background:var(--trilho);overflow:hidden}
+.cmet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:12px;
+  border-top:1px solid var(--borda)}
+.cmet small{display:block;font-family:var(--fonte);font-size:10px;font-weight:600;color:var(--texto-3);
+  line-height:1.25;min-height:2.5em}
+.cmet b{display:block;font-family:var(--fonte);font-size:15px;font-weight:800;color:var(--texto);
+  font-variant-numeric:tabular-nums;margin-top:3px;white-space:nowrap}
 .canal .fx i{display:block;height:100%;border-radius:99px;background:var(--c)}
 .cmini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:12px;border-top:1px solid var(--borda-2)}
 .cmini .v{display:block;font-family:var(--fonte);font-size:15px;font-weight:700;color:var(--texto);
@@ -875,7 +881,7 @@ const VISAO_SEMANA={
      mais do Windsor. */
   canais:[
     {n:"Google Ads", fonte:"Export do Ads · investimento da conta inteira; impressões e cliques só da Pesquisa",
-     alcance:null,  impressoes:11914,  cliques:1046, custo:3322.60, cadastros:173},
+     alcance:null,  impressoes:11914,  cliques:1046, custo:3322.60, custoBase:3085.15, cadastros:173},
     {n:"Meta Ads",   fonte:"Export do Ads Manager por campanha · alcance indisponível sem o Windsor",
      alcance:null,  impressoes:132131, cliques:1804, custo:3436.40, cadastros:245},
     {n:"OpenAI Ads", fonte:"Export do Ads Manager",
@@ -1308,6 +1314,15 @@ async function qInstaPerfil(de,ate){
           totalPosts:l.media_count!=null?+l.media_count:null};
 }
 
+/* Alcance do Meta no PERÍODO INTEIRO da Visão geral (duas janelas vizinhas).
+   Alcance é pessoa única: somar o de cada semana conta duas vezes quem viu nas
+   duas. Por isso, quando a Visão geral junta as janelas, o painel pede a conta
+   inteira de uma vez, sem dimensão — igual ao Ads Manager. */
+async function qMetaAlcance(de,ate){
+  const r=linhas(await chamar("Windsor.ai","get_data",{connector:"facebook",accounts:[CONTAS.meta],
+    fields:["account_id","reach"],date_from:de,date_to:ate},"Meta Ads · alcance do período"));
+  return r.length ? soma(r,x=>x.reach) : null;
+}
 async function qOpenai(de,ate){
   /* sem filtro de conta: o id muda a cada reconexão e só existe uma conta.
      CONVERSÕES: o conector ganhou o campo "conversions" (conversão pós-clique).
@@ -1452,6 +1467,9 @@ async function puxarAgora(){
   if(cmp) tarefas.push(
     ["gB",()=>qGoogle(cde,cate)], ["mB",()=>qMeta(cde,cate)],
     ["oB",()=>qOpenai(cde,cate)]);
+  /* janelas vizinhas: a Visão geral soma as duas, e o alcance do Meta precisa vir
+     do período inteiro numa consulta só (ver qMetaAlcance) */
+  if(cmp && menos(de,1)===cate) tarefas.push(["mT",()=>qMetaAlcance(cde,ate)]);
   const R={};
   await Promise.all(tarefas.map(async([k,f])=>{
     try{ R[k]=await f() }catch(e){ R[k]=null; FALHAS[k]=e }
@@ -1470,6 +1488,7 @@ async function puxarAgora(){
     campanhas:(R.gA&&R.gA.campanhas)||[], cliquesReais:true, erro:msg("gA")||msg("gB")};
   novo.meta={atual:R.mA&&R.mA.total, anterior:R.mB&&R.mB.total,
     criativos:(R.mA&&R.mA.criativos)||[], criativosAnt:(R.mB&&R.mB.criativos)||[], erro:msg("mA")||msg("mB"),
+    alcanceTotal:(R.mT!=null?R.mT:null),
     grupos:{
       cadastro:{atual:R.mA&&R.mA.grupos.cadastro, anterior:R.mB&&R.mB.grupos.cadastro},
       perfil:  {atual:R.mA&&R.mA.grupos.perfil,   anterior:R.mB&&R.mB.grupos.perfil}
@@ -2226,14 +2245,22 @@ function visaoAoVivo(){
   const canais=[], fora=[];
   const g=janelas(D.google), ct=D.google&&D.google.contaTotal;
   const gc=ct&&ct.atual ? (vizinhas ? (ct.anterior?[ct.atual,ct.anterior]:null) : [ct.atual]) : g;
+  /* custoConv do Google sai do custo da PESQUISA, como na aba dele (R$ 17,30 em
+     22-28/09) — com o custo da conta inteira daria R$ 19,52 e a Visão geral
+     discordaria da aba */
   if(g&&gc) canais.push({n:"Google Ads",
-    fonte:"Windsor · ao vivo · investimento da conta inteira; impressões e cliques da Pesquisa",
+    fonte:"Windsor · ao vivo · investimento da conta inteira; o resto é da Pesquisa",
     alcance:null, impressoes:s(g,"impressoes"), cliques:s(g,"cliques"),
-    custo:s(gc,"custo"), cadastros:s(g,"conversoes")});
+    custo:s(gc,"custo"), custoBase:s(g,"custo"), cadastros:s(g,"conversoes")});
   else fora.push(["Google Ads", D.google&&D.google.erro]);
   for(const [n,o] of [["Meta Ads",D.meta],["OpenAI Ads",D.openai]]){
     const l=janelas(o);
-    if(l) canais.push({n, fonte:"Windsor · ao vivo", alcance:null,
+    /* alcance só existe no Meta: janela única usa o da janela; duas vizinhas usam
+       o do período inteiro (mT). Sem ele, o cartão mostra impressões. */
+    const alc = n!=="Meta Ads" ? null
+      : vizinhas ? (o&&o.alcanceTotal!=null?o.alcanceTotal:null)
+      : (o&&o.atual&&o.atual.alcance!=null?o.atual.alcance:null);
+    if(l) canais.push({n, fonte:"Windsor · ao vivo", alcance:alc,
       impressoes:s(l,"impressoes"), cliques:s(l,"cliques"), custo:s(l,"custo"), cadastros:s(l,"conversoes")});
     else fora.push([n, o&&o.erro]);
   }
@@ -2252,7 +2279,8 @@ function vVisao(){
   const rp=V.rotulo;
   const COR={"Google Ads":"var(--d1)","Meta Ads":"var(--d2)","OpenAI Ads":"var(--d3)"};
   const LOGO={"Google Ads":IC.gads,"Meta Ads":IC.metaf,"OpenAI Ads":IC.oai};
-  const C=V.canais.map(c=>({...derivar(c),custoCad:c.cadastros?c.custo/c.cadastros:null}));
+  const C=V.canais.map(c=>({...derivar(c),custoCad:c.cadastros?c.custo/c.cadastros:null,
+    custoConvV:c.cadastros?(c.custoBase!=null?c.custoBase:c.custo)/c.cadastros:null}));
   const T=derivar(C.reduce((a,c)=>({impressoes:a.impressoes+c.impressoes,cliques:a.cliques+c.cliques,
     custo:a.custo+c.custo,conversoes:a.conversoes+(c.cadastros||0)}),{impressoes:0,cliques:0,custo:0,conversoes:0}));
   const alcance=C.reduce((a,c)=>a+(c.alcance||0),0);
@@ -2266,6 +2294,12 @@ function vVisao(){
         <span class="v">${brl(c.custo)}</span>
         <span class="fx"><i style="width:${fatia(c.custo,T.custo).toFixed(1)}%"></i></span>
         <span class="k2">${nf0.format(fatia(c.custo,T.custo))}% de tudo o que foi investido</span></div>
+      <div class="cmet">
+        ${c.alcance!=null ? `<div><small>Alcance</small><b>${num(c.alcance)}</b></div>`
+                          : `<div><small>Impressões</small><b>${num(c.impressoes)}</b></div>`}
+        <div><small>CTR</small><b>${pct(c.ctr)}</b></div>
+        <div><small>Custo por conversão</small><b>${brl(c.custoConvV)}</b></div>
+      </div>
     </article>`).join("")}</div>`;
 
   const metricas=[
@@ -2303,6 +2337,9 @@ function vVisao(){
   ${acumulado}
   ${tituloGrupo("Por canal · "+rp)}
   ${cartoes}
+  <p class="proc" style="border-top:0;margin-top:8px;padding-top:0">Alcance (pessoas únicas) só existe no Meta:
+  o Google não informa alcance em campanhas de Pesquisa e o OpenAI não informa em nenhuma — nos dois entra
+  impressões. No Google, CTR e custo por conversão são da Pesquisa, como na aba do canal.</p>
   <div class="faixa" style="margin-top:14px">${cx(cxt("Onde foi o dinheiro e de onde vieram os cadastros",
       "Cada barra soma 100%. Compare a fatia de investimento de um canal com a fatia de cadastros que ele trouxe.")
       + legenda + empilhado)}</div>`;
@@ -2609,7 +2646,7 @@ function encaixar(){
 /* memória do painel: as quatro datas e o último resultado de "Puxar dados"
    ficam guardados no navegador, para não sumirem quando a página é atualizada
    (inclusive quando uma versão nova do painel é publicada). */
-const VERSAO_DADOS="2026-10-05-auto";  /* mude quando o formato de D mudar: o
+const VERSAO_DADOS="2026-10-06-metricas";  /* mude quando o formato de D mudar: o
    resultado salvo é descartado com segurança; as datas ficam sempre */
 function lembrarDatas(){
   try{localStorage.setItem("mia:datas",JSON.stringify(
