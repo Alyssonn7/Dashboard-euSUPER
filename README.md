@@ -25,9 +25,11 @@ trocam quando a migração de marca chegar ao produto.
 1. A barra de cima diz o que está na tela: "**Agosto de 2026** comparado com
    **julho de 2026**". Clique em **Escolher datas** (ou no próprio período) para
    abrir a edição — Aplicar datas fecha, Cancelar ou Esc desfaz. Os atalhos são
-   **Semana passada**, **Este mês** (do dia 1 até ontem, contra o mesmo trecho do
+   **Semana passada**, **Quinzena passada** (a última quinzena fechada — dia 1 a 15 ou 16 ao fim do mês — contra a anterior; em 06/10 dá a 2ª contra a 1ª de setembro, e a barra escreve “2ª quinzena de setembro”), **Este mês** (do dia 1 até ontem, contra o mesmo trecho do
    mês passado) e **Mês passado**. Mexer no período principal reencaixa a
-   comparação na janela anterior de mesmo tamanho.
+   comparação na janela anterior de mesmo tamanho — ou, se o período for uma quinzena,
+   na quinzena anterior. O “Escolher datas” virou só o ícone de calendário, para a
+   linha do topo caber com o atalho novo.
 2. **Não precisa clicar em nada.** Aberto dentro do claude.ai, o painel consulta
    Google Ads, Meta Ads e OpenAI Ads no Windsor **sozinho** — ao abrir e sempre que
    as datas mudam (Aplicar, Enter ou um atalho). A linha de estado mostra

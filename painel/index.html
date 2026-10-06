@@ -131,7 +131,7 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .cd input[type=date]:focus-visible{outline:none}
 .cd-seta{color:var(--texto-3);font-size:12px}
 /* a barra como frase: período em destaque, comparação discreta, edição sob demanda */
-.per{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0;flex:1 1 280px;
+.per{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0;flex:1 1 250px;
   margin-right:auto;align-self:center}
 /* o pontilhado discreto em repouso diz "isto se edita"; escurece no hover e aberto */
 .per button{font-family:var(--fonte);border:none;background:none;padding:0 0 2px;cursor:pointer;
@@ -144,7 +144,7 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 .per .p2{font-size:clamp(15px,1.3vw,18px);font-weight:700;letter-spacing:-.02em;color:var(--texto-2)}
 .atalhos{display:flex;gap:4px}
 .atalhos button{font-family:var(--fonte);font-size:12.5px;font-weight:600;color:var(--texto-2);background:none;
-  border:1px solid transparent;border-radius:9px;padding:8px 11px;cursor:pointer;white-space:nowrap;
+  border:1px solid transparent;border-radius:9px;padding:8px 9px;cursor:pointer;white-space:nowrap;
   transition:background .15s,border-color .15s}
 .atalhos button:hover{background:var(--tela);border-color:var(--borda);color:var(--texto)}
 .atalhos button:focus-visible{outline:2px solid var(--mata);outline-offset:1px}
@@ -177,6 +177,11 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 /* botao que abre a edicao das datas — sem ele o pontilhado do periodo era a
    unica pista de que as datas se editam, e nao era pista suficiente */
 .atalhos .abrir{display:inline-flex;align-items:center;gap:6px}
+/* com "Quinzena passada" a linha do topo não cabia mais (o Puxar dados descia):
+   o "Escolher datas" fica só com o ícone — o nome segue no aria-label e na
+   dica, e clicar no período também abre a edição */
+.atalhos .abrir-t{display:none}
+.atalhos .abrir{padding-left:10px;padding-right:10px}
 .atalhos .abrir svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;
   stroke-linecap:round;stroke-linejoin:round;flex:none}
 .atalhos button[aria-expanded="true"]{background:var(--tela);border-color:var(--mata);color:var(--titulo)}
@@ -515,7 +520,7 @@ tfoot td.r{text-align:right}
   .consulta{padding:12px 14px 10px;gap:10px}
   .cd{flex:1 1 100%} .cd input[type=date]{width:auto;flex:1;min-width:0}
   .per{flex:1 1 100%} .per .p1{font-size:19px} .per .p2{font-size:15px}
-  .atalhos{flex:1 1 auto} .atalhos button{flex:1;padding:10px 0}
+  .atalhos{flex:1 1 auto;flex-wrap:wrap} .atalhos button{flex:1 1 auto;padding:10px 6px}
   .ed-acoes{flex:1 1 100%} .ed-acoes button{flex:1}
   .puxar{flex:1 1 100%;justify-content:center}
   .ferram{margin-left:auto}
@@ -927,15 +932,17 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="atalhos" role="group" aria-label="Períodos prontos">
           <button type="button" id="btSemana"
             title="Última semana fechada, de segunda a domingo, contra a anterior">Semana passada</button>
+          <button type="button" id="btQuinzena"
+            title="Última quinzena fechada (dia 1 a 15, ou 16 ao fim do mês) contra a quinzena anterior">Quinzena passada</button>
           <button type="button" id="btMesAtual"
             title="Do dia 1 deste mês até ontem, contra o mesmo trecho do mês passado">Este mês</button>
           <button type="button" id="btMes"
             title="Último mês fechado contra o mês anterior">Mês passado</button>
           <button type="button" class="abrir" id="btAbrir" aria-expanded="false"
-            aria-controls="edicao" title="Escolher as datas na mão">
+            aria-controls="edicao" aria-label="Escolher datas" title="Escolher as datas na mão">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="4.6" width="17.6"
               height="16.2" rx="2.4"/><path d="M3.2 9.4h17.6M8 3.2v3M16 3.2v3"/></svg>
-            Escolher datas</button>
+            <span class="abrir-t">Escolher datas</span></button>
         </div>
         <button class="puxar" type="button" id="btPuxar">
           <span class="gira" aria-hidden="true"></span><span id="txPuxar">Puxar dados</span>
@@ -2233,7 +2240,8 @@ function vLPSemanal(){
 function visaoAoVivo(){
   const p=D.periodo, pa=p.anterior;
   const vizinhas = !!pa && menos(p.atual.de,1)===pa.ate;
-  const rotulo = vizinhas ? `${dm(pa.de)}–${dm(p.atual.ate)}` : rotuloPer(p.atual);
+  /* rotuloPer dá o nome do mês quando a soma fecha um mês (as duas quinzenas) */
+  const rotulo = vizinhas ? rotuloPer({de:pa.de, ate:p.atual.ate}) : rotuloPer(p.atual);
   const janelas=o=>{
     if(!o||!o.atual) return null;
     if(vizinhas && !o.anterior) return null;
@@ -2456,6 +2464,8 @@ function rotuloLongo(de,ate,minusc){
   const [ya,ma,da]=de.split("-"), [yb,mb,db]=ate.split("-");
   const agora=String(new Date().getFullYear());
   const anoA=ya!==agora?` de ${ya}`:"", anoB=yb!==agora?` de ${yb}`:"";
+  const q=quinzena(de,ate);
+  if(q) return `${q}ª quinzena de ${MES_LONGO(de)}${anoA}`;
   if(de===ate) return `${+da} de ${MES_LONGO(de)}${anoA}`;
   if(ya===yb&&ma===mb) return `${+da} a ${+db} de ${MES_LONGO(de)}${anoA}`;
   return `${+da} de ${MES_LONGO(de)}${ya!==yb?` de ${ya}`:""} a ${+db} de ${MES_LONGO(ate)}${anoB}`;
@@ -2483,12 +2493,15 @@ function pintarEstado(){
     let tam, desiguais=false;
     if(!comparar){
       tam = ehMesCalendario(de,ate) ? "Um mês fechado, sem comparação."
+          : quinzena(de,ate) ? `Uma quinzena, ${d1} dias, sem comparação.`
           : `${d1} ${d1===1?"dia":"dias"}, sem comparação.`;
     } else {
       const d2=dias(cde,cate);
       const doisMeses=ehMesCalendario(de,ate)&&ehMesCalendario(cde,cate);
-      desiguais=!doisMeses&&d1!==d2;
+      const duasQ=!!(quinzena(de,ate)&&quinzena(cde,cate));
+      desiguais=!doisMeses&&!duasQ&&d1!==d2;
       tam = doisMeses ? "Dois meses fechados."
+          : duasQ ? (d1===d2 ? `Duas quinzenas, ${d1} dias cada.` : `Duas quinzenas, de ${d1} e ${d2} dias.`)
           : d1===d2 ? `${d1} dias em cada período.`
           : `Atenção: períodos de tamanhos diferentes, ${d1} e ${d2} dias.`;
     }
@@ -2499,9 +2512,11 @@ function pintarEstado(){
       html=`<b>Atualizando…</b> Consultando Google Ads, Meta Ads e OpenAI Ads no Windsor. ${esc(tam)}`;
     } else if(!naTela){
       cls=desiguais?"mal":"novo";
+      /* fora do claude.ai (MCP===null) o aviso de "só funciona no claude.ai" já é
+         acrescentado no fim da linha — não repete aqui */
       html = MCP
         ? `<b>Datas novas.</b> A consulta começa sozinha — ou clique em Puxar dados. ${esc(tam)}`
-        : `<b>Datas novas.</b> Abra o painel dentro do claude.ai para consultar estas datas. ${esc(tam)}`;
+        : `<b>Datas novas.</b> ${esc(tam)}`;
     } else if(D.aoVivo&&D.falhouTudo){
       cls="mal"; html="<b>A consulta não trouxe dados de nenhuma fonte.</b> Veja o aviso em cada aba e tente de novo.";
     } else if(D.aoVivo&&D.falharam>0){
@@ -2583,6 +2598,19 @@ const menos=(iso,d)=>{const x=new Date(iso+"T12:00:00");x.setDate(x.getDate()-d)
   return x.toISOString().slice(0,10)};
 const isoLocal=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 
+/* QUINZENA: 1ª = dia 1 a 15; 2ª = dia 16 ao último dia do mês. Devolve 1 ou 2
+   quando o período é exatamente uma delas, senão 0. A 2ª tem 13 a 16 dias
+   conforme o mês — por isso a barra não acusa "tamanhos diferentes" entre duas
+   quinzenas, só informa os dias. */
+function quinzena(de,ate){
+  if(!dataOk(de)||!dataOk(ate)) return 0;
+  const a=new Date(de+"T12:00:00"), b=new Date(ate+"T12:00:00");
+  if(a.getFullYear()!==b.getFullYear()||a.getMonth()!==b.getMonth()) return 0;
+  const ultimo=new Date(b.getFullYear(),b.getMonth()+1,0).getDate();
+  if(a.getDate()===1 && b.getDate()===15) return 1;
+  if(a.getDate()===16 && b.getDate()===ultimo) return 2;
+  return 0;
+}
 /* um período é um mês-calendário quando vai do dia 1 ao último dia do mesmo mês */
 function ehMesCalendario(de,ate){
   if(!de||!ate) return false;
@@ -2609,6 +2637,16 @@ function atalhoSemana(){
   const iniB=new Date(fimB); iniB.setDate(fimB.getDate()-6);
   preencher(ini,fim,iniB,fimB,true);
 }
+/* "Quinzena passada": a última quinzena que já terminou, contra a anterior.
+   Do dia 16 em diante a 1ª deste mês já fechou; antes disso, a última fechada
+   é a 2ª do mês passado. Em 06/10: 16-30/09 contra 01-15/09. */
+function atalhoQuinzena(){
+  const h=new Date(), y=h.getFullYear(), m=h.getMonth();
+  if(h.getDate()>=16)
+    preencher(new Date(y,m,1), new Date(y,m,15), new Date(y,m-1,16), new Date(y,m,0), true);
+  else
+    preencher(new Date(y,m-1,16), new Date(y,m,0), new Date(y,m-1,1), new Date(y,m-1,15), true);
+}
 function atalhoMes(){
   const hoje=new Date();
   const fim=new Date(hoje.getFullYear(),hoje.getMonth(),0);     /* último dia do mês passado */
@@ -2633,6 +2671,16 @@ function atalhoMesAtual(){
 function encaixar(){
   if(!comparar) return;
   const de=inDe.value,ate=inAte.value; if(!dataOk(de)||!dataOk(ate)||de>ate)return;
+  /* quinzena escolhida na mão: a comparação é a quinzena anterior, não "os
+     mesmos N dias antes" — senão a 2ª de outubro (16 dias) comparava com
+     30/09-15/10 */
+  const q=quinzena(de,ate);
+  if(q){
+    const a=new Date(de+"T12:00:00"), y=a.getFullYear(), m=a.getMonth();
+    if(q===2){ inCDe.value=isoLocal(new Date(y,m,1));    inCAte.value=isoLocal(new Date(y,m,15)); }
+    else     { inCDe.value=isoLocal(new Date(y,m-1,16)); inCAte.value=isoLocal(new Date(y,m,0)); }
+    return;
+  }
   const n=Math.round((new Date(ate)-new Date(de))/86400000); if(!Number.isFinite(n))return;
   inCAte.value=menos(de,1); inCDe.value=menos(inCAte.value,n);
 }
@@ -2689,6 +2737,7 @@ restaurar();
 [inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
 btPuxar.addEventListener("click",puxar);
 document.getElementById("btSemana").addEventListener("click",atalhoSemana);
+document.getElementById("btQuinzena").addEventListener("click",atalhoQuinzena);
 document.getElementById("btMes").addEventListener("click",atalhoMes);
 document.getElementById("btMesAtual").addEventListener("click",atalhoMesAtual);
 
