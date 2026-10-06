@@ -411,6 +411,10 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .hmn small{display:block;font-size:10.5px;color:var(--texto-3);font-weight:400;white-space:normal}
 .hmd{font-size:11.5px;line-height:1.5;color:var(--texto-2)}
 .hmd b{color:var(--texto);font-weight:700}
+/* proximo teste: borda tracejada, para nao parecer resultado */
+.cx.proximo{border-style:dashed;border-color:var(--d1)}
+.pq{margin:2px 0 4px;font-size:12.5px;line-height:1.55;color:var(--texto-2)}
+.pq b{color:var(--texto);font-weight:700}
 /* o que o teste ensinou */
 .apr{background:var(--bom-t);border:1px solid var(--bom);border-radius:12px;padding:16px 18px;margin-top:15px}
 .apr>b{display:block;font-family:var(--fonte);font-size:12px;font-weight:800;letter-spacing:.04em;
@@ -834,6 +838,23 @@ const AB_LP2={
     {n:"Google Ads", a:16.33, b:15.76},
     {n:"Meta Ads",   a:23.55, b:17.47},
     {n:"OpenAI Ads", a:10.22, b:6.96}
+  ]
+};
+
+/* PRÓXIMO TESTE — o bloco do topo da aba Landing Page. Descreve o que vem, não um
+   resultado: as duas hipóteses são "talvez", nas palavras do Alysson (06/10).
+   Quando o teste começar, ele vira um bloco de resultado como os outros (o mais
+   novo sempre em cima) e este passa a descrever o seguinte. */
+const PROXIMO_TESTE={
+  nome:"Teste A/B 03",
+  ate:"13/10",
+  porque:"as pessoas estão se cadastrando, mas não ativam o onboarding.",
+  objetivo:"melhorar a qualidade do lead — quem se cadastra chegar sabendo mais sobre o produto.",
+  hipoteses:[
+    ["Copy da miaapp.com.br numa nova página",
+     "Levar a copy da miaapp.com.br para a lp2.miaapp.com.br, que passa a ser lp3.miaapp.com.br."],
+    ["Botões de cadastro em outras seções",
+     "Testar botões de cadastro mais abaixo na página, para a pessoa se cadastrar depois de entender melhor o produto e chegar mais consciente ao onboarding."]
   ]
 };
 
@@ -1977,7 +1998,23 @@ function vOpenai(){
 /* A aba mostra o teste em andamento em cima e o anterior embaixo: a sequência
    (B venceu → virou a principal → novo desafiante) é a história que interessa. */
 function vLP(){
-  return vLPTeste02() + vLPTeste01();
+  /* ordem: o próximo teste no topo, depois os resultados do mais novo para o
+     mais antigo. Teste novo entra logo abaixo do próximo. */
+  return vProximoTeste() + vLPTeste02() + vLPTeste01();
+}
+
+function vProximoTeste(){
+  const P=(typeof PROXIMO_TESTE!=="undefined")?PROXIMO_TESTE:null;
+  if(!P) return "";
+  return `
+  ${tituloGrupo("Próximo teste","Começa em até 7 dias, até "+esc(P.ate))}
+  <div class="faixa">
+    ${cx(cxt(esc(P.nome)+" · o que vamos testar",
+        "Duas hipóteses em estudo — o formato final ainda vai ser decidido.","em até 7 dias")
+      + `<p class="pq"><b>Por quê:</b> ${esc(P.porque)} <b>Objetivo:</b> ${esc(P.objetivo)}</p>`
+      + `<ol class="fl">${P.hipoteses.map(([t,d],i)=>`<li><b>${i+1}</b>
+          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`, "proximo")}
+  </div>`;
 }
 
 function vLPTeste02(){
