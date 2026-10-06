@@ -2107,34 +2107,9 @@ function vLPTeste01(){
       "B venceu "+venceu+"/"+T.canais.length)
       + T.canais.map(linhaCanal).join("")
       + `<p class="proc">O teste dividiu o mesmo tráfego entre as duas páginas, então a comparação é direta: o anúncio, o público e a semana foram os mesmos — o que mudou foi a página.</p>`)}
-  </div>
-  <div class="faixa">
-    ${cx(cxt("O que o Clarity mostrou dentro da página",
-      "Onde a pessoa toca depois de chegar. Microsoft Clarity, "+esc(T.clarity.rotulo)+
-      " — um export por página.", T.clarity.dias+" dias")
-      + `<div class="hm">${[[A,false],[Bp,true]].map(([p,v])=>`
-        <div class="hmc${v?" vence":""}">
-          <div class="hmh"><span class="hml">${esc(p.rot)}</span><span class="hmn">${esc(p.url)}</span></div>
-          <div class="hmi"><img src="${p.calor}" alt="Mapa de calor da página ${esc(p.rot)}" loading="lazy"></div>
-          <p class="hmd">${esc(p.calorLegenda)}</p>
-        </div>`).join("")}</div>`
-      + `<div class="apr"><b>O que esse teste ensinou</b><ul>
-        <li><b>Um botão dominante ganha da página cheia de opções.</b> Na página B,
-        ${pct(Bp.ctaTotal/Bp.toques*100)} dos toques foram em algum botão de criar link —
-        ${pct(Bp.maisTocado.pct)} num só, o do topo. Na página A o elemento mais tocado não passa de
-        ${pct(A.maisTocado.pct)}, e o resto se divide entre menu, imagem do topo, FAQ e WhatsApp.</li>
-        <li><b>Mais toque não é melhor.</b> A página A tem mais toque por visita
-        (${n2(por100(A))} contra ${n2(por100(Bp))}) e ainda assim perdeu nos três canais. O que conta não é
-        quantos toques a página recebe, é para onde eles vão.</li>
-        <li><b>O que dá para levar para a página principal:</b> um botão claro no topo, repetido ao
-        longo da página, e menos caminhos competindo com ele.</li>
-      </ul></div>`
-      + `<p class="proc"><b>Como ler:</b> o Clarity mede <b>toque</b>, não cadastro. A concentração no
-      botão é a explicação mais provável para a diferença de conversão, não uma medição dela.
-      O export cobre ${T.clarity.dias} dias (${esc(T.clarity.rotulo)}) e o teste de anúncios rodou
-      ${T.diasAnuncio}, então os volumes daqui não batem com os dos gerenciadores. Foram
-      ${num(Bp.toques)} toques na B e ${num(A.toques)} na A.</p>`)}
   </div>`;
+  /* o bloco "O que o Clarity mostrou dentro da página" deste teste saiu a pedido
+     em 06/10. Os dados dele (mapas de calor, toques) continuam em AB_LP. */
 }
 
 /* VERSAO ANTERIOR DA ABA — comparacao semana a semana do Clarity. Continua
