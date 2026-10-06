@@ -437,6 +437,10 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .cx.proximo{border-style:dashed;border-color:var(--d1)}
 .pq{margin:2px 0 4px;font-size:12.5px;line-height:1.55;color:var(--texto-2)}
 .pq b{color:var(--texto);font-weight:700}
+.ptl{margin:16px 0 2px;font-family:var(--fonte);font-size:11px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--texto-3)}
+.ptl.atual{color:var(--d1)}
+.fl.prox>li>b{background:none;color:var(--texto-3);font-size:18px}
 /* o que o teste ensinou */
 .apr{background:var(--bom-t);border:1px solid var(--bom);border-radius:12px;padding:16px 18px;margin-top:15px}
 .apr>b{display:block;font-family:var(--fonte);font-size:12px;font-weight:800;letter-spacing:.04em;
@@ -872,11 +876,22 @@ const PROXIMO_TESTE={
   ate:"13/10",
   porque:"as pessoas estão se cadastrando, mas não ativam o onboarding.",
   objetivo:"melhorar a qualidade do lead — quem se cadastra chegar sabendo mais sobre o produto.",
-  hipoteses:[
+  /* 06/10: o Alysson dividiu em "semana atual" (o que roda agora) e "próximas
+     semanas" (a fila, sem ordem definida). Texto revisado a pedido dele. */
+  semanaAtual:[
     ["Copy da miaapp.com.br numa nova página",
-     "Levar a copy da miaapp.com.br para a lp2.miaapp.com.br, que passa a ser lp3.miaapp.com.br."],
+     "Levar a copy da miaapp.com.br para a lp2.miaapp.com.br, que passa a ser a lp3.miaapp.com.br. "+
+     "Assim separamos o efeito do texto do efeito do resto da página: se a lp3 converter como a "+
+     "miaapp.com.br, o que pesa é a copy; se não, é o layout."]
+  ],
+  proximasSemanas:[
     ["Botões de cadastro em outras seções",
-     "Testar botões de cadastro mais abaixo na página, para a pessoa se cadastrar depois de entender melhor o produto e chegar mais consciente ao onboarding."]
+     "Colocar botões de cadastro mais abaixo na página, para a pessoa se cadastrar depois de entender "+
+     "melhor o produto e chegar ao onboarding sabendo o que vai fazer."],
+    ["Vídeo curto antes do cadastro (VSL)",
+     "Um vídeo de 45 segundos a 1 minuto mostrando, passo a passo, o cadastro e o onboarding. O botão de "+
+     "cadastro só aparece quando o vídeo termina. Objetivo: a pessoa entender o produto antes de se "+
+     "cadastrar e chegar ao onboarding pronta para concluir."]
   ]
 };
 
@@ -2090,10 +2105,14 @@ function vProximoTeste(){
   ${tituloGrupo("Próximo teste","Começa em até 7 dias, até "+esc(P.ate))}
   <div class="faixa">
     ${cx(cxt(esc(P.nome)+" · o que vamos testar",
-        "Duas hipóteses em estudo — o formato final ainda vai ser decidido.","em até 7 dias")
+        "Um teste nesta semana e mais dois na fila para as próximas.","em até 7 dias")
       + `<p class="pq"><b>Por quê:</b> ${esc(P.porque)} <b>Objetivo:</b> ${esc(P.objetivo)}</p>`
-      + `<ol class="fl">${P.hipoteses.map(([t,d],i)=>`<li><b>${i+1}</b>
-          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`, "proximo")}
+      + `<p class="ptl atual">Semana atual</p>`
+      + `<ol class="fl">${P.semanaAtual.map(([t,d],i)=>`<li><b>${i+1}</b>
+          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`
+      + `<p class="ptl">Próximas semanas</p>`
+      + `<ul class="fl prox">${P.proximasSemanas.map(([t,d])=>`<li><b aria-hidden="true">•</b>
+          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ul>`, "proximo")}
   </div>`;
 }
 
