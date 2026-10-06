@@ -1125,17 +1125,22 @@ const espera=ms=>new Promise(r=>setTimeout(r,ms));
    esta espera o painel leria "nada" e somaria zero. */
 const NA_FILA=new Set(["pending","queued","running","processing"]);
 const naFila=p=>!!(p&&NA_FILA.has(String(p.status||"").toLowerCase()));
+const FILA_MAX_MS=90*1000;
 async function chamar(server,tool,input,rotulo){
   if(!MCP) throw {code:"capability_disabled",rotulo};
   for(let t=0;t<2;t++){
     try{
       let p=(await MCP.callTool(server,tool,input,{cache:{refresh:true}})).payload;
-      for(let k=0; server==="Windsor.ai" && naFila(p) && k<12; k++){
+      /* teto de 90 s na fila: em 06/10 uma consulta ficou presa mais de 4 minutos.
+         Desistir cedo não perde nada — o Windsor segue processando o mesmo job, e o
+         próximo "Puxar dados" pega o resultado pronto */
+      const t0=Date.now();
+      for(let k=0; server==="Windsor.ai" && naFila(p) && Date.now()-t0<FILA_MAX_MS; k++){
         await espera(Math.min(Math.max((+p.poll_after_seconds||5)*1000,2000),15000));
         p=(await MCP.callTool(server,tool,input,{cache:{refresh:true}})).payload;
       }
       if(server==="Windsor.ai" && naFila(p))
-        throw {code:"timeout",message:"O Windsor não terminou a consulta a tempo. Puxe de novo em um minuto."};
+        throw {code:"timeout",message:"O Windsor demorou mais de 90 segundos para responder esta consulta. Clique em Puxar dados de novo em um minuto — ele continua processando e costuma ter o resultado pronto."};
       return p;
     }
     catch(e){
@@ -1217,38 +1222,48 @@ async function qGoogle(de,ate){
 
 async function qMeta(de,ate){
   const base={connector:"facebook",accounts:[CONTAS.meta],date_from:de,date_to:ate};
-  /* totais SEM dimensão: só assim o alcance vem deduplicado, igual ao Ads
-     Manager — somar o alcance por anúncio conta a mesma pessoa várias vezes */
-  /* com account_id o Windsor devolve UMA linha da conta inteira; sem dimensão
-     nenhuma, janelas longas (um mês) voltavam fragmentadas em várias linhas */
-  const totL=linhas(await chamar("Windsor.ai","get_data",{...base,
-    fields:["account_id","spend","reach","impressions","actions_link_click",
-            "actions_landing_page_view","actions_complete_registration"]},"Meta Ads"));
+  /* DUAS consultas, em paralelo:
+     - totais SEM dimensão (com account_id): uma linha da conta inteira, com o
+       alcance deduplicado igual ao Ads Manager;
+     - por ANÚNCIO, com o objetivo da campanha: dá os criativos E os grupos
+       (cadastro x visita ao perfil), porque tudo o que se soma (gasto,
+       impressões, cliques, visitas, conversões) fecha igual somando anúncios.
+     Até 06/10 havia uma terceira consulta, por campanha, só para o alcance de cada
+     grupo. Ela ficou presa na fila do Windsor por mais de 4 minutos e segurava o
+     painel inteiro. Agora só roda quando os DOIS grupos gastaram (o único caso
+     em que precisa) e, se falhar, o alcance do grupo fica em branco — a aba não cai. */
+  const [totL, r] = await Promise.all([
+    chamar("Windsor.ai","get_data",{...base,
+      fields:["account_id","spend","reach","impressions","actions_link_click",
+              "actions_landing_page_view","actions_complete_registration"]},"Meta Ads").then(linhas),
+    chamar("Windsor.ai","get_data",{...base,
+      fields:["campaign","campaign_objective","ad_name","spend","impressions",
+              "actions_link_click","actions_landing_page_view","actions_complete_registration",
+              "instagram_profile_visits","thumbnail_url","instagram_permalink_url"]},"Meta Ads").then(linhas)
+  ]);
   const tot=totL.reduce((acc,x)=>{for(const k of ["spend","reach","impressions","actions_link_click",
     "actions_landing_page_view","actions_complete_registration"]) acc[k]=(+acc[k]||0)+(+x[k]||0); return acc;},{});
-  const r=linhas(await chamar("Windsor.ai","get_data",{...base,
-    fields:["campaign","campaign_objective","ad_name","spend","impressions",
-            "actions_link_click","actions_complete_registration",
-            "instagram_profile_visits","thumbnail_url","instagram_permalink_url"]},"Meta Ads"));
-  /* por campanha, com o objetivo: separa cadastro (OUTCOME_SALES) de visita ao
-     perfil (OUTCOME_TRAFFIC). O Windsor não deduplica alcance por grupo, então:
-     se só um grupo gastou na janela, ele leva o alcance deduplicado da conta;
-     se os dois gastaram, cada grupo soma o alcance das suas campanhas e avisa. */
-  const camps=linhas(await chamar("Windsor.ai","get_data",{...base,
-    fields:["campaign","campaign_objective","spend","reach","impressions",
-            "actions_link_click","actions_landing_page_view",
-            "actions_complete_registration","instagram_profile_visits"]},"Meta Ads"));
   const grupoDe=x=>grupoCampanha(x.campaign_objective,x.campaign);
   const acc={cadastro:null,perfil:null};
-  camps.forEach(x=>{
-    const g=grupoDe(x); const t=acc[g]||(acc[g]={alcance:0,impressoes:0,cliques:0,custo:0,
-      conversoes:0,visitasLP:0,visitasPerfil:0,alcanceSomado:true});
-    t.alcance+=+x.reach||0; t.impressoes+=+x.impressions||0; t.cliques+=+x.actions_link_click||0;
+  r.forEach(x=>{
+    const g=grupoDe(x); const t=acc[g]||(acc[g]={alcance:null,impressoes:0,cliques:0,custo:0,
+      conversoes:0,visitasLP:0,visitasPerfil:0,alcanceSomado:false});
+    t.impressoes+=+x.impressions||0; t.cliques+=+x.actions_link_click||0;
     t.custo+=+x.spend||0; t.conversoes+=+x.actions_complete_registration||0;
     t.visitasLP+=+x.actions_landing_page_view||0; t.visitasPerfil+=+x.instagram_profile_visits||0;
   });
   const ativos=Object.values(acc).filter(t=>t&&t.custo>0);
-  if(ativos.length===1){ ativos[0].alcance=+tot.reach||ativos[0].alcance; ativos[0].alcanceSomado=false; }
+  if(ativos.length===1){ ativos[0].alcance=+tot.reach||null; }
+  else if(ativos.length>1){
+    /* os dois grupos gastaram: o alcance de cada um é a soma das campanhas dele
+       (o Windsor não deduplica por grupo), com o aviso na tela */
+    try{
+      const camps=linhas(await chamar("Windsor.ai","get_data",{...base,
+        fields:["campaign","campaign_objective","reach"]},"Meta Ads · alcance por grupo"));
+      for(const t of ativos){ t.alcance=0; t.alcanceSomado=true; }
+      camps.forEach(x=>{const t=acc[grupoDe(x)]; if(t&&t.alcanceSomado) t.alcance+=+x.reach||0;});
+    }catch(e){ /* sem o alcance por grupo: fica em branco, o resto da aba vale */ }
+  }
   return {total:{alcance:+tot.reach||0,impressoes:+tot.impressions||0,
                  cliques:+tot.actions_link_click||0,custo:+tot.spend||0,
                  conversoes:+tot.actions_complete_registration||0,
@@ -1436,7 +1451,8 @@ function selecaoNaTela(){
 function autoPuxar(){
   if(!MCP) return;
   if(puxando){ puxarDeNovo=true; return; }
-  const fresco = D.aoVivo && D.ts && (Date.now()-D.ts) < FRESCO_MS;
+  /* resultado com falha não conta como fresco: ao abrir de novo, tenta outra vez */
+  const fresco = D.aoVivo && D.ts && (Date.now()-D.ts) < FRESCO_MS && !D.falharam;
   if(fresco && selecaoNaTela()) return;
   puxar();
 }
@@ -1492,11 +1508,24 @@ async function puxarAgora(){
   /* janelas vizinhas: a Visão geral soma as duas, e o alcance do Meta precisa vir
      do período inteiro numa consulta só (ver qMetaAlcance) */
   if(cmp && menos(de,1)===cate) tarefas.push(["mT",()=>qMetaAlcance(cde,ate)]);
-  const R={};
+  /* DESENHO PROGRESSIVO: cada consulta que termina já aparece na tela. Antes o
+     painel esperava TODAS — uma consulta presa na fila do Windsor (aconteceu em
+     06/10, mais de 4 minutos) deixava a tela parada em "Atualizando…" sem
+     mostrar nem o que já tinha chegado. As abas que ainda esperam dizem isso. */
+  const R={}, pendentes=new Set(tarefas.map(([k])=>k));
+  D=montar(); desenhar();
   await Promise.all(tarefas.map(async([k,f])=>{
     try{ R[k]=await f() }catch(e){ R[k]=null; FALHAS[k]=e }
+    pendentes.delete(k);
+    D=montar(); desenhar();
   }));
+  const novo=montar();
+  D=novo; guardarVivo(novo); lembrarDatas();
+  puxando=false;
+  btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
+  desenhar();
 
+  function montar(){
   const novo=JSON.parse(JSON.stringify(RETRATO));
   const ag=new Date(), z=n=>String(n).padStart(2,"0");
   novo.aoVivo=true; novo.ts=Date.now();
@@ -1532,10 +1561,9 @@ async function puxarAgora(){
      porque uma sexta respondeu seria enganoso */
   novo.falharam = tarefas.filter(([k])=>FALHAS[k]).length;
   novo.fontes = tarefas.length;
-  D=novo; guardarVivo(novo); lembrarDatas();
-  puxando=false;
-  btPuxar.disabled=false; btPuxar.classList.remove("indo"); txPuxar.textContent="Puxar dados";
-  desenhar();
+  novo.pendentes = [...pendentes];
+  return novo;
+  }
 }
 const msg=k=>{
   const f=FALHAS[k]; if(!f) return null;
@@ -1600,6 +1628,14 @@ const blocos=h=>`<div class="blocos">${h}</div>`;
 /* faixa amarela para uma aba que ficou numa janela diferente da barra */
 const avisoJanela=o=>(o&&o.desatualizado)?`<p class="aviso"><b>Atenção à janela.</b> ${esc(o.desatualizado)}</p>`:"";
 
+/* enquanto a consulta de um canal não volta, a aba diz que está esperando —
+   não "sem dados", que seria mentira */
+const aguardando=(...ks)=>!!(D&&D.aoVivo&&D.pendentes&&ks.some(k=>D.pendentes.includes(k)));
+function consultando(rotulo){
+  return cx(cxt(rotulo,"Consultando o Windsor…")
+    + `<p class="proc" style="border-top:0;margin-top:4px;padding-top:0">Os números aparecem aqui assim que o
+    Windsor responder. As outras abas já podem estar prontas.</p>`);
+}
 function semDados(rotulo,motivo){
   return cx(cxt(rotulo,"Este canal não trouxe dados nesta janela.")
     + `<p class="falhou"><b>Não foi possível ler</b>${esc(motivo||"sem dados no período")}</p>`);
@@ -1714,6 +1750,7 @@ function vOutros(){
 
 /* ------------------------------------------------------------- Google Ads */
 function vGoogle(){
+  if(aguardando("gA","gB")) return consultando("Google Ads");
   const a=derivar(D.google&&D.google.atual), b=derivar(D.google&&D.google.anterior);
   if(!a) return semDados("Google Ads", D.google&&D.google.erro);
   const camp=(D.google.campanhas||[]).map(derivar).filter(c=>c.custo>0);
@@ -1762,6 +1799,7 @@ function vGoogle(){
 
 /* --------------------------------------------------------------- Meta Ads */
 function vMeta(){
+  if(aguardando("mA","mB")) return consultando("Meta Ads");
   const a=derivar(D.meta&&D.meta.atual), b=derivar(D.meta&&D.meta.anterior);
   if(!a) return semDados("Meta Ads", D.meta&&D.meta.erro);
   const cri=(D.meta.criativos||[]).map(derivar).filter(c=>c.custo>0);
@@ -1986,6 +2024,7 @@ function vOpenai(){
      O export do Ads Manager (OPENAI_MANAGER) fica como reserva: aparece só
      quando ainda não houve consulta (fora do claude.ai, ou antes da primeira). */
   if(D.aoVivo){
+    if(aguardando("oA","oB")) return consultando("OpenAI Ads");
     const a=derivar(D.openai&&D.openai.atual), z=derivar(D.openai&&D.openai.anterior);
     if(!a) return semDados("OpenAI Ads", D.openai&&D.openai.erro);
     const bv=(r,f,k,e,m)=>B(r,f,a[k],z&&z[k],e,m);
@@ -2296,6 +2335,10 @@ function vVisao(){
      três números que importam), barras empilhadas de participação por métrica
      e a tabela completa com o melhor valor de cada coluna destacado */
   /* ao vivo: calculada das abas; sem consulta: o consolidado gravado */
+  /* a Visão geral soma os três canais: com algum faltando, o total seria
+     menor do que é — espera todos (menos o alcance do período, mT, que só
+     troca impressões por alcance no cartão do Meta quando chega) */
+  if(aguardando("gA","gB","mA","mB","oA","oB")) return consultando("Visão geral");
   const V = D.aoVivo ? visaoAoVivo()
           : (typeof VISAO_SEMANA!=="undefined")?VISAO_SEMANA:null;
   if(!V||!V.canais.length) return `<div class="vazio">${V&&V.fora?esc(V.fora):"Sem consolidado da semana."}</div>`;
@@ -2526,7 +2569,10 @@ function pintarEstado(){
       html=`Ajuste as datas e clique em Aplicar datas. ${esc(tam)}`; cls=desiguais?"mal":"";
     } else if(puxando){
       cls="novo";
-      html=`<b>Atualizando…</b> Consultando Google Ads, Meta Ads e OpenAI Ads no Windsor. ${esc(tam)}`;
+      const tot=D.fontes||0, faltam=(D.pendentes||[]).length;
+      html = tot
+        ? `<b>Atualizando…</b> ${tot-faltam} de ${tot} consultas prontas — cada aba aparece quando a dela chega. ${esc(tam)}`
+        : `<b>Atualizando…</b> Consultando Google Ads, Meta Ads e OpenAI Ads no Windsor. ${esc(tam)}`;
     } else if(!naTela){
       cls=desiguais?"mal":"novo";
       /* fora do claude.ai (MCP===null) o aviso de "só funciona no claude.ai" já é

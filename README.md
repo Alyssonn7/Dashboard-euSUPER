@@ -290,6 +290,17 @@ export), então numa consulta ao vivo a coluna se chama **Cliques** e a ressalva
 YouTube some. Conferido contra os dois exports: a Pesquisa bate até o centavo nas
 duas semanas.
 
+**Consulta presa na fila (06/10).** Uma consulta do Meta — por campanha, só para o
+alcance de cada grupo — ficou mais de 4 minutos na fila do Windsor, e como o painel
+esperava todas as consultas antes de desenhar, a tela ficava parada sem mostrar nada.
+Três mudanças: (1) o painel **desenha cada canal assim que ele chega** — quem ainda
+espera mostra “Consultando o Windsor…” e a linha de estado conta “X de N prontas”;
+(2) a espera na fila tem **teto de 90 segundos**, depois a aba pede para puxar de novo
+(o Windsor segue processando o mesmo job); (3) o Meta faz **duas consultas em paralelo**
+em vez de três em sequência — os grupos saem da consulta por anúncio, e a por
+campanha só roda quando cadastro e visita ao perfil gastaram juntos. Resultado com
+falha não conta como “fresco”: ao reabrir, o painel tenta de novo.
+
 Testado com um Windsor simulado no navegador: os oito formatos de resposta e o
 botão "Puxar dados" inteiro com o Google desconectado e Meta/OpenAI devolvendo os
 números reais de 22–28/09.
