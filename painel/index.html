@@ -177,11 +177,24 @@ body{background:var(--menta);color:var(--texto);margin:0;padding:20px;overflow:h
 /* botao que abre a edicao das datas — sem ele o pontilhado do periodo era a
    unica pista de que as datas se editam, e nao era pista suficiente */
 .atalhos .abrir{display:inline-flex;align-items:center;gap:6px}
-/* com "Quinzena passada" a linha do topo não cabia mais (o Puxar dados descia):
-   o "Escolher datas" fica só com o ícone — o nome segue no aria-label e na
-   dica, e clicar no período também abre a edição */
+/* menu da Quinzena: duas opções do mês passado, cada uma dizendo com o que compara */
+/* com o botão Quinzena a linha do topo não cabe com o texto "Escolher datas"
+   (o tema e o AL desciam): ele fica só com o ícone — o nome segue no aria-label e
+   na dica, e clicar no período também abre a edição */
 .atalhos .abrir-t{display:none}
 .atalhos .abrir{padding-left:10px;padding-right:10px}
+.qz{position:relative;display:flex}
+.qz>button{display:inline-flex;align-items:center;gap:4px}
+.qz>button svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round;
+  stroke-linejoin:round;transition:transform .15s}
+.qz>button[aria-expanded="true"]{background:var(--tela);border-color:var(--mata);color:var(--titulo)}
+.qz>button[aria-expanded="true"] svg{transform:rotate(180deg)}
+.qz-menu{position:absolute;top:calc(100% + 6px);left:0;z-index:40;width:max-content;min-width:250px;max-width:calc(100vw - 24px);
+  background:var(--cartao);border:1px solid var(--borda);border-radius:12px;box-shadow:var(--sombra);
+  padding:6px;display:grid;gap:2px}
+.atalhos .qz-menu button{display:block;width:100%;text-align:left;white-space:normal;padding:9px 11px;
+  font-size:13px;font-weight:700;color:var(--texto)}
+.qz-menu small{display:block;font-size:11px;font-weight:500;color:var(--texto-3);margin-top:2px;white-space:nowrap}
 .atalhos .abrir svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.9;fill:none;
   stroke-linecap:round;stroke-linejoin:round;flex:none}
 .atalhos button[aria-expanded="true"]{background:var(--tela);border-color:var(--mata);color:var(--titulo)}
@@ -932,8 +945,12 @@ const CRIATIVOS={"ADS01-EXISTENTE|DUDA":{"img":"data:image/jpeg;base64,/9j/4AAQS
         <div class="atalhos" role="group" aria-label="Períodos prontos">
           <button type="button" id="btSemana"
             title="Última semana fechada, de segunda a domingo, contra a anterior">Semana passada</button>
-          <button type="button" id="btQuinzena"
-            title="Última quinzena fechada (dia 1 a 15, ou 16 ao fim do mês) contra a quinzena anterior">Quinzena passada</button>
+          <div class="qz">
+            <button type="button" id="btQuinzena" aria-haspopup="menu" aria-expanded="false"
+              aria-controls="qzMenu" title="1ª ou 2ª quinzena do mês passado">Quinzena
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="qz-menu" id="qzMenu" role="menu" aria-label="Quinzenas do mês passado" hidden></div>
+          </div>
           <button type="button" id="btMesAtual"
             title="Do dia 1 deste mês até ontem, contra o mesmo trecho do mês passado">Este mês</button>
           <button type="button" id="btMes"
@@ -2637,16 +2654,56 @@ function atalhoSemana(){
   const iniB=new Date(fimB); iniB.setDate(fimB.getDate()-6);
   preencher(ini,fim,iniB,fimB,true);
 }
-/* "Quinzena passada": a última quinzena que já terminou, contra a anterior.
-   Do dia 16 em diante a 1ª deste mês já fechou; antes disso, a última fechada
-   é a 2ª do mês passado. Em 06/10: 16-30/09 contra 01-15/09. */
-function atalhoQuinzena(){
-  const h=new Date(), y=h.getFullYear(), m=h.getMonth();
-  if(h.getDate()>=16)
-    preencher(new Date(y,m,1), new Date(y,m,15), new Date(y,m-1,16), new Date(y,m,0), true);
-  else
-    preencher(new Date(y,m-1,16), new Date(y,m,0), new Date(y,m-1,1), new Date(y,m-1,15), true);
+/* QUINZENA: sempre do MÊS PASSADO, a pedido — serve para analisar o mês que
+   fechou, não o que está correndo. Duas opções, e cada uma compara com a
+   quinzena ANTERIOR, como o resto do painel (o período de comparação é sempre
+   o que vem antes):
+     1ª do mês passado  -> contra a 2ª do mês retrasado
+     2ª do mês passado  -> contra a 1ª do mês passado
+   Em 06/10 (e em qualquer dia de outubro): 01-15/09 x 16-31/08 e 16-30/09 x 01-15/09. */
+function quinzenasMesPassado(){
+  const h=new Date(), y=h.getFullYear(), m=h.getMonth()-1;   /* mês passado */
+  const d=(yy,mm,dd)=>new Date(yy,mm,dd);
+  const nome=dt=>dt.toLocaleDateString("pt-BR",{month:"long"});
+  const ano=dt=>dt.getFullYear()!==h.getFullYear()?" de "+dt.getFullYear():"";
+  const q1={ini:d(y,m,1),  fim:d(y,m,15),  cIni:d(y,m-1,16), cFim:d(y,m,0)};
+  const q2={ini:d(y,m,16), fim:d(y,m+1,0), cIni:d(y,m,1),    cFim:d(y,m,15)};
+  q1.rot=`1ª quinzena de ${nome(q1.ini)}${ano(q1.ini)}`;
+  q2.rot=`2ª quinzena de ${nome(q2.ini)}${ano(q2.ini)}`;
+  q1.comp=`comparada com a 2ª de ${nome(q1.cIni)}`;
+  q2.comp=`comparada com a 1ª de ${nome(q2.cIni)}`;
+  const dd=dt=>`${String(dt.getDate()).padStart(2,"0")}/${String(dt.getMonth()+1).padStart(2,"0")}`;
+  q1.datas=`${dd(q1.ini)} a ${dd(q1.fim)}`; q2.datas=`${dd(q2.ini)} a ${dd(q2.fim)}`;
+  return [q1,q2];
 }
+const btQz=document.getElementById("btQuinzena"), qzMenu=document.getElementById("qzMenu");
+function fecharQuinzena(foco){
+  qzMenu.hidden=true; btQz.setAttribute("aria-expanded","false"); if(foco) btQz.focus();
+}
+function abrirQuinzena(){
+  const qs=quinzenasMesPassado();
+  qzMenu.innerHTML=qs.map((q,i)=>`<button type="button" role="menuitem" data-q="${i}">${esc(q.rot)}
+    <small>${esc(q.datas)} · ${esc(q.comp)}</small></button>`).join("");
+  qzMenu.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    const q=qs[+b.dataset.q]; fecharQuinzena(false);
+    preencher(q.ini,q.fim,q.cIni,q.cFim,true); btQz.focus();
+  }));
+  qzMenu.hidden=false; btQz.setAttribute("aria-expanded","true");
+  /* no celular o botão fica no meio da linha e o menu passava da borda direita:
+     encosta o menu para dentro da tela */
+  qzMenu.style.left="0px";
+  const r=qzMenu.getBoundingClientRect(), sobra=r.right-(window.innerWidth-12);
+  if(sobra>0) qzMenu.style.left=Math.max(-r.left+12,-sobra)+"px";
+  qzMenu.querySelector("button").focus();
+}
+btQz.addEventListener("click",e=>{ e.stopPropagation(); qzMenu.hidden?abrirQuinzena():fecharQuinzena(false); });
+qzMenu.addEventListener("keydown",e=>{
+  const it=[...qzMenu.querySelectorAll("button")], i=it.indexOf(document.activeElement);
+  if(e.key==="Escape"){ e.preventDefault(); fecharQuinzena(true); }
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault();
+    it[(i+(e.key==="ArrowDown"?1:-1)+it.length)%it.length].focus(); }
+});
+document.addEventListener("click",e=>{ if(!qzMenu.hidden && !e.target.closest(".qz")) fecharQuinzena(false); });
 function atalhoMes(){
   const hoje=new Date();
   const fim=new Date(hoje.getFullYear(),hoje.getMonth(),0);     /* último dia do mês passado */
@@ -2737,7 +2794,6 @@ restaurar();
 [inCDe,inCAte].forEach(e=>e.addEventListener("change",pintarEstado));
 btPuxar.addEventListener("click",puxar);
 document.getElementById("btSemana").addEventListener("click",atalhoSemana);
-document.getElementById("btQuinzena").addEventListener("click",atalhoQuinzena);
 document.getElementById("btMes").addEventListener("click",atalhoMes);
 document.getElementById("btMesAtual").addEventListener("click",atalhoMesAtual);
 
