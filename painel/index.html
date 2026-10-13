@@ -929,8 +929,7 @@ const AB_LP3={
 const PROXIMO_TESTE={
   nome:"Teste A/B 04",
   ate:"20/10",
-  porque:"as pessoas estão se cadastrando, mas não ativam o onboarding.",
-  objetivo:"melhorar a qualidade do lead — quem se cadastra chegar sabendo mais sobre o produto.",
+  /* 13/10: "Por quê" e "Objetivo" saíram a pedido. Sem os campos, a linha some. */
   /* 06/10: o Alysson dividiu em "semana atual" (o que roda agora) e "próximas
      semanas" (a fila, sem ordem definida). Texto revisado a pedido dele.
      13/10: o Teste 03 (copy da miaapp.com.br na lp3) terminou e virou bloco de
@@ -2158,7 +2157,7 @@ function vProximoTeste(){
   <div class="faixa">
     ${cx(cxt(esc(P.nome)+" · o que vamos testar",
         "Um teste nesta semana"+(!P.proximasSemanas.length?".":" e mais "+(P.proximasSemanas.length===1?"um":P.proximasSemanas.length===2?"dois":P.proximasSemanas.length)+" na fila para as próximas."),"em até 7 dias")
-      + `<p class="pq"><b>Por quê:</b> ${esc(P.porque)} <b>Objetivo:</b> ${esc(P.objetivo)}</p>`
+      + (P.porque||P.objetivo ? `<p class="pq">${P.porque?`<b>Por quê:</b> ${esc(P.porque)} `:""}${P.objetivo?`<b>Objetivo:</b> ${esc(P.objetivo)}`:""}</p>` : "")
       + `<p class="ptl atual">Semana atual</p>`
       + `<ol class="fl">${P.semanaAtual.map(([t,d],i)=>`<li><b>${i+1}</b>
           <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`
