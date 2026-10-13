@@ -934,18 +934,16 @@ const PROXIMO_TESTE={
   /* 06/10: o Alysson dividiu em "semana atual" (o que roda agora) e "próximas
      semanas" (a fila, sem ordem definida). Texto revisado a pedido dele.
      13/10: o Teste 03 (copy da miaapp.com.br na lp3) terminou e virou bloco de
-     resultado; a semana atual passa a ser só a VSL, a pedido dele. */
+     resultado; a semana atual passa a ser só a VSL, a pedido dele. Depois ele
+     pediu para tirar "Próximas semanas" (botões de cadastro em outras seções).
+     Lista vazia esconde o título da seção. */
   semanaAtual:[
     ["Vídeo curto antes do cadastro (VSL)",
      "Um vídeo de 45 segundos a 1 minuto mostrando, passo a passo, o cadastro e o onboarding. O botão de "+
      "cadastro só aparece quando o vídeo termina. Objetivo: a pessoa entender o produto antes de se "+
      "cadastrar e chegar ao onboarding pronta para concluir."]
   ],
-  proximasSemanas:[
-    ["Botões de cadastro em outras seções",
-     "Colocar botões de cadastro mais abaixo na página, para a pessoa se cadastrar depois de entender "+
-     "melhor o produto e chegar ao onboarding sabendo o que vai fazer."]
-  ]
+  proximasSemanas:[]
 };
 
 const VISAO_SEMANA={
@@ -2159,14 +2157,14 @@ function vProximoTeste(){
   ${tituloGrupo("Próximo teste","Começa em até 7 dias, até "+esc(P.ate))}
   <div class="faixa">
     ${cx(cxt(esc(P.nome)+" · o que vamos testar",
-        "Um teste nesta semana e mais "+(P.proximasSemanas.length===1?"um":P.proximasSemanas.length===2?"dois":P.proximasSemanas.length)+" na fila para as próximas.","em até 7 dias")
+        "Um teste nesta semana"+(!P.proximasSemanas.length?".":" e mais "+(P.proximasSemanas.length===1?"um":P.proximasSemanas.length===2?"dois":P.proximasSemanas.length)+" na fila para as próximas."),"em até 7 dias")
       + `<p class="pq"><b>Por quê:</b> ${esc(P.porque)} <b>Objetivo:</b> ${esc(P.objetivo)}</p>`
       + `<p class="ptl atual">Semana atual</p>`
       + `<ol class="fl">${P.semanaAtual.map(([t,d],i)=>`<li><b>${i+1}</b>
           <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`
-      + `<p class="ptl">Próximas semanas</p>`
+      + (!P.proximasSemanas.length ? "" : `<p class="ptl">Próximas semanas</p>`
       + `<ul class="fl prox">${P.proximasSemanas.map(([t,d])=>`<li><b aria-hidden="true">•</b>
-          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ul>`, "proximo")}
+          <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ul>`), "proximo")}
   </div>`;
 }
 
