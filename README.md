@@ -5,6 +5,50 @@ Painel semanal e mensal para a reunião com os founders.
 **Painel:** `painel/index.html` — um arquivo, sem build, sem dependência.
 A raiz do repositório redireciona para `/painel/`.
 
+**Painel v2 (funil de cadastro):** `painel-v2/index.html` — convive com a v1,
+que segue intacta. Detalhes na seção [Painel v2](#painel-v2--funil-de-cadastro).
+
+## Painel v2 — funil de cadastro
+
+Visual escuro no formato de resumo: filtros no topo, quatro números na primeira
+linha, o funil à esquerda e oito números à direita, mais investimento e
+cadastros por dia e uma tabela por campanha.
+
+**Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
+passado, personalizado — sempre até ontem), comparação (mesmo período do mês
+anterior, período anterior ou nenhuma), fonte de tráfego e campanha. Trocar
+filtro não consulta nada: o painel guarda as linhas por dia e por campanha e
+recalcula na hora. Só busca de novo quando o período pedido ainda não foi
+carregado.
+
+**Dois modos de funil:**
+
+| Filtro | Funil | De onde vem o cadastro |
+|---|---|---|
+| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → Conta ativa | Metabase (todos os cadastros, com ou sem anúncio) |
+| Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
+
+Onboarding e conta ativa só existem no total porque nenhuma fonte grava a
+origem do cadastro. A altura das faixas do funil é logarítmica, para caber de
+centenas de milhares de impressões a dezenas de contas.
+
+**Cartão em vermelho** = a métrica piorou 10% ou mais contra a comparação
+(custo que subiu, taxa que caiu). O "i" de cada cartão explica o número.
+
+**Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
+`google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
+pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
+cadastros, onboarding e conta ativa por dia de cadastro, sem os IDs de teste.
+O conector `openai_ads` do Windsor **agora traz `conversions`** — agosto bate
+com o export do Ads Manager (117). O GA4 não está mais conectado no Windsor, por
+isso "Visitas na página" só aparece no Meta (landing page view do pixel).
+
+**Ao vivo e retrato:** dentro do claude.ai o painel atualiza sozinho ao abrir
+(se os dados tiverem mais de 30 minutos) e pelo botão Atualizar. Fora dele
+mostra o retrato gravado no arquivo — 01/08 a 12/10/2026, conferido campanha a
+campanha contra os totais do Windsor e do Metabase. O último resultado ao vivo
+fica salvo no navegador (`v2:dados`), junto com os filtros (`v2:filtros`).
+
 ## Identidade visual
 
 O front segue o **Manual da Identidade Visual euSUPER! (2026)**: azul
