@@ -448,6 +448,7 @@ td.cr a:hover .cr-img{box-shadow:0 0 0 2px var(--mata)}
 .apr ul{margin:0;padding-left:17px;display:grid;gap:9px}
 .apr li{font-size:12.5px;line-height:1.55;color:var(--texto-2)}
 .apr li b{color:var(--texto);font-weight:700}
+.apr-r{margin:0 0 12px;font-size:14px;line-height:1.5;font-weight:600;color:var(--texto)}
 /* comparativo por canal */
 .abcan{display:grid;grid-template-columns:104px minmax(0,1fr) 158px;gap:12px;align-items:center;
   padding:12px 0;border-top:1px solid var(--borda)}
@@ -910,13 +911,19 @@ const AB_LP3={
     {n:"Meta Ads",   a:24.20, b:15.97},
     {n:"OpenAI Ads", a:9.19,  b:10.95}
   ],
+  /* 13/10: explicação curta pedida pelo Alysson — por que cada página ganhou
+     onde ganhou. É leitura nossa (o Clarity junta os canais), e o "Como ler" diz isso. */
+  resumo:"Em uma frase: quem já procura a solução (Google e OpenAI) prefere uma página direta; quem foi pego no meio do feed (Meta) precisa ver o produto antes de se cadastrar.",
+  comoLerExtra:"Os motivos por canal são a nossa leitura: o Clarity junta os três canais no mesmo mapa.",
   ensinou:(A,Bp)=>`
-        <li><b>Mesmo texto, resultado diferente por canal.</b> As duas páginas falam igual; muda só o
-        layout. No Google e na OpenAI, a B converteu mais: com esse texto, o layout da Mia funcionou.
-        No Meta, a A converteu bem mais: para quem vem do Meta, o layout da miaapp.com.br faz diferença.</li>
-        <li><b>Na B, o “${esc(Bp.principal.nome)}” do topo leva mais toques.</b> ${pct(Bp.principal.pct)}
-        dos toques, contra ${pct(A.principal.pct)} na A. Na A a atenção se espalha: o “Entrar” leva
-        ${pct(A.login.pct)} e o botão fixo de baixo ${pct(A.fixo.pct)}.</li>
+        <li><b>Google e OpenAI: quem já procura quer uma página direta.</b> Quem vem desses canais
+        pesquisou no Google ou perguntou no ChatGPT — chega querendo agir. A B vai direto ao ponto:
+        título, uma frase e o botão. O “${esc(Bp.principal.nome)}” do topo levou ${pct(Bp.principal.pct)}
+        dos toques, contra ${pct(A.principal.pct)} na A.</li>
+        <li><b>Meta: quem foi interrompido precisa ver o produto.</b> Quem vem do Meta estava rolando o
+        feed, sem procurar nada. A A mostra o produto — o selo “Sem mensalidade”, a conversa no WhatsApp,
+        os passos com telas do app — e tem um botão fixo que acompanha a rolagem (${pct(A.fixo.pct)} dos
+        toques). A B só fala dele: o topo é só texto.</li>
         <li><b>A miaapp.com.br recebe quem já é cliente.</b> ${pct(A.login.pct)} dos toques na A foram
         no “Entrar” — gente que já tem conta e veio fazer login. Na B, ${pct(Bp.login.pct)}. Tirando o
         login, o botão principal leva ${pct(A.principalSemLogin)} dos toques na A e ${pct(Bp.principalSemLogin)} na B.</li>`
@@ -2239,12 +2246,12 @@ function vLPTesteAB(T){
       "Onde a pessoa toca depois de chegar. Microsoft Clarity, "+esc(T.clarity.rotulo)+" — um export por página.",
       T.clarity.dias+" dias")
       + `<div class="hm">${mapa(A,"a")}${mapa(Bp,"b")}</div>`
-      + `<div class="apr"><b>O que esse teste ensinou</b><ul>
+      + `<div class="apr"><b>O que esse teste ensinou</b>${T.resumo?`<p class="apr-r">${esc(T.resumo)}</p>`:""}<ul>
         ${veredito}${T.ensinou?T.ensinou(A,Bp):""}
       </ul></div>`
       + `<p class="proc"><b>Como ler:</b> o Clarity mede <b>toque</b>, não cadastro. O export cobre
       ${esc(T.clarity.rotulo)} — ${T.clarity.dias} dias${T.clarity.nota?", e "+esc(T.clarity.nota):""}. A A teve ${num(A.exibicoes)} exibições e a B ${num(Bp.exibicoes)}: compare as
-      porcentagens, nunca os volumes.</p>`)}
+      porcentagens, nunca os volumes.${T.comoLerExtra?" "+esc(T.comoLerExtra):""}</p>`)}
   </div>`;
 }
 
