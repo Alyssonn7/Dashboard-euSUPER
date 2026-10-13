@@ -915,12 +915,14 @@ const AB_LP3={
      ganhou —, depois reduzida a pedido dele a uma linha só (o resumo). É leitura
      nossa (o Clarity junta os canais), e o "Como ler" diz isso. */
   resumo:"Quem já procura (Google e OpenAI) prefere página direta; quem vem do feed (Meta) precisa ver o produto.",
+  /* a pedido, a caixa fala em palavras, sem números: os números estão no bloco de conversão acima */
+  vereditoTexto:["A lp3 venceu em 2 de 3 canais.",
+    "Converteu um pouco mais no Google e na OpenAI. No Meta, a miaapp.com.br ganhou com folga."],
   comoLerExtra:"Os motivos por canal são a nossa leitura: o Clarity junta os três canais no mesmo mapa.",
   ensinou:(A,Bp)=>`
 
-        <li><b>A miaapp.com.br recebe quem já é cliente.</b> ${pct(A.login.pct)} dos toques na A foram
-        no “Entrar” — gente que já tem conta e veio fazer login. Na B, ${pct(Bp.login.pct)}. Tirando o
-        login, o botão principal leva ${pct(A.principalSemLogin)} dos toques na A e ${pct(Bp.principalSemLogin)} na B.</li>`
+        <li><b>A miaapp.com.br também recebe quem já é cliente.</b> Muita gente entra nela só para
+        fazer login. Na lp3, quase ninguém.</li>`
 };
 
 /* PRÓXIMO TESTE — o bloco do topo da aba Landing Page. Descreve o que vem, não um
@@ -2207,7 +2209,9 @@ function vLPTesteAB(T){
         <small>${ganha&&lo?nf0.format((Math.max(c.a,c.b)/lo-1)*100)+"% melhor":""}</small></div></div>`;
   };
   const pg={a:A,b:Bp};
-  const veredito = !temConv ? `<li><b>Quem decide o teste é a taxa de conversão.</b> O toque mostra para
+  /* T.vereditoTexto: o veredito escrito à mão, só em palavras, no lugar do calculado */
+  const veredito = T.vereditoTexto ? `<li><b>${esc(T.vereditoTexto[0])}</b> ${esc(T.vereditoTexto[1])}</li>`
+    : !temConv ? `<li><b>Quem decide o teste é a taxa de conversão.</b> O toque mostra para
       onde a atenção vai; quem vence é a página que faz mais gente se cadastrar em cada canal.</li>` : (()=>{
     const vence = ganhou ? pg[ganhou] : null;
     const ord=[...T.canais].sort((x,y)=>Math.abs(y.a-y.b)-Math.abs(x.a-x.b));
