@@ -919,8 +919,13 @@ const AB_LP3={
   vereditoTexto:["A lp3 venceu em 2 de 3 canais.",
     "Converteu um pouco mais no Google e na OpenAI. No Meta, a miaapp.com.br ganhou com folga."],
   comoLerExtra:"Os motivos por canal são a nossa leitura: o Clarity junta os três canais no mesmo mapa.",
-  /* a caixa fala só de desempenho: o item do login saiu a pedido (13/10) */
-  ensinou:null
+  /* a caixa fala só de desempenho: o item do login saiu a pedido (13/10).
+     Item das cores pedido depois, para a apresentação: o argumento é que a mesma
+     página (mesmas cores) ganhou em dois canais e perdeu em um. */
+  ensinou:()=>`
+        <li><b>Não foi a cor que decidiu.</b> A mesma página, com as mesmas cores, ganhou no Google e
+        na OpenAI e perdeu no Meta. Se a cor fosse o problema, ela perderia em todos. O que pesou foi o
+        jeito de apresentar: direto ou mostrando o produto.</li>`
 };
 
 /* PRÓXIMO TESTE — o bloco do topo da aba Landing Page. Descreve o que vem, não um
