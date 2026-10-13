@@ -929,6 +929,14 @@ const AB_LP3={
 const PROXIMO_TESTE={
   nome:"Teste A/B 04",
   ate:"20/10",
+  /* 13/10, depois: o Teste 03 ganha mais alguns dias (até completar 14, em 20/10)
+     e a VSL vai para a semana seguinte, em "Próximos passos". Os textos do
+     cabeçalho e do cartão viram campos para dizer isso; sem eles, valem os de antes. */
+  subtitulo:"Esta semana, mais dias de Teste A/B 03, até 20/10. Depois, a VSL",
+  titulo:"O que vem pela frente",
+  resumo:"Esta semana, o Teste A/B 03 segue rodando. Na próxima, entra a VSL.",
+  selo:"até 20/10",
+  rotuloProx:"Próximos passos",
   /* 13/10: "Por quê" e "Objetivo" saíram a pedido. Sem os campos, a linha some. */
   /* 06/10: o Alysson dividiu em "semana atual" (o que roda agora) e "próximas
      semanas" (a fila, sem ordem definida). Texto revisado a pedido dele.
@@ -937,12 +945,17 @@ const PROXIMO_TESTE={
      pediu para tirar "Próximas semanas" (botões de cadastro em outras seções).
      Lista vazia esconde o título da seção. */
   semanaAtual:[
-    ["Vídeo curto antes do cadastro (VSL)",
-     "Um vídeo de 45 segundos a 1 minuto mostrando, passo a passo, o cadastro e o onboarding. O botão de "+
-     "cadastro só aparece quando o vídeo termina. Objetivo: a pessoa entender o produto antes de se "+
-     "cadastrar e chegar ao onboarding pronta para concluir."]
+    ["Mais alguns dias de Teste A/B 03",
+     "A miaapp.com.br e a lp3.miaapp.com.br seguem recebendo os anúncios até completar 14 dias de teste, "+
+     "em 20/10, para termos um discernimento melhor antes de concluir. Até lá, nada muda nas duas "+
+     "páginas nem nos anúncios."]
   ],
-  proximasSemanas:[]
+  proximasSemanas:[
+    ["Vídeo curto antes do cadastro (VSL)",
+     "Na próxima semana, depois do Teste A/B 03. Um vídeo de 45 segundos a 1 minuto mostrando, passo a "+
+     "passo, o cadastro e o onboarding. O botão de cadastro só aparece quando o vídeo termina. Objetivo: "+
+     "a pessoa entender o produto antes de se cadastrar e chegar ao onboarding pronta para concluir."]
+  ]
 };
 
 const VISAO_SEMANA={
@@ -2153,15 +2166,15 @@ function vProximoTeste(){
   const P=(typeof PROXIMO_TESTE!=="undefined")?PROXIMO_TESTE:null;
   if(!P) return "";
   return `
-  ${tituloGrupo("Próximo teste","Começa em até 7 dias, até "+esc(P.ate))}
+  ${tituloGrupo("Próximo teste",esc(P.subtitulo||"Começa em até 7 dias, até "+P.ate))}
   <div class="faixa">
-    ${cx(cxt(esc(P.nome)+" · o que vamos testar",
-        "Um teste nesta semana"+(!P.proximasSemanas.length?".":" e mais "+(P.proximasSemanas.length===1?"um":P.proximasSemanas.length===2?"dois":P.proximasSemanas.length)+" na fila para as próximas."),"em até 7 dias")
+    ${cx(cxt(esc(P.titulo||P.nome+" · o que vamos testar"),
+        esc(P.resumo||"Um teste nesta semana"+(!P.proximasSemanas.length?".":" e mais "+(P.proximasSemanas.length===1?"um":P.proximasSemanas.length===2?"dois":P.proximasSemanas.length)+" na fila para as próximas.")),esc(P.selo||"em até 7 dias"))
       + (P.porque||P.objetivo ? `<p class="pq">${P.porque?`<b>Por quê:</b> ${esc(P.porque)} `:""}${P.objetivo?`<b>Objetivo:</b> ${esc(P.objetivo)}`:""}</p>` : "")
       + `<p class="ptl atual">Semana atual</p>`
       + `<ol class="fl">${P.semanaAtual.map(([t,d],i)=>`<li><b>${i+1}</b>
           <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ol>`
-      + (!P.proximasSemanas.length ? "" : `<p class="ptl">Próximas semanas</p>`
+      + (!P.proximasSemanas.length ? "" : `<p class="ptl">${esc(P.rotuloProx||"Próximas semanas")}</p>`
       + `<ul class="fl prox">${P.proximasSemanas.map(([t,d])=>`<li><b aria-hidden="true">•</b>
           <p><b>${esc(t)}.</b> ${esc(d)}</p></li>`).join("")}</ul>`), "proximo")}
   </div>`;
