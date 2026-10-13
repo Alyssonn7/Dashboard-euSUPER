@@ -911,19 +911,13 @@ const AB_LP3={
     {n:"Meta Ads",   a:24.20, b:15.97},
     {n:"OpenAI Ads", a:9.19,  b:10.95}
   ],
-  /* 13/10: explicação curta pedida pelo Alysson — por que cada página ganhou
-     onde ganhou. É leitura nossa (o Clarity junta os canais), e o "Como ler" diz isso. */
-  resumo:"Em uma frase: quem já procura a solução (Google e OpenAI) prefere uma página direta; quem foi pego no meio do feed (Meta) precisa ver o produto antes de se cadastrar.",
+  /* 13/10: explicação pedida pelo Alysson — por que cada página ganhou onde
+     ganhou —, depois reduzida a pedido dele a uma linha só (o resumo). É leitura
+     nossa (o Clarity junta os canais), e o "Como ler" diz isso. */
+  resumo:"Quem já procura (Google e OpenAI) prefere página direta; quem vem do feed (Meta) precisa ver o produto.",
   comoLerExtra:"Os motivos por canal são a nossa leitura: o Clarity junta os três canais no mesmo mapa.",
   ensinou:(A,Bp)=>`
-        <li><b>Google e OpenAI: quem já procura quer uma página direta.</b> Quem vem desses canais
-        pesquisou no Google ou perguntou no ChatGPT — chega querendo agir. A B vai direto ao ponto:
-        título, uma frase e o botão. O “${esc(Bp.principal.nome)}” do topo levou ${pct(Bp.principal.pct)}
-        dos toques, contra ${pct(A.principal.pct)} na A.</li>
-        <li><b>Meta: quem foi interrompido precisa ver o produto.</b> Quem vem do Meta estava rolando o
-        feed, sem procurar nada. A A mostra o produto — o selo “Sem mensalidade”, a conversa no WhatsApp,
-        os passos com telas do app — e tem um botão fixo que acompanha a rolagem (${pct(A.fixo.pct)} dos
-        toques). A B só fala dele: o topo é só texto.</li>
+
         <li><b>A miaapp.com.br recebe quem já é cliente.</b> ${pct(A.login.pct)} dos toques na A foram
         no “Entrar” — gente que já tem conta e veio fazer login. Na B, ${pct(Bp.login.pct)}. Tirando o
         login, o botão principal leva ${pct(A.principalSemLogin)} dos toques na A e ${pct(Bp.principalSemLogin)} na B.</li>`
