@@ -184,27 +184,6 @@ button,select,input{font-family:inherit}
 .graf-x{display:flex;gap:2px;margin:6px 0 0 44px;height:15px;position:relative}
 .graf-x span{position:absolute;font-size:10.5px;color:var(--texto-3);transform:translateX(-50%);white-space:nowrap}
 
-/* ---------------- tabela ---------------- */
-.tab-cx{padding:16px 18px 6px}
-.tw{overflow-x:auto;margin:12px -18px 0;padding:0 18px}
-table{border-collapse:collapse;width:100%;font-size:12.5px}
-thead th{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-3);
-  text-align:right;padding:0 0 10px 14px;border-bottom:1px solid var(--borda);white-space:nowrap}
-thead th:first-child{text-align:left;padding-left:0}
-tbody td{padding:11px 0 11px 14px;border-bottom:1px solid var(--borda-2);text-align:right;white-space:nowrap;
-  font-variant-numeric:tabular-nums;color:var(--texto-2)}
-tbody td:first-child{text-align:left;padding-left:0;color:var(--texto);font-weight:600;white-space:normal;min-width:240px}
-tbody tr:last-child td{border-bottom:none}
-tfoot td{padding:11px 0 12px 14px;border-top:1px solid var(--borda);text-align:right;font-weight:700;
-  font-variant-numeric:tabular-nums;white-space:nowrap}
-tfoot td:first-child{text-align:left;padding-left:0}
-.camp{display:flex;align-items:center;gap:10px}
-.camp small{display:block;font-size:10.5px;color:var(--texto-3);font-weight:500}
-.logo-c{width:24px;height:24px;border-radius:7px;background:#FEFEFE;display:grid;place-items:center;flex:none}
-.logo-c svg{width:14px;height:14px}
-.fatia{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
-.fatia i{display:block;width:56px;height:6px;border-radius:99px;background:#2A3346;overflow:hidden}
-.fatia i b{display:block;height:100%;border-radius:99px}
 
 .rodape{font-size:11.5px;color:var(--texto-3);line-height:1.6;max-width:110ch}
 .rodape b{color:var(--texto-2);font-weight:600}
@@ -296,7 +275,6 @@ tfoot td:first-child{text-align:left;padding-left:0}
   <div class="avisos" id="avisos" aria-live="polite"></div>
   <section class="resumo" id="resumo" aria-label="Resumo do funil"></section>
   <section class="dupla" id="graficos" aria-label="Evolução diária"></section>
-  <section class="cx tab-cx" id="tabela" aria-label="Por campanha"></section>
   <p class="rodape" id="rodape"></p>
 </div>
 <div id="dica" role="tooltip" hidden></div>
@@ -855,9 +833,6 @@ const IDS_TESTE="1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,
 const CANAIS=["google","meta","openai"];
 const NOME={google:"Google Ads", meta:"Meta Ads", openai:"OpenAI Ads", base:"Metabase"};
 const COR={google:"var(--google)", meta:"var(--meta)", openai:"var(--openai)"};
-const LOGO={google:"<path d=\"M4.75 17.8 12 4.4\" stroke=\"#FBBC04\" stroke-width=\"5.5\" stroke-linecap=\"round\"/><path d=\"M12 4.4l7.25 13.4\" stroke=\"#4285F4\" stroke-width=\"5.5\" stroke-linecap=\"round\"/><circle cx=\"4.75\" cy=\"17.8\" r=\"2.75\" fill=\"#34A853\"/>",
-  meta:"<path fill=\"#0081FB\" d=\"M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.499-1.56a2.926 2.926 0 0 1 1.122-.258z\"/>",
-  openai:"<path fill=\"#000\" transform=\"translate(1.44 1.44) scale(.88)\" d=\"M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.073zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.0615v5.5826a4.504 4.504 0 0 1-4.4945 4.4849zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z\"/>"};
 
 /* ---------------------------------------------------------- formatação */
 const nf0=new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
@@ -1213,7 +1188,7 @@ const dDe=document.getElementById("dDe"), dAte=document.getElementById("dAte"), 
 const btAtualizar=document.getElementById("btAtualizar"), txAtualizar=document.getElementById("txAtualizar");
 const elAtual=document.getElementById("atual"), elFrase=document.getElementById("frase"), elAvisos=document.getElementById("avisos");
 const elResumo=document.getElementById("resumo"), elGraf=document.getElementById("graficos");
-const elTab=document.getElementById("tabela"), elRod=document.getElementById("rodape");
+const elRod=document.getElementById("rodape");
 
 function kpi(area,k,a,b,t,tb,ctx,sub){
   const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
@@ -1355,7 +1330,7 @@ function pintar(){
 
   if(!p){
     elFrase.className="frase mal"; elFrase.querySelector("span").innerHTML="<b>Datas incompletas.</b> Escolha início e fim, com o início antes do fim.";
-    elResumo.innerHTML=elGraf.innerHTML=elTab.innerHTML=""; return;
+    elResumo.innerHTML=elGraf.innerHTML=""; return;
   }
   opcoesCampanha(p,c);
   const camp=fCamp.value, canal=camp?camp.split("|")[0]:fCanal.value;
@@ -1383,7 +1358,7 @@ function pintar(){
     elResumo.innerHTML=`<div class="cx vazio" style="grid-column:1/-1;min-height:220px">
       <div><b style="color:var(--texto);font-size:15px">Este período ainda não foi carregado.</b><br>
       Falta: ${esc(quais)}. ${MCP?"Clique em Atualizar para buscar.":"Abra o painel no claude.ai e clique em Atualizar."}</div></div>`;
-    elGraf.innerHTML=elTab.innerHTML=""; return;
+    elGraf.innerHTML=""; return;
   }
   const temComp=!!c&&!faltaC.length;
   const a=agregar(p.de,p.ate,canal,camp), b=temComp?agregar(c.de,c.ate,canal,camp):null;
@@ -1422,7 +1397,7 @@ function pintar(){
     "Nenhuma fonte grava a origem do cadastro: por canal, o cadastro é o que a plataforma reporta. Onboarding e conta ativa só existem no total.";
   elResumo.innerHTML=cartoes+`<article class="cx funil-cx">
     <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
-      <button type="button" class="info" data-dica="O número grande é a taxa da etapa: quanto da etapa anterior passou para esta. Passe o mouse em cada coluna para ver o total, a fatia do topo e a comparação." aria-label="Como ler o funil">i</button></div>
+      <button type="button" class="info" data-dica="Em cima, o total de cada etapa e a comparação. No meio, a taxa da etapa: quanto da etapa anterior passou para esta. Embaixo, quanto custou cada etapa e a fatia do topo. Passe o mouse numa coluna para ver tudo junto." aria-label="Como ler o funil">i</button></div>
     ${funil(etapas,temComp,a.inv)}
     <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a contas ativas. Embaixo de cada etapa, quanto custou cada uma.</p>
   </article>`;
@@ -1440,23 +1415,6 @@ function pintar(){
   const longo=dias(p.de,p.ate)>62?"por semana":"por dia";
   elGraf.innerHTML=`<article class="cx graf-cx"><div class="cx-t"><div><h2>Investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div></div>${leg}${gInv}</article>
     <article class="cx graf-cx"><div class="cx-t"><div><h2>Cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div></div>${gCad}</article>`;
-
-  /* tabela por campanha */
-  const linhasC=Object.values(a.camp).filter(x=>x.inv>0||x.cad>0||x.imp>0).sort((x,y)=>y.inv-x.inv);
-  const TIPO={SEARCH:"Pesquisa",DEMAND_GEN:"YouTube",PERFORMANCE_MAX:"Performance Max",OUTCOME_SALES:"Conversão",OUTCOME_TRAFFIC:"Tráfego",OUTCOME_LEADS:"Cadastro",OUTCOME_AWARENESS:"Alcance",OUTCOME_ENGAGEMENT:"Engajamento"};
-  const corpo=linhasC.map(x=>{
-    const f=div(x.inv,t.inv);
-    return `<tr><td><div class="camp"><span class="logo-c" title="${NOME[x.k]}"><svg viewBox="0 0 24 24" aria-hidden="true">${LOGO[x.k]}</svg></span>
-      <div>${esc(x.nome)}<small>${NOME[x.k]}${TIPO[x.t]?" · "+TIPO[x.t]:""}</small></div></div></td>
-      <td>${brl(x.inv)}</td><td>${num(x.imp)}</td><td>${num(x.cli)}</td><td>${pct(div(x.cli,x.imp)!=null?x.cli/x.imp*100:null,2)}</td>
-      <td>${brl(div(x.inv,x.cli))}</td><td>${num(x.cad)}</td><td>${brl(div(x.inv,x.cad))}</td>
-      <td><span class="fatia">${pct(f!=null?f*100:null)}<i><b style="width:${f!=null?Math.min(100,f*100):0}%;background:${COR[x.k]}"></b></i></span></td></tr>`;
-  }).join("");
-  elTab.innerHTML=`<div class="cx-t"><div><h2>Por campanha</h2><p>Cadastros e custo por cadastro como cada plataforma reporta. Fatia = parte do investimento total dos três canais.</p></div></div>
-    <div class="tw"><table><thead><tr><th>Campanha</th><th>Investimento</th><th>Impressões</th><th>Cliques</th><th>CTR</th><th>CPC</th><th>Cadastros</th><th>Custo por cadastro</th><th>Fatia</th></tr></thead>
-    <tbody>${corpo||`<tr><td colspan="9" style="color:var(--texto-3)">Nenhuma campanha com entrega neste período.</td></tr>`}</tbody>
-    ${linhasC.length>1?`<tfoot><tr><td>Total</td><td>${brl(a.inv)}</td><td>${num(a.imp)}</td><td>${num(a.cli)}</td><td>${pct(div(a.cli,a.imp)!=null?a.cli/a.imp*100:null,2)}</td><td>${brl(div(a.inv,a.cli))}</td><td>${num(a.cad)}</td><td>${brl(div(a.inv,a.cad))}</td><td>${pct(div(a.inv,t.inv)!=null?a.inv/t.inv*100:null)}</td></tr></tfoot>`:""}
-    </table></div>`;
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
     `Cadastros, onboarding e contas ativas: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro. `+

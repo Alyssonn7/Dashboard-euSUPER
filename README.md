@@ -16,7 +16,7 @@ CPM, ativação em 7 dias, cadastros atribuídos e custo por cadastro atribuído
 o funil na largura toda. Cada etapa do funil mostra o total, a comparação, a
 taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
 etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
-cadastros por dia e uma tabela por campanha.
+cadastros por dia.
 
 **Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
 passado, personalizado — sempre até ontem), comparação (mesmo período do mês
