@@ -10,8 +10,12 @@ que segue intacta. Detalhes na seção [Painel v2](#painel-v2--funil-de-cadastro
 
 ## Painel v2 — funil de cadastro
 
-Visual escuro no formato de resumo: filtros no topo, quatro números na primeira
-linha, o funil à esquerda e oito números à direita, mais investimento e
+Visual escuro no formato de resumo: filtros no topo, quatro números principais,
+oito mini blocos em duas linhas (CTR, onboarding, CPC, custo por onboarding,
+CPM, ativação em 7 dias, cadastros atribuídos e custo por cadastro atribuído) e
+o funil na largura toda. Cada etapa do funil mostra o total, a comparação, a
+taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
+etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
 cadastros por dia e uma tabela por campanha.
 
 **Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
