@@ -29,7 +29,15 @@ carregado.
 | Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
 
 Onboarding e conta ativa só existem no total porque nenhuma fonte grava a
-origem do cadastro. A altura das faixas do funil é logarítmica, para caber de
+origem do cadastro.
+
+**Conta ativa = pelo menos um agendamento criado nos 7 dias depois do
+cadastro** (`event_scheduled.professional_id`, `created_at` dentro da janela,
+rascunho `DRAFT` não conta; agendamento cancelado depois conta, porque foi
+feito). Não é mais a conta de recebimento do Pagar.me. Como a janela leva 7 dias
+para fechar, o cartão mostra a **taxa de ativação em 7 dias** só entre os
+cadastros que já completaram a janela, e diz quantos ainda estão dentro dela; o
+funil mostra a contagem, que ainda sobe nos períodos recentes. A altura das faixas do funil é logarítmica, para caber de
 centenas de milhares de impressões a dezenas de contas.
 
 **Cartão em vermelho** = a métrica piorou 10% ou mais contra a comparação
