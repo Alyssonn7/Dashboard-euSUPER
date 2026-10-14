@@ -10,8 +10,18 @@ que segue intacta. Detalhes na seção [Painel v2](#painel-v2--funil-de-cadastro
 
 ## Painel v2 — funil de cadastro
 
-Visual escuro no formato de resumo: filtros no topo, quatro números principais,
-oito mini blocos em duas linhas (CTR, onboarding, CPC, custo por onboarding,
+Segue o manual de identidade da euSUPER!: faixa azul no topo (degradê oficial,
+barra do "!" a 22,5° e o círculo laranja), títulos em minúsculas, botão em caixa
+alta e ícones da marca. Fonte Gilroy quando instalada, Outfit no lugar.
+
+**Tema claro e escuro.** O claro é o do manual (fundo branco). O escuro é
+derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
+`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. Sem escolha, o painel
+segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** no
+topo fixa a escolha neste navegador (`v2:tema`).
+
+Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
+principais, oito mini blocos em duas linhas (CTR, onboarding, CPC, custo por onboarding,
 CPM, ativação em 7 dias, cadastros atribuídos e custo por cadastro atribuído) e
 o funil na largura toda. Cada etapa do funil mostra o total, a comparação, a
 taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
@@ -44,8 +54,9 @@ cadastros que já completaram a janela, e diz quantos ainda estão dentro dela; 
 funil mostra a contagem, que ainda sobe nos períodos recentes. A altura das faixas do funil é logarítmica, para caber de
 centenas de milhares de impressões a dezenas de contas.
 
-**Cartão em vermelho** = a métrica piorou 10% ou mais contra a comparação
-(custo que subiu, taxa que caiu). O "i" de cada cartão explica o número.
+**Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
+(custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
+laranja. O "i" de cada cartão explica o número.
 
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
