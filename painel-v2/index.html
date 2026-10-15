@@ -155,11 +155,13 @@ button,select,input{font-family:inherit}
 .aviso.erro{background:var(--ruim-bg);border-color:var(--alerta-borda);color:var(--ruim)}
 
 /* ---------------- grade do resumo ----------------
-   12 colunas: os quatro principais ocupam 3 cada (4 por linha), os seis mini
-   blocos 4 cada (3 por linha, duas linhas cheias) e o funil a largura toda */
+   12 colunas: os quatro principais ocupam 3 cada (4 por linha), os mini blocos
+   4 cada (3 por linha) ou 6 quando a linha tem só dois ("meia"); o funil vai
+   na largura toda. Nenhuma linha fica com buraco. */
 .resumo{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
 .resumo .kpi{grid-column:span 3}
 .resumo .kpi.mini{grid-column:span 4}
+.resumo .kpi.mini.meia{grid-column:span 6}
 .cx{background:var(--painel);border:1px solid var(--borda);border-radius:12px;min-width:0}
 .kpi{position:relative;padding:20px 22px;display:flex;flex-direction:column;gap:10px;
   transition:transform .18s ease,box-shadow .18s ease}
@@ -288,7 +290,9 @@ button,select,input{font-family:inherit}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
   .resumo{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .resumo .kpi,.resumo .kpi.mini{grid-column:auto}
+  .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.meia{grid-column:auto}
+  /* em duas colunas, um último cartão sozinho ocupa a linha inteira */
+  .resumo .kpi.mini:nth-last-child(2):nth-child(odd){grid-column:1/-1}
   .fc{padding:0 10px}
   .filtros,.datas{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -1251,7 +1255,8 @@ function faltando(p,canal){
 const M={
   inv:     {r:"Investimento em anúncios", f:brl, dir:0, v:a=>a.inv},
   cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cadReal},
-  cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cadReal)},
+  /* custo por cadastro = só canais de anúncio: investimento ÷ cadastros atribuídos */
+  cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
   /* a conversão deste funil é o cadastro: cadastros ÷ cliques */
   taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cadReal,a.cli)!=null?div(a.cadReal,a.cli)*100:null},
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
@@ -1260,7 +1265,6 @@ const M={
   /* taxa, e não contagem: compara períodos com maturidades diferentes de forma justa */
   ativ:    {r:"Ativação em 7 dias", f:v=>pct(v), dir:1, v:a=>div(a.ativMad,a.mad)!=null?div(a.ativMad,a.mad)*100:null},
   cadPlat: {r:"Cadastros atribuídos pelas plataformas", f:num, dir:1, v:a=>a.cad},
-  cpaPlat: {r:"Custo por cadastro atribuído", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
   /* modo canal/campanha: cadastro = o que a plataforma reporta */
   cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
@@ -1274,11 +1278,11 @@ const M={
 /* fórmula de cada cartão em uma linha: é o que a dica mostra embaixo do nome */
 const FORMULA={
   inv:"Soma do gasto em anúncios", cad:"Contas criadas no período (Metabase)",
-  cpa:"Investimento total ÷ cadastros", taxa:"Cadastros ÷ cliques totais",
+  cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros ÷ cliques totais",
   onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
   cpm:"Investimento total ÷ impressões totais × 1.000",
   ativ:"Agendaram em até 7 dias ÷ cadastros com 7 dias completos",
-  cadPlat:"Soma das conversões das plataformas", cpaPlat:"Investimento total ÷ cadastros atribuídos",
+  cadPlat:"Soma das conversões das plataformas",
   cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
   fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
   invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
@@ -1362,9 +1366,8 @@ const POR_CANAL={
   inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv"},
   cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1},
   cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad"},
-  cpaPlat:{f:brl, v:c=>div(c.inv,c.cad), dir:-1},
+  cpa:    {f:brl, v:c=>div(c.inv,c.cad), dir:-1},
   cad:    {ref:true, f:num, v:c=>c.cad, dir:1},
-  cpa:    {ref:true, f:brl, v:c=>div(c.inv,c.cad), dir:-1},
   taxa:   {ref:true, f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
   onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
 };
@@ -1384,14 +1387,15 @@ function dicaCartao(k,a,b,ctx){
   return h+`<div class="lin tot"><span>${pc.ref?"Geral (Metabase)":"Geral"}</span><span>${m.f(m.v(a))}</span></div>`;
 }
 
-/* tipo: "principal" (os quatro grandes, com ícone) ou "mini" */
+/* tipo: "principal" (os quatro grandes, com ícone), "mini" (três por linha)
+   ou "meia" (mini que ocupa meia linha, para uma linha de dois) */
 function kpi(tipo,k,a,b,t,tb,ctx,sub){
   const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
   const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
-  const mini=tipo==="mini", alerta=!!(vr&&vr.alerta);
+  const mini=tipo!=="principal", alerta=!!(vr&&vr.alerta);
   const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
   /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
-  return `<article class="cx kpi${mini?" mini":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
+  return `<article class="cx kpi${mini?" mini":""}${tipo==="meia"?" meia":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
     <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
       <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
     <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
@@ -1429,7 +1433,7 @@ function funil(etapas,temComp,inv){
     const vr=temComp?variacao(e.v,e.b,1):null;
     const passoB=i>0&&temComp&&e.b!=null&&etapas[i-1].b?e.b/etapas[i-1].b*100:null;
     /* custo de cada etapa: CPM no topo, depois investimento ÷ etapa */
-    const c=i===0?(div(inv,e.v)!=null?div(inv,e.v)*1000:null):div(inv,e.v);
+    const c=i===0?(div(inv,e.v)!=null?div(inv,e.v)*1000:null):div(inv,e.cv!==undefined?e.cv:e.v);
     const custo=c!=null?`${brl(c)} ${i===0?"por mil":"por "+e.u}`:"";
     const ref=i===0?"topo do funil":etapas[i-1].ref;
     const d=`<b>${esc(e.n)}</b><div class="lin"><span>Total</span><span>${num(e.v)}</span></div>`+
@@ -1579,13 +1583,17 @@ function pintar(){
        1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
        2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
        3. depois do cadastro: onboarding (volume e custo) e ativação */
-    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx)+kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
-      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("mini","cpaPlat",a,b,t,tb,ctx)+
+    /* um só custo por cadastro: o dos canais de anúncio (investimento ÷ cadastros
+       que Google, Meta e OpenAI atribuem a si) */
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx)+
+      kpi("principal","cpa",a,b,t,tb,ctx,"Atribuído por Google, Meta e OpenAI")+kpi("principal","taxa",a,b,t,tb,ctx)+
+      kpi("meia","cpm",a,b,t,tb,ctx)+kpi("meia","cadPlat",a,b,t,tb,ctx,sPlat)+
       kpi("mini","onb",a,b,t,tb,ctx,sOnb)+kpi("mini","custoOnb",a,b,t,tb,ctx)+kpi("mini","ativ",a,b,t,tb,ctx,sAtiv);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
-      {n:"Cadastros",ic:"cad",v:a.cadReal,b:b&&b.cadReal,u:"cadastro",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
+      /* o total vem do Metabase; o custo usa os cadastros atribuídos pelos canais, igual ao cartão */
+      {n:"Cadastros",ic:"cad",v:a.cadReal,b:b&&b.cadReal,cv:a.cad,u:"cadastro atribuído",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
       {n:"Onboarding concluído",ic:"onb",v:a.onb,b:b&&b.onb,u:"onboarding",ref:"dos onboardings"},
       {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",nota:"Agendou em até 7 dias."+
         (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
@@ -1620,7 +1628,11 @@ function pintar(){
   const corCad=modoReal?"var(--cad-barra)":COR[canal];
   const gCad=barras(p,a,[{k:"cad",cor:corCad}],(d)=>d&&(modoReal?d.real:d.cad),v=>(v%1?nf1:nf0).format(v),
     (g,val)=>{const cad=val(g,"cad"),inv=g.dias.reduce((s,d)=>s+Object.values((a.dia[d]||{inv:{}}).inv).reduce((x,y)=>x+y,0),0);
-      return `<div class="lin"><span>Cadastros</span><span>${num(cad)}</span></div><div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div><div class="lin"><span>Custo por cadastro</span><span>${brl(div(inv,cad))}</span></div>`});
+      /* custo por cadastro sempre pelos cadastros atribuídos pelos canais */
+      const atr=g.dias.reduce((s,d)=>s+((a.dia[d]||{}).cad||0),0);
+      return `<div class="lin"><span>Cadastros</span><span>${num(cad)}</span></div>`+
+        (modoReal?`<div class="lin"><span>Atribuídos pelos canais</span><span>${num(atr)}</span></div>`:"")+
+        `<div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div><div class="lin"><span>Custo por cadastro</span><span>${brl(div(inv,atr))}</span></div>`});
   const longo=dias(p.de,p.ate)>62?"por semana":"por dia";
   elGraf.innerHTML=`<article class="cx graf-cx"><div class="cx-t"><div><h2>investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div></div>${leg}${gInv}</article>
     <article class="cx graf-cx"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div></div>${gCad}</article>`;
