@@ -1128,21 +1128,36 @@ async function chamar(serv,tool,input){
   }
 }
 /* resposta sem a lista de linhas é erro, nunca "zero": um erro do conector
-   que voltasse vazio apareceria no painel como dia sem gasto */
+   que voltasse vazio apareceria no painel como dia sem gasto.
+   Formatos do Windsor: o atual é {status:"done", data:[...]}; o antigo era
+   {result:[...]} e continua aceito. */
 function linhas(p){
+  if(p&&Array.isArray(p.data)) return p.data;
   if(p&&Array.isArray(p.result)) return p.result;
   throw {code:"tool_error",message:(p&&p.error)?String(p.error).slice(0,200):"a resposta veio sem linhas"};
 }
+/* relatório grande: o Windsor responde {status:"pending", poll_after_seconds}
+   sem linhas, e a mesma chamada, repetida, continua o mesmo relatório. Repete
+   no intervalo que ele pede, por até 5 minutos. */
+async function windsor(input){
+  const ini=Date.now();
+  for(;;){
+    const p=await chamar("Windsor.ai","get_data",input);
+    if(!(p&&p.status==="pending")) return linhas(p);
+    if(Date.now()-ini>5*60000) throw {code:"tool_error",message:"o relatório ainda está sendo gerado; tente atualizar em alguns minutos"};
+    await espera(Math.min(60,Math.max(5,+p.poll_after_seconds||10))*1000);
+  }
+}
 
 async function qGoogle(de,ate){
-  return linhas(await chamar("Windsor.ai","get_data",{connector:"google_ads",accounts:[CONTAS.google],
+  return (await windsor({connector:"google_ads",accounts:[CONTAS.google],
     fields:["date","campaign","advertising_channel_type","impressions","clicks","cost","conversions"],
     date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
       t:x.advertising_channel_type||"",imp:+x.impressions||0,cli:+x.clicks||0,custo:+x.cost||0,
       cad:+x.conversions||0,vis:null}));
 }
 async function qMeta(de,ate){
-  return linhas(await chamar("Windsor.ai","get_data",{connector:"facebook",accounts:[CONTAS.meta],
+  return (await windsor({connector:"facebook",accounts:[CONTAS.meta],
     fields:["date","campaign","campaign_objective","spend","impressions","actions_link_click",
             "actions_landing_page_view","actions_complete_registration"],
     date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
@@ -1151,7 +1166,7 @@ async function qMeta(de,ate){
 }
 /* sem filtro de conta: o id da conta muda a cada reconexão */
 async function qOpenai(de,ate){
-  return linhas(await chamar("Windsor.ai","get_data",{connector:"openai_ads",
+  return (await windsor({connector:"openai_ads",
     fields:["date","campaign","impressions","clicks","spend","conversions"],
     date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
       t:"",imp:+x.impressions||0,cli:+x.clicks||0,custo:+x.spend||0,cad:+x.conversions||0,vis:null}));
