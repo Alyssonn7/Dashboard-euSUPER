@@ -58,7 +58,9 @@ centenas de milhares de impressões a dezenas de contas.
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
 laranja.
 
-**Dica de cada cartão (passar o mouse, ou tocar no "i" no celular):** explica
+**Dica de cada cartão (passar o mouse, ou tocar no "i" no celular):** com o
+mouse parado no cartão, o resto da página desfoca e o cartão fica em
+destaque, junto com a dica. A dica explica
 o número e, em "Todos os canais", abre por canal (Google, Meta, OpenAI) com a
 variação de cada um. O número do cartão é o **geral dos três somados**, não a
 média: CTR = soma dos cliques ÷ soma das impressões, CPC = investimento total ÷
