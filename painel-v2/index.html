@@ -13,7 +13,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
    Painel v2 — funil de cadastro, na identidade visual euSUPER!.
    Layout: faixa azul da marca no topo (degradê oficial, barra do "!" a
    22,5° e o círculo laranja); filtros num cartão que sobe sobre a faixa;
-   depois os quatro números principais, os oito mini blocos, o funil na
+   depois os quatro números principais, os seis mini blocos, o funil na
    largura toda e os gráficos por dia.
    Dois temas. Claro: o do manual, fundo branco. Escuro: derivado do azul da
    marca, com o cinza e o azul claro como cor de texto. Sem escolha, segue o
@@ -154,14 +154,12 @@ button,select,input{font-family:inherit}
 .aviso b{font-weight:600}
 .aviso.erro{background:var(--ruim-bg);border-color:var(--alerta-borda);color:var(--ruim)}
 
-/* ---------------- grade do resumo ---------------- */
-.resumo{display:grid;gap:16px;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-template-areas:
-    "a b c d"
-    "e g h i"
-    "j k l m"
-    "f f f f"}
+/* ---------------- grade do resumo ----------------
+   12 colunas: os quatro principais ocupam 3 cada (4 por linha), os seis mini
+   blocos 4 cada (3 por linha, duas linhas cheias) e o funil a largura toda */
+.resumo{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.resumo .kpi{grid-column:span 3}
+.resumo .kpi.mini{grid-column:span 4}
 .cx{background:var(--painel);border:1px solid var(--borda);border-radius:12px;min-width:0}
 .kpi{position:relative;padding:20px 22px;display:flex;flex-direction:column;gap:10px;
   transition:transform .18s ease,box-shadow .18s ease}
@@ -199,11 +197,9 @@ button,select,input{font-family:inherit}
   color:var(--texto-2);background:none;font-size:11px;font-weight:700;line-height:1;display:grid;
   place-items:center;cursor:help;padding:0;font-family:Georgia,serif;font-style:italic}
 .info:hover,.info:focus-visible{border-color:var(--azul);color:var(--azul);outline:none}
-.a{grid-area:a}.b{grid-area:b}.c{grid-area:c}.d{grid-area:d}.e{grid-area:e}.g{grid-area:g}
-.h{grid-area:h}.i{grid-area:i}.j{grid-area:j}.k{grid-area:k}.l{grid-area:l}.m{grid-area:m}
 
 /* ---------------- funil ---------------- */
-.funil-cx{grid-area:f;padding:26px 28px 20px;display:flex;flex-direction:column;gap:18px}
+.funil-cx{grid-column:1/-1;padding:26px 28px 20px;display:flex;flex-direction:column;gap:18px}
 .cx-t{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .cx-t h2{margin:0;font-size:clamp(24px,2.4vw,32px);font-weight:700;line-height:1.05;color:var(--titulo);text-wrap:balance}
 .cx-t h2 small{font-size:.56em;font-weight:500;color:var(--texto-2);letter-spacing:0}
@@ -291,8 +287,8 @@ button,select,input{font-family:inherit}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
-  .resumo{grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-template-areas:"a b" "c d" "e g" "h i" "j k" "l m" "f f"}
+  .resumo{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .resumo .kpi,.resumo .kpi.mini{grid-column:auto}
   .fc{padding:0 10px}
   .filtros,.datas{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -331,7 +327,7 @@ button,select,input{font-family:inherit}
   .graf,.graf-x{margin-left:42px}
 }
 @media (max-width:380px){
-  .resumo{grid-template-columns:minmax(0,1fr);grid-template-areas:"a" "b" "c" "d" "e" "g" "h" "i" "j" "k" "l" "m" "f"}
+  .resumo{grid-template-columns:minmax(0,1fr)}
 }
 </style>
 
@@ -1257,9 +1253,7 @@ const M={
   cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cadReal},
   cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cadReal)},
   taxa:    {r:"Taxa de cadastro", f:v=>pct(v), dir:1, v:a=>div(a.cadReal,a.cli)!=null?div(a.cadReal,a.cli)*100:null},
-  ctr:     {r:"CTR", f:v=>pct(v,2), dir:1, v:a=>div(a.cli,a.imp)!=null?div(a.cli,a.imp)*100:null},
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
-  cpc:     {r:"CPC", f:brl, dir:-1, v:a=>div(a.inv,a.cli)},
   custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
   cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
   /* taxa, e não contagem: compara períodos com maturidades diferentes de forma justa */
@@ -1283,9 +1277,7 @@ function explicar(k,ctx){
     cad:"Profissionais que criaram conta no período, direto do Metabase (sem contas de teste). Inclui quem chegou sem anúncio: orgânico, indicação, direto.",
     cpa:"Investimento dividido pelos cadastros reais. É o custo médio de cada conta nova, contando também as que vieram sem anúncio.",
     taxa:"De cada 100 cliques em anúncio, quantos cadastros entraram no período. Pode passar de 100% quando muitos cadastros chegam sem anúncio.",
-    ctr:"De cada 100 vezes que o anúncio apareceu, quantas viraram clique.",
     onb:"Cadastros do período que já terminaram o onboarding.",
-    cpc:"Custo por clique: investimento dividido pelos cliques.",
     custoOnb:"Investimento dividido pelos onboardings concluídos.",
     cpm:"Quanto custou mostrar o anúncio mil vezes.",
     ativ:"Conta ativa = profissional que teve pelo menos um agendamento criado nos 7 dias depois do cadastro (rascunho não conta). A taxa usa só os cadastros que já completaram os 7 dias, para não punir quem acabou de entrar.",
@@ -1374,13 +1366,8 @@ const elRod=document.getElementById("rodape");
    plataforma atribui a si. */
 const POR_CANAL={
   inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv", nota:"O geral é a soma dos três canais."},
-  ctr:    {f:v=>pct(v,2), v:c=>div(c.cli,c.imp)!=null?div(c.cli,c.imp)*100:null, dir:1, peso:["imp","das impressões"],
-           nota:"O geral é a soma dos cliques ÷ a soma das impressões dos três canais, e não a média dos três CTRs.",
-           extra:"No Meta Ads conta só clique no link, por isso o CTR dele tende a ficar abaixo dos outros."},
-  cpc:    {f:brl, v:c=>div(c.inv,c.cli), dir:-1, peso:["cli","dos cliques"],
-           nota:"O geral é o investimento total ÷ todos os cliques, e não a média dos três CPCs."},
   cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1, peso:["imp","das impressões"],
-           nota:"O geral é o investimento total ÷ todas as impressões, vezes mil."},
+           nota:"O geral é o investimento total ÷ todas as impressões, vezes mil, e não a média dos três CPMs."},
   cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad", nota:"O geral é a soma do que cada plataforma diz ter gerado."},
   cpaPlat:{f:brl, v:c=>div(c.inv,c.cad), dir:-1, peso:["cad","dos cadastros atribuídos"],
            nota:"O geral é o investimento total ÷ a soma dos cadastros atribuídos."},
@@ -1417,13 +1404,14 @@ function dicaCartao(k,a,b,ctx){
   return h;
 }
 
-function kpi(area,k,a,b,t,tb,ctx,sub){
+/* tipo: "principal" (os quatro grandes, com ícone) ou "mini" */
+function kpi(tipo,k,a,b,t,tb,ctx,sub){
   const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
   const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
-  const mini="eghijklm".includes(area), alerta=!!(vr&&vr.alerta);
+  const mini=tipo==="mini", alerta=!!(vr&&vr.alerta);
   const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
   /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
-  return `<article class="cx kpi ${area}${mini?" mini":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
+  return `<article class="cx kpi${mini?" mini":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
     <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
       <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
     <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
@@ -1607,9 +1595,10 @@ function pintar(){
     const sAtiv=`${num(a.ativ)} conta${a.ativ===1?"":"s"} ativa${a.ativ===1?"":"s"}`+
       (pend>0?` · ${num(pend)} cadastro${pend>1?"s":""} ainda na janela de 7 dias`:"");
     const sPlat=a.cadReal?`${pct(a.cad/a.cadReal*100)} dos cadastros reais`:"";
-    cartoes=kpi("a","inv",a,b,t,tb,ctx)+kpi("b","cad",a,b,t,tb,ctx)+kpi("c","cpa",a,b,t,tb,ctx)+kpi("d","taxa",a,b,t,tb,ctx)+
-      kpi("e","ctr",a,b,t,tb,ctx)+kpi("g","onb",a,b,t,tb,ctx,sOnb)+kpi("h","cpc",a,b,t,tb,ctx)+kpi("i","custoOnb",a,b,t,tb,ctx)+
-      kpi("j","cpm",a,b,t,tb,ctx)+kpi("k","ativ",a,b,t,tb,ctx,sAtiv)+kpi("l","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("m","cpaPlat",a,b,t,tb,ctx);
+    /* mini blocos na ordem do funil: anúncio, onboarding, ativação, atribuição */
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx)+kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
+      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","onb",a,b,t,tb,ctx,sOnb)+kpi("mini","custoOnb",a,b,t,tb,ctx)+
+      kpi("mini","ativ",a,b,t,tb,ctx,sAtiv)+kpi("mini","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("mini","cpaPlat",a,b,t,tb,ctx);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"No Meta Ads conta só clique no link."},
@@ -1619,9 +1608,9 @@ function pintar(){
         (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} cadastros deste período ainda estão dentro dos 7 dias, então este número ainda vai subir.`:"")}
     ];
   } else {
-    cartoes=kpi("a","inv",a,b,t,tb,ctx)+kpi("b","cadC",a,b,t,tb,ctx)+kpi("c","cpaC",a,b,t,tb,ctx)+kpi("d","taxaC",a,b,t,tb,ctx)+
-      kpi("e","ctr",a,b,t,tb,ctx)+kpi("g","fInv",a,b,t,tb,ctx)+kpi("h","cpc",a,b,t,tb,ctx)+kpi("i","fCad",a,b,t,tb,ctx)+
-      kpi("j","cpm",a,b,t,tb,ctx)+kpi("k","invDia",a,b,t,tb,ctx)+kpi("l","cadDia",a,b,t,tb,ctx)+kpi("m","nCamp",a,b,t,tb,ctx);
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cadC",a,b,t,tb,ctx)+kpi("principal","cpaC",a,b,t,tb,ctx)+kpi("principal","taxaC",a,b,t,tb,ctx)+
+      kpi("mini","fInv",a,b,t,tb,ctx)+kpi("mini","fCad",a,b,t,tb,ctx)+kpi("mini","cpm",a,b,t,tb,ctx)+
+      kpi("mini","invDia",a,b,t,tb,ctx)+kpi("mini","cadDia",a,b,t,tb,ctx)+kpi("mini","nCamp",a,b,t,tb,ctx);
     etapas=[{n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:canal==="meta"?"Cliques no link":"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques"}];
     if(a.temVis) etapas.push({n:"Visitas na página",ic:"vis",v:a.vis,b:b&&b.vis,u:"visita",ref:"das visitas",nota:"Meta Ads: quem clicou e a página chegou a carregar."});

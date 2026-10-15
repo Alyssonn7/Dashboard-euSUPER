@@ -21,9 +21,10 @@ segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** n
 topo fixa a escolha neste navegador (`v2:tema`).
 
 Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
-principais, oito mini blocos em duas linhas (CTR, onboarding, CPC, custo por onboarding,
-CPM, ativação em 7 dias, cadastros atribuídos e custo por cadastro atribuído) e
-o funil na largura toda. Cada etapa do funil mostra o total, a comparação, a
+principais, seis mini blocos em duas linhas de três (CPM, onboarding concluído,
+custo por onboarding, ativação em 7 dias, cadastros atribuídos e custo por
+cadastro atribuído) e o funil na largura toda. CTR e CPC saíram dos mini blocos:
+continuam no funil, como a taxa de Cliques e o custo por clique. Cada etapa do funil mostra o total, a comparação, a
 taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
 etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
 cadastros por dia.
@@ -63,8 +64,9 @@ mouse parado no cartão, o resto da página desfoca e o cartão fica em
 destaque, junto com a dica. A dica explica
 o número e, em "Todos os canais", abre por canal (Google, Meta, OpenAI) com a
 variação de cada um. O número do cartão é o **geral dos três somados**, não a
-média: CTR = soma dos cliques ÷ soma das impressões, CPC = investimento total ÷
-todos os cliques, e assim por diante. A dica diz qual canal pesa mais. Cadastro,
+média: CPM = investimento total ÷ todas as impressões × 1.000, custo por
+cadastro atribuído = investimento total ÷ soma dos cadastros atribuídos, e
+assim por diante. A dica diz qual canal pesa mais. Cadastro,
 custo por cadastro e taxa de cadastro vêm do Metabase e não existem por canal:
 ali a dica mostra, como referência, o que cada plataforma atribui a si.
 Onboarding e ativação só existem no total.
