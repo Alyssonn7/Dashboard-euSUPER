@@ -22,14 +22,17 @@ topo fixa a escolha neste navegador (`v2:tema`).
 
 Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
 principais (investimento, cadastros, custo por cadastro, taxa de conversão),
-cinco mini blocos na ordem do funil (mídia, em dois: CPM e cadastros
-atribuídos; depois do cadastro, em três: onboarding concluído, custo por
-onboarding e ativação em 7 dias) e o funil na largura toda.
+quatro mini blocos numa linha, na ordem do funil (CPM, onboarding concluído,
+custo por onboarding e ativação em 7 dias) e o funil na largura toda.
 
-**Um só custo por cadastro, o dos canais de anúncio:** investimento ÷ cadastros
-que Google, Meta e OpenAI atribuem a si. É o mesmo número no cartão, no custo
-da etapa Cadastros do funil e na dica do gráfico de cadastros por dia. O
-custo por cadastro sobre o total do Metabase saiu. CTR e CPC saíram dos mini blocos:
+**Os quatro principais são só do tráfego pago.** Cadastros = conversões que
+Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
+investimento ÷ esses cadastros; taxa de conversão = esses cadastros ÷ cliques.
+A linha fecha a conta (investimento ÷ cadastros = custo por cadastro). O custo
+da etapa Cadastros do funil e a dica do gráfico por dia usam o mesmo custo.
+Onboarding, custo por onboarding e ativação continuam sobre o total de
+cadastros do Metabase (com ou sem anúncio), porque nenhuma fonte grava de onde
+veio cada cadastro; o funil mostra esse total como "Cadastros (total)". CTR e CPC saíram dos mini blocos:
 continuam no funil, como a taxa de Cliques e o custo por clique. Cada etapa do funil mostra o total, a comparação, a
 taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
 etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
@@ -70,10 +73,8 @@ mouse parado no cartão, o resto da página desfoca e o cartão fica em
 destaque, com a dica logo abaixo. A dica é curta: nome, fórmula em uma
 linha e, em "Todos os canais", o valor de cada canal (Google, Meta, OpenAI)
 com a variação, mais a linha **Geral**. O geral é a soma de tudo, não a média
-dos três (CPM = investimento total ÷ impressões totais × 1.000). Cadastro e
-taxa de conversão vêm do Metabase e não existem por canal:
-ali as linhas por canal são o que cada plataforma atribui a si, e o geral é o
-do Metabase. Onboarding e ativação só existem no total.
+dos três (CPM = investimento total ÷ impressões totais × 1.000). Onboarding,
+custo por onboarding e ativação só existem no total.
 
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem

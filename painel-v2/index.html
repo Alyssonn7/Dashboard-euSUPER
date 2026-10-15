@@ -156,12 +156,12 @@ button,select,input{font-family:inherit}
 
 /* ---------------- grade do resumo ----------------
    12 colunas: os quatro principais ocupam 3 cada (4 por linha), os mini blocos
-   4 cada (3 por linha) ou 6 quando a linha tem só dois ("meia"); o funil vai
+   4 cada (3 por linha) ou 3 quando a linha tem quatro ("quarto"); o funil vai
    na largura toda. Nenhuma linha fica com buraco. */
 .resumo{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
 .resumo .kpi{grid-column:span 3}
 .resumo .kpi.mini{grid-column:span 4}
-.resumo .kpi.mini.meia{grid-column:span 6}
+.resumo .kpi.mini.quarto{grid-column:span 3}
 .cx{background:var(--painel);border:1px solid var(--borda);border-radius:12px;min-width:0}
 .kpi{position:relative;padding:20px 22px;display:flex;flex-direction:column;gap:10px;
   transition:transform .18s ease,box-shadow .18s ease}
@@ -290,7 +290,7 @@ button,select,input{font-family:inherit}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
   .resumo{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.meia{grid-column:auto}
+  .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.quarto{grid-column:auto}
   /* em duas colunas, um último cartão sozinho ocupa a linha inteira */
   .resumo .kpi.mini:nth-last-child(2):nth-child(odd){grid-column:1/-1}
   .fc{padding:0 10px}
@@ -1254,17 +1254,17 @@ function faltando(p,canal){
    dir: +1 = subir é bom · -1 = cair é bom · 0 = sem julgamento */
 const M={
   inv:     {r:"Investimento em anúncios", f:brl, dir:0, v:a=>a.inv},
-  cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cadReal},
+  /* tráfego pago: cadastros que Google, Meta e OpenAI atribuem a si */
+  cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   /* custo por cadastro = só canais de anúncio: investimento ÷ cadastros atribuídos */
   cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
   /* a conversão deste funil é o cadastro: cadastros ÷ cliques */
-  taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cadReal,a.cli)!=null?div(a.cadReal,a.cli)*100:null},
+  taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
   custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
   cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
   /* taxa, e não contagem: compara períodos com maturidades diferentes de forma justa */
   ativ:    {r:"Ativação em 7 dias", f:v=>pct(v), dir:1, v:a=>div(a.ativMad,a.mad)!=null?div(a.ativMad,a.mad)*100:null},
-  cadPlat: {r:"Cadastros atribuídos pelas plataformas", f:num, dir:1, v:a=>a.cad},
   /* modo canal/campanha: cadastro = o que a plataforma reporta */
   cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
@@ -1277,12 +1277,11 @@ const M={
 };
 /* fórmula de cada cartão em uma linha: é o que a dica mostra embaixo do nome */
 const FORMULA={
-  inv:"Soma do gasto em anúncios", cad:"Contas criadas no período (Metabase)",
-  cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros ÷ cliques totais",
+  inv:"Soma do gasto em anúncios", cad:"Conversões de Google, Meta e OpenAI somadas",
+  cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros atribuídos ÷ cliques totais",
   onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
   cpm:"Investimento total ÷ impressões totais × 1.000",
   ativ:"Agendaram em até 7 dias ÷ cadastros com 7 dias completos",
-  cadPlat:"Soma das conversões das plataformas",
   cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
   fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
   invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
@@ -1365,10 +1364,9 @@ const elRod=document.getElementById("rodape");
 const POR_CANAL={
   inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv"},
   cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1},
-  cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad"},
   cpa:    {f:brl, v:c=>div(c.inv,c.cad), dir:-1},
-  cad:    {ref:true, f:num, v:c=>c.cad, dir:1},
-  taxa:   {ref:true, f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
+  cad:    {f:num, v:c=>c.cad, dir:1, fatia:"cad"},
+  taxa:   {f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
   onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
 };
 function dicaCartao(k,a,b,ctx){
@@ -1378,24 +1376,24 @@ function dicaCartao(k,a,b,ctx){
   if(pc.so) return h+`<p class="m">Sem abertura por canal.</p>`;
   const ks=CANAIS.filter(c=>a.canal[c]&&(a.canal[c].inv>0||a.canal[c].imp>0));
   if(!ks.length) return h;
-  h+=`<div class="sep"></div>`+(pc.ref?`<div class="m">Atribuído por cada plataforma</div>`:"")+ks.map(c=>{
+  h+=`<div class="sep"></div>`+ks.map(c=>{
     const x=a.canal[c], v=pc.v(x), vb=b&&b.canal[c]?pc.v(b.canal[c]):null, vr=b?variacao(v,vb,pc.dir):null;
     const fat=pc.fatia&&a[pc.fatia]?` <span class="m">${pct(x[pc.fatia]/a[pc.fatia]*100)}</span>`:"";
     return `<div class="lin"><span><i class="sw" style="background:${COR[c]}"></i>${NOME[c]}</span>`+
       `<span>${pc.f(v)}${fat}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}</span></div>`;
   }).join("");
-  return h+`<div class="lin tot"><span>${pc.ref?"Geral (Metabase)":"Geral"}</span><span>${m.f(m.v(a))}</span></div>`;
+  return h+`<div class="lin tot"><span>Geral</span><span>${m.f(m.v(a))}</span></div>`;
 }
 
 /* tipo: "principal" (os quatro grandes, com ícone), "mini" (três por linha)
-   ou "meia" (mini que ocupa meia linha, para uma linha de dois) */
+   ou "quarto" (mini numa linha de quatro) */
 function kpi(tipo,k,a,b,t,tb,ctx,sub){
   const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
   const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
   const mini=tipo!=="principal", alerta=!!(vr&&vr.alerta);
   const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
   /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
-  return `<article class="cx kpi${mini?" mini":""}${tipo==="meia"?" meia":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
+  return `<article class="cx kpi${mini?" mini":""}${tipo==="quarto"?" quarto":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
     <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
       <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
     <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
@@ -1574,26 +1572,26 @@ function pintar(){
   /* cartões */
   let cartoes, etapas;
   if(modoReal){
-    const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} dos cadastros`:"";
+    /* onboarding e ativação só existem sobre o total de cadastros do Metabase */
+    const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} de ${num(a.cadReal)} cadastros no total`:"";
     const pend=a.cadReal-a.mad;
     const sAtiv=`${num(a.ativ)} conta${a.ativ===1?"":"s"} ativa${a.ativ===1?"":"s"}`+
       (pend>0?` · ${num(pend)} cadastro${pend>1?"s":""} ainda na janela de 7 dias`:"");
-    const sPlat=a.cadReal?`${pct(a.cad/a.cadReal*100)} dos cadastros reais`:"";
     /* ordem de apresentação, de cima para baixo como o funil:
        1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
        2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
        3. depois do cadastro: onboarding (volume e custo) e ativação */
-    /* um só custo por cadastro: o dos canais de anúncio (investimento ÷ cadastros
-       que Google, Meta e OpenAI atribuem a si) */
-    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx)+
-      kpi("principal","cpa",a,b,t,tb,ctx,"Atribuído por Google, Meta e OpenAI")+kpi("principal","taxa",a,b,t,tb,ctx)+
-      kpi("meia","cpm",a,b,t,tb,ctx)+kpi("meia","cadPlat",a,b,t,tb,ctx,sPlat)+
-      kpi("mini","onb",a,b,t,tb,ctx,sOnb)+kpi("mini","custoOnb",a,b,t,tb,ctx)+kpi("mini","ativ",a,b,t,tb,ctx,sAtiv);
+    /* cadastros, custo por cadastro e taxa de conversão só do tráfego pago:
+       cadastros que Google, Meta e OpenAI atribuem a si */
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx,"Atribuídos por Google, Meta e OpenAI")+
+      kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
+      kpi("quarto","cpm",a,b,t,tb,ctx)+kpi("quarto","onb",a,b,t,tb,ctx,sOnb)+
+      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",a,b,t,tb,ctx,sAtiv);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
       /* o total vem do Metabase; o custo usa os cadastros atribuídos pelos canais, igual ao cartão */
-      {n:"Cadastros",ic:"cad",v:a.cadReal,b:b&&b.cadReal,cv:a.cad,u:"cadastro atribuído",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
+      {n:"Cadastros (total)",ic:"cad",v:a.cadReal,b:b&&b.cadReal,cv:a.cad,u:"cadastro atribuído",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
       {n:"Onboarding concluído",ic:"onb",v:a.onb,b:b&&b.onb,u:"onboarding",ref:"dos onboardings"},
       {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",nota:"Agendou em até 7 dias."+
         (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
