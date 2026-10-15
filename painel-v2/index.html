@@ -273,7 +273,7 @@ button,select,input{font-family:inherit}
 
 /* dica flutuante (cartões, funil e barras) */
 #dica{position:fixed;z-index:30;pointer-events:none;background:var(--dica-bg);border:1px solid var(--dica-borda);
-  color:var(--dica-texto);border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.5;max-width:330px;
+  color:var(--dica-texto);border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.5;max-width:300px;
   box-shadow:var(--sombra-dica)}
 #dica b{font-weight:600} #dica .m{color:var(--dica-m)}
 #dica p{margin:4px 0 0}
@@ -1271,30 +1271,18 @@ const M={
   cadDia:  {r:"Cadastros por dia", f:num1, dir:1, v:a=>a.cad/a.dias},
   nCamp:   {r:"Campanhas com gasto", f:num, dir:0, v:a=>a.nCamp}
 };
-function explicar(k,ctx){
-  const quem=ctx.rotulo;
-  const T={
-    inv:`Quanto ${quem==="todos"?"Google Ads, Meta Ads e OpenAI Ads gastaram somados":"foi gasto"} no período.`,
-    cad:"Profissionais que criaram conta no período, direto do Metabase (sem contas de teste). Inclui quem chegou sem anúncio: orgânico, indicação, direto.",
-    cpa:"Investimento dividido pelos cadastros reais. É o custo médio de cada conta nova, contando também as que vieram sem anúncio.",
-    taxa:"Conversão de clique em cadastro: de cada 100 cliques em anúncio, quantos cadastros entraram no período. Conta todos os cadastros do Metabase, inclusive os que chegaram sem anúncio, por isso não é igual à taxa de conversão que o Google ou o Meta mostram e pode até passar de 100%.",
-    onb:"Cadastros do período que já terminaram o onboarding.",
-    custoOnb:"Investimento dividido pelos onboardings concluídos.",
-    cpm:"Quanto custou mostrar o anúncio mil vezes.",
-    ativ:"Conta ativa = profissional que teve pelo menos um agendamento criado nos 7 dias depois do cadastro (rascunho não conta). A taxa usa só os cadastros que já completaram os 7 dias, para não punir quem acabou de entrar.",
-    cadPlat:"Soma das conversões que cada plataforma diz ter gerado. Cada uma conta do seu jeito, e a mesma pessoa pode ser contada por duas.",
-    cpaPlat:"Investimento dividido pelos cadastros que as plataformas atribuem a si.",
-    cadC:`Cadastros que ${quem} diz ter gerado (conversão da própria plataforma). Nenhuma fonte grava a origem do cadastro, então não existe número do Metabase por canal.`,
-    cpaC:"Investimento dividido pelos cadastros que a plataforma atribui a si.",
-    taxaC:"Conversão de clique em cadastro: de cada 100 cliques, quantos viraram cadastro segundo a plataforma (conversões ÷ cliques).",
-    fInv:"Quanto deste recorte representa do investimento total dos três canais no mesmo período.",
-    fCad:"Quanto deste recorte representa dos cadastros que as três plataformas atribuem a si.",
-    invDia:"Investimento dividido pelos dias do período.",
-    cadDia:"Cadastros atribuídos pela plataforma divididos pelos dias do período.",
-    nCamp:"Quantas campanhas tiveram algum gasto no período."
-  };
-  return T[k]||"";
-}
+/* fórmula de cada cartão em uma linha: é o que a dica mostra embaixo do nome */
+const FORMULA={
+  inv:"Soma do gasto em anúncios", cad:"Contas criadas no período (Metabase)",
+  cpa:"Investimento total ÷ cadastros", taxa:"Cadastros ÷ cliques totais",
+  onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
+  cpm:"Investimento total ÷ impressões totais × 1.000",
+  ativ:"Agendaram em até 7 dias ÷ cadastros com 7 dias completos",
+  cadPlat:"Soma das conversões das plataformas", cpaPlat:"Investimento total ÷ cadastros atribuídos",
+  cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
+  fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
+  invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
+};
 /* variação: a seta diz a direção; a cor diz se foi bom ou ruim */
 function variacao(a,b,dir){
   if(a==null||b==null||!isFinite(a)||!isFinite(b)) return null;
@@ -1312,6 +1300,12 @@ function mostrarDica(el,x,y){
   dica.innerHTML=el.hasAttribute("data-html")?h:esc(h); dica.hidden=false;
   const r=dica.getBoundingClientRect(), W=innerWidth, H=innerHeight;
   let l=x+14, t=y+14; if(l+r.width>W-8) l=Math.max(8,x-r.width-14); if(t+r.height>H-8) t=Math.max(8,y-r.height-14);
+  /* nos cartões a dica fica presa logo abaixo (ou acima) do cartão, sem cobrir o número */
+  if(el.classList.contains("kpi")){
+    const c=el.getBoundingClientRect();
+    l=Math.min(Math.max(8,c.left),W-r.width-8);
+    t=c.bottom+8; if(t+r.height>H-8) t=Math.max(8,c.top-r.height-8);
+  }
   dica.style.left=l+"px"; dica.style.top=t+"px";
 }
 document.addEventListener("mousemove",e=>{
@@ -1360,49 +1354,34 @@ const elAtual=document.getElementById("atual"), elFrase=document.getElementById(
 const elResumo=document.getElementById("resumo"), elGraf=document.getElementById("graficos");
 const elRod=document.getElementById("rodape");
 
-/* abertura por canal, só em "todos os canais". O número do cartão é o geral
-   dos três canais somados (cliques ÷ impressões de tudo, por exemplo), não a
-   média dos três; a dica mostra cada canal e diz quem pesa mais no geral.
-   Números do Metabase não existem por canal: ali a referência é o que cada
-   plataforma atribui a si. */
+/* dica do cartão: nome, fórmula e, em "todos os canais", o valor de cada canal
+   e o geral (a soma de tudo, não a média dos três). Cadastro, custo por
+   cadastro e taxa de conversão vêm do Metabase, que não tem canal: a abertura
+   ali é o que cada plataforma atribui a si. Onboarding e ativação só no total. */
 const POR_CANAL={
-  inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv", nota:"O geral é a soma dos três canais."},
-  cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1, peso:["imp","das impressões"],
-           nota:"O geral é o investimento total ÷ todas as impressões, vezes mil, e não a média dos três CPMs."},
-  cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad", nota:"O geral é a soma do que cada plataforma diz ter gerado."},
-  cpaPlat:{f:brl, v:c=>div(c.inv,c.cad), dir:-1, peso:["cad","dos cadastros atribuídos"],
-           nota:"O geral é o investimento total ÷ a soma dos cadastros atribuídos."},
-  cad:    {ref:"os cadastros que cada plataforma diz ter gerado:", f:num, v:c=>c.cad, dir:1},
-  cpa:    {ref:"o investimento do canal ÷ os cadastros que ele diz ter gerado:", f:brl, v:c=>div(c.inv,c.cad), dir:-1},
-  taxa:   {ref:"a taxa de conversão de cada plataforma (cadastros que ela diz ter gerado ÷ cliques dela):", f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
+  inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv"},
+  cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1},
+  cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad"},
+  cpaPlat:{f:brl, v:c=>div(c.inv,c.cad), dir:-1},
+  cad:    {ref:true, f:num, v:c=>c.cad, dir:1},
+  cpa:    {ref:true, f:brl, v:c=>div(c.inv,c.cad), dir:-1},
+  taxa:   {ref:true, f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
   onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
 };
 function dicaCartao(k,a,b,ctx){
-  const m=M[k], todos=ctx.rotulo==="todos";
-  let h=`<b>${esc(m.r)}</b>${todos?` <span class="m">· todos os canais</span>`:""}<p>${esc(explicar(k,ctx))}</p>`;
-  const pc=todos?POR_CANAL[k]:null;
+  const m=M[k], pc=ctx.rotulo==="todos"?POR_CANAL[k]:null;
+  let h=`<b>${esc(m.r)}</b><p class="m">${FORMULA[k]||""}</p>`;
   if(!pc) return h;
-  if(pc.so) return h+`<p class="m">Só existe no total: nenhuma fonte grava de qual canal veio cada cadastro.</p>`;
+  if(pc.so) return h+`<p class="m">Sem abertura por canal.</p>`;
   const ks=CANAIS.filter(c=>a.canal[c]&&(a.canal[c].inv>0||a.canal[c].imp>0));
   if(!ks.length) return h;
-  if(pc.ref) h+=`<p class="m">Por canal não dá para separar, porque nenhuma fonte grava de onde veio cada cadastro. Como referência, ${pc.ref}</p>`;
-  h+=`<div class="sep"></div>`+ks.map(c=>{
+  h+=`<div class="sep"></div>`+(pc.ref?`<div class="m">Atribuído por cada plataforma</div>`:"")+ks.map(c=>{
     const x=a.canal[c], v=pc.v(x), vb=b&&b.canal[c]?pc.v(b.canal[c]):null, vr=b?variacao(v,vb,pc.dir):null;
-    const fat=pc.fatia&&a[pc.fatia]?` <span class="m">(${pct(x[pc.fatia]/a[pc.fatia]*100)})</span>`:"";
+    const fat=pc.fatia&&a[pc.fatia]?` <span class="m">${pct(x[pc.fatia]/a[pc.fatia]*100)}</span>`:"";
     return `<div class="lin"><span><i class="sw" style="background:${COR[c]}"></i>${NOME[c]}</span>`+
       `<span>${pc.f(v)}${fat}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}</span></div>`;
   }).join("");
-  if(pc.ref) return h+`<p class="m">Cada plataforma conta do seu jeito, e a mesma pessoa pode ser contada por duas.</p>`;
-  h+=`<div class="lin tot"><span>Geral</span><span>${m.f(m.v(a))}</span></div>`;
-  let nota=pc.nota;
-  if(pc.peso&&ks.length>1){
-    const [campo,txt]=pc.peso, tot=ks.reduce((s,c)=>s+a.canal[c][campo],0);
-    const top=ks.reduce((x,c)=>a.canal[c][campo]>a.canal[x][campo]?c:x,ks[0]);
-    if(tot>0) nota+=` Por isso pesa mais quem tem mais volume: o ${NOME[top]} ficou com ${pct(a.canal[top][campo]/tot*100)} ${txt}.`;
-  }
-  h+=`<p class="m">${nota}</p>`;
-  if(pc.extra) h+=`<p class="m">${pc.extra}</p>`;
-  return h;
+  return h+`<div class="lin tot"><span>${pc.ref?"Geral (Metabase)":"Geral"}</span><span>${m.f(m.v(a))}</span></div>`;
 }
 
 /* tipo: "principal" (os quatro grandes, com ícone) ou "mini" */
@@ -1602,11 +1581,11 @@ function pintar(){
       kpi("mini","ativ",a,b,t,tb,ctx,sAtiv)+kpi("mini","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("mini","cpaPlat",a,b,t,tb,ctx);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
-      {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"No Meta Ads conta só clique no link."},
-      {n:"Cadastros",ic:"cad",v:a.cadReal,b:b&&b.cadReal,u:"cadastro",ref:"dos cadastros",nota:"Metabase: inclui quem chegou sem anúncio."},
+      {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
+      {n:"Cadastros",ic:"cad",v:a.cadReal,b:b&&b.cadReal,u:"cadastro",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
       {n:"Onboarding concluído",ic:"onb",v:a.onb,b:b&&b.onb,u:"onboarding",ref:"dos onboardings"},
-      {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",nota:"Teve pelo menos um agendamento nos 7 dias depois do cadastro."+
-        (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} cadastros deste período ainda estão dentro dos 7 dias, então este número ainda vai subir.`:"")}
+      {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",nota:"Agendou em até 7 dias."+
+        (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
     ];
   } else {
     cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cadC",a,b,t,tb,ctx)+kpi("principal","cpaC",a,b,t,tb,ctx)+kpi("principal","taxaC",a,b,t,tb,ctx)+
@@ -1614,8 +1593,8 @@ function pintar(){
       kpi("mini","invDia",a,b,t,tb,ctx)+kpi("mini","cadDia",a,b,t,tb,ctx)+kpi("mini","nCamp",a,b,t,tb,ctx);
     etapas=[{n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:canal==="meta"?"Cliques no link":"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques"}];
-    if(a.temVis) etapas.push({n:"Visitas na página",ic:"vis",v:a.vis,b:b&&b.vis,u:"visita",ref:"das visitas",nota:"Meta Ads: quem clicou e a página chegou a carregar."});
-    etapas.push({n:`Cadastros (${NOME[canal]})`,ic:"cad",v:a.cad,b:b&&b.cad,u:"cadastro",nota:"Conversão reportada pela própria plataforma."});
+    if(a.temVis) etapas.push({n:"Visitas na página",ic:"vis",v:a.vis,b:b&&b.vis,u:"visita",ref:"das visitas",nota:"Meta: a página carregou."});
+    etapas.push({n:`Cadastros (${NOME[canal]})`,ic:"cad",v:a.cad,b:b&&b.cad,u:"cadastro",nota:"Conversão da plataforma."});
   }
   /* títulos em minúsculas, como pede o manual; o recorte vai ao lado, menor */
   const titulo="funil de cadastro"+(modoReal?"":` <small>· ${camp?esc(camp.split("|").slice(1).join("|")):NOME[canal]}</small>`);
@@ -1623,7 +1602,7 @@ function pintar(){
     "Nenhuma fonte grava a origem do cadastro: por canal, o cadastro é o que a plataforma reporta. Onboarding e conta ativa só existem no total.";
   elResumo.innerHTML=cartoes+`<article class="cx funil-cx">
     <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
-      <button type="button" class="info" data-dica="Em cima, o total de cada etapa e a comparação. No meio, a taxa da etapa: quanto da etapa anterior passou para esta. Embaixo, quanto custou cada etapa e a fatia do topo. Passe o mouse numa coluna para ver tudo junto." aria-label="Como ler o funil">i</button></div>
+      <button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa." aria-label="Como ler o funil">i</button></div>
     ${funil(etapas,temComp,a.inv)}
     <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a contas ativas. Embaixo de cada etapa, quanto custou cada uma.</p>
   </article>`;
