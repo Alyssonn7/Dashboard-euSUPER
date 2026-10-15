@@ -21,9 +21,11 @@ segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** n
 topo fixa a escolha neste navegador (`v2:tema`).
 
 Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
-principais, seis mini blocos em duas linhas de três (CPM, onboarding concluído,
-custo por onboarding, ativação em 7 dias, cadastros atribuídos e custo por
-cadastro atribuído) e o funil na largura toda. CTR e CPC saíram dos mini blocos:
+principais (investimento, cadastros, custo por cadastro, taxa de conversão),
+seis mini blocos em duas linhas de três, na ordem do funil (mídia: CPM,
+cadastros atribuídos e custo por cadastro atribuído; depois do cadastro:
+onboarding concluído, custo por onboarding e ativação em 7 dias) e o funil na
+largura toda. CTR e CPC saíram dos mini blocos:
 continuam no funil, como a taxa de Cliques e o custo por clique. Cada etapa do funil mostra o total, a comparação, a
 taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
 etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e

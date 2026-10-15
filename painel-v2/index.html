@@ -1575,10 +1575,13 @@ function pintar(){
     const sAtiv=`${num(a.ativ)} conta${a.ativ===1?"":"s"} ativa${a.ativ===1?"":"s"}`+
       (pend>0?` · ${num(pend)} cadastro${pend>1?"s":""} ainda na janela de 7 dias`:"");
     const sPlat=a.cadReal?`${pct(a.cad/a.cadReal*100)} dos cadastros reais`:"";
-    /* mini blocos na ordem do funil: anúncio, onboarding, ativação, atribuição */
+    /* ordem de apresentação, de cima para baixo como o funil:
+       1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
+       2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
+       3. depois do cadastro: onboarding (volume e custo) e ativação */
     cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx)+kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
-      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","onb",a,b,t,tb,ctx,sOnb)+kpi("mini","custoOnb",a,b,t,tb,ctx)+
-      kpi("mini","ativ",a,b,t,tb,ctx,sAtiv)+kpi("mini","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("mini","cpaPlat",a,b,t,tb,ctx);
+      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","cadPlat",a,b,t,tb,ctx,sPlat)+kpi("mini","cpaPlat",a,b,t,tb,ctx)+
+      kpi("mini","onb",a,b,t,tb,ctx,sOnb)+kpi("mini","custoOnb",a,b,t,tb,ctx)+kpi("mini","ativ",a,b,t,tb,ctx,sAtiv);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
@@ -1589,8 +1592,9 @@ function pintar(){
     ];
   } else {
     cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cadC",a,b,t,tb,ctx)+kpi("principal","cpaC",a,b,t,tb,ctx)+kpi("principal","taxaC",a,b,t,tb,ctx)+
-      kpi("mini","fInv",a,b,t,tb,ctx)+kpi("mini","fCad",a,b,t,tb,ctx)+kpi("mini","cpm",a,b,t,tb,ctx)+
-      kpi("mini","invDia",a,b,t,tb,ctx)+kpi("mini","cadDia",a,b,t,tb,ctx)+kpi("mini","nCamp",a,b,t,tb,ctx);
+      /* linha do gasto, depois linha do resultado */
+      kpi("mini","invDia",a,b,t,tb,ctx)+kpi("mini","fInv",a,b,t,tb,ctx)+kpi("mini","nCamp",a,b,t,tb,ctx)+
+      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","cadDia",a,b,t,tb,ctx)+kpi("mini","fCad",a,b,t,tb,ctx);
     etapas=[{n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:canal==="meta"?"Cliques no link":"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques"}];
     if(a.temVis) etapas.push({n:"Visitas na página",ic:"vis",v:a.vis,b:b&&b.vis,u:"visita",ref:"das visitas",nota:"Meta: a página carregou."});
