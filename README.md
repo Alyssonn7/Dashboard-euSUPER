@@ -67,7 +67,7 @@ variação de cada um. O número do cartão é o **geral dos três somados**, n�
 média: CPM = investimento total ÷ todas as impressões × 1.000, custo por
 cadastro atribuído = investimento total ÷ soma dos cadastros atribuídos, e
 assim por diante. A dica diz qual canal pesa mais. Cadastro,
-custo por cadastro e taxa de cadastro vêm do Metabase e não existem por canal:
+custo por cadastro e taxa de conversão vêm do Metabase e não existem por canal:
 ali a dica mostra, como referência, o que cada plataforma atribui a si.
 Onboarding e ativação só existem no total.
 

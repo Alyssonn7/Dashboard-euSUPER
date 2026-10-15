@@ -1252,7 +1252,8 @@ const M={
   inv:     {r:"Investimento em anúncios", f:brl, dir:0, v:a=>a.inv},
   cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cadReal},
   cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cadReal)},
-  taxa:    {r:"Taxa de cadastro", f:v=>pct(v), dir:1, v:a=>div(a.cadReal,a.cli)!=null?div(a.cadReal,a.cli)*100:null},
+  /* a conversão deste funil é o cadastro: cadastros ÷ cliques */
+  taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cadReal,a.cli)!=null?div(a.cadReal,a.cli)*100:null},
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
   custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
   cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
@@ -1263,7 +1264,7 @@ const M={
   /* modo canal/campanha: cadastro = o que a plataforma reporta */
   cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
-  taxaC:   {r:"Taxa de cadastro", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
+  taxaC:   {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
   fInv:    {r:"Fatia do investimento", f:v=>pct(v), dir:0, v:(a,t)=>div(a.inv,t.inv)!=null?div(a.inv,t.inv)*100:null},
   fCad:    {r:"Fatia dos cadastros atribuídos", f:v=>pct(v), dir:1, v:(a,t)=>div(a.cad,t.cad)!=null?div(a.cad,t.cad)*100:null},
   invDia:  {r:"Investimento por dia", f:brl, dir:0, v:a=>a.inv/a.dias},
@@ -1276,7 +1277,7 @@ function explicar(k,ctx){
     inv:`Quanto ${quem==="todos"?"Google Ads, Meta Ads e OpenAI Ads gastaram somados":"foi gasto"} no período.`,
     cad:"Profissionais que criaram conta no período, direto do Metabase (sem contas de teste). Inclui quem chegou sem anúncio: orgânico, indicação, direto.",
     cpa:"Investimento dividido pelos cadastros reais. É o custo médio de cada conta nova, contando também as que vieram sem anúncio.",
-    taxa:"De cada 100 cliques em anúncio, quantos cadastros entraram no período. Pode passar de 100% quando muitos cadastros chegam sem anúncio.",
+    taxa:"Conversão de clique em cadastro: de cada 100 cliques em anúncio, quantos cadastros entraram no período. Conta todos os cadastros do Metabase, inclusive os que chegaram sem anúncio, por isso não é igual à taxa de conversão que o Google ou o Meta mostram e pode até passar de 100%.",
     onb:"Cadastros do período que já terminaram o onboarding.",
     custoOnb:"Investimento dividido pelos onboardings concluídos.",
     cpm:"Quanto custou mostrar o anúncio mil vezes.",
@@ -1285,7 +1286,7 @@ function explicar(k,ctx){
     cpaPlat:"Investimento dividido pelos cadastros que as plataformas atribuem a si.",
     cadC:`Cadastros que ${quem} diz ter gerado (conversão da própria plataforma). Nenhuma fonte grava a origem do cadastro, então não existe número do Metabase por canal.`,
     cpaC:"Investimento dividido pelos cadastros que a plataforma atribui a si.",
-    taxaC:"De cada 100 cliques, quantos viraram cadastro segundo a plataforma.",
+    taxaC:"Conversão de clique em cadastro: de cada 100 cliques, quantos viraram cadastro segundo a plataforma (conversões ÷ cliques).",
     fInv:"Quanto deste recorte representa do investimento total dos três canais no mesmo período.",
     fCad:"Quanto deste recorte representa dos cadastros que as três plataformas atribuem a si.",
     invDia:"Investimento dividido pelos dias do período.",
@@ -1373,7 +1374,7 @@ const POR_CANAL={
            nota:"O geral é o investimento total ÷ a soma dos cadastros atribuídos."},
   cad:    {ref:"os cadastros que cada plataforma diz ter gerado:", f:num, v:c=>c.cad, dir:1},
   cpa:    {ref:"o investimento do canal ÷ os cadastros que ele diz ter gerado:", f:brl, v:c=>div(c.inv,c.cad), dir:-1},
-  taxa:   {ref:"os cadastros que o canal diz ter gerado ÷ os cliques dele:", f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
+  taxa:   {ref:"a taxa de conversão de cada plataforma (cadastros que ela diz ter gerado ÷ cliques dela):", f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
   onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
 };
 function dicaCartao(k,a,b,ctx){
