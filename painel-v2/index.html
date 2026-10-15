@@ -36,7 +36,8 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
   --alerta-v:#C05E0F; --alerta-borda:#F9C48F;
   --cad-barra:#1760B9;
   --google:#008CF5; --meta:#F9902A; --openai:#05B27C;
-  --dica-bg:#1760B9; --dica-borda:#1760B9; --dica-texto:#FEFEFE; --dica-m:#D7FFF7;
+  --dica-bg:#FEFEFE; --dica-borda:#CFE0F2; --dica-texto:#1760B9; --dica-m:#4A76A8;
+  --sombra-dica:0 14px 34px -12px rgba(23,96,185,.4);
   --sombra:0 2px 4px rgba(23,96,185,.06),0 18px 40px -18px rgba(23,96,185,.35);
   --foco:rgba(0,140,245,.28);
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234A76A8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -52,7 +53,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
     --neutro:#D7FFF7; --neutro-bg:#19385F;
     --alerta-v:#FFB067; --alerta-borda:#F9902A;
     --cad-barra:#008CF5;
-    --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB;
+    --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65);
     --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
     --foco:rgba(0,140,245,.45);
     --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -68,7 +69,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
   --neutro:#D7FFF7; --neutro-bg:#19385F;
   --alerta-v:#FFB067; --alerta-borda:#F9902A;
   --cad-barra:#008CF5;
-  --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB;
+  --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65);
   --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
   --foco:rgba(0,140,245,.45);
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -266,12 +267,18 @@ button,select,input{font-family:inherit}
 .rodape{margin:0;font-size:12.5px;color:var(--texto-2);line-height:1.6;max-width:110ch}
 .rodape b{color:var(--texto);font-weight:600}
 
-/* dica flutuante (funil, barras e o "i" dos cartões) */
+/* dica flutuante (cartões, funil e barras) */
 #dica{position:fixed;z-index:20;pointer-events:none;background:var(--dica-bg);border:1px solid var(--dica-borda);
-  color:var(--dica-texto);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.5;max-width:300px;
-  box-shadow:0 12px 30px -10px rgba(10,26,48,.55)}
+  color:var(--dica-texto);border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.5;max-width:330px;
+  box-shadow:var(--sombra-dica)}
 #dica b{font-weight:600} #dica .m{color:var(--dica-m)}
+#dica p{margin:4px 0 0}
+#dica .sep{border-top:1px solid var(--dica-borda);margin:9px 0 6px}
 #dica .lin{display:flex;justify-content:space-between;gap:16px;font-variant-numeric:tabular-nums}
+#dica .lin+.lin{margin-top:2px}
+#dica .lin.tot{border-top:1px solid var(--dica-borda);margin-top:5px;padding-top:5px;font-weight:600}
+#dica .lin .delta{font-size:11.5px;margin-left:4px}
+.kpi[data-dica]{cursor:help}
 #dica .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -1326,14 +1333,65 @@ const elAtual=document.getElementById("atual"), elFrase=document.getElementById(
 const elResumo=document.getElementById("resumo"), elGraf=document.getElementById("graficos");
 const elRod=document.getElementById("rodape");
 
+/* abertura por canal, só em "todos os canais". O número do cartão é o geral
+   dos três canais somados (cliques ÷ impressões de tudo, por exemplo), não a
+   média dos três; a dica mostra cada canal e diz quem pesa mais no geral.
+   Números do Metabase não existem por canal: ali a referência é o que cada
+   plataforma atribui a si. */
+const POR_CANAL={
+  inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv", nota:"O geral é a soma dos três canais."},
+  ctr:    {f:v=>pct(v,2), v:c=>div(c.cli,c.imp)!=null?div(c.cli,c.imp)*100:null, dir:1, peso:["imp","das impressões"],
+           nota:"O geral é a soma dos cliques ÷ a soma das impressões dos três canais, e não a média dos três CTRs.",
+           extra:"No Meta Ads conta só clique no link, por isso o CTR dele tende a ficar abaixo dos outros."},
+  cpc:    {f:brl, v:c=>div(c.inv,c.cli), dir:-1, peso:["cli","dos cliques"],
+           nota:"O geral é o investimento total ÷ todos os cliques, e não a média dos três CPCs."},
+  cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1, peso:["imp","das impressões"],
+           nota:"O geral é o investimento total ÷ todas as impressões, vezes mil."},
+  cadPlat:{f:num, v:c=>c.cad, dir:1, fatia:"cad", nota:"O geral é a soma do que cada plataforma diz ter gerado."},
+  cpaPlat:{f:brl, v:c=>div(c.inv,c.cad), dir:-1, peso:["cad","dos cadastros atribuídos"],
+           nota:"O geral é o investimento total ÷ a soma dos cadastros atribuídos."},
+  cad:    {ref:"os cadastros que cada plataforma diz ter gerado:", f:num, v:c=>c.cad, dir:1},
+  cpa:    {ref:"o investimento do canal ÷ os cadastros que ele diz ter gerado:", f:brl, v:c=>div(c.inv,c.cad), dir:-1},
+  taxa:   {ref:"os cadastros que o canal diz ter gerado ÷ os cliques dele:", f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
+  onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
+};
+function dicaCartao(k,a,b,ctx){
+  const m=M[k], todos=ctx.rotulo==="todos";
+  let h=`<b>${esc(m.r)}</b>${todos?` <span class="m">· todos os canais</span>`:""}<p>${esc(explicar(k,ctx))}</p>`;
+  const pc=todos?POR_CANAL[k]:null;
+  if(!pc) return h;
+  if(pc.so) return h+`<p class="m">Só existe no total: nenhuma fonte grava de qual canal veio cada cadastro.</p>`;
+  const ks=CANAIS.filter(c=>a.canal[c]&&(a.canal[c].inv>0||a.canal[c].imp>0));
+  if(!ks.length) return h;
+  if(pc.ref) h+=`<p class="m">Por canal não dá para separar, porque nenhuma fonte grava de onde veio cada cadastro. Como referência, ${pc.ref}</p>`;
+  h+=`<div class="sep"></div>`+ks.map(c=>{
+    const x=a.canal[c], v=pc.v(x), vb=b&&b.canal[c]?pc.v(b.canal[c]):null, vr=b?variacao(v,vb,pc.dir):null;
+    const fat=pc.fatia&&a[pc.fatia]?` <span class="m">(${pct(x[pc.fatia]/a[pc.fatia]*100)})</span>`:"";
+    return `<div class="lin"><span><i class="sw" style="background:${COR[c]}"></i>${NOME[c]}</span>`+
+      `<span>${pc.f(v)}${fat}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}</span></div>`;
+  }).join("");
+  if(pc.ref) return h+`<p class="m">Cada plataforma conta do seu jeito, e a mesma pessoa pode ser contada por duas.</p>`;
+  h+=`<div class="lin tot"><span>Geral</span><span>${m.f(m.v(a))}</span></div>`;
+  let nota=pc.nota;
+  if(pc.peso&&ks.length>1){
+    const [campo,txt]=pc.peso, tot=ks.reduce((s,c)=>s+a.canal[c][campo],0);
+    const top=ks.reduce((x,c)=>a.canal[c][campo]>a.canal[x][campo]?c:x,ks[0]);
+    if(tot>0) nota+=` Por isso pesa mais quem tem mais volume: o ${NOME[top]} ficou com ${pct(a.canal[top][campo]/tot*100)} ${txt}.`;
+  }
+  h+=`<p class="m">${nota}</p>`;
+  if(pc.extra) h+=`<p class="m">${pc.extra}</p>`;
+  return h;
+}
+
 function kpi(area,k,a,b,t,tb,ctx,sub){
   const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
   const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
   const mini="eghijklm".includes(area), alerta=!!(vr&&vr.alerta);
   const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
-  return `<article class="cx kpi ${area}${mini?" mini":""}${alerta?" alerta":""}">
+  /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
+  return `<article class="cx kpi ${area}${mini?" mini":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
     <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
-      <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" data-dica="${esc(explicar(k,ctx))}" aria-label="O que é ${esc(m.r)}">i</button></span></header>
+      <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
     <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
     <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}${antes}</div>
     ${sub?`<div class="kpi-s">${sub}</div>`:""}

@@ -56,7 +56,16 @@ centenas de milhares de impressões a dezenas de contas.
 
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
-laranja. O "i" de cada cartão explica o número.
+laranja.
+
+**Dica de cada cartão (passar o mouse, ou tocar no "i" no celular):** explica
+o número e, em "Todos os canais", abre por canal (Google, Meta, OpenAI) com a
+variação de cada um. O número do cartão é o **geral dos três somados**, não a
+média: CTR = soma dos cliques ÷ soma das impressões, CPC = investimento total ÷
+todos os cliques, e assim por diante. A dica diz qual canal pesa mais. Cadastro,
+custo por cadastro e taxa de cadastro vêm do Metabase e não existem por canal:
+ali a dica mostra, como referência, o que cada plataforma atribui a si.
+Onboarding e ativação só existem no total.
 
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
