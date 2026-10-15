@@ -5,6 +5,91 @@ Painel semanal e mensal para a reunião com os founders.
 **Painel:** `painel/index.html` — um arquivo, sem build, sem dependência.
 A raiz do repositório redireciona para `/painel/`.
 
+**Painel v2 (funil de cadastro):** `painel-v2/index.html` — convive com a v1,
+que segue intacta. Detalhes na seção [Painel v2](#painel-v2--funil-de-cadastro).
+
+## Painel v2 — funil de cadastro
+
+Segue o manual de identidade da euSUPER!: faixa azul no topo (degradê oficial,
+barra do "!" a 22,5° e o círculo laranja), títulos em minúsculas, botão em caixa
+alta e ícones da marca. Fonte Gilroy quando instalada, Outfit no lugar.
+
+**Tema claro e escuro.** O claro é o do manual (fundo branco). O escuro é
+derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
+`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. Sem escolha, o painel
+segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** no
+topo fixa a escolha neste navegador (`v2:tema`).
+
+Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
+principais (investimento, cadastros, custo por cadastro, taxa de conversão),
+quatro mini blocos numa linha, na ordem do funil (CPM, onboarding concluído,
+custo por onboarding e ativação em 7 dias) e o funil na largura toda.
+
+**Os quatro principais são só do tráfego pago.** Cadastros = conversões que
+Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
+investimento ÷ esses cadastros; taxa de conversão = esses cadastros ÷ cliques.
+A linha fecha a conta (investimento ÷ cadastros = custo por cadastro). O custo
+da etapa Cadastros do funil e a dica do gráfico por dia usam o mesmo custo.
+Onboarding, custo por onboarding e ativação continuam sobre o total de
+cadastros do Metabase (com ou sem anúncio), porque nenhuma fonte grava de onde
+veio cada cadastro; o funil mostra esse total como "Cadastros (total)". CTR e CPC saíram dos mini blocos:
+continuam no funil, como a taxa de Cliques e o custo por clique. Cada etapa do funil mostra o total, a comparação, a
+taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
+etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
+cadastros por dia.
+
+**Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
+passado, personalizado — sempre até ontem), comparação (mesmo período do mês
+anterior, período anterior ou nenhuma), fonte de tráfego e campanha. Trocar
+filtro não consulta nada: o painel guarda as linhas por dia e por campanha e
+recalcula na hora. Só busca de novo quando o período pedido ainda não foi
+carregado.
+
+**Dois modos de funil:**
+
+| Filtro | Funil | De onde vem o cadastro |
+|---|---|---|
+| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → Conta ativa | Metabase (todos os cadastros, com ou sem anúncio) |
+| Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
+
+Onboarding e conta ativa só existem no total porque nenhuma fonte grava a
+origem do cadastro.
+
+**Conta ativa = pelo menos um agendamento criado nos 7 dias depois do
+cadastro** (`event_scheduled.professional_id`, `created_at` dentro da janela,
+rascunho `DRAFT` não conta; agendamento cancelado depois conta, porque foi
+feito). Não é mais a conta de recebimento do Pagar.me. Como a janela leva 7 dias
+para fechar, o cartão mostra a **taxa de ativação em 7 dias** só entre os
+cadastros que já completaram a janela, e diz quantos ainda estão dentro dela; o
+funil mostra a contagem, que ainda sobe nos períodos recentes. A altura das faixas do funil é logarítmica, para caber de
+centenas de milhares de impressões a dezenas de contas.
+
+**Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
+(custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
+laranja.
+
+**Dica de cada cartão (passar o mouse, ou tocar no "i" no celular):** com o
+mouse parado no cartão, o resto da página desfoca e o cartão fica em
+destaque, com a dica logo abaixo. A dica é curta: nome, fórmula em uma
+linha e, em "Todos os canais", o valor de cada canal (Google, Meta, OpenAI)
+com a variação, mais a linha **Geral**. O geral é a soma de tudo, não a média
+dos três (CPM = investimento total ÷ impressões totais × 1.000). Onboarding,
+custo por onboarding e ativação só existem no total.
+
+**Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
+`google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
+pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
+cadastros, onboarding e conta ativa por dia de cadastro, sem os IDs de teste.
+O conector `openai_ads` do Windsor **agora traz `conversions`** — agosto bate
+com o export do Ads Manager (117). O GA4 não está mais conectado no Windsor, por
+isso "Visitas na página" só aparece no Meta (landing page view do pixel).
+
+**Ao vivo e retrato:** dentro do claude.ai o painel atualiza sozinho ao abrir
+(se os dados tiverem mais de 30 minutos) e pelo botão Atualizar. Fora dele
+mostra o retrato gravado no arquivo — 01/08 a 12/10/2026, conferido campanha a
+campanha contra os totais do Windsor e do Metabase. O último resultado ao vivo
+fica salvo no navegador (`v2:dados`), junto com os filtros (`v2:filtros`).
+
 ## Identidade visual
 
 O front segue o **Manual da Identidade Visual euSUPER! (2026)**: azul
