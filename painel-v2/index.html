@@ -287,9 +287,39 @@ button,select,input{font-family:inherit}
 .kpi[data-dica]{cursor:help}
 #dica .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
 
+/* ---------------- abas (no topo azul) ---------------- */
+.abas{display:inline-flex;gap:4px;padding:4px;margin-top:10px;align-self:flex-start;max-width:100%;overflow-x:auto;
+  border-radius:6px;background:rgba(10,26,48,.24)}
+.abas button{font-family:inherit;font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+  color:var(--branco);background:transparent;border:0;border-radius:4px;height:38px;padding:0 16px;cursor:pointer}
+.abas button[aria-selected="true"]{background:var(--branco);color:var(--azul-2)}
+.abas button:not([aria-selected="true"]):hover{background:rgba(254,254,254,.14)}
+.abas button:focus-visible{outline:2px solid var(--branco);outline-offset:2px}
+.aba{display:flex;flex-direction:column;gap:24px}
+
+/* ---------------- aba evolução mensal ---------------- */
+.evo-cab{padding:18px 24px}
+.evo-cartoes{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
+/* o mês que ainda não acabou aparece mais claro no gráfico */
+.gb.parcial .pilha{opacity:.5}
+.evo-tab{padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px}
+.evo-tab .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.rolagem{overflow-x:auto;min-width:0}
+.evo-tab table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.evo-tab th,.evo-tab td{padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--grade)}
+.evo-tab thead th{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2);
+  border-bottom-color:var(--borda-forte)}
+.evo-tab th:first-child{text-align:left}
+.evo-tab tbody th{font-weight:600;color:var(--texto)}
+.evo-tab tbody th small{font-weight:500;color:var(--texto-2);font-size:12px}
+.evo-tab td{color:var(--texto)}
+.evo-tab td .delta{display:inline-block;min-width:62px;margin-left:8px;font-size:12px;text-align:right}
+.evo-tab tr.parcial th,.evo-tab tr.parcial td{background:var(--neutro-bg)}
+.evo-tab tbody tr:last-child th,.evo-tab tbody tr:last-child td{border-bottom:0}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
-  .resumo{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .resumo,.evo-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}
   .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.quarto{grid-column:auto}
   /* em duas colunas, um último cartão sozinho ocupa a linha inteira */
   .resumo .kpi.mini:nth-last-child(2):nth-child(odd){grid-column:1/-1}
@@ -308,6 +338,9 @@ button,select,input{font-family:inherit}
   .conteudo{gap:20px}
 }
 @media (max-width:560px){
+  .abas button{padding:0 10px;font-size:12px;letter-spacing:.04em}
+  .evo-cab{padding:14px 16px}
+  .evo-tab{padding:18px 16px 14px}
   .marca svg{width:32px;height:32px}
   .marca span{display:none}
   .atual{order:5;flex-basis:100%;font-size:12.5px}
@@ -331,7 +364,7 @@ button,select,input{font-family:inherit}
   .graf,.graf-x{margin-left:42px}
 }
 @media (max-width:380px){
-  .resumo{grid-template-columns:minmax(0,1fr)}
+  .resumo,.evo-cartoes{grid-template-columns:minmax(0,1fr)}
 }
 </style>
 
@@ -352,14 +385,19 @@ button,select,input{font-family:inherit}
       <button class="btn" type="button" id="btAtualizar"><span class="gira" aria-hidden="true"></span><span id="txAtualizar">Atualizar</span></button>
     </div>
     <div class="topo-t">
-      <h1>funil de cadastro</h1>
-      <p>Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa.</p>
+      <h1 id="titulo">funil de cadastro</h1>
+      <p id="subtitulo">Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa.</p>
+      <div class="abas" role="tablist" aria-label="Visões do painel">
+        <button type="button" role="tab" id="tabFunil" aria-selected="true" aria-controls="abaFunil">Funil de cadastro</button>
+        <button type="button" role="tab" id="tabEvo" aria-selected="false" aria-controls="abaEvo" tabindex="-1">Evolução mensal</button>
+      </div>
     </div>
   </div>
 </header>
 
 <main class="pagina">
   <div class="conteudo">
+   <div class="aba" id="abaFunil" role="tabpanel" aria-labelledby="tabFunil">
     <section class="filtro" aria-label="Filtros">
       <div class="filtros">
         <div class="campo">
@@ -408,6 +446,21 @@ button,select,input{font-family:inherit}
     <section class="resumo" id="resumo" aria-label="Resumo do funil"></section>
     <section class="dupla" id="graficos" aria-label="Evolução diária"></section>
     <p class="rodape" id="rodape"></p>
+   </div>
+   <div class="aba" id="abaEvo" role="tabpanel" aria-labelledby="tabEvo" hidden>
+    <section class="filtro evo-cab" aria-label="Período">
+      <p class="frase" id="fraseEvo"><em class="selo">retrato</em><span></span></p>
+    </section>
+    <div class="avisos" id="avisosEvo" aria-live="polite"></div>
+    <section class="evo-cartoes" id="evoCartoes" aria-label="Mês atual"></section>
+    <section class="dupla" id="evoGraf" aria-label="Evolução dos últimos 12 meses"></section>
+    <section class="cx evo-tab" aria-label="Mês a mês">
+      <div class="cx-t"><div><h2>mês a mês</h2><p>Valor de cada mês e a variação contra o mês anterior.</p></div></div>
+      <div class="rolagem"><table id="evoTabela"></table></div>
+      <p class="legenda-f" id="evoNota"></p>
+    </section>
+    <p class="rodape" id="rodapeEvo"></p>
+   </div>
   </div>
 </main>
 <div id="veu" aria-hidden="true"></div>
@@ -1206,7 +1259,7 @@ async function atualizar(){
   const c=comparacao(p);
   /* uma consulta por intervalo; se as janelas se encostam, vira uma só */
   let rs=juntar(c?[[c.de,c.ate]]:[],p.de,p.ate);
-  puxando=true; btAtualizar.disabled=true; btAtualizar.classList.add("indo"); txAtualizar.textContent="Atualizando…";
+  puxando=true; pintarTopo();
   FALHAS={}; let algum=false;
   const fontes={google:qGoogle, meta:qMeta, openai:qOpenai};
   const serv={google:"Windsor.ai",meta:"Windsor.ai",openai:"Windsor.ai",base:"Metabase"};
@@ -1228,7 +1281,7 @@ async function atualizar(){
     })()
   ]));
   if(algum){ DADOS.puxadoEm=Date.now(); DADOS.fonte="vivo"; guardar(); }
-  puxando=false; btAtualizar.classList.remove("indo"); txAtualizar.textContent="Atualizar";
+  puxando=false;
   pintar();
 }
 
@@ -1522,11 +1575,11 @@ function opcoesCampanha(p,c){
   fCamp.value=acc[atual]?atual:"";
 }
 
-function rotuloTempo(){
-  if(!DADOS.puxadoEm) return "—";
-  const min=Math.round((Date.now()-DADOS.puxadoEm)/60000);
-  const q=new Date(DADOS.puxadoEm), hm=`${String(q.getHours()).padStart(2,"0")}:${String(q.getMinutes()).padStart(2,"0")}`;
-  if(DADOS.fonte!=="vivo") return `Retrato gravado em ${curta(iso(q))} às ${hm}`;
+function rotuloTempo(x){
+  if(!x.puxadoEm) return "—";
+  const min=Math.round((Date.now()-x.puxadoEm)/60000);
+  const q=new Date(x.puxadoEm), hm=`${String(q.getHours()).padStart(2,"0")}:${String(q.getMinutes()).padStart(2,"0")}`;
+  if(x.fonte!=="vivo") return `Retrato gravado em ${curta(iso(q))} às ${hm}`;
   if(min<1) return "Atualizado agora";
   if(min<60) return `Atualizado há ${min} minuto${min>1?"s":""}`;
   const h=Math.floor(min/60); if(h<24) return `Atualizado há ${h} hora${h>1?"s":""}`;
@@ -1544,9 +1597,7 @@ function pintar(){
   focar(null);   /* os cartões vão ser redesenhados */
   elDatas.hidden=fPeriodo.value!=="custom";
   const p=periodo(), c=comparacao(p);
-  elAtual.textContent=rotuloTempo();
-  btAtualizar.disabled=!MCP||puxando;
-  btAtualizar.title=MCP===null?"A consulta ao vivo só funciona com o painel aberto no claude.ai.":"Puxar de novo do Windsor.ai e do Metabase";
+  pintarTopo();
 
   if(!p){
     frase("frase mal","<b>Datas incompletas.</b> Escolha início e fim, com o início antes do fim.");
@@ -1684,7 +1735,7 @@ fPeriodo.addEventListener("change",()=>{
 [fComp,dDe,dAte].forEach(el=>el.addEventListener("change",aoMudar));
 fCanal.addEventListener("change",()=>{fCamp.value="";aoMudar()});
 fCamp.addEventListener("change",aoMudar);
-btAtualizar.addEventListener("click",atualizar);
+btAtualizar.addEventListener("click",()=>{ABA==="evo"?atualizarEvo():atualizar()});
 
 /* ------------------------------------------------- tema claro / escuro
    sem escolha guardada, vale o tema do claude.ai (ou do sistema); o botão
@@ -1712,6 +1763,218 @@ if(mqEscuro&&mqEscuro.addEventListener) mqEscuro.addEventListener("change",marca
 new MutationObserver(marcarTema).observe(raiz,{attributes:true,attributeFilter:["data-theme"]});
 marcarTema();
 
+/* =========================================================================
+   ABA "EVOLUÇÃO MENSAL" — a base inteira mês a mês, últimos 12 meses.
+   Tudo do Metabase, sem as contas de teste:
+   · usuários cadastrados: contas existentes no fim do mês (sem as apagadas)
+   · contas ativas: profissionais com pelo menos um atendimento no mês
+   · serviços realizados: agendamentos confirmados cujo horário já passou
+   · valor: soma do preço que o profissional cadastrou no serviço (centavos ÷ 100)
+   Crescimento contra o mês anterior; o mês atual, que está pela metade, é
+   comparado com os mesmos dias do mês anterior (linha "ref" da consulta).
+   A consulta traz 13 meses: o mais antigo só serve de base para o
+   crescimento do primeiro mês mostrado.
+   ========================================================================= */
+/* retrato: [mês, total, novos, ativos, serviços, com preço, valor] */
+const EVO_RETRATO={puxadoEm:Date.UTC(2026,9,19,15,5) /* Metabase em 19/10/2026 12:05 (Brasília) */, fonte:"retrato",
+  ate:"2026-10-19T15:05:43Z",
+  meses:[["2025-10",140,4,1,3,3,1500],["2025-11",148,7,3,9,9,4337.5],["2025-12",359,205,8,28,27,5542.5],
+    ["2026-01",742,367,31,77,46,5630],["2026-02",1032,311,24,151,60,8104],["2026-03",1342,313,79,880,233,18990],
+    ["2026-04",1619,276,88,1335,447,30218.9],["2026-05",1919,298,109,1418,532,33643],["2026-06",2226,307,109,1608,669,50346],
+    ["2026-07",2509,284,109,2099,857,78202.49],["2026-08",2849,341,120,2051,777,69713.05],["2026-09",4100,1252,186,2219,716,62033.96],
+    ["2026-10",5335,1236,168,1751,603,52159]],
+  ref:["2026-09",3521,670,141,1401,454,41369.99]};
+const evoLinha=a=>({mes:a[0],total:a[1],novos:a[2],ativos:a[3],servicos:a[4],comPreco:a[5],valor:a[6]});
+const evoArr=o=>[o.mes,o.total,o.novos,o.ativos,o.servicos,o.comPreco,o.valor];
+const abrirEvo=x=>({puxadoEm:x.puxadoEm,fonte:x.fonte,ate:x.ate,meses:x.meses.map(evoLinha),ref:x.ref?evoLinha(x.ref):null});
+let EVO=abrirEvo(EVO_RETRATO);
+const GUARDA_EVO="v2:evolucao";
+try{
+  const s=JSON.parse(localStorage.getItem(GUARDA_EVO)||"null");
+  if(s&&s.v===1&&s.puxadoEm>EVO_RETRATO.puxadoEm) EVO=abrirEvo(s);
+}catch(e){}
+function guardarEvo(){try{localStorage.setItem(GUARDA_EVO,JSON.stringify({v:1,puxadoEm:EVO.puxadoEm,fonte:EVO.fonte,ate:EVO.ate,
+  meses:EVO.meses.map(evoArr),ref:EVO.ref?evoArr(EVO.ref):null}))}catch(e){}}
+
+function sqlEvolucao(){
+  return `WITH teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id),
+m AS (
+  SELECT ini, LEAST(ini + interval '1 month', now()) AS fim, false AS ref
+  FROM generate_series(date_trunc('month', now()) - interval '12 months', date_trunc('month', now()), interval '1 month') AS ini
+  UNION ALL
+  SELECT date_trunc('month', now() - interval '1 month'), now() - interval '1 month', true),
+p AS (SELECT id, created_at, deleted_at FROM professional WHERE id NOT IN (SELECT id FROM teste)),
+s AS (SELECT es.professional_id, es.start_datetime, COALESCE((e.et_price->>'amount')::numeric, 0) / 100 AS valor
+      FROM event_scheduled es JOIN event e ON e.id = es.event_id
+      WHERE es.status::text = 'CONFERENCE_SCHEDULED' AND es.professional_id NOT IN (SELECT id FROM teste))
+SELECT m.ini::date AS mes, m.ref,
+  (SELECT count(*) FROM p WHERE p.created_at < m.fim AND (p.deleted_at IS NULL OR p.deleted_at >= m.fim)) AS total,
+  (SELECT count(*) FROM p WHERE p.created_at >= m.ini AND p.created_at < m.fim AND p.deleted_at IS NULL) AS novos,
+  (SELECT count(DISTINCT professional_id) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS ativos,
+  (SELECT count(*) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS servicos,
+  (SELECT count(*) FROM s WHERE s.valor > 0 AND s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS com_preco,
+  (SELECT COALESCE(round(sum(valor), 2), 0) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS valor,
+  m.fim AS ate
+FROM m ORDER BY m.ref, m.ini`;
+}
+let puxandoEvo=false, FALHA_EVO="";
+async function atualizarEvo(){
+  if(!MCP||puxandoEvo) return;
+  puxandoEvo=true; FALHA_EVO=""; pintarTopo();
+  try{
+    const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlEvolucao()});
+    const rows=p&&p.data&&p.data.rows;
+    if(!Array.isArray(rows)||!rows.length) throw {code:"tool_error",message:"resposta sem linhas"};
+    const meses=[]; let ref=null, ate="";
+    rows.forEach(r=>{
+      const o={mes:String(r[0]).slice(0,7),total:+r[2]||0,novos:+r[3]||0,ativos:+r[4]||0,servicos:+r[5]||0,comPreco:+r[6]||0,valor:+r[7]||0};
+      if(r[1]===true||r[1]==="true") ref=o; else {meses.push(o); ate=String(r[8]||"")}
+    });
+    meses.sort((a,b)=>a.mes<b.mes?-1:1);
+    EVO={puxadoEm:Date.now(),fonte:"vivo",ate,meses,ref}; guardarEvo();
+  }catch(e){ FALHA_EVO=`Metabase: ${msgErro(e,"Metabase")}`; }
+  puxandoEvo=false; pintarEvo();
+}
+
+/* "2026-10" → "out/26" e "outubro de 2026" */
+const mesCurto=m=>`${MESES[+m.slice(5,7)-1].slice(0,3)}/${m.slice(2,4)}`;
+const mesLongo=m=>`${MESES[+m.slice(5,7)-1]} de ${m.slice(0,4)}`;
+const mesNome=m=>MESES[+m.slice(5,7)-1];
+/* o mês atual está pela metade quando a consulta parou antes do fim dele */
+function evoCorte(){
+  const ms=EVO.meses, ult=ms[ms.length-1];
+  const dia=EVO.ate&&EVO.ate.slice(0,7)===ult.mes?+EVO.ate.slice(8,10):0;
+  return {parcial:!!dia&&!!EVO.ref, dia};
+}
+/* crescimento do mês i: contra o anterior; no mês pela metade, contra os mesmos dias do anterior */
+function evoCresc(i,campo){
+  const ms=EVO.meses, {parcial}=evoCorte();
+  const b=i===ms.length-1&&parcial?EVO.ref[campo]:(i>0?ms[i-1][campo]:null);
+  return variacao(ms[i][campo],b,1);
+}
+const EVO_M=[
+  {k:"total",r:"Usuários cadastrados",ic:"pessoas",f:num,cor:"var(--azul)",h2:"usuários cadastrados",p:"Total de contas no fim de cada mês",
+   formula:"Contas existentes no fim do mês, sem as de teste e as apagadas"},
+  {k:"ativos",r:"Contas ativas",ic:"ativ",f:num,cor:"var(--verde)",h2:"contas ativas",p:"Profissionais com pelo menos um atendimento no mês",
+   formula:"Profissionais com pelo menos um atendimento realizado no mês"},
+  {k:"servicos",r:"Serviços realizados",ic:"taxa",f:num,cor:"var(--cad-barra)",h2:"serviços realizados",p:"Agendamentos confirmados cujo horário já passou",
+   formula:"Agendamentos confirmados cujo horário já passou, sem os cancelados"},
+  {k:"valor",r:"Valor dos serviços",ic:"inv",f:brl,cor:"var(--laranja)",h2:"valor dos serviços",p:"Soma do preço que o profissional cadastrou",
+   formula:"Soma do preço cadastrado pelo profissional em cada serviço realizado"}
+];
+/* barras mês a mês, no mesmo desenho dos gráficos diários; o mês pela metade fica mais claro */
+function barrasMes(m){
+  const ms=EVO.meses, ini=Math.max(0,ms.length-12), vis=ms.slice(ini), {parcial,dia}=evoCorte();
+  const mx=teto(Math.max(0,...vis.map(o=>o[m.k])));
+  const fy=m.k==="valor"?reais:v=>nf0.format(v);
+  const ticks=[0,.5,1].map(f=>`<div class="${f===0?"zero":""}" style="bottom:${f*100}%;top:auto"><span>${fy(mx*f)}</span></div>`).join("");
+  const cols=vis.map((o,j)=>{
+    const i=ini+j, ult=i===ms.length-1&&parcial, vr=evoCresc(i,m.k);
+    const d=`<b>${mesLongo(o.mes)}</b>${ult?` <span class="m">até dia ${dia}</span>`:""}`+
+      `<div class="lin"><span>${m.r}</span><span>${m.f(o[m.k])}</span></div>`+
+      (vr?`<div class="lin"><span>${ult?`vs 1 a ${dia} de ${mesNome(EVO.ref.mes)}`:"vs mês anterior"}</span><span class="delta ${vr.cls}">${vr.txt}</span></div>`:"");
+    return `<div class="gb${ult?" parcial":""}" data-html data-dica="${esc(d)}">
+      <div class="pilha" style="height:${o[m.k]/mx*100}%${o[m.k]>0?";min-height:2px":""}"><i style="height:100%;background:${m.cor}"></i></div></div>`;
+  }).join("");
+  const xs=vis.map((o,j)=>(vis.length-1-j)%2===0?`<span style="left:${(j+.5)/vis.length*100}%">${mesCurto(o.mes)}</span>`:"").join("");
+  return `<article class="cx graf-cx"><div class="cx-t"><div><h2>${m.h2}</h2><p>${m.p}</p></div></div>
+    <div class="graf" role="img" aria-label="${esc(m.r)} por mês, últimos 12 meses"><div class="graf-y">${ticks}</div><div class="graf-b">${cols}</div></div>
+    <div class="graf-x">${xs}</div></article>`;
+}
+
+const elEvoFrase=document.getElementById("fraseEvo"), elEvoAvisos=document.getElementById("avisosEvo");
+const elEvoCartoes=document.getElementById("evoCartoes"), elEvoGraf=document.getElementById("evoGraf");
+const elEvoTabela=document.getElementById("evoTabela"), elEvoNota=document.getElementById("evoNota"), elEvoRod=document.getElementById("rodapeEvo");
+function pintarEvo(){
+  focar(null);
+  pintarTopo();
+  const ms=EVO.meses, n=ms.length, ult=ms[n-1], {parcial,dia}=evoCorte();
+  const vis=ms.slice(Math.max(0,n-12));
+  const refTxt=parcial?`${dia===1?"1":`1 a ${dia}`} de ${mesNome(EVO.ref.mes)}`:"";
+  /* frase de estado */
+  const cls="frase"+(EVO.fonte==="vivo"?" vivo":"");
+  elEvoFrase.className=cls;
+  elEvoFrase.querySelector(".selo").textContent=puxandoEvo?"atualizando":EVO.fonte==="vivo"?"ao vivo":"retrato";
+  elEvoFrase.querySelector("span").innerHTML=`<b>Últimos 12 meses</b> · ${mesCurto(vis[0].mes)} a ${mesCurto(ult.mes)}`+
+    (parcial?` · ${mesNome(ult.mes)} até dia ${dia}, comparado com <b>${refTxt}</b>`:"");
+  elEvoAvisos.innerHTML=FALHA_EVO?`<div class="aviso erro" role="status"><span>${esc(FALHA_EVO)}</span></div>`:"";
+
+  /* cartões do mês atual */
+  elEvoCartoes.innerHTML=EVO_M.map(m=>{
+    const vr=evoCresc(n-1,m.k), b=parcial?EVO.ref[m.k]:(n>1?ms[n-2][m.k]:null);
+    const antes=b==null?"":parcial?(m.k==="total"?`em ${dia}/${EVO.ref.mes.slice(5,7)}: ${m.f(b)}`:`${refTxt}: ${m.f(b)}`):`${mesNome(ms[n-2].mes)}: ${m.f(b)}`;
+    const sub=m.k==="total"?`+${num(ult.novos)} novos em ${mesNome(ult.mes)}`:m.k==="servicos"?`${num(ult.comPreco)} com preço preenchido`:
+      m.k==="valor"?"Preço declarado, não é pagamento confirmado":"Com pelo menos um atendimento no mês";
+    const d=`<b>${m.r}</b><p class="m">${m.formula}</p>`+(parcial?`<p class="m">${mesNome(ult.mes)} até dia ${dia}, comparado com ${refTxt}.</p>`:"");
+    return `<article class="cx kpi" data-html data-dica="${esc(d)}">
+      <header><span class="kpi-ic">${IC[m.ic]}</span><span class="kpi-r">${m.r}</span>
+        <span class="kpi-x"><button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
+      <div class="kpi-v" title="${esc(m.f(ult[m.k]))}">${m.f(ult[m.k])}</div>
+      <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}${antes?`<span class="num">${antes}</span>`:""}</div>
+      <div class="kpi-s">${sub}</div></article>`;
+  }).join("");
+
+  /* um gráfico por métrica */
+  elEvoGraf.innerHTML=EVO_M.map(barrasMes).join("");
+
+  /* tabela, do mês mais recente para o mais antigo */
+  const corpo=vis.map((o,j)=>{
+    const i=n-vis.length+j, u=i===n-1&&parcial;
+    return `<tr${u?' class="parcial"':""}><th scope="row">${mesLongo(o.mes)}${u?` <small>até dia ${dia}*</small>`:""}</th>`+
+      EVO_M.map(m=>{const vr=evoCresc(i,m.k);
+        return `<td>${m.f(o[m.k])}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:`<span class="delta flat">—</span>`}</td>`}).join("")+`</tr>`;
+  }).reverse().join("");
+  elEvoTabela.innerHTML=`<thead><tr><th scope="col">Mês</th>${EVO_M.map(m=>`<th scope="col">${m.r}</th>`).join("")}</tr></thead><tbody>${corpo}</tbody>`;
+  elEvoNota.textContent="Variação contra o mês anterior."+(parcial?` *No mês atual, contra os mesmos dias do mês anterior (${refTxt}).`:"");
+
+  elEvoRod.innerHTML=`<b>De onde vem cada número.</b> Metabase, base Mia Production, sem as contas de teste. `+
+    `Usuários cadastrados: contas existentes no fim de cada mês, sem as apagadas. `+
+    `Conta ativa: profissional com pelo menos um atendimento realizado no mês. `+
+    `Serviço realizado: agendamento confirmado cujo horário já passou, sem os cancelados; o sistema não registra quando o cliente falta. `+
+    `Valor: soma do preço que o profissional cadastrou no serviço. Não é pagamento confirmado, e serviços com preço R$ 0 não somam.`;
+}
+
+/* ------------------------------------------------- abas */
+const ABA_GUARDA="v2:aba";
+const TITULOS={funil:["funil de cadastro","Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa."],
+  evo:["evolução mensal","Os últimos 12 meses da base: cadastros, contas ativas e serviços realizados."]};
+const tabs={funil:document.getElementById("tabFunil"), evo:document.getElementById("tabEvo")};
+const paineis={funil:document.getElementById("abaFunil"), evo:document.getElementById("abaEvo")};
+let ABA="funil";
+try{const a=localStorage.getItem(ABA_GUARDA); if(a==="evo") ABA="evo"}catch(e){}
+if(location.hash==="#evolucao") ABA="evo"; else if(location.hash==="#funil") ABA="funil";
+/* topo: título, "atualizado há", botão Atualizar — sempre da aba aberta */
+function pintarTopo(){
+  const evo=ABA==="evo", ind=evo?puxandoEvo:puxando;
+  document.getElementById("titulo").textContent=TITULOS[ABA][0];
+  document.getElementById("subtitulo").textContent=TITULOS[ABA][1];
+  elAtual.textContent=rotuloTempo(evo?EVO:DADOS);
+  btAtualizar.disabled=!MCP||ind;
+  btAtualizar.classList.toggle("indo",ind);
+  txAtualizar.textContent=ind?"Atualizando…":"Atualizar";
+  btAtualizar.title=MCP===null?"A consulta ao vivo só funciona com o painel aberto no claude.ai.":
+    evo?"Puxar de novo do Metabase":"Puxar de novo do Windsor.ai e do Metabase";
+}
+const velhoFunil=()=>!DADOS.puxadoEm||DADOS.fonte!=="vivo"||Date.now()-DADOS.puxadoEm>30*60000;
+const velhoEvo=()=>!EVO.puxadoEm||EVO.fonte!=="vivo"||Date.now()-EVO.puxadoEm>30*60000;
+function abrirAba(a,foco){
+  ABA=a;
+  try{localStorage.setItem(ABA_GUARDA,a)}catch(e){}
+  Object.keys(tabs).forEach(k=>{
+    const on=k===a; tabs[k].setAttribute("aria-selected",on?"true":"false"); tabs[k].tabIndex=on?0:-1; paineis[k].hidden=!on;
+  });
+  if(foco) tabs[a].focus();
+  dica.hidden=true; focar(null);
+  if(a==="evo") pintarEvo(); else pintar();
+  if(MCP){ if(a==="evo"&&velhoEvo()) atualizarEvo(); else if(a==="funil"&&velhoFunil()) atualizar(); }
+}
+Object.keys(tabs).forEach(k=>{
+  tabs[k].addEventListener("click",()=>{if(ABA!==k) abrirAba(k)});
+  tabs[k].addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault(); abrirAba(ABA==="funil"?"evo":"funil",true)}
+  });
+});
+
 /* primeira pintura com o que está gravado; a campanha lembrada volta
    depois que a lista existe */
 pintar();
@@ -1719,17 +1982,18 @@ if(fCamp.dataset.ini){
   if([...fCamp.options].some(o=>o.value===fCamp.dataset.ini)){fCamp.value=fCamp.dataset.ini;pintar()}
   delete fCamp.dataset.ini;
 }
-setInterval(()=>{elAtual.textContent=rotuloTempo()},30000);
+abrirAba(ABA);
+setInterval(pintarTopo,30000);
 
 /* consulta ao vivo: só existe dentro do claude.ai. Ao abrir, se os dados
    têm mais de 30 minutos ou o período não está carregado, atualiza sozinho */
 ((window.claude&&window.claude.use)?window.claude.use("mcp"):Promise.resolve(null))
   .then(m=>{MCP=m||null}).catch(()=>{MCP=null})
   .then(()=>{
-    pintar();
+    pintar(); if(ABA==="evo") pintarEvo();
     if(!MCP) return;
+    if(ABA==="evo"){ if(velhoEvo()) atualizarEvo(); return; }
     const p=periodo(), c=p&&comparacao(p);
-    const velho=!DADOS.puxadoEm||DADOS.fonte!=="vivo"||Date.now()-DADOS.puxadoEm>30*60000;
-    if(p&&(velho||faltando(p,"todos").length||(c&&faltando(c,"todos").length))) atualizar();
+    if(p&&(velhoFunil()||faltando(p,"todos").length||(c&&faltando(c,"todos").length))) atualizar();
   });
 </script>

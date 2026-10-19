@@ -38,6 +38,28 @@ taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
 etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
 cadastros por dia.
 
+**Duas abas no topo:** **Funil de cadastro** (o que está descrito aqui) e
+**Evolução mensal**. O painel lembra a última aba aberta; o link com `#evolucao`
+no fim abre direto nela.
+
+**Evolução mensal** — a base inteira mês a mês, últimos 12 meses, tudo do
+Metabase e sem as contas de teste. Quatro cartões do mês atual com o % de
+crescimento, um gráfico por métrica e a tabela mês a mês com a variação:
+
+| Métrica | Como é contada |
+|---|---|
+| Usuários cadastrados | Contas existentes no fim do mês, sem as apagadas |
+| Contas ativas | Profissionais com pelo menos um atendimento realizado no mês |
+| Serviços realizados | Agendamentos confirmados (`CONFERENCE_SCHEDULED`) cujo horário já passou; cancelados não contam. O sistema não registra quando o cliente falta |
+| Valor dos serviços | Soma do preço que o profissional cadastrou no serviço (`event.et_price`). Não é pagamento confirmado; serviços com preço R$ 0 não somam |
+
+O crescimento é contra o mês anterior. O mês atual, que ainda não acabou, é
+comparado com os mesmos dias do mês anterior (ex.: 1 a 19 de outubro contra 1
+a 19 de setembro; para o total de usuários, o total de hoje contra o do mesmo
+dia do mês passado). Uma consulta só ao Metabase traz os 13 meses (o mais
+antigo é a base do crescimento do primeiro) e a linha de comparação; o
+resultado fica salvo no navegador (`v2:evolucao`).
+
 **Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
 passado, personalizado — sempre até ontem), comparação (mesmo período do mês
 anterior, período anterior ou nenhuma), fonte de tráfego e campanha. Trocar
