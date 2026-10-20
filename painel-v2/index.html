@@ -1343,12 +1343,22 @@ async function atualizar(){
 }
 
 /* ------------------------------------------------- agregação */
-/* o funil só conta campanhas de cadastro. No Meta, o objetivo da campanha
-   separa: conversão (OUTCOME_SALES/LEADS) é cadastro; tráfego, engajamento e
-   reconhecimento (ex.: visita ao perfil do Instagram) ficam fora de tudo,
-   inclusive do investimento. Google e OpenAI: todas as campanhas contam. */
+/* o funil só conta campanhas de cadastro; as de divulgação ficam fora de
+   tudo, inclusive do investimento.
+   · Meta: o objetivo da campanha separa. Conversão (OUTCOME_SALES/LEADS) é
+     cadastro; tráfego, engajamento e reconhecimento (ex.: visita ao perfil do
+     Instagram) são divulgação.
+   · Google: o tipo da campanha separa. Pesquisa (SEARCH) é cadastro; vídeo,
+     Demand Gen, Display e Performance Max são divulgação.
+   · OpenAI: todas as campanhas são de cadastro. */
 const OBJ_CADASTRO=new Set(["OUTCOME_SALES","OUTCOME_LEADS","CONVERSIONS","LEAD_GENERATION"]);
-const noFunil=(k,x)=>k!=="meta"||!x.t||OBJ_CADASTRO.has(String(x.t).toUpperCase());
+function noFunil(k,x){
+  if(!x.t) return true;
+  const t=String(x.t).toUpperCase();
+  if(k==="meta") return OBJ_CADASTRO.has(t);
+  if(k==="google") return t==="SEARCH";
+  return true;
+}
 
 function agregar(de,ate,canal,campanha){
   const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativMad:0,
@@ -1381,7 +1391,7 @@ function foraTxt(a){
   const l=Object.entries(a.fora).filter(([,v])=>v>0).sort((x,y)=>y[1]-x[1]);
   if(!l.length) return "";
   const nomes=l.slice(0,3).map(([n,v])=>`${esc(n)} (${brl(v)})`).join(", ")+(l.length>3?` e mais ${l.length-3}`:"");
-  return ` <b>Fora do funil</b> por não serem campanhas de cadastro: ${nomes}.`;
+  return ` <b>Fora do funil</b> por serem campanhas de divulgação, não de cadastro: ${nomes}.`;
 }
 /* o que falta carregar para mostrar este período com estes filtros */
 function faltando(p,canal){
