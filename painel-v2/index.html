@@ -249,6 +249,7 @@ button,select,input{font-family:inherit}
   color:var(--texto-2);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0}
 .fc-pe b{color:var(--texto);font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .legenda-f{margin:0;font-size:12.5px;color:var(--texto-2)}
+.legenda-f b{color:var(--texto);font-weight:600}
 /* no celular o funil vira lista: uma barra por etapa */
 .funil-lista{display:none;flex-direction:column;gap:16px}
 .fl header{display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -1342,14 +1343,22 @@ async function atualizar(){
 }
 
 /* ------------------------------------------------- agregação */
+/* o funil só conta campanhas de cadastro. No Meta, o objetivo da campanha
+   separa: conversão (OUTCOME_SALES/LEADS) é cadastro; tráfego, engajamento e
+   reconhecimento (ex.: visita ao perfil do Instagram) ficam fora de tudo,
+   inclusive do investimento. Google e OpenAI: todas as campanhas contam. */
+const OBJ_CADASTRO=new Set(["OUTCOME_SALES","OUTCOME_LEADS","CONVERSIONS","LEAD_GENERATION"]);
+const noFunil=(k,x)=>k!=="meta"||!x.t||OBJ_CADASTRO.has(String(x.t).toUpperCase());
+
 function agregar(de,ate,canal,campanha){
   const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativMad:0,
-    canal:{},camp:{},dia:{}};
+    canal:{},camp:{},dia:{},fora:{}};
   CANAIS.forEach(k=>{
     if(canal!=="todos"&&canal!==k) return;
     r.canal[k]={inv:0,imp:0,cli:0,cad:0,vis:0};
     DADOS.midia[k].linhas.forEach(x=>{
       if(x.d<de||x.d>ate) return;
+      if(!noFunil(k,x)){ r.fora[x.c]=(r.fora[x.c]||0)+x.custo; return; }   /* guardado só para o aviso */
       if(campanha&&campanha!==k+"|"+x.c) return;
       const ck=k+"|"+x.c, c=r.camp[ck]||(r.camp[ck]={k,nome:x.c,t:x.t,inv:0,imp:0,cli:0,cad:0,vis:0});
       const dd=r.dia[x.d]||(r.dia[x.d]={inv:{},cad:0});
@@ -1366,6 +1375,13 @@ function agregar(de,ate,canal,campanha){
   r.nCamp=Object.values(r.camp).filter(c=>c.inv>0).length;
   r.dias=dias(de,ate);
   return r;
+}
+/* "Fora do funil: VISITA AO PERFIL - OUTUBRO (R$ 390,06)" — só quando houve gasto */
+function foraTxt(a){
+  const l=Object.entries(a.fora).filter(([,v])=>v>0).sort((x,y)=>y[1]-x[1]);
+  if(!l.length) return "";
+  const nomes=l.slice(0,3).map(([n,v])=>`${esc(n)} (${brl(v)})`).join(", ")+(l.length>3?` e mais ${l.length-3}`:"");
+  return ` <b>Fora do funil</b> por não serem campanhas de cadastro: ${nomes}.`;
 }
 /* o que falta carregar para mostrar este período com estes filtros */
 function faltando(p,canal){
@@ -1617,7 +1633,7 @@ function opcoesCampanha(p,c){
   CANAIS.forEach(k=>{
     if(canal!=="todos"&&canal!==k) return;
     DADOS.midia[k].linhas.forEach(x=>{
-      const dentro=(x.d>=p.de&&x.d<=p.ate)||(c&&x.d>=c.de&&x.d<=c.ate); if(!dentro) return;
+      const dentro=(x.d>=p.de&&x.d<=p.ate)||(c&&x.d>=c.de&&x.d<=c.ate); if(!dentro||!noFunil(k,x)) return;
       const key=k+"|"+x.c; acc[key]=acc[key]||{k,nome:x.c,inv:0};
       if(x.d>=p.de&&x.d<=p.ate) acc[key].inv+=x.custo;
     });
@@ -1738,7 +1754,7 @@ function pintar(){
     <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
       <button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa." aria-label="Como ler o funil">i</button></div>
     ${funil(etapas,temComp,a.inv)}
-    <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a contas ativas. Embaixo de cada etapa, quanto custou cada uma.</p>
+    <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a contas ativas. Embaixo de cada etapa, quanto custou cada uma.${foraTxt(a)}</p>
   </article>`;
 
   /* gráficos diários */

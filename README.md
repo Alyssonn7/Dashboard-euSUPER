@@ -60,6 +60,15 @@ dia do mês passado). Uma consulta só ao Metabase traz os 13 meses (o mais
 antigo é a base do crescimento do primeiro) e a linha de comparação; o
 resultado fica salvo no navegador (`v2:evolucao`).
 
+**Só campanhas de cadastro entram no funil.** No Meta, o objetivo da campanha
+decide: conversão (`OUTCOME_SALES`, `OUTCOME_LEADS`) é campanha de cadastro;
+tráfego, engajamento e reconhecimento (ex.: `OUTCOME_TRAFFIC` das campanhas de
+visita ao perfil do Instagram) ficam fora de tudo — investimento, impressões,
+cliques, taxas, custos, gráficos e lista de campanhas. O cartão do funil lista
+o que ficou fora no período e quanto gastou. Google e OpenAI: todas as
+campanhas contam. Com essa regra, agosto perde R$ 1.249,95 de nove campanhas
+de tráfego (investimento de R$ 7.040,06 para R$ 5.790,11).
+
 **Comparativo semanal** (opção do "Período de visualização"): mostra a semana
 que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:
 em 20/10, semana 13/10 a 19/10 contra 06/10 a 12/10. As setas ‹ › andam de
