@@ -136,6 +136,20 @@ button,select,input{font-family:inherit}
 .campo select:hover,.campo input:hover{border-color:var(--cinza)}
 .campo select:focus-visible,.campo input:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
 .campo optgroup{font-style:normal}
+/* comparativo semanal: a semana anterior à esquerda, a analisada à direita */
+.semanas{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.sem{flex:1 1 170px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;
+  padding:8px 14px;border-radius:8px;border:1.5px solid var(--borda-campo);background:var(--campo)}
+.sem small{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.sem b{font-size:16px;font-weight:600;color:var(--texto);font-variant-numeric:tabular-nums}
+.sem.atual{border-color:var(--azul)}
+.sem-vs{align-self:center;font-size:13px;font-weight:600;color:var(--texto-2)}
+.sem-bt{flex:none;width:46px;min-height:46px;border-radius:8px;border:1.5px solid var(--borda-campo);background:var(--campo);
+  color:var(--texto);font-family:inherit;font-size:22px;line-height:1;cursor:pointer}
+.sem-bt:hover:not(:disabled){border-color:var(--cinza)}
+.sem-bt:disabled{opacity:.4;cursor:default}
+.sem-bt:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
+.campo select:disabled{cursor:default;opacity:.75}
 .frase{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin:0;font-size:14px;color:var(--texto-2)}
 .frase span{flex:1;min-width:0}
 .frase b{color:var(--texto);font-weight:600}
@@ -338,6 +352,14 @@ button,select,input{font-family:inherit}
   .conteudo{gap:20px}
 }
 @media (max-width:560px){
+  /* semanas uma sobre a outra, setas nas laterais */
+  .semanas{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
+  .sem-vs{display:none}
+  .sem-bt{width:44px}
+  #semAnt{grid-column:1;grid-row:1/3}
+  .semanas .sem{grid-column:2;grid-row:1}
+  .semanas .sem.atual{grid-row:2}
+  #semProx{grid-column:3;grid-row:1/3}
   .abas button{padding:0 10px;font-size:12px;letter-spacing:.04em}
   .evo-cab{padding:14px 16px}
   .evo-tab{padding:18px 16px 14px}
@@ -405,6 +427,7 @@ button,select,input{font-family:inherit}
             <button type="button" class="info" data-dica="Todos os períodos terminam ontem: as plataformas só fecham o dia seguinte." aria-label="Sobre o período">i</button></div>
           <select id="fPeriodo">
             <option value="mes">Esse mês</option>
+            <option value="semanal">Comparativo semanal</option>
             <option value="7d">Últimos 7 dias</option>
             <option value="14d">Últimos 14 dias</option>
             <option value="30d">Últimos 30 dias</option>
@@ -419,6 +442,7 @@ button,select,input{font-family:inherit}
             <option value="mes">Mesmo período do mês anterior</option>
             <option value="anterior">Período anterior</option>
             <option value="nenhuma">Sem comparação</option>
+            <option value="semana" disabled hidden>Semana anterior</option>
           </select>
         </div>
         <div class="campo">
@@ -438,6 +462,13 @@ button,select,input{font-family:inherit}
       <div class="datas" id="datas" hidden>
         <div class="campo"><label for="dDe">Início</label><input type="date" id="dDe" min="2025-07-01"></div>
         <div class="campo"><label for="dAte">Fim</label><input type="date" id="dAte" min="2025-07-01"></div>
+      </div>
+      <div class="semanas" id="semanas" hidden>
+        <button type="button" class="sem-bt" id="semAnt" aria-label="Voltar uma semana">‹</button>
+        <div class="sem"><small>Semana anterior</small><b id="semAntes">—</b></div>
+        <span class="sem-vs" aria-hidden="true">vs</span>
+        <div class="sem atual"><small id="semRot">Semana atual</small><b id="semAtual">—</b></div>
+        <button type="button" class="sem-bt" id="semProx" aria-label="Avançar uma semana">›</button>
       </div>
       <p class="frase" id="frase"><em class="selo">retrato</em><span></span></p>
     </section>
@@ -1087,6 +1118,8 @@ function periodo(){
   if(v==="14d") return {de:soma(o,-13),ate:o};
   if(v==="30d") return {de:soma(o,-29),ate:o};
   if(v==="mes") return {de:o.slice(0,8)+"01", ate:o};
+  /* comparativo semanal: 7 dias que terminam ontem; as setas andam de 7 em 7 */
+  if(v==="semanal"){ const f=soma(o,-7*SEM_OFF); return {de:soma(f,-6), ate:f}; }
   if(v==="semana"){
     const h=new Date(), dow=(h.getDay()+6)%7, fim=new Date(h); fim.setDate(h.getDate()-dow-1);
     const f=iso(fim); return {de:soma(f,-6), ate:f};
@@ -1101,6 +1134,7 @@ function periodo(){
   return {de,ate};
 }
 function comparacao(p){
+  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.ate,-7)};   /* sempre a semana anterior */
   if(!p||fComp.value==="nenhuma") return null;
   if(ehMes(p.de,p.ate)){                      /* mês fechado: o mês anterior inteiro */
     const a=D(p.de), fim=new Date(a.getFullYear(),a.getMonth(),0,12);
@@ -1108,6 +1142,28 @@ function comparacao(p){
   }
   if(fComp.value==="mes") return {de:mesAntes(p.de), ate:mesAntes(p.ate)};
   const n=dias(p.de,p.ate); return {de:soma(p.de,-n), ate:soma(p.de,-1)};
+}
+
+/* ------------------------------------------------- comparativo semanal
+   SEM_OFF = quantas semanas para trás (0 = a semana que terminou ontem).
+   No modo semanal a comparação fica presa em "Semana anterior"; a escolha
+   que havia antes volta quando sai do modo. */
+let SEM_OFF=0;
+const dataCurta=s=>`${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(2,4)}`;
+function modoSemanal(){
+  const sem=fPeriodo.value==="semanal";
+  if(sem&&fComp.value!=="semana"){ fComp.dataset.prev=fComp.value; fComp.value="semana"; }
+  if(!sem&&fComp.value==="semana"){ fComp.value=fComp.dataset.prev||"mes"; }
+  fComp.disabled=sem;
+}
+function pintarSemanas(){
+  const sem=fPeriodo.value==="semanal", el=document.getElementById("semanas");
+  el.hidden=!sem; if(!sem) return;
+  const p=periodo(), c=comparacao(p);
+  document.getElementById("semAtual").textContent=`${dataCurta(p.de)} a ${dataCurta(p.ate)}`;
+  document.getElementById("semAntes").textContent=`${dataCurta(c.de)} a ${dataCurta(c.ate)}`;
+  document.getElementById("semRot").textContent=SEM_OFF===0?"Semana atual":"Semana";
+  document.getElementById("semProx").disabled=SEM_OFF===0;
 }
 
 /* ------------------------------------------------- dados em memória
@@ -1596,6 +1652,7 @@ function frase(cls,html){
 function pintar(){
   focar(null);   /* os cartões vão ser redesenhados */
   elDatas.hidden=fPeriodo.value!=="custom";
+  pintarSemanas();
   const p=periodo(), c=comparacao(p);
   pintarTopo();
 
@@ -1611,7 +1668,8 @@ function pintar(){
   /* frase de estado */
   const falta=faltando(p,canal), faltaC=c?faltando(c,canal):[];
   const n=dias(p.de,p.ate);
-  let fr=`<b>${falar(p.de,p.ate)}</b>`+(c?` comparado com <b>${falar(c.de,c.ate)}</b>`:"")+
+  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b> comparada com <b>semana ${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
+    `<b>${falar(p.de,p.ate)}</b>`+(c?` comparado com <b>${falar(c.de,c.ate)}</b>`:"")+
     ` · ${ehMes(p.de,p.ate)?"mês fechado":`${n} dia${n>1?"s":""}`}`;
   let cls="frase"+(DADOS.fonte==="vivo"?" vivo":"");
   if(falta.length||faltaC.length){
@@ -1710,13 +1768,14 @@ function pintar(){
 
 /* ------------------------------------------------- filtros e memória */
 const FILTROS="v2:filtros";
-function lembrar(){try{localStorage.setItem(FILTROS,JSON.stringify({p:fPeriodo.value,c:fComp.value,k:fCanal.value,m:fCamp.value,de:dDe.value,ate:dAte.value}))}catch(e){}}
+function lembrar(){try{localStorage.setItem(FILTROS,JSON.stringify({p:fPeriodo.value,c:fComp.value==="semana"?(fComp.dataset.prev||"mes"):fComp.value,k:fCanal.value,m:fCamp.value,de:dDe.value,ate:dAte.value}))}catch(e){}}
 try{
   const f=JSON.parse(localStorage.getItem(FILTROS)||"null");
   if(f){ if(f.p)fPeriodo.value=f.p; if(f.c)fComp.value=f.c; if(f.k)fCanal.value=f.k;
     if(f.de)dDe.value=f.de; if(f.ate)dAte.value=f.ate; if(f.m) fCamp.dataset.ini=f.m; }
 }catch(e){}
 if(!fPeriodo.value) fPeriodo.value="mes";
+modoSemanal();
 dDe.max=dAte.max=ontem();
 if(!dataOk(dDe.value)){const p0=periodo()||{de:soma(ontem(),-6),ate:ontem()}; dDe.value=p0.de; dAte.value=p0.ate;}
 
@@ -1730,8 +1789,11 @@ function aoMudar(){
 }
 fPeriodo.addEventListener("change",()=>{
   if(fPeriodo.value==="custom"){const p0=periodo(); if(p0){dDe.value=p0.de;dAte.value=p0.ate}}
-  aoMudar();
+  if(fPeriodo.value==="semanal") SEM_OFF=0;
+  modoSemanal(); aoMudar();
 });
+document.getElementById("semAnt").addEventListener("click",()=>{SEM_OFF++; aoMudar()});
+document.getElementById("semProx").addEventListener("click",()=>{if(SEM_OFF>0){SEM_OFF--; aoMudar()}});
 [fComp,dDe,dAte].forEach(el=>el.addEventListener("change",aoMudar));
 fCanal.addEventListener("change",()=>{fCamp.value="";aoMudar()});
 fCamp.addEventListener("change",aoMudar);

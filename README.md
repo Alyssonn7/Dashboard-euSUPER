@@ -60,7 +60,13 @@ dia do mês passado). Uma consulta só ao Metabase traz os 13 meses (o mais
 antigo é a base do crescimento do primeiro) e a linha de comparação; o
 resultado fica salvo no navegador (`v2:evolucao`).
 
-**Filtros:** período (esse mês, últimos 7/14/30 dias, semana passada, mês
+**Comparativo semanal** (opção do "Período de visualização"): mostra a semana
+que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:
+em 20/10, semana 13/10 a 19/10 contra 06/10 a 12/10. As setas ‹ › andam de
+semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
+ao sair, volta a que estava escolhida.
+
+**Filtros:** período (esse mês, comparativo semanal, últimos 7/14/30 dias, semana passada, mês
 passado, personalizado — sempre até ontem), comparação (mesmo período do mês
 anterior, período anterior ou nenhuma), fonte de tráfego e campanha. Trocar
 filtro não consulta nada: o painel guarda as linhas por dia e por campanha e
