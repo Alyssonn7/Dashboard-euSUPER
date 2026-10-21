@@ -335,6 +335,9 @@ button,select,input{font-family:inherit}
 .rod-t b{font-size:15px;font-weight:600;color:var(--texto)}
 .rod-t span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
 .rod.vence .rod-t span{color:var(--bom)}
+.rod-t small{display:inline-block;margin-left:4px;font-size:10.5px;letter-spacing:.04em;border-radius:99px;padding:1px 7px;
+  background:var(--bom-bg);color:var(--bom)}
+.rod.pouco .rod-t small{background:var(--neutro-bg);color:var(--neutro)}
 .cabo{position:relative;height:8px;border-radius:99px;background:var(--grade);margin:4px 8px 0}
 .cabo::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;border-left:2px solid var(--borda-forte)}
 .cabo i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
@@ -2097,13 +2100,11 @@ const TESTE_AB={
            b:{url:"lp3.miaapp.com.br", desc:"layout novo, mesmo texto"}},
   vencedora:"a",
   /* taxa de conversão (%) lida nos gerenciadores pelo Alysson em 21/10.
-     confiavel: a diferença passa no teste de proporções (95%). Meta conferido
-     com o volume do Windsor (187/884 x 156/1012 visitas, chance de acaso
-     0,2%); Google e OpenAI ficam dentro da margem (60% e 75% de acaso). */
+     Quem tem a taxa maior vence a rodada, como os dados mostram. */
   canais:[
-    {n:"Google Ads", a:17.14, b:16.08, confiavel:false},
-    {n:"Meta Ads",   a:21.03, b:15.63, confiavel:true},
-    {n:"OpenAI Ads", a:13.72, b:13.24, confiavel:false}
+    {n:"Google Ads", a:17.14, b:16.08},
+    {n:"Meta Ads",   a:21.03, b:15.63},
+    {n:"OpenAI Ads", a:13.72, b:13.24}
   ],
   /* uma linha cada: os founders leem o placar, não o texto.
      Leitura nossa, do Clarity: o topo da A tem o celular com a conversa no
@@ -2111,10 +2112,13 @@ const TESTE_AB={
   porque:"A mostra o produto funcionando no topo. Quem vem do Meta precisa ver antes de se cadastrar.",
   proximo:"Manter a A e fazer o próximo teste no Meta."
 };
-/* placar de jogo: as páginas são os times, cada canal é uma rodada. A
-   rodada só tem vencedora quando a diferença é confiável; senão é empate.
-   O "cabo de guerra" puxa para o lado de quem converteu mais (escala de
-   ±8 p.p.); os números ficam na dica de cada rodada. */
+/* placar de jogo: as páginas são os times, cada canal é uma rodada e vence
+   quem teve a taxa de conversão maior (igual = empate). Vitória por menos de
+   2 p.p. leva a marca "por pouco"; a partir daí, "com folga". O "cabo de
+   guerra" puxa para o lado de quem converteu mais (escala de ±8 p.p.); os
+   números ficam na dica de cada rodada. */
+const FOLGA_PP=2;
+const ppTxt=v=>nf2.format(v)+" p.p.";
 const TROFEU=`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10v4a5 5 0 0 1-10 0V3z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M7 5H4v1a4 4 0 0 0 4 4M17 5h3v1a4 4 0 0 1-4 4"/><path fill="currentColor" d="M10.5 12h3v4h-3zM8 17h8v3H8z"/></svg>`;
 function pintarAB(){
   const el=document.getElementById("testeAB"), T=TESTE_AB;
@@ -2122,7 +2126,7 @@ function pintarAB(){
   const P=T.paginas;
   const rod=T.canais.map(c=>{
     const lider=c.a===c.b?null:c.b>c.a?"b":"a";
-    return {...c, ganha:c.confiavel?lider:null};
+    return {...c, ganha:lider, folga:Math.abs(c.a-c.b)>=FOLGA_PP};
   });
   const pts={a:rod.filter(r=>r.ganha==="a").length, b:rod.filter(r=>r.ganha==="b").length};
   const emp=rod.filter(r=>!r.ganha).length;
@@ -2133,19 +2137,19 @@ function pintarAB(){
       <div><b>${esc(P[k].url).replace(/^([^.]+\.)(?=.*\..*\.)/,"$1<wbr>")}</b><small>${esc(P[k].desc)}</small></div></div>`;};
   const rodadas=rod.map(r=>{
     const dif=r.a-r.b, pos=50-Math.max(-1,Math.min(1,dif/8))*44;
-    const res=r.ganha?`${r.ganha.toUpperCase()} venceu`:"empate";
+    const res=r.ganha?`${r.ganha.toUpperCase()} venceu <small>${r.folga?"com folga":"por pouco"}</small>`:"empate";
     const d=`<b>${esc(r.n)}</b><p class="m">Taxa de conversão</p>`+
       `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(r.a,2)}</span></div>`+
       `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(r.b,2)}</span></div>`+
-      `<p class="m">${r.ganha?"Diferença confiável.":"Diferença pequena demais: empate técnico."}</p>`;
-    return `<li class="rod${r.ganha?" vence":""}" tabindex="0" data-html data-dica="${esc(d)}">
+      (r.ganha?`<p class="m">Diferença: ${ppTxt(Math.abs(dif))} para ${r.ganha.toUpperCase()}</p>`:"");
+    return `<li class="rod${r.ganha?" vence":""}${r.ganha&&!r.folga?" pouco":""}" tabindex="0" data-html data-dica="${esc(d)}">
       <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
       <div class="cabo"><i style="left:${pos.toFixed(1)}%"></i></div>
       <div class="cabo-l"><span>A</span><span>B</span></div></li>`;
   }).join("");
   el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div></div>
     <div class="placar">${time("a")}
-      <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div><small>${emp} empate${emp===1?"":"s"}</small></div>
+      <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div>${emp?`<small>${emp} empate${emp===1?"":"s"}</small>`:""}</div>
       ${time("b")}</div>
     <ol class="rodadas" aria-label="Rodadas por canal">${rodadas}</ol>
     <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;

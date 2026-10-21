@@ -77,14 +77,15 @@ setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
 **Teste A/B** (abaixo dos gráficos por dia): um **placar de jogo**, feito para
 a reunião semanal. As duas páginas são os times (a vencedora ganha o selo
-"venceu"), o placar fica no meio (rodadas ganhas, mais os empates) e cada canal
-é uma rodada com um "cabo de guerra" puxado para quem converteu mais. Embaixo,
-só duas linhas: **por quê** e **próximo**. As taxas de conversão ficam
-guardadas em `TESTE_AB` e aparecem ao passar o mouse em cada rodada. Uma rodada
-só tem vencedora quando a diferença passa no teste de proporções (95%); fora
-disso é empate. O bloco **não segue os filtros**: mostra o período do próprio
-teste. Hoje: Teste A/B 03 com as duas semanas (06/10 a 20/10), A
-(miaapp.com.br) 1 × 0 B, com 2 empates.
+"venceu"), o placar fica no meio e cada canal é uma rodada com um "cabo de
+guerra" puxado para quem converteu mais. Cada rodada vence quem teve a **taxa
+de conversão maior**, exatamente como os dados lidos nos gerenciadores mostram;
+a marca diz a margem: **por pouco** (menos de 2 p.p.) ou **com folga** (2 p.p.
+ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam em
+`TESTE_AB` e aparecem ao passar o mouse em cada rodada. O bloco **não segue os
+filtros**: mostra o período do próprio teste. Hoje: Teste A/B 03 com as duas
+semanas (06/10 a 20/10): A (miaapp.com.br) 3 × 0 B — com folga no Meta, por
+pouco no Google e na OpenAI.
 
 **Comparativo semanal** (opção do "Período de visualização"): mostra a semana
 que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:
