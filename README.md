@@ -82,7 +82,9 @@ taxa de conversão de cada página em cada canal, lida nos gerenciadores. O
 placar ("Página B venceu em 2 de 3 canais") e a diferença em pontos
 percentuais são calculados. O bloco **não segue os filtros**: mostra o período
 do próprio teste. Os dados ficam em `TESTE_AB` no código; campo sem dado fica
-`null` e aparece como "—". Hoje: Teste A/B 03 (07/10 a 13/10).
+`null` e aparece como "—". Hoje: Teste A/B 03 com as duas semanas (06/10 a
+20/10) — Clarity enviado pelo Alysson e taxas lidas por ele nos gerenciadores
+em 21/10. Cada página mostra também a % de toques no "Entrar" (login).
 
 **Comparativo semanal** (opção do "Período de visualização"): mostra a semana
 que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:

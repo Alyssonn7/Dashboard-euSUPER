@@ -319,7 +319,7 @@ button,select,input{font-family:inherit}
 .ab-l{width:28px;height:28px;flex:none;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:14px;
   color:var(--branco);background:var(--ab-perde)}
 .ab-p.vence .ab-l{background:var(--verde)}
-.ab-p dl{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ab-p dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
 .ab-p dt{font-size:11.5px;color:var(--texto-2);line-height:1.3}
 .ab-p dd{margin:3px 0 0;font-size:18px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
 .ab-cs{border:1px solid var(--borda);border-radius:10px;padding:14px 16px;min-width:0}
@@ -2073,19 +2073,25 @@ function pintarEvo(){
    a = página A (controle), b = página B (desafiante).
    ========================================================================= */
 const TESTE_AB={
-  nome:"Teste A/B 03",
-  de:"2026-10-07", ate:"2026-10-13",
+  nome:"Teste A/B 03 · duas semanas",
+  de:"2026-10-06", ate:"2026-10-20",
+  /* Clarity, 06/10 a 20/10, enviado pelo Alysson em 21/10.
+     Botão principal = o "Criar meu link grátis" do topo (#cta-criar-hero na A,
+     primeiro botão do topo na B), o mesmo critério da semana 1.
+     Entrar = login de quem já tem conta (#cta-entrar-header na A, primeiro
+     botão do cabeçalho na B). */
   paginas:{
     a:{url:"miaapp.com.br",     desc:"Página principal",
-       exibicoes:1446, toques:695, botaoPrincipal:24.60},
+       exibicoes:3579, toques:1879, botaoPrincipal:23.95, login:23.47},
     b:{url:"lp3.miaapp.com.br", desc:"Layout da Mia com o texto da página principal",
-       exibicoes:1146, toques:522, botaoPrincipal:36.78}
+       exibicoes:2715, toques:1251, botaoPrincipal:33.01, login:4.16}
   },
-  /* taxa de conversão de cada página em cada canal (%), lida nos gerenciadores */
+  /* taxa de conversão de cada página em cada canal (%), lida nos gerenciadores
+     pelo Alysson em 21/10, para as duas semanas do teste */
   canais:[
-    {n:"Google Ads", a:14.07, b:16.14},
-    {n:"Meta Ads",   a:24.20, b:15.97},
-    {n:"OpenAI Ads", a:9.19,  b:10.95}
+    {n:"Google Ads", a:17.14, b:16.08},
+    {n:"Meta Ads",   a:21.03, b:15.63},
+    {n:"OpenAI Ads", a:13.72, b:13.24}
   ]
 };
 const ppTxt=v=>nf2.format(v)+" p.p.";
@@ -2106,6 +2112,7 @@ function pintarAB(){
         <div><dt>Exibições</dt><dd>${num(P.exibicoes)}</dd></div>
         <div><dt>Toques</dt><dd>${num(P.toques)}</dd></div>
         <div><dt>No botão principal</dt><dd>${pct(P.botaoPrincipal,2)}</dd></div>
+        ${P.login!=null?`<div><dt>No "Entrar" (login)</dt><dd>${pct(P.login,2)}</dd></div>`:""}
       </dl></div>`;};
   const linhas=can.map(c=>`<div class="ab-c">
       <span class="ab-cn">${esc(c.n)}</span>
@@ -2119,7 +2126,7 @@ function pintarAB(){
       <span class="ab-ver${lider?"":" neutro"}">${veredito}</span></div>
     <div class="ab-g">${pag("a")}${pag("b")}
       <div class="ab-cs"><h3>Taxa de conversão por canal</h3>${linhas}</div></div>
-    <p class="legenda-f">Exibições, toques e toques no botão principal: Microsoft Clarity. Taxa de conversão: lida no gerenciador de cada canal.</p>`;
+    <p class="legenda-f">Exibições, toques, botão principal e "Entrar": Microsoft Clarity (% dos toques da página). Taxa de conversão: lida no gerenciador de cada canal.</p>`;
 }
 /* ------------------------------------------------- abas */
 const ABA_GUARDA="v2:aba";
