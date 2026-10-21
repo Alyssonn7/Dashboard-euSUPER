@@ -1230,6 +1230,7 @@ function semanasAtiv(p,c){
   for(let k=0;k<2;k++){ const u=w[w.length-1]; w.push({de:soma(u.de,-7), ate:soma(u.de,-1)}); }
   return w;
 }
+const intervalo=w=>w.de.slice(5,7)===w.ate.slice(5,7)?`${w.de.slice(8,10)}–${curta(w.ate)}`:`${curta(w.de)}–${curta(w.ate)}`;
 const dataCurta=s=>`${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(2,4)}`;
 function modoSemanal(){
   const sem=fPeriodo.value==="semanal";
@@ -1661,7 +1662,9 @@ function kpi(tipo,k,a,b,t,tb,ctx,sub){
 function funil(etapas,temComp,inv){
   if(!etapas.length||!(etapas[0].v>0)) return `<div class="vazio">Sem impressões neste recorte. Escolha outro período ou outra fonte.</div>`;
   const n=etapas.length, topo=Math.log10(etapas[0].v+1);
-  const h=etapas.map(e=>200*Math.max(.05,Math.log10((e.v||0)+1)/topo));
+  /* piso de 30%: as faixas finais (dezenas de contas) ficam altas o bastante
+     para caber o % e as duas linhas de texto, sem mudar a ordem do funil */
+  const h=etapas.map(e=>200*(.3+.7*Math.max(0,Math.log10((e.v||0)+1)/topo)));
   const W=n*100, y=v=>100-v/2, yb=v=>100+v/2;
   let top=`M0,${y(h[0])}`, bot="";
   for(let i=0;i<n;i++){
@@ -1703,13 +1706,13 @@ function funil(etapas,temComp,inv){
       <div class="fc-topo"><span class="fc-n" title="${esc(e.n)}">${IC[e.ic]||""}<span>${esc(e.n)}</span></span>
         <b class="fc-v">${num(e.v)}</b>
         <span class="fc-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span> antes ${num(e.b)}`:"&nbsp;"}</span></div>
-      <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small>${e.x?`<small class="fc-x">${p2(e.x.v)} ${esc(e.x.ref)}</small>`:""}</span></div>
+      <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small>${e.x?`<small class="fc-x">${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}</small>`:""}</span></div>
       <div class="fc-pe">${custo?`<b>${custo}</b>`:""}<span>${i===0?"&nbsp;":p2(doTopo)+" do topo"}</span></div>
     </div>`).join("");
   const lista=info.map(({e,i,passo,vr,custo,ref})=>
     `<div class="fl"><header><span class="fc-n">${IC[e.ic]||""}<span>${esc(e.n)}</span></span><b class="fc-v">${num(e.v)}</b></header>
       <div class="fl-b"><i style="width:${h[i]/2}%"></i></div>
-      <small>${i===0?"Topo do funil":`${passo!=null?p2(passo)+" ":""}${esc(ref)}`}${e.x?` · ${p2(e.x.v)} ${esc(e.x.ref)}`:""}${custo?" · "+custo:""}${vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
+      <small>${i===0?"Topo do funil":`${passo!=null?p2(passo)+" ":""}${esc(ref)}`}${e.x?` · ${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}`:""}${custo?" · "+custo:""}${vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
   return `<div class="funil">${svg}<div class="funil-cols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${cols}</div></div>
     <div class="funil-lista">${lista}</div>`;
 }
@@ -1865,7 +1868,10 @@ function pintar(){
       {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",
         p:M.ativ.v(a), pb:b&&M.ativ.v(b), pRot:"Ativação D7, de todos os cadastros",
         pRef:d7Fechado(a)?"dos cadastros (D7)":`D7 fecha em ${curta(soma(p.ate,7))}`,
-        x:d7Fechado(a)?{v:cem(a.ativOnbMad,a.onbMad), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"}:null,
+        x:d7Fechado(a)?{v:cem(a.ativOnbMad,a.onbMad), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"}:
+          /* semana ainda aberta: a taxa da última semana fechada, a mesma do cartão */
+          co&&M.ativ.v(aAt)!=null?{v:M.ativ.v(aAt), rot:`Última semana fechada (${intervalo(co)})`,
+            t:`última fechada: ${pct(M.ativ.v(aAt))}\u00a0(${intervalo(co).replace("–","\u2060–\u2060")})`}:null,
         nota:"Agendou um cliente (não a si mesma) em até 7 dias. As taxas só usam cadastros com 7 dias completos."+
         (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
     ];

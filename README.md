@@ -132,14 +132,17 @@ fechou; antes disso o cartão mostra "—" e "Fecha em DD/MM". No **comparativo
 semanal**, a semana recente ainda está aberta, então o cartão usa a semana
 mais nova que já fechou (a escolhida, a anterior ou a de antes) contra a semana
 antes dela, como o slide ("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel
-busca essas semanas extras junto. O cartão se chama "Ativação D7" ("de todos os
+busca essas semanas extras junto. No funil, a etapa Conta ativa de uma semana
+ainda aberta mostra "—" e "D7 fecha em DD/MM" e, embaixo, a mesma taxa do
+cartão: "última fechada: 8,2% (07–13/10)". O cartão se chama "Ativação D7" ("de todos os
 cadastros"). No funil, a etapa Conta ativa mostra a contagem (que ainda sobe
 nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
 embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
 ÷ quem concluiu o onboarding (~19–25%). Essa etapa não usa o "passo da etapa
 anterior", porque quem pula o onboarding também pode ativar — antes, ativos ÷
 onboarding dava ~21–27% e era lido como se fosse a ativação D7. A altura das faixas do funil é logarítmica, para caber de
-centenas de milhares de impressões a dezenas de contas.
+centenas de milhares de impressões a dezenas de contas, com piso de 30% da
+primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
