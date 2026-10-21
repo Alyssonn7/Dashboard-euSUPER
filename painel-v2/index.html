@@ -1366,7 +1366,7 @@ async function qOpenai(de,ate){
 /* mesmo método do relatório semanal do marketing (Metabase):
    · dia do cadastro no horário de Brasília (o banco grava em UTC);
    · contas excluídas depois continuam contando como cadastro;
-   · conta ativa = pelo menos um agendamento de cliente com e-mail e telefone
+   · 1º cliente em 7 dias (ativação) = pelo menos um agendamento de cliente com e-mail e telefone
      diferentes dos da profissional (autoagendamento de teste não conta),
      criado nos 7 dias depois do cadastro; rascunho não conta.
    "maduro" = o cadastro já completou os 7 dias; a taxa de ativação só usa
@@ -1686,7 +1686,7 @@ function funil(etapas,temComp,inv){
     /* a etapa pode trocar o % do meio (p) e trazer uma segunda taxa (x) */
     const passo=e.p!==undefined?e.p:i===0?100:cem(e.v,etapas[i-1].v);
     const doTopo=div(e.v,etapas[0].v)!=null?div(e.v,etapas[0].v)*100:null;
-    const vr=temComp?variacao(e.v,e.b,1):null;
+    const vr=temComp&&!e.parcial?variacao(e.v,e.b,1):null;
     const passoB=!temComp?null:e.p!==undefined?e.pb:i>0&&e.b!=null&&etapas[i-1].b?e.b/etapas[i-1].b*100:null;
     /* custo de cada etapa: CPM no topo, depois investimento ÷ etapa */
     const c=i===0?(div(inv,e.v)!=null?div(inv,e.v)*1000:null):div(inv,e.cv!==undefined?e.cv:e.v);
@@ -1705,14 +1705,15 @@ function funil(etapas,temComp,inv){
     `<div class="fc" tabindex="0" data-html data-dica="${esc(d)}" aria-label="${esc(e.n)}: ${num(e.v)}">
       <div class="fc-topo"><span class="fc-n" title="${esc(e.n)}">${IC[e.ic]||""}<span>${esc(e.n)}</span></span>
         <b class="fc-v">${num(e.v)}</b>
-        <span class="fc-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span> antes ${num(e.b)}`:"&nbsp;"}</span></div>
+        <span class="fc-d">${e.parcial?`<span class="delta flat">parcial</span>${temComp&&e.b!=null?` antes ${num(e.b)}`:""}`:
+          vr?`<span class="delta ${vr.cls}">${vr.txt}</span> antes ${num(e.b)}`:"&nbsp;"}</span></div>
       <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small>${e.x?`<small class="fc-x">${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}</small>`:""}</span></div>
       <div class="fc-pe">${custo?`<b>${custo}</b>`:""}<span>${i===0?"&nbsp;":p2(doTopo)+" do topo"}</span></div>
     </div>`).join("");
   const lista=info.map(({e,i,passo,vr,custo,ref})=>
     `<div class="fl"><header><span class="fc-n">${IC[e.ic]||""}<span>${esc(e.n)}</span></span><b class="fc-v">${num(e.v)}</b></header>
       <div class="fl-b"><i style="width:${h[i]/2}%"></i></div>
-      <small>${i===0?"Topo do funil":`${passo!=null?p2(passo)+" ":""}${esc(ref)}`}${e.x?` · ${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}`:""}${custo?" · "+custo:""}${vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
+      <small>${i===0?"Topo do funil":`${passo!=null?p2(passo)+" ":""}${esc(ref)}`}${e.x?` · ${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}`:""}${custo?" · "+custo:""}${e.parcial?` · <span class="delta flat">parcial</span>`:vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
   return `<div class="funil">${svg}<div class="funil-cols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${cols}</div></div>
     <div class="funil-lista">${lista}</div>`;
 }
@@ -1865,7 +1866,9 @@ function pintar(){
       /* o % do meio é a ativação D7 oficial (de todos os cadastros), não o passo
          desde o onboarding: quem pula o onboarding também pode ativar. A taxa
          de quem fez o onboarding fica embaixo, só com quem fez e ativou */
-      {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",
+      /* parcial: ainda há cadastros na janela de 7 dias, a contagem vai subir;
+         no lugar da seta (que pareceria queda) aparece "parcial" */
+      {n:"1º cliente em 7 dias",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"ativação",parcial:a.cadReal>a.mad,
         p:M.ativ.v(a), pb:b&&M.ativ.v(b), pRot:"Ativação D7, de todos os cadastros",
         pRef:d7Fechado(a)?"dos cadastros (D7)":`D7 fecha em ${curta(soma(p.ate,7))}`,
         x:d7Fechado(a)?{v:cem(a.ativOnbMad,a.onbMad), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"}:
@@ -1888,12 +1891,12 @@ function pintar(){
   /* títulos em minúsculas, como pede o manual; o recorte vai ao lado, menor */
   const titulo="funil de cadastro"+(modoReal?"":` <small>· ${camp?esc(camp.split("|").slice(1).join("|")):NOME[canal]}</small>`);
   const sub=modoReal?"Todos os canais. Topo do funil nos anúncios (Windsor.ai), do cadastro em diante no Metabase.":
-    "Nenhuma fonte grava a origem do cadastro: por canal, o cadastro é o que a plataforma reporta. Onboarding e conta ativa só existem no total.";
+    "Nenhuma fonte grava a origem do cadastro: por canal, o cadastro é o que a plataforma reporta. Onboarding e ativação só existem no total.";
   elResumo.innerHTML=cartoes+`<article class="cx funil-cx">
     <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
       <button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa." aria-label="Como ler o funil">i</button></div>
     ${funil(etapas,temComp,a.inv)}
-    <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a contas ativas. Embaixo de cada etapa, quanto custou cada uma.${foraTxt(a)}</p>
+    <p class="legenda-f">Tamanho das faixas em escala logarítmica, para caber de impressões a ativações. Embaixo de cada etapa, quanto custou cada uma.${foraTxt(a)}</p>
   </article>`;
 
   /* gráficos diários */
@@ -1915,8 +1918,8 @@ function pintar(){
     <article class="cx graf-cx"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div></div>${gCad}</article>`;
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
-    `Cadastros, onboarding e contas ativas: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro no horário de Brasília, contando também as contas excluídas depois. `+
-    `Conta ativa = pelo menos um agendamento de cliente com e-mail e telefone diferentes dos da profissional, nos 7 dias depois do cadastro; ativação D7 = contas ativas ÷ todos os cadastros com 7 dias completos (mesmo método do relatório semanal). `+
+    `Cadastros, onboarding e ativação: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro no horário de Brasília, contando também as contas excluídas depois. `+
+    `1º cliente em 7 dias = pelo menos um agendamento de cliente com e-mail e telefone diferentes dos da profissional, nos 7 dias depois do cadastro; ativação D7 = quem teve o 1º cliente em 7 dias ÷ todos os cadastros com 7 dias completos (mesmo método do relatório semanal). `+
     `No Meta Ads, clique é clique no link. Taxas e custos são calculados aqui, a partir das contagens. `+
     `Selo laranja de atenção: a métrica piorou 10% ou mais contra a comparação.`;
 }

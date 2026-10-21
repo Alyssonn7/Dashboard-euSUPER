@@ -107,10 +107,10 @@ carregado.
 
 | Filtro | Funil | De onde vem o cadastro |
 |---|---|---|
-| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → Conta ativa | Metabase (todos os cadastros, com ou sem anúncio) |
+| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → 1º cliente em 7 dias | Metabase (todos os cadastros, com ou sem anúncio) |
 | Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
 
-Onboarding e conta ativa só existem no total porque nenhuma fonte grava a
+Onboarding e ativação só existem no total porque nenhuma fonte grava a
 origem do cadastro.
 
 **Mesmo método do relatório semanal do marketing** (conferido em 21/10: semana
@@ -119,7 +119,8 @@ slide):
 
 - dia do cadastro no **horário de Brasília** (o banco grava em UTC);
 - contas **excluídas depois continuam contando** como cadastro;
-- **conta ativa = pelo menos um agendamento de cliente com e-mail e telefone
+- **1º cliente em 7 dias (a etapa que antes se chamava "Conta ativa") = pelo
+  menos um agendamento de cliente com e-mail e telefone
   diferentes dos da profissional**, criado nos 7 dias depois do cadastro
   (`event_client` ligado a `event_scheduled.professional_id`, `created_at` do
   cliente dentro da janela, rascunho `DRAFT` não conta, telefone comparado pelos
@@ -132,10 +133,14 @@ fechou; antes disso o cartão mostra "—" e "Fecha em DD/MM". No **comparativo
 semanal**, a semana recente ainda está aberta, então o cartão usa a semana
 mais nova que já fechou (a escolhida, a anterior ou a de antes) contra a semana
 antes dela, como o slide ("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel
-busca essas semanas extras junto. No funil, a etapa Conta ativa de uma semana
+busca essas semanas extras junto. No funil, a etapa 1º cliente em 7 dias de uma semana
 ainda aberta mostra "—" e "D7 fecha em DD/MM" e, embaixo, a mesma taxa do
-cartão: "última fechada: 8,2% (07–13/10)". O cartão se chama "Ativação D7" ("de todos os
-cadastros"). No funil, a etapa Conta ativa mostra a contagem (que ainda sobe
+cartão: "última fechada: 8,2% (07–13/10)".
+Enquanto ainda há cadastros dentro da janela de 7 dias, a contagem da etapa
+vai subir: no lugar da seta de variação aparece **"parcial"** (com o "antes" ao
+lado), para não parecer queda. O nome "Conta ativa" saiu do funil porque a aba
+Evolução mensal usa "Contas ativas" com outro sentido (atendeu no mês). O cartão se chama "Ativação D7" ("de todos os
+cadastros"). No funil, a etapa 1º cliente em 7 dias mostra a contagem (que ainda sobe
 nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
 embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
 ÷ quem concluiu o onboarding (~19–25%). Essa etapa não usa o "passo da etapa
@@ -159,7 +164,7 @@ custo por onboarding e ativação só existem no total.
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
 pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
-cadastros, onboarding e conta ativa por dia de cadastro (Brasília), sem os IDs
+cadastros, onboarding e ativação por dia de cadastro (Brasília), sem os IDs
 de teste e com as contas excluídas (inclui maduros, ativos maduros, onboarding
 maduros e ativos com onboarding entre os maduros; dados guardados no navegador
 na versão `v:5`).
