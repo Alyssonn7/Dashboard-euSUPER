@@ -75,17 +75,16 @@ Com essa regra, agosto perde R$ 1.673 (nove campanhas de tráfego no Meta e
 duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
-**Teste A/B** (abaixo dos gráficos por dia): um bloco na largura toda que
-resume o teste de páginas **em palavras**, sem números na tela — o resultado de
-cada canal ("miaapp.com.br converteu mais" ou "empate técnico"), **o que deu
-certo**, **por que converteu mais** (nossa leitura, com base no Clarity) e o
-**próximo passo**. Os números (taxa de conversão de cada página por canal) ficam
-guardados em `TESTE_AB` e aparecem só ao passar o mouse em cada canal. Um canal
-só ganha vencedora quando a diferença passa no teste de proporções (95%); fora
-disso é empate técnico. O bloco **não segue os filtros**: mostra o período do
-próprio teste. Hoje: Teste A/B 03 com as duas semanas (06/10 a 20/10) — Clarity
-e taxas enviados pelo Alysson em 21/10; vencedora miaapp.com.br (clara no Meta,
-empate no Google e na OpenAI).
+**Teste A/B** (abaixo dos gráficos por dia): um **placar de jogo**, feito para
+a reunião semanal. As duas páginas são os times (a vencedora ganha o selo
+"venceu"), o placar fica no meio (rodadas ganhas, mais os empates) e cada canal
+é uma rodada com um "cabo de guerra" puxado para quem converteu mais. Embaixo,
+só duas linhas: **por quê** e **próximo**. As taxas de conversão ficam
+guardadas em `TESTE_AB` e aparecem ao passar o mouse em cada rodada. Uma rodada
+só tem vencedora quando a diferença passa no teste de proporções (95%); fora
+disso é empate. O bloco **não segue os filtros**: mostra o período do próprio
+teste. Hoje: Teste A/B 03 com as duas semanas (06/10 a 20/10), A
+(miaapp.com.br) 1 × 0 B, com 2 empates.
 
 **Comparativo semanal** (opção do "Período de visualização"): mostra a semana
 que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:

@@ -303,30 +303,49 @@ button,select,input{font-family:inherit}
 #dica .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
 
 
-/* ---------------- teste A/B (largura toda, abaixo dos gráficos) ---------------- */
-.ab-cx{padding:22px 24px 18px;display:flex;flex-direction:column;gap:16px}
-.ab-cx .cx-t{align-items:flex-start;flex-wrap:wrap}
+/* ---------------- teste A/B: placar de jogo (largura toda, abaixo dos gráficos) ---------------- */
+.ab-cx{padding:22px 24px 20px;display:flex;flex-direction:column;gap:18px}
 .ab-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
-.ab-ver{flex:none;font-size:13px;font-weight:600;border-radius:99px;padding:6px 12px;background:var(--bom-bg);color:var(--bom)}
-.ab-ver.neutro{background:var(--neutro-bg);color:var(--neutro)}
-/* resultado de cada canal, em palavras */
-.ab-chs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.ab-ch{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:10px;border:1px solid var(--borda);
-  background:var(--neutro-bg);cursor:help;min-width:0}
-.ab-ch b{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
-.ab-ch span{font-size:15px;font-weight:600;color:var(--texto)}
-.ab-ch.vence{background:var(--bom-bg);border-color:var(--verde)}
-.ab-ch.vence span{color:var(--bom)}
-.ab-ch:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
-.ab-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:14px}
-.ab-col{border:1px solid var(--borda);border-radius:10px;padding:14px 18px;min-width:0}
-.ab-col h3{margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
-.ab-col ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
-.ab-col li{font-size:14.5px;line-height:1.5;color:var(--texto)}
-.ab-col li::marker{color:var(--azul)}
-.ab-prox{margin:0;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:12px 16px;border-radius:10px;
-  background:var(--neutro-bg);color:var(--texto);font-size:14.5px;line-height:1.5}
-.ab-prox b{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--neutro)}
+.placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
+.time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
+  border:1.5px solid var(--borda);border-radius:12px}
+.time.b{flex-direction:row-reverse;text-align:right}
+.time div{min-width:0}
+.time b{display:block;font-size:17px;font-weight:700;color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time small{display:block;font-size:12.5px;color:var(--texto-2)}
+.ab-l{width:42px;height:42px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:20px;font-weight:700;
+  background:var(--neutro-bg);color:var(--neutro)}
+.time.vence{border-color:var(--verde);background:var(--bom-bg)}
+.time.vence .ab-l{background:var(--verde);color:var(--tinta)}
+.trofeu{position:absolute;top:-11px;left:16px;display:inline-flex;align-items:center;gap:5px;font-style:normal;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:3px 10px 3px 7px;
+  background:var(--verde);color:var(--tinta)}
+.time.b .trofeu{left:auto;right:16px}
+.trofeu svg{width:14px;height:14px;display:block}
+.score{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 6px}
+.score div{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.score b{font-size:44px;font-weight:700;line-height:1;color:var(--texto)}
+.score span{font-size:22px;color:var(--texto-2)}
+.score small{font-size:12px;color:var(--texto-2);white-space:nowrap}
+/* rodadas: um cabo de guerra por canal */
+.rodadas{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rod{display:flex;flex-direction:column;gap:9px;padding:13px 16px 11px;border:1px solid var(--borda);border-radius:10px;cursor:help;min-width:0}
+.rod:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.rod-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rod-t b{font-size:15px;font-weight:600;color:var(--texto)}
+.rod-t span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.rod.vence .rod-t span{color:var(--bom)}
+.cabo{position:relative;height:8px;border-radius:99px;background:var(--grade);margin:4px 8px 0}
+.cabo::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;border-left:2px solid var(--borda-forte)}
+.cabo i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
+  background:var(--cinza);border:3px solid var(--painel);box-shadow:0 0 0 1px var(--borda-forte)}
+.rod.vence .cabo i{background:var(--verde)}
+.cabo-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--texto-2)}
+.ab-fim{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ab-fim p{margin:0;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
+  font-size:14.5px;line-height:1.45;color:var(--texto)}
+.ab-fim b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
+.ab-fim .prox{background:var(--bom-bg)} .ab-fim .prox b{color:var(--bom)}
 /* ---------------- abas (no topo azul) ---------------- */
 .abas{display:inline-flex;gap:4px;padding:4px;margin-top:10px;align-self:flex-start;max-width:100%;overflow-x:auto;
   border-radius:6px;background:rgba(10,26,48,.24)}
@@ -360,7 +379,10 @@ button,select,input{font-family:inherit}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
   .resumo,.evo-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ab-g{grid-template-columns:minmax(0,1fr)}
+  .rodadas{grid-template-columns:minmax(0,1fr)}
+  .rod{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:4px 16px}
+  .rod .rod-t{grid-row:1/3;flex-direction:column;gap:2px}
+  .rod .cabo{margin-top:6px}
   .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.quarto{grid-column:auto}
   /* em duas colunas, um último cartão sozinho ocupa a linha inteira */
   .resumo .kpi.mini:nth-last-child(2):nth-child(odd){grid-column:1/-1}
@@ -379,8 +401,16 @@ button,select,input{font-family:inherit}
   .conteudo{gap:20px}
 }
 @media (max-width:560px){
-  .ab-cx{padding:18px 16px 14px}
-  .ab-chs{grid-template-columns:minmax(0,1fr)}
+  .ab-cx{padding:18px 16px 16px}
+  .placar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px}
+  .time{flex-direction:column!important;text-align:center!important;padding:18px 8px 12px;gap:8px}
+  .time b{font-size:13px;white-space:normal}
+  .time small{font-size:11.5px}
+  .ab-l{width:34px;height:34px;font-size:16px}
+  .trofeu{left:50%!important;right:auto!important;transform:translateX(-50%)}
+  .score b{font-size:32px} .score span{font-size:17px}
+  .rod{grid-template-columns:84px minmax(0,1fr)}
+  .ab-fim{grid-template-columns:minmax(0,1fr)}
   /* semanas uma sobre a outra, setas nas laterais */
   .semanas{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
   .sem-vs{display:none}
@@ -2064,7 +2094,7 @@ const TESTE_AB={
   nome:"Teste A/B 03",
   de:"2026-10-06", ate:"2026-10-20",
   paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
-           b:{url:"lp3.miaapp.com.br", desc:"layout da Mia com o mesmo texto"}},
+           b:{url:"lp3.miaapp.com.br", desc:"layout novo, mesmo texto"}},
   vencedora:"a",
   /* taxa de conversão (%) lida nos gerenciadores pelo Alysson em 21/10.
      confiavel: a diferença passa no teste de proporções (95%). Meta conferido
@@ -2075,47 +2105,50 @@ const TESTE_AB={
     {n:"Meta Ads",   a:21.03, b:15.63, confiavel:true},
     {n:"OpenAI Ads", a:13.72, b:13.24, confiavel:false}
   ],
-  deuCerto:[
-    "A página principal converteu mais nos três canais: com folga no Meta e por pouco no Google e na OpenAI.",
-    "No Meta, a vantagem é grande e se repetiu nas duas semanas. É o resultado mais firme do teste.",
-    "No Google e na OpenAI, deu empate: a diferença é pequena demais para escolher uma página."
-  ],
-  /* leitura nossa: as duas páginas têm o mesmo texto, então o que mudou foi o
-     layout. Clarity: o topo da A tem o celular com a conversa no WhatsApp e o
-     link de agendamento; o topo da B é só texto e os dois botões. */
-  porque:[
-    "As duas páginas têm o mesmo texto. O que muda é o layout, e foi ele que fez a diferença.",
-    "A página principal mostra o produto funcionando logo no topo: a conversa no WhatsApp com o link de agendamento. A LP3 abre só com texto e botões.",
-    "Quem chega pelo Meta vem do feed e ainda não conhece a Mia. Ver o produto antes de pedir o cadastro ajuda a decidir.",
-    "Na LP3, mais gente clica no botão, mas menos termina o cadastro: clica por curiosidade, sem ter entendido o que é.",
-    "Quem vem do Google e da OpenAI já está procurando uma solução e se cadastra em qualquer uma das duas. Por isso o empate."
-  ],
-  proximo:"Manter a miaapp.com.br como página principal, tirar a verba da LP3 no Meta e fazer o próximo teste no Meta, onde a página faz diferença."
+  /* uma linha cada: os founders leem o placar, não o texto.
+     Leitura nossa, do Clarity: o topo da A tem o celular com a conversa no
+     WhatsApp e o link de agendamento; o topo da B é só texto e botões. */
+  porque:"A mostra o produto funcionando no topo. Quem vem do Meta precisa ver antes de se cadastrar.",
+  proximo:"Manter a A e fazer o próximo teste no Meta."
 };
+/* placar de jogo: as páginas são os times, cada canal é uma rodada. A
+   rodada só tem vencedora quando a diferença é confiável; senão é empate.
+   O "cabo de guerra" puxa para o lado de quem converteu mais (escala de
+   ±8 p.p.); os números ficam na dica de cada rodada. */
+const TROFEU=`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10v4a5 5 0 0 1-10 0V3z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M7 5H4v1a4 4 0 0 0 4 4M17 5h3v1a4 4 0 0 1-4 4"/><path fill="currentColor" d="M10.5 12h3v4h-3zM8 17h8v3H8z"/></svg>`;
 function pintarAB(){
   const el=document.getElementById("testeAB"), T=TESTE_AB;
   if(!T){ el.hidden=true; return; }
-  const P=T.paginas, nomeDe=k=>P[k].url;
-  const chips=T.canais.map(c=>{
-    const lider=c.a===c.b?null:c.b>c.a?"b":"a", vence=c.confiavel&&lider;
-    const txt=vence?`${nomeDe(lider)} converteu mais`:"empate técnico";
-    const d=`<b>${esc(c.n)}</b><p class="m">Taxa de conversão no período do teste</p>`+
-      `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(c.a,2)}</span></div>`+
-      `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(c.b,2)}</span></div>`+
-      `<p class="m">${vence?"Diferença confiável: não é acaso.":"Diferença pequena demais para apontar vencedora."}</p>`;
-    return `<li class="ab-ch${vence?" vence":""}" tabindex="0" data-html data-dica="${esc(d)}"><b>${esc(c.n)}</b><span>${esc(txt)}</span></li>`;
+  const P=T.paginas;
+  const rod=T.canais.map(c=>{
+    const lider=c.a===c.b?null:c.b>c.a?"b":"a";
+    return {...c, ganha:c.confiavel?lider:null};
+  });
+  const pts={a:rod.filter(r=>r.ganha==="a").length, b:rod.filter(r=>r.ganha==="b").length};
+  const emp=rod.filter(r=>!r.ganha).length;
+  const time=k=>{const vence=T.vencedora===k;
+    return `<div class="time ${k}${vence?" vence":""}">
+      ${vence?`<em class="trofeu">${TROFEU}venceu</em>`:""}
+      <span class="ab-l">${k.toUpperCase()}</span>
+      <div><b>${esc(P[k].url).replace(/^([^.]+\.)(?=.*\..*\.)/,"$1<wbr>")}</b><small>${esc(P[k].desc)}</small></div></div>`;};
+  const rodadas=rod.map(r=>{
+    const dif=r.a-r.b, pos=50-Math.max(-1,Math.min(1,dif/8))*44;
+    const res=r.ganha?`${r.ganha.toUpperCase()} venceu`:"empate";
+    const d=`<b>${esc(r.n)}</b><p class="m">Taxa de conversão</p>`+
+      `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(r.a,2)}</span></div>`+
+      `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(r.b,2)}</span></div>`+
+      `<p class="m">${r.ganha?"Diferença confiável.":"Diferença pequena demais: empate técnico."}</p>`;
+    return `<li class="rod${r.ganha?" vence":""}" tabindex="0" data-html data-dica="${esc(d)}">
+      <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
+      <div class="cabo"><i style="left:${pos.toFixed(1)}%"></i></div>
+      <div class="cabo-l"><span>A</span><span>B</span></div></li>`;
   }).join("");
-  const lista=l=>`<ul>${l.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
-  el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2>
-      <p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)} · A: ${esc(P.a.url)} (${esc(P.a.desc)}) × B: ${esc(P.b.url)} (${esc(P.b.desc)})</p></div>
-      ${T.vencedora?`<span class="ab-ver">Vencedora: ${esc(nomeDe(T.vencedora))}</span>`:`<span class="ab-ver neutro">Sem vencedora</span>`}</div>
-    <ul class="ab-chs" aria-label="Resultado por canal">${chips}</ul>
-    <div class="ab-g">
-      <div class="ab-col"><h3>O que deu certo</h3>${lista(T.deuCerto)}</div>
-      <div class="ab-col"><h3>Por que converteu mais</h3>${lista(T.porque)}</div>
-    </div>
-    <p class="ab-prox"><b>Próximo passo</b>${esc(T.proximo)}</p>
-    <p class="legenda-f">O resultado vem da taxa de conversão de cada gerenciador. O "por que" é a nossa leitura, com base no Clarity. Passe o mouse em cada canal para ver os números. Este bloco não segue os filtros acima.</p>`;
+  el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div></div>
+    <div class="placar">${time("a")}
+      <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div><small>${emp} empate${emp===1?"":"s"}</small></div>
+      ${time("b")}</div>
+    <ol class="rodadas" aria-label="Rodadas por canal">${rodadas}</ol>
+    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;
 }
 
 /* ------------------------------------------------- abas */
