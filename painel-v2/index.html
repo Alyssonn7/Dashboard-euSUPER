@@ -34,7 +34,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
   --ruim:#A9520C; --ruim-bg:#FDEEDD;
   --neutro:#1760B9; --neutro-bg:#EAF2FB;
   --alerta-v:#C05E0F; --alerta-borda:#F9C48F;
-  --cad-barra:#1760B9; --ab-perde:#4A76A8;
+  --cad-barra:#1760B9;
   --google:#008CF5; --meta:#F9902A; --openai:#05B27C;
   --dica-bg:#FEFEFE; --dica-borda:#CFE0F2; --dica-texto:#1760B9; --dica-m:#4A76A8;
   --sombra-dica:0 14px 34px -12px rgba(23,96,185,.4);
@@ -53,7 +53,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
     --ruim:#FFB067; --ruim-bg:#3A2614;
     --neutro:#D7FFF7; --neutro-bg:#19385F;
     --alerta-v:#FFB067; --alerta-borda:#F9902A;
-    --cad-barra:#008CF5; --ab-perde:#2A4A75;
+    --cad-barra:#008CF5;
     --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
     --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
     --foco:rgba(0,140,245,.45);
@@ -69,7 +69,7 @@ try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document
   --ruim:#FFB067; --ruim-bg:#3A2614;
   --neutro:#D7FFF7; --neutro-bg:#19385F;
   --alerta-v:#FFB067; --alerta-borda:#F9902A;
-  --cad-barra:#008CF5; --ab-perde:#2A4A75;
+  --cad-barra:#008CF5;
   --dica-bg:#0A1A30; --dica-borda:#2A4A75; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
   --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
   --foco:rgba(0,140,245,.45);
@@ -309,34 +309,24 @@ button,select,input{font-family:inherit}
 .ab-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
 .ab-ver{flex:none;font-size:13px;font-weight:600;border-radius:99px;padding:6px 12px;background:var(--bom-bg);color:var(--bom)}
 .ab-ver.neutro{background:var(--neutro-bg);color:var(--neutro)}
-.ab-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr);gap:14px}
-.ab-p{border:1px solid var(--borda);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.ab-p.vence{border-color:var(--verde)}
-.ab-p header{display:flex;align-items:center;gap:10px;min-width:0}
-.ab-p header div{min-width:0}
-.ab-p header b{display:block;font-size:15px;font-weight:600;color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ab-p header small{display:block;font-size:12px;color:var(--texto-2);line-height:1.35}
-.ab-l{width:28px;height:28px;flex:none;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:14px;
-  color:var(--branco);background:var(--ab-perde)}
-.ab-p.vence .ab-l{background:var(--verde)}
-.ab-p dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
-.ab-p dt{font-size:11.5px;color:var(--texto-2);line-height:1.3}
-.ab-p dd{margin:3px 0 0;font-size:18px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
-.ab-cs{border:1px solid var(--borda);border-radius:10px;padding:14px 16px;min-width:0}
-.ab-cs h3{margin:0 0 6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
-.ab-c{display:grid;grid-template-columns:92px minmax(0,1fr) 112px;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--grade)}
-.ab-c:first-of-type{border-top:0}
-.ab-cn{font-size:13.5px;font-weight:600;color:var(--texto)}
-.ab-cb{display:grid;gap:5px;min-width:0}
-.ab-cl{display:grid;grid-template-columns:14px minmax(0,1fr) 54px;gap:8px;align-items:center}
-.ab-cl>span:first-child{font-size:11px;font-weight:700;color:var(--texto-2)}
-.ab-ct{height:10px;border-radius:99px;background:var(--grade);overflow:hidden}
-.ab-ct i{display:block;height:100%;border-radius:99px;background:var(--cinza)}
-.ab-ct i.vence{background:var(--verde)}
-.ab-cl b{font-size:12.5px;font-weight:600;color:var(--texto);text-align:right;font-variant-numeric:tabular-nums}
-.ab-cv{text-align:right;font-size:14px;font-weight:700;color:var(--bom);font-variant-numeric:tabular-nums;white-space:nowrap}
-.ab-cv small{display:block;font-size:11.5px;font-weight:500;color:var(--texto-2)}
-.ab-cv.neutro{color:var(--texto-2);font-weight:500}
+/* resultado de cada canal, em palavras */
+.ab-chs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ab-ch{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:10px;border:1px solid var(--borda);
+  background:var(--neutro-bg);cursor:help;min-width:0}
+.ab-ch b{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.ab-ch span{font-size:15px;font-weight:600;color:var(--texto)}
+.ab-ch.vence{background:var(--bom-bg);border-color:var(--verde)}
+.ab-ch.vence span{color:var(--bom)}
+.ab-ch:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.ab-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:14px}
+.ab-col{border:1px solid var(--borda);border-radius:10px;padding:14px 18px;min-width:0}
+.ab-col h3{margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.ab-col ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.ab-col li{font-size:14.5px;line-height:1.5;color:var(--texto)}
+.ab-col li::marker{color:var(--azul)}
+.ab-prox{margin:0;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:12px 16px;border-radius:10px;
+  background:var(--neutro-bg);color:var(--texto);font-size:14.5px;line-height:1.5}
+.ab-prox b{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--neutro)}
 /* ---------------- abas (no topo azul) ---------------- */
 .abas{display:inline-flex;gap:4px;padding:4px;margin-top:10px;align-self:flex-start;max-width:100%;overflow-x:auto;
   border-radius:6px;background:rgba(10,26,48,.24)}
@@ -370,8 +360,7 @@ button,select,input{font-family:inherit}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
   .resumo,.evo-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ab-g{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .ab-cs{grid-column:1/-1}
+  .ab-g{grid-template-columns:minmax(0,1fr)}
   .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.quarto{grid-column:auto}
   /* em duas colunas, um último cartão sozinho ocupa a linha inteira */
   .resumo .kpi.mini:nth-last-child(2):nth-child(odd){grid-column:1/-1}
@@ -391,9 +380,7 @@ button,select,input{font-family:inherit}
 }
 @media (max-width:560px){
   .ab-cx{padding:18px 16px 14px}
-  .ab-g{grid-template-columns:minmax(0,1fr)}
-  .ab-c{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}
-  .ab-cb{grid-column:1/-1;grid-row:2}
+  .ab-chs{grid-template-columns:minmax(0,1fr)}
   /* semanas uma sobre a outra, setas nas laterais */
   .semanas{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
   .sem-vs{display:none}
@@ -2067,67 +2054,70 @@ function pintarEvo(){
 
 /* =========================================================================
    TESTE A/B DAS PÁGINAS — bloco fixo, não segue os filtros: mostra o teste
-   do período dele. Dados lançados à mão (Clarity e taxa de conversão lida em
-   cada gerenciador); para trocar de teste, basta substituir TESTE_AB.
-   Campo sem dado fica null e aparece como "—".
+   do período dele, em palavras: o resultado de cada canal, o que deu certo,
+   por que converteu mais e o próximo passo. Os números ficam guardados aqui e
+   aparecem só na dica de cada canal (passar o mouse).
+   Para trocar de teste, basta substituir TESTE_AB.
    a = página A (controle), b = página B (desafiante).
    ========================================================================= */
 const TESTE_AB={
-  nome:"Teste A/B 03 · duas semanas",
+  nome:"Teste A/B 03",
   de:"2026-10-06", ate:"2026-10-20",
-  /* Clarity, 06/10 a 20/10, enviado pelo Alysson em 21/10.
-     Botão principal = o "Criar meu link grátis" do topo (#cta-criar-hero na A,
-     primeiro botão do topo na B), o mesmo critério da semana 1.
-     Entrar = login de quem já tem conta (#cta-entrar-header na A, primeiro
-     botão do cabeçalho na B). */
-  paginas:{
-    a:{url:"miaapp.com.br",     desc:"Página principal",
-       exibicoes:3579, toques:1879, botaoPrincipal:23.95, login:23.47},
-    b:{url:"lp3.miaapp.com.br", desc:"Layout da Mia com o texto da página principal",
-       exibicoes:2715, toques:1251, botaoPrincipal:33.01, login:4.16}
-  },
-  /* taxa de conversão de cada página em cada canal (%), lida nos gerenciadores
-     pelo Alysson em 21/10, para as duas semanas do teste */
+  paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
+           b:{url:"lp3.miaapp.com.br", desc:"layout da Mia com o mesmo texto"}},
+  vencedora:"a",
+  /* taxa de conversão (%) lida nos gerenciadores pelo Alysson em 21/10.
+     confiavel: a diferença passa no teste de proporções (95%). Meta conferido
+     com o volume do Windsor (187/884 x 156/1012 visitas, chance de acaso
+     0,2%); Google e OpenAI ficam dentro da margem (60% e 75% de acaso). */
   canais:[
-    {n:"Google Ads", a:17.14, b:16.08},
-    {n:"Meta Ads",   a:21.03, b:15.63},
-    {n:"OpenAI Ads", a:13.72, b:13.24}
-  ]
+    {n:"Google Ads", a:17.14, b:16.08, confiavel:false},
+    {n:"Meta Ads",   a:21.03, b:15.63, confiavel:true},
+    {n:"OpenAI Ads", a:13.72, b:13.24, confiavel:false}
+  ],
+  deuCerto:[
+    "A página principal converteu mais nos três canais: com folga no Meta e por pouco no Google e na OpenAI.",
+    "No Meta, a vantagem é grande e se repetiu nas duas semanas. É o resultado mais firme do teste.",
+    "No Google e na OpenAI, deu empate: a diferença é pequena demais para escolher uma página."
+  ],
+  /* leitura nossa: as duas páginas têm o mesmo texto, então o que mudou foi o
+     layout. Clarity: o topo da A tem o celular com a conversa no WhatsApp e o
+     link de agendamento; o topo da B é só texto e os dois botões. */
+  porque:[
+    "As duas páginas têm o mesmo texto. O que muda é o layout, e foi ele que fez a diferença.",
+    "A página principal mostra o produto funcionando logo no topo: a conversa no WhatsApp com o link de agendamento. A LP3 abre só com texto e botões.",
+    "Quem chega pelo Meta vem do feed e ainda não conhece a Mia. Ver o produto antes de pedir o cadastro ajuda a decidir.",
+    "Na LP3, mais gente clica no botão, mas menos termina o cadastro: clica por curiosidade, sem ter entendido o que é.",
+    "Quem vem do Google e da OpenAI já está procurando uma solução e se cadastra em qualquer uma das duas. Por isso o empate."
+  ],
+  proximo:"Manter a miaapp.com.br como página principal, tirar a verba da LP3 no Meta e fazer o próximo teste no Meta, onde a página faz diferença."
 };
-const ppTxt=v=>nf2.format(v)+" p.p.";
 function pintarAB(){
   const el=document.getElementById("testeAB"), T=TESTE_AB;
   if(!T){ el.hidden=true; return; }
-  const ok=v=>v!=null&&isFinite(v);
-  /* vencedor de cada canal e o placar */
-  const can=T.canais.map(c=>({...c, ganha:ok(c.a)&&ok(c.b)&&c.a!==c.b?(c.b>c.a?"b":"a"):null}));
-  const vA=can.filter(c=>c.ganha==="a").length, vB=can.filter(c=>c.ganha==="b").length, n=can.filter(c=>ok(c.a)&&ok(c.b)).length;
-  const lider=vA===vB?null:vA>vB?"a":"b";
-  const veredito=!n?"Aguardando as taxas de conversão":lider?`Página ${lider.toUpperCase()} venceu em ${lider==="a"?vA:vB} de ${n} canais`:`Empate: ${vA} a ${vB}`;
-  const maxTx=Math.max(1,...can.flatMap(c=>[c.a,c.b]).filter(ok));
-  const pag=k=>{const P=T.paginas[k], vence=lider===k;
-    return `<div class="ab-p${vence?" vence":""}">
-      <header><span class="ab-l">${k.toUpperCase()}</span><div><b>${esc(P.url||"—")}</b><small>${esc(P.desc||"")}</small></div></header>
-      <dl>
-        <div><dt>Exibições</dt><dd>${num(P.exibicoes)}</dd></div>
-        <div><dt>Toques</dt><dd>${num(P.toques)}</dd></div>
-        <div><dt>No botão principal</dt><dd>${pct(P.botaoPrincipal,2)}</dd></div>
-        ${P.login!=null?`<div><dt>No "Entrar" (login)</dt><dd>${pct(P.login,2)}</dd></div>`:""}
-      </dl></div>`;};
-  const linhas=can.map(c=>`<div class="ab-c">
-      <span class="ab-cn">${esc(c.n)}</span>
-      <div class="ab-cb">${["a","b"].map(k=>`<div class="ab-cl"><span>${k.toUpperCase()}</span>
-        <span class="ab-ct"><i style="width:${ok(c[k])?(c[k]/maxTx*100).toFixed(1):0}%" class="${c.ganha===k?"vence":""}"></i></span>
-        <b>${pct(c[k],2)}</b></div>`).join("")}</div>
-      <span class="ab-cv${c.ganha?"":" neutro"}">${c.ganha?`+${ppTxt(Math.abs(c.b-c.a))} <small>para ${c.ganha.toUpperCase()}</small>`:ok(c.a)&&ok(c.b)?"empate":"—"}</span>
-    </div>`).join("");
+  const P=T.paginas, nomeDe=k=>P[k].url;
+  const chips=T.canais.map(c=>{
+    const lider=c.a===c.b?null:c.b>c.a?"b":"a", vence=c.confiavel&&lider;
+    const txt=vence?`${nomeDe(lider)} converteu mais`:"empate técnico";
+    const d=`<b>${esc(c.n)}</b><p class="m">Taxa de conversão no período do teste</p>`+
+      `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(c.a,2)}</span></div>`+
+      `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(c.b,2)}</span></div>`+
+      `<p class="m">${vence?"Diferença confiável: não é acaso.":"Diferença pequena demais para apontar vencedora."}</p>`;
+    return `<li class="ab-ch${vence?" vence":""}" tabindex="0" data-html data-dica="${esc(d)}"><b>${esc(c.n)}</b><span>${esc(txt)}</span></li>`;
+  }).join("");
+  const lista=l=>`<ul>${l.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
   el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2>
-      <p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)} · não segue os filtros acima</p></div>
-      <span class="ab-ver${lider?"":" neutro"}">${veredito}</span></div>
-    <div class="ab-g">${pag("a")}${pag("b")}
-      <div class="ab-cs"><h3>Taxa de conversão por canal</h3>${linhas}</div></div>
-    <p class="legenda-f">Exibições, toques, botão principal e "Entrar": Microsoft Clarity (% dos toques da página). Taxa de conversão: lida no gerenciador de cada canal.</p>`;
+      <p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)} · A: ${esc(P.a.url)} (${esc(P.a.desc)}) × B: ${esc(P.b.url)} (${esc(P.b.desc)})</p></div>
+      ${T.vencedora?`<span class="ab-ver">Vencedora: ${esc(nomeDe(T.vencedora))}</span>`:`<span class="ab-ver neutro">Sem vencedora</span>`}</div>
+    <ul class="ab-chs" aria-label="Resultado por canal">${chips}</ul>
+    <div class="ab-g">
+      <div class="ab-col"><h3>O que deu certo</h3>${lista(T.deuCerto)}</div>
+      <div class="ab-col"><h3>Por que converteu mais</h3>${lista(T.porque)}</div>
+    </div>
+    <p class="ab-prox"><b>Próximo passo</b>${esc(T.proximo)}</p>
+    <p class="legenda-f">O resultado vem da taxa de conversão de cada gerenciador. O "por que" é a nossa leitura, com base no Clarity. Passe o mouse em cada canal para ver os números. Este bloco não segue os filtros acima.</p>`;
 }
+
 /* ------------------------------------------------- abas */
 const ABA_GUARDA="v2:aba";
 const TITULOS={funil:["funil de cadastro","Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa."],
