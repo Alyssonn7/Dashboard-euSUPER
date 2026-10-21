@@ -1185,8 +1185,13 @@ function periodo(){
   if(v==="14d") return {de:soma(o,-13),ate:o};
   if(v==="30d") return {de:soma(o,-29),ate:o};
   if(v==="mes") return {de:o.slice(0,8)+"01", ate:o};
-  /* comparativo semanal: 7 dias que terminam ontem; as setas andam de 7 em 7 */
-  if(v==="semanal"){ const f=soma(o,-7*SEM_OFF); return {de:soma(f,-6), ate:f}; }
+  /* comparativo semanal: semanas de quarta a terça, como o relatório semanal.
+     A semana atual é a que contém ontem; em andamento, vai só até ontem.
+     As setas andam de 7 em 7 */
+  if(v==="semanal"){
+    const qua=soma(o,-((D(o).getDay()+4)%7)), de=soma(qua,-7*SEM_OFF), fim=soma(de,6);
+    return {de, ate:fim>o?o:fim};
+  }
   if(v==="semana"){
     const h=new Date(), dow=(h.getDay()+6)%7, fim=new Date(h); fim.setDate(h.getDate()-dow-1);
     const f=iso(fim); return {de:soma(f,-6), ate:f};
@@ -1201,7 +1206,7 @@ function periodo(){
   return {de,ate};
 }
 function comparacao(p){
-  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.ate,-7)};   /* sempre a semana anterior */
+  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.de,-1)};   /* sempre a semana anterior inteira */
   if(!p||fComp.value==="nenhuma") return null;
   if(ehMes(p.de,p.ate)){                      /* mês fechado: o mês anterior inteiro */
     const a=D(p.de), fim=new Date(a.getFullYear(),a.getMonth(),0,12);
@@ -1212,17 +1217,18 @@ function comparacao(p){
 }
 
 /* ------------------------------------------------- comparativo semanal
-   SEM_OFF = quantas semanas para trás (0 = a semana que terminou ontem).
+   SEM_OFF = quantas semanas para trás (0 = a semana de quarta a terça que contém ontem).
    No modo semanal a comparação fica presa em "Semana anterior"; a escolha
    que havia antes volta quando sai do modo. */
 let SEM_OFF=0;
-/* no semanal, a semana que terminou ontem ainda não fechou a janela de 7
-   dias: a ativação D7 usa a semana anterior (a última fechada) contra a
-   semana antes dela, como o relatório semanal faz. Semanas mais antigas já
-   fecharam e usam a própria semana */
-function coorteAtiv(p,c){
-  if(fPeriodo.value!=="semanal"||!p||!c||soma(p.ate,7)<=ontem()) return null;
-  return {p:c, c:{de:soma(c.de,-7), ate:soma(c.ate,-7)}};
+/* ativação D7 no semanal: a semana recente ainda não fechou a janela de 7
+   dias, então o cartão usa a semana mais nova que já fechou (a escolhida, a
+   anterior ou a de antes), contra a semana antes dela — como o relatório
+   semanal ("cadastros de 07–13/10"). Devolve as 4 semanas, da escolhida para trás */
+function semanasAtiv(p,c){
+  const w=[p,c];
+  for(let k=0;k<2;k++){ const u=w[w.length-1]; w.push({de:soma(u.de,-7), ate:soma(u.de,-1)}); }
+  return w;
 }
 const dataCurta=s=>`${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(2,4)}`;
 function modoSemanal(){
@@ -1237,7 +1243,7 @@ function pintarSemanas(){
   const p=periodo(), c=comparacao(p);
   document.getElementById("semAtual").textContent=`${dataCurta(p.de)} a ${dataCurta(p.ate)}`;
   document.getElementById("semAntes").textContent=`${dataCurta(c.de)} a ${dataCurta(c.ate)}`;
-  document.getElementById("semRot").textContent=SEM_OFF===0?"Semana atual":"Semana";
+  document.getElementById("semRot").textContent=SEM_OFF>0?"Semana":dias(p.de,p.ate)<7?"Semana atual · parcial":"Semana atual";
   document.getElementById("semProx").disabled=SEM_OFF===0;
 }
 
@@ -1407,7 +1413,7 @@ async function atualizar(){
   const c=comparacao(p);
   /* uma consulta por intervalo; se as janelas se encostam, vira uma só */
   let rs=juntar(c?[[c.de,c.ate]]:[],p.de,p.ate);
-  const co=coorteAtiv(p,c); if(co) rs=juntar(rs,co.c.de,co.c.ate);
+  if(fPeriodo.value==="semanal"&&c) rs=juntar(rs,semanasAtiv(p,c)[3].de,c.ate);
   puxando=true; pintarTopo();
   FALHAS={}; let algum=false;
   const fontes={google:qGoogle, meta:qMeta, openai:qOpenai};
@@ -1794,7 +1800,7 @@ function pintar(){
   /* frase de estado */
   const falta=faltando(p,canal), faltaC=c?faltando(c,canal):[];
   const n=dias(p.de,p.ate);
-  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b> comparada com <b>semana ${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
+  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b>${n<7?` (em andamento, ${n} de 7 dias)`:""} comparada com <b>semana ${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
     `<b>${falar(p.de,p.ate)}</b>`+(c?` comparado com <b>${falar(c.de,c.ate)}</b>`:"")+
     ` · ${ehMes(p.de,p.ate)?"mês fechado":`${n} dia${n>1?"s":""}`}`;
   let cls="frase"+(DADOS.fonte==="vivo"?" vivo":"");
@@ -1824,12 +1830,18 @@ function pintar(){
   if(modoReal){
     /* onboarding e ativação só existem sobre o total de cadastros do Metabase */
     const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} de ${num(a.cadReal)} cadastros no total`:"";
-    const co=coorteAtiv(p,c);
-    const aAt=co?agregar(co.p.de,co.p.ate,canal,camp):a;
-    const bAt=co?(cobre(DADOS.base.cob,co.c.de,co.c.ate)?agregar(co.c.de,co.c.ate,canal,camp):null):b;
+    let aAt=a, bAt=b, co=null;
+    if(fPeriodo.value==="semanal"&&c){
+      const w=semanasAtiv(p,c), tem=x=>cobre(DADOS.base.cob,x.de,x.ate);
+      for(let k=0;k<3&&tem(w[k]);k++){
+        const x=k===0?a:agregar(w[k].de,w[k].ate,canal,camp);
+        if(!d7Fechado(x)) continue;
+        aAt=x; bAt=tem(w[k+1])?agregar(w[k+1].de,w[k+1].ate,canal,camp):null; co=k>0?w[k]:null; break;
+      }
+    }
     const pend=aAt.cadReal-aAt.mad;
     const sAtiv=!d7Fechado(aAt)?`Fecha em ${curta(soma(p.ate,7))} · ${num(pend)} cadastro${pend===1?"":"s"} na janela`:
-      (co?`Cadastros de ${curta(co.p.de)} a ${curta(co.p.ate)}`:"De todos os cadastros")+
+      (co?`Cadastros de ${curta(co.de)} a ${curta(co.ate)}`:"De todos os cadastros")+
       ` · ${num(aAt.ativMad)} de ${num(aAt.mad)}`+(pend>0?` · ${num(pend)} ainda na janela`:"");
     /* ordem de apresentação, de cima para baixo como o funil:
        1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte

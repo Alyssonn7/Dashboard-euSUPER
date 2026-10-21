@@ -87,10 +87,13 @@ filtros**: mostra o período do próprio teste. Hoje: Teste A/B 03 com as duas
 semanas (06/10 a 20/10): A (miaapp.com.br) 3 × 0 B — com folga no Meta, por
 pouco no Google e na OpenAI.
 
-**Comparativo semanal** (opção do "Período de visualização"): mostra a semana
-que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:
-em 20/10, semana 13/10 a 19/10 contra 06/10 a 12/10. As setas ‹ › andam de
-semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
+**Comparativo semanal** (opção do "Período de visualização"): semanas de
+**quarta a terça**, as mesmas do relatório semanal do marketing. A semana atual
+é a que contém ontem; se ainda está em andamento, vai até ontem e aparece como
+"Semana atual · parcial" (ex.: na terça 27/10, 21/10 a 26/10, 6 de 7 dias),
+sempre contra a semana anterior inteira — como o slide. Na quarta, a semana
+atual está fechada: em 21/10, 14/10 a 20/10 contra 07/10 a 13/10. As setas
+‹ › andam de semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
 ao sair, volta a que estava escolhida.
 
 **Filtros:** período (esse mês, comparativo semanal, últimos 7/14/30 dias, semana passada, mês
@@ -126,10 +129,10 @@ slide):
 a janela leva 7 dias para fechar, a taxa só usa os cadastros que já completaram
 a janela, e só aparece quando pelo menos metade dos cadastros do recorte já
 fechou; antes disso o cartão mostra "—" e "Fecha em DD/MM". No **comparativo
-semanal**, a semana que terminou ontem ainda está aberta, então o cartão usa a
-semana anterior (a última fechada) contra a semana antes dela, como o slide
-("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel busca essa semana extra
-junto. O cartão se chama "Ativação D7" ("de todos os
+semanal**, a semana recente ainda está aberta, então o cartão usa a semana
+mais nova que já fechou (a escolhida, a anterior ou a de antes) contra a semana
+antes dela, como o slide ("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel
+busca essas semanas extras junto. O cartão se chama "Ativação D7" ("de todos os
 cadastros"). No funil, a etapa Conta ativa mostra a contagem (que ainda sobe
 nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
 embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
