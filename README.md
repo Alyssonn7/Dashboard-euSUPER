@@ -75,6 +75,15 @@ Com essa regra, agosto perde R$ 1.673 (nove campanhas de tráfego no Meta e
 duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
+**Teste A/B** (abaixo dos gráficos por dia): um bloco na largura toda com o
+teste de páginas em andamento ou o último fechado — as duas páginas (A e B)
+com exibições, toques e % de toques no botão principal (Microsoft Clarity) e a
+taxa de conversão de cada página em cada canal, lida nos gerenciadores. O
+placar ("Página B venceu em 2 de 3 canais") e a diferença em pontos
+percentuais são calculados. O bloco **não segue os filtros**: mostra o período
+do próprio teste. Os dados ficam em `TESTE_AB` no código; campo sem dado fica
+`null` e aparece como "—". Hoje: Teste A/B 03 (07/10 a 13/10).
+
 **Comparativo semanal** (opção do "Período de visualização"): mostra a semana
 que terminou ontem (7 dias) contra os 7 dias anteriores, lado a lado — ex.:
 em 20/10, semana 13/10 a 19/10 contra 06/10 a 12/10. As setas ‹ › andam de
