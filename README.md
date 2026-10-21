@@ -23,7 +23,7 @@ topo fixa a escolha neste navegador (`v2:tema`).
 Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
 principais (investimento, cadastros, custo por cadastro, taxa de conversão),
 quatro mini blocos numa linha, na ordem do funil (CPM, onboarding concluído,
-custo por onboarding e ativação em 7 dias) e o funil na largura toda.
+custo por onboarding e ativação D7) e o funil na largura toda.
 
 **Os quatro principais são só do tráfego pago.** Cadastros = conversões que
 Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
@@ -113,10 +113,18 @@ origem do cadastro.
 **Conta ativa = pelo menos um agendamento criado nos 7 dias depois do
 cadastro** (`event_scheduled.professional_id`, `created_at` dentro da janela,
 rascunho `DRAFT` não conta; agendamento cancelado depois conta, porque foi
-feito). Não é mais a conta de recebimento do Pagar.me. Como a janela leva 7 dias
-para fechar, o cartão mostra a **taxa de ativação em 7 dias** só entre os
-cadastros que já completaram a janela, e diz quantos ainda estão dentro dela; o
-funil mostra a contagem, que ainda sobe nos períodos recentes. A altura das faixas do funil é logarítmica, para caber de
+feito). Não é mais a conta de recebimento do Pagar.me.
+
+**Ativação D7 = contas ativas ÷ todos os cadastros com 7 dias completos** — o
+mesmo número do Metabase e do Oráculo (~10%). Como a janela leva 7 dias para
+fechar, a taxa só usa os cadastros que já completaram a janela, e o painel diz
+quantos ainda estão dentro dela. O cartão se chama "Ativação D7" ("de todos os
+cadastros"). No funil, a etapa Conta ativa mostra a contagem (que ainda sobe
+nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
+embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
+÷ quem concluiu o onboarding (~25%). Essa etapa não usa o "passo da etapa
+anterior", porque quem pula o onboarding também pode ativar — antes, ativos ÷
+onboarding dava ~21–27% e era lido como se fosse a ativação D7. A altura das faixas do funil é logarítmica, para caber de
 centenas de milhares de impressões a dezenas de contas.
 
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
@@ -134,7 +142,9 @@ custo por onboarding e ativação só existem no total.
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
 pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
-cadastros, onboarding e conta ativa por dia de cadastro, sem os IDs de teste.
+cadastros, onboarding e conta ativa por dia de cadastro, sem os IDs de teste
+(inclui maduros, ativos maduros, onboarding maduros e ativos com onboarding
+entre os maduros; dados guardados no navegador na versão `v:4`).
 O conector `openai_ads` do Windsor **agora traz `conversions`** — agosto bate
 com o export do Ads Manager (117). O GA4 não está mais conectado no Windsor, por
 isso "Visitas na página" só aparece no Meta (landing page view do pixel).

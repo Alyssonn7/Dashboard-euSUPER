@@ -246,6 +246,7 @@ button,select,input{font-family:inherit}
   text-shadow:0 1px 2px rgba(10,26,48,.35);min-height:0}
 .fc-p{font-size:clamp(20px,1.9vw,26px);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
 .fc-p small{display:block;font-size:13px;font-weight:500;opacity:.92;margin-top:5px;letter-spacing:0}
+.fc-p small.fc-x{margin-top:8px;padding-top:7px;border-top:1px solid rgba(254,254,254,.35);font-size:12px;opacity:.85}
 .fc-pe{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;gap:1px;padding-bottom:2px;font-size:13px;
   color:var(--texto-2);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0}
 .fc-pe b{color:var(--texto);font-weight:600;overflow:hidden;text-overflow:ellipsis}
@@ -570,9 +571,10 @@ button,select,input{font-family:inherit}
    midia[canal].l: [dia, campanha (índice em camp), impressões, cliques,
                     investimento, cadastros da plataforma, visitas na página]
    base.l:         [dia, cadastros, onboarding concluído, contas ativas em 7 dias,
-                    cadastros que já completaram 7 dias, ativos entre esses]
+                    cadastros que já completaram 7 dias, ativos entre esses,
+                    maduros com onboarding concluído, ativos entre esses]
    ========================================================================= */
-const RETRATO={v:3, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 14/10/2026 12:05 (Brasília) */, fonte:"retrato",
+const RETRATO={v:4, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 21/10/2026 (taxas de ativação D7) */, fonte:"retrato",
  cobre:{"de":"2026-08-01","ate":"2026-10-12"},
  midia:{
   google:{cob:[["2026-08-01","2026-10-12"]],
@@ -1034,79 +1036,79 @@ const RETRATO={v:3, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 14
  },
  base:{cob:[["2026-08-01","2026-10-12"]],
   l:[
-["2026-08-01",9,8,0,9,0],
-["2026-08-02",15,14,2,15,2],
-["2026-08-03",9,8,1,9,1],
-["2026-08-04",9,6,0,9,0],
-["2026-08-05",13,11,4,13,4],
-["2026-08-06",8,8,1,8,1],
-["2026-08-07",5,2,0,5,0],
-["2026-08-08",3,3,0,3,0],
-["2026-08-09",5,4,3,5,3],
-["2026-08-10",5,3,0,5,0],
-["2026-08-11",11,10,1,11,1],
-["2026-08-12",7,7,0,7,0],
-["2026-08-13",4,4,1,4,1],
-["2026-08-14",4,4,1,4,1],
-["2026-08-15",3,3,0,3,0],
-["2026-08-16",3,3,1,3,1],
-["2026-08-17",3,3,0,3,0],
-["2026-08-18",23,19,5,23,5],
-["2026-08-19",24,21,4,24,4],
-["2026-08-20",25,23,2,25,2],
-["2026-08-21",24,21,0,24,0],
-["2026-08-22",21,16,4,21,4],
-["2026-08-23",8,6,3,8,3],
-["2026-08-24",4,3,2,4,2],
-["2026-08-25",6,4,1,6,1],
-["2026-08-26",7,6,0,7,0],
-["2026-08-27",8,8,0,8,0],
-["2026-08-28",6,5,0,6,0],
-["2026-08-29",10,10,4,10,4],
-["2026-08-30",24,20,3,24,3],
-["2026-08-31",35,28,5,35,5],
-["2026-09-01",27,22,3,27,3],
-["2026-09-02",17,15,3,17,3],
-["2026-09-03",33,23,5,33,5],
-["2026-09-04",27,22,3,27,3],
-["2026-09-05",18,17,0,18,0],
-["2026-09-06",25,19,6,25,6],
-["2026-09-07",28,22,5,28,5],
-["2026-09-08",41,34,5,41,5],
-["2026-09-09",48,39,10,48,10],
-["2026-09-10",47,41,11,47,11],
-["2026-09-11",43,35,7,43,7],
-["2026-09-12",29,23,4,29,4],
-["2026-09-13",26,23,6,26,6],
-["2026-09-14",32,22,6,32,6],
-["2026-09-15",31,21,2,31,2],
-["2026-09-16",45,24,7,45,7],
-["2026-09-17",59,17,12,59,12],
-["2026-09-18",66,17,8,66,8],
-["2026-09-19",47,18,5,47,5],
-["2026-09-20",27,7,3,27,3],
-["2026-09-21",33,10,3,33,3],
-["2026-09-22",67,19,6,67,6],
-["2026-09-23",70,23,9,70,9],
-["2026-09-24",59,17,2,59,2],
-["2026-09-25",44,17,8,44,8],
-["2026-09-26",40,13,4,40,4],
-["2026-09-27",41,13,4,41,4],
-["2026-09-28",56,13,3,56,3],
-["2026-09-29",53,19,7,53,7],
-["2026-09-30",73,23,8,73,8],
-["2026-10-01",60,19,6,60,6],
-["2026-10-02",60,19,7,60,7],
-["2026-10-03",44,22,6,44,6],
-["2026-10-04",45,11,4,45,4],
-["2026-10-05",67,17,8,67,8],
-["2026-10-06",79,41,15,79,15],
-["2026-10-07",65,32,7,35,3],
-["2026-10-08",99,38,9,0,0],
-["2026-10-09",63,22,7,0,0],
-["2026-10-10",60,24,5,0,0],
-["2026-10-11",72,28,4,0,0],
-["2026-10-12",67,24,4,0,0]
+["2026-08-01",9,8,0,9,0,8,0],
+["2026-08-02",15,14,2,15,2,14,2],
+["2026-08-03",9,8,1,9,1,8,1],
+["2026-08-04",9,6,0,9,0,6,0],
+["2026-08-05",13,11,4,13,4,11,4],
+["2026-08-06",8,8,1,8,1,8,1],
+["2026-08-07",5,2,0,5,0,2,0],
+["2026-08-08",3,3,0,3,0,3,0],
+["2026-08-09",5,4,3,5,3,4,3],
+["2026-08-10",5,3,0,5,0,3,0],
+["2026-08-11",11,10,1,11,1,10,1],
+["2026-08-12",7,7,0,7,0,7,0],
+["2026-08-13",4,4,1,4,1,4,1],
+["2026-08-14",4,4,1,4,1,4,1],
+["2026-08-15",3,3,0,3,0,3,0],
+["2026-08-16",3,3,1,3,1,3,1],
+["2026-08-17",3,3,0,3,0,3,0],
+["2026-08-18",23,19,5,23,5,19,5],
+["2026-08-19",24,21,4,24,4,21,4],
+["2026-08-20",25,23,2,25,2,23,2],
+["2026-08-21",24,21,0,24,0,21,0],
+["2026-08-22",21,16,4,21,4,16,4],
+["2026-08-23",8,6,3,8,3,6,3],
+["2026-08-24",4,3,2,4,2,3,2],
+["2026-08-25",6,4,1,6,1,4,1],
+["2026-08-26",7,6,0,7,0,6,0],
+["2026-08-27",8,8,0,8,0,8,0],
+["2026-08-28",6,5,0,6,0,5,0],
+["2026-08-29",10,10,4,10,4,10,4],
+["2026-08-30",24,20,3,24,3,20,3],
+["2026-08-31",35,28,5,35,5,28,5],
+["2026-09-01",27,22,3,27,3,22,3],
+["2026-09-02",17,15,3,17,3,15,3],
+["2026-09-03",33,23,5,33,5,23,5],
+["2026-09-04",27,22,3,27,3,22,3],
+["2026-09-05",18,17,0,18,0,17,0],
+["2026-09-06",25,19,6,25,6,19,6],
+["2026-09-07",28,22,5,28,5,22,5],
+["2026-09-08",41,34,5,41,5,34,5],
+["2026-09-09",48,39,10,48,10,39,10],
+["2026-09-10",47,41,11,47,11,41,11],
+["2026-09-11",43,35,7,43,7,35,7],
+["2026-09-12",29,23,4,29,4,23,4],
+["2026-09-13",26,23,6,26,6,23,6],
+["2026-09-14",32,22,6,32,6,22,6],
+["2026-09-15",31,21,2,31,2,21,2],
+["2026-09-16",45,24,7,45,7,24,7],
+["2026-09-17",59,17,12,59,12,17,10],
+["2026-09-18",66,17,8,66,8,17,7],
+["2026-09-19",47,18,5,47,5,18,5],
+["2026-09-20",27,7,3,27,3,7,2],
+["2026-09-21",33,10,3,33,3,10,3],
+["2026-09-22",67,19,6,67,6,19,5],
+["2026-09-23",70,24,9,70,9,24,8],
+["2026-09-24",59,17,2,59,2,17,2],
+["2026-09-25",44,18,8,44,8,18,6],
+["2026-09-26",39,12,4,39,4,12,3],
+["2026-09-27",41,13,4,41,4,13,4],
+["2026-09-28",56,13,3,56,3,13,3],
+["2026-09-29",53,19,7,53,7,19,6],
+["2026-09-30",73,24,8,73,8,24,5],
+["2026-10-01",60,19,6,60,6,19,3],
+["2026-10-02",60,19,7,60,7,19,7],
+["2026-10-03",44,22,6,44,6,22,5],
+["2026-10-04",45,11,4,45,4,11,3],
+["2026-10-05",67,17,8,67,8,17,7],
+["2026-10-06",79,41,15,79,15,41,14],
+["2026-10-07",64,31,7,64,7,31,5],
+["2026-10-08",99,38,10,99,10,38,10],
+["2026-10-09",63,22,7,63,7,22,6],
+["2026-10-10",60,25,5,60,5,25,5],
+["2026-10-11",72,28,4,72,4,28,4],
+["2026-10-12",67,24,4,67,4,24,4]
   ]}
 };
 
@@ -1144,6 +1146,7 @@ const brl=v=>v==null||!isFinite(v)?"—":"R$ "+nf2.format(v);
 const pct=(v,c)=>v==null||!isFinite(v)?"—":(c===2?nf2:nf1).format(v)+"%";
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const div=(a,b)=>(a==null||b==null||!b)?null:a/b;
+const cem=(a,b)=>div(a,b)!=null?div(a,b)*100:null;
 const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
 
 /* ---------------------------------------------------------- datas (ISO) */
@@ -1232,7 +1235,7 @@ function pintarSemanas(){
 
 /* ------------------------------------------------- dados em memória
    DADOS.midia[canal] = {cob:[[de,ate]...], linhas:[{d,c,t,imp,cli,custo,cad,vis}]}
-   DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativMad]}}
+   DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativMad,onbMad,ativOnbMad]}}
    cob = intervalos de dias já consultados (dia sem linha = dia sem gasto) */
 function abrir(enc){
   const m={};
@@ -1254,7 +1257,7 @@ function fechar(x){
     });
     midia[c]={cob:x.midia[c].cob, camp, l};
   });
-  return {v:3, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
+  return {v:4, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
     base:{cob:x.base.cob, l:Object.keys(x.base.dias).sort().map(d=>[d,...x.base.dias[d]])}};
 }
 function juntar(cob,de,ate){
@@ -1269,9 +1272,9 @@ let DADOS=abrir(RETRATO);
 const GUARDA="v2:dados";
 try{
   const s=JSON.parse(localStorage.getItem(GUARDA)||"null");
-  /* v3: base.l passou a ter ativos em 7 dias e maduros; o que estava salvo
-     no formato antigo é descartado */
-  if(s&&s.v===3&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
+  /* v4: base.l passou a ter maduros e ativos entre quem concluiu o
+     onboarding; o que estava salvo no formato antigo é descartado */
+  if(s&&s.v===4&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
 }catch(e){}
 function guardar(){try{localStorage.setItem(GUARDA,JSON.stringify(fechar(DADOS)))}catch(e){}}
 
@@ -1363,13 +1366,15 @@ SELECT dia, count(*) AS cadastros,
   count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
   count(*) FILTER (WHERE ativo) AS ativos_7d,
   count(*) FILTER (WHERE maduro) AS maduros,
-  count(*) FILTER (WHERE maduro AND ativo) AS ativos_maduros
+  count(*) FILTER (WHERE maduro AND ativo) AS ativos_maduros,
+  count(*) FILTER (WHERE maduro AND onboarding_step = 'FINISHED') AS onboarding_maduros,
+  count(*) FILTER (WHERE maduro AND ativo AND onboarding_step = 'FINISHED') AS ativos_onb_maduros
 FROM c GROUP BY 1 ORDER BY 1`;
 }
 async function qBase(de,ate){
   const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlBase(de,ate)});
   if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
-  return p.data.rows.map(r=>[String(r[0]).slice(0,10),...[1,2,3,4,5].map(i=>+r[i]||0)]);
+  return p.data.rows.map(r=>[String(r[0]).slice(0,10),...[1,2,3,4,5,6,7].map(i=>+r[i]||0)]);
 }
 
 let puxando=false;
@@ -1424,7 +1429,7 @@ function noFunil(k,x){
 }
 
 function agregar(de,ate,canal,campanha){
-  const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativMad:0,
+  const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativMad:0,onbMad:0,ativOnbMad:0,
     canal:{},camp:{},dia:{},fora:{}};
   CANAIS.forEach(k=>{
     if(canal!=="todos"&&canal!==k) return;
@@ -1443,6 +1448,7 @@ function agregar(de,ate,canal,campanha){
   Object.entries(DADOS.base.dias).forEach(([d,v])=>{
     if(d<de||d>ate) return;
     r.cadReal+=v[0]; r.onb+=v[1]; r.ativ+=v[2]; r.mad+=v[3]||0; r.ativMad+=v[4]||0;
+    r.onbMad+=v[5]||0; r.ativOnbMad+=v[6]||0;
     (r.dia[d]||(r.dia[d]={inv:{},cad:0})).real=v[0];
   });
   r.nCamp=Object.values(r.camp).filter(c=>c.inv>0).length;
@@ -1476,8 +1482,10 @@ const M={
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
   custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
   cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
-  /* taxa, e não contagem: compara períodos com maturidades diferentes de forma justa */
-  ativ:    {r:"Ativação em 7 dias", f:v=>pct(v), dir:1, v:a=>div(a.ativMad,a.mad)!=null?div(a.ativMad,a.mad)*100:null},
+  /* ativação D7 oficial: ativos ÷ TODOS os cadastros com 7 dias completos
+     (o mesmo número do Metabase e do Oráculo). Taxa, e não contagem: compara
+     períodos com maturidades diferentes de forma justa */
+  ativ:    {r:"Ativação D7", f:v=>pct(v), dir:1, v:a=>cem(a.ativMad,a.mad)},
   /* modo canal/campanha: cadastro = o que a plataforma reporta */
   cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
@@ -1494,7 +1502,7 @@ const FORMULA={
   cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros atribuídos ÷ cliques totais",
   onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
   cpm:"Investimento total ÷ impressões totais × 1.000",
-  ativ:"Agendaram em até 7 dias ÷ cadastros com 7 dias completos",
+  ativ:"Agendaram em até 7 dias ÷ todos os cadastros com 7 dias completos",
   cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
   fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
   invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
@@ -1639,16 +1647,18 @@ function funil(etapas,temComp,inv){
     <path d="${top}${bot} Z" fill="url(#gf)"/></svg>`;
   const p2=v=>pct(v,v!=null&&v<1?2:1);
   const info=etapas.map((e,i)=>{
-    const passo=i===0?100:div(e.v,etapas[i-1].v)!=null?div(e.v,etapas[i-1].v)*100:null;
+    /* a etapa pode trocar o % do meio (p) e trazer uma segunda taxa (x) */
+    const passo=e.p!==undefined?e.p:i===0?100:cem(e.v,etapas[i-1].v);
     const doTopo=div(e.v,etapas[0].v)!=null?div(e.v,etapas[0].v)*100:null;
     const vr=temComp?variacao(e.v,e.b,1):null;
-    const passoB=i>0&&temComp&&e.b!=null&&etapas[i-1].b?e.b/etapas[i-1].b*100:null;
+    const passoB=!temComp?null:e.p!==undefined?e.pb:i>0&&e.b!=null&&etapas[i-1].b?e.b/etapas[i-1].b*100:null;
     /* custo de cada etapa: CPM no topo, depois investimento ÷ etapa */
     const c=i===0?(div(inv,e.v)!=null?div(inv,e.v)*1000:null):div(inv,e.cv!==undefined?e.cv:e.v);
     const custo=c!=null?`${brl(c)} ${i===0?"por mil":"por "+e.u}`:"";
-    const ref=i===0?"topo do funil":etapas[i-1].ref;
+    const ref=e.pRef||(i===0?"topo do funil":etapas[i-1].ref);
     const d=`<b>${esc(e.n)}</b><div class="lin"><span>Total</span><span>${num(e.v)}</span></div>`+
-      (i>0?`<div class="lin"><span>Da etapa anterior</span><span>${p2(passo)}</span></div>`+
+      (i>0?`<div class="lin"><span>${esc(e.pRot||"Da etapa anterior")}</span><span>${p2(passo)}</span></div>`+
+           (e.x?`<div class="lin"><span>${esc(e.x.rot)}</span><span>${p2(e.x.v)}</span></div>`:"")+
            `<div class="lin"><span>Do topo do funil</span><span>${p2(doTopo)}</span></div>`:"")+
       (custo?`<div class="lin"><span>Custo</span><span>${custo}</span></div>`:"")+
       (temComp?`<div class="lin m"><span>Antes</span><span>${num(e.b)}${passoB!=null?` · ${p2(passoB)}`:""}</span></div>`:"")+
@@ -1660,13 +1670,13 @@ function funil(etapas,temComp,inv){
       <div class="fc-topo"><span class="fc-n" title="${esc(e.n)}">${IC[e.ic]||""}<span>${esc(e.n)}</span></span>
         <b class="fc-v">${num(e.v)}</b>
         <span class="fc-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span> antes ${num(e.b)}`:"&nbsp;"}</span></div>
-      <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small></span></div>
+      <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small>${e.x?`<small class="fc-x">${p2(e.x.v)} ${esc(e.x.ref)}</small>`:""}</span></div>
       <div class="fc-pe">${custo?`<b>${custo}</b>`:""}<span>${i===0?"&nbsp;":p2(doTopo)+" do topo"}</span></div>
     </div>`).join("");
   const lista=info.map(({e,i,passo,vr,custo,ref})=>
     `<div class="fl"><header><span class="fc-n">${IC[e.ic]||""}<span>${esc(e.n)}</span></span><b class="fc-v">${num(e.v)}</b></header>
       <div class="fl-b"><i style="width:${h[i]/2}%"></i></div>
-      <small>${i===0?"Topo do funil":`${p2(passo)} ${esc(ref)}`}${custo?" · "+custo:""}${vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
+      <small>${i===0?"Topo do funil":`${p2(passo)} ${esc(ref)}`}${e.x?` · ${p2(e.x.v)} ${esc(e.x.ref)}`:""}${custo?" · "+custo:""}${vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
   return `<div class="funil">${svg}<div class="funil-cols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${cols}</div></div>
     <div class="funil-lista">${lista}</div>`;
 }
@@ -1788,8 +1798,8 @@ function pintar(){
     /* onboarding e ativação só existem sobre o total de cadastros do Metabase */
     const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} de ${num(a.cadReal)} cadastros no total`:"";
     const pend=a.cadReal-a.mad;
-    const sAtiv=`${num(a.ativ)} conta${a.ativ===1?"":"s"} ativa${a.ativ===1?"":"s"}`+
-      (pend>0?` · ${num(pend)} cadastro${pend>1?"s":""} ainda na janela de 7 dias`:"");
+    const sAtiv=`De todos os cadastros · ${num(a.ativMad)} de ${num(a.mad)}`+
+      (pend>0?` · ${num(pend)} ainda na janela`:"");
     /* ordem de apresentação, de cima para baixo como o funil:
        1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
        2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
@@ -1806,7 +1816,13 @@ function pintar(){
       /* o total vem do Metabase; o custo usa os cadastros atribuídos pelos canais, igual ao cartão */
       {n:"Cadastros (total)",ic:"cad",v:a.cadReal,b:b&&b.cadReal,cv:a.cad,u:"cadastro atribuído",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
       {n:"Onboarding concluído",ic:"onb",v:a.onb,b:b&&b.onb,u:"onboarding",ref:"dos onboardings"},
-      {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",nota:"Agendou em até 7 dias."+
+      /* o % do meio é a ativação D7 oficial (de todos os cadastros), não o passo
+         desde o onboarding: quem pula o onboarding também pode ativar. A taxa
+         de quem fez o onboarding fica embaixo, só com quem fez e ativou */
+      {n:"Conta ativa",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"conta ativa",
+        p:cem(a.ativMad,a.mad), pb:b&&cem(b.ativMad,b.mad), pRef:"dos cadastros (D7)", pRot:"Ativação D7, de todos os cadastros",
+        x:{v:cem(a.ativOnbMad,a.onbMad), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"},
+        nota:"Agendou em até 7 dias. As taxas só usam cadastros com 7 dias completos."+
         (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
     ];
   } else {
@@ -1850,7 +1866,7 @@ function pintar(){
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
     `Cadastros, onboarding e contas ativas: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro. `+
-    `Conta ativa = pelo menos um agendamento criado nos 7 dias depois do cadastro. `+
+    `Conta ativa = pelo menos um agendamento criado nos 7 dias depois do cadastro; ativação D7 = contas ativas ÷ todos os cadastros com 7 dias completos. `+
     `No Meta Ads, clique é clique no link. Taxas e custos são calculados aqui, a partir das contagens. `+
     `Selo laranja de atenção: a métrica piorou 10% ou mais contra a comparação.`;
 }
