@@ -5,6 +5,206 @@ Painel semanal e mensal para a reunião com os founders.
 **Painel:** `painel/index.html` — um arquivo, sem build, sem dependência.
 A raiz do repositório redireciona para `/painel/`.
 
+**Painel v2 (funil de cadastro):** `painel-v2/index.html` — convive com a v1,
+que segue intacta. Detalhes na seção [Painel v2](#painel-v2--funil-de-cadastro).
+
+## Painel v2 — funil de cadastro
+
+Segue o manual de identidade da euSUPER!: faixa azul no topo (degradê oficial,
+barra do "!" a 22,5° e o círculo laranja), títulos em minúsculas, botão em caixa
+alta e ícones da marca. Fonte Gilroy quando instalada, Outfit no lugar.
+
+**Tema claro e escuro.** O claro é o do manual (fundo branco). O escuro é
+derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
+`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. Sem escolha, o painel
+segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** no
+topo fixa a escolha neste navegador (`v2:tema`).
+
+Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
+principais (investimento, cadastros, custo por cadastro, taxa de conversão),
+quatro mini blocos numa linha, na ordem do funil (CPM, onboarding concluído,
+custo por onboarding e ativação D7) e o funil na largura toda.
+
+**Os quatro principais são só do tráfego pago.** Cadastros = conversões que
+Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
+investimento ÷ esses cadastros; taxa de conversão = esses cadastros ÷ cliques.
+A linha fecha a conta (investimento ÷ cadastros = custo por cadastro). O custo
+da etapa Cadastros do funil e a dica do gráfico por dia usam o mesmo custo.
+Onboarding, custo por onboarding e ativação continuam sobre o total de
+cadastros do Metabase (com ou sem anúncio), porque nenhuma fonte grava de onde
+veio cada cadastro; o funil mostra esse total como "Cadastros (total)". CTR e CPC saíram dos mini blocos:
+continuam no funil, como a taxa de Cliques e o custo por clique. Cada etapa do funil mostra o total, a comparação, a
+taxa sobre a etapa anterior e quanto custou (CPM no topo, depois investimento ÷
+etapa). No celular o funil vira uma lista de barras. Abaixo, investimento e
+cadastros por dia.
+
+**Duas abas no topo:** **Funil de cadastro** (o que está descrito aqui) e
+**Evolução mensal**. O painel lembra a última aba aberta; o link com `#evolucao`
+no fim abre direto nela.
+
+**Evolução mensal** — a base inteira mês a mês, últimos 12 meses, tudo do
+Metabase e sem as contas de teste. Quatro cartões do mês atual com o % de
+crescimento, um gráfico por métrica e a tabela mês a mês com a variação:
+
+| Métrica | Como é contada |
+|---|---|
+| Usuários cadastrados | Contas existentes no fim do mês, sem as apagadas |
+| Contas ativas | Profissionais com pelo menos um atendimento realizado no mês |
+| Serviços realizados | Agendamentos confirmados (`CONFERENCE_SCHEDULED`) cujo horário já passou; cancelados não contam. O sistema não registra quando o cliente falta |
+| Valor dos serviços | Soma do preço que o profissional cadastrou no serviço (`event.et_price`). Não é pagamento confirmado; serviços com preço R$ 0 não somam |
+
+O crescimento é contra o mês anterior. O mês atual, que ainda não acabou, é
+comparado com os mesmos dias do mês anterior (ex.: 1 a 19 de outubro contra 1
+a 19 de setembro; para o total de usuários, o total de hoje contra o do mesmo
+dia do mês passado). Uma consulta só ao Metabase traz os 13 meses (o mais
+antigo é a base do crescimento do primeiro) e a linha de comparação; o
+resultado fica salvo no navegador (`v2:evolucao`).
+
+**Só campanhas de cadastro entram no funil.** As de divulgação ficam fora de
+tudo — investimento, impressões, cliques, taxas, custos, gráficos e lista de
+campanhas — e o cartão do funil lista o que ficou fora no período e quanto
+gastou.
+
+| Canal | Cadastro (entra) | Divulgação (fica fora) |
+|---|---|---|
+| Meta | objetivo de conversão (`OUTCOME_SALES`, `OUTCOME_LEADS`) | tráfego, engajamento, reconhecimento (ex.: visita ao perfil do Instagram, `OUTCOME_TRAFFIC`) |
+| Google | campanhas de pesquisa (`SEARCH`) | vídeo, Demand Gen, Display, Performance Max |
+| OpenAI | todas | — |
+
+Com essa regra, agosto perde R$ 1.673 (nove campanhas de tráfego no Meta e
+duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
+setembro perde a "YT - Motion Horizontal" (R$ 237,75).
+
+**Teste A/B** (abaixo dos gráficos por dia): um **placar de jogo**, feito para
+a reunião semanal. As duas páginas são os times (a vencedora ganha o selo
+"venceu"), o placar fica no meio e cada canal é uma rodada com um "cabo de
+guerra" puxado para quem converteu mais. Cada rodada vence quem teve a **taxa
+de conversão maior**, exatamente como os dados lidos nos gerenciadores mostram;
+a marca diz a margem: **por pouco** (menos de 2 p.p.) ou **com folga** (2 p.p.
+ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam em
+`TESTE_AB` e aparecem ao passar o mouse em cada rodada. O bloco **não segue os
+filtros**: mostra o período do próprio teste. Hoje: Teste A/B 03 com as duas
+semanas (06/10 a 20/10): A (miaapp.com.br) 3 × 0 B — com folga no Meta, por
+pouco no Google e na OpenAI.
+
+**Comparativo semanal** (opção do "Período de visualização"): semanas de
+**quarta a terça**, as mesmas do relatório semanal do marketing. A semana atual
+é a que contém ontem; se ainda está em andamento, vai até ontem e aparece como
+"Semana atual · parcial" (ex.: na terça 27/10, 21/10 a 26/10, 6 de 7 dias),
+sempre contra a semana anterior inteira — como o slide. Na quarta, a semana
+atual está fechada: em 21/10, 14/10 a 20/10 contra 07/10 a 13/10. As setas
+‹ › andam de semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
+ao sair, volta a que estava escolhida.
+
+**Filtros:** período (esse mês, comparativo semanal, últimos 7/14/30 dias, semana passada, mês
+passado, personalizado — sempre até ontem), comparação (mesmo período do mês
+anterior, período anterior ou nenhuma), fonte de tráfego e campanha. Trocar
+filtro não consulta nada: o painel guarda as linhas por dia e por campanha e
+recalcula na hora. Só busca de novo quando o período pedido ainda não foi
+carregado.
+
+**Dois modos de funil:**
+
+| Filtro | Funil | De onde vem o cadastro |
+|---|---|---|
+| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → 1º cliente em 7 dias | Metabase (todos os cadastros, com ou sem anúncio) |
+| Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
+
+Onboarding e ativação só existem no total porque nenhuma fonte grava a
+origem do cadastro.
+
+**Mesmo método do relatório semanal do marketing** (conferido em 21/10: semana
+07–13/10 = 503 cadastros, 40,6% de onboarding, 8,2% de ativação, igual ao
+slide):
+
+- dia do cadastro no **horário de Brasília** (o banco grava em UTC);
+- contas **excluídas depois continuam contando** como cadastro;
+- **1º cliente em 7 dias (a etapa que antes se chamava "Conta ativa") = pelo
+  menos um agendamento de cliente com e-mail e telefone
+  diferentes dos da profissional**, criado nos 7 dias depois do cadastro
+  (`event_client` ligado a `event_scheduled.professional_id`, `created_at` do
+  cliente dentro da janela, rascunho `DRAFT` não conta, telefone comparado pelos
+  9 últimos dígitos). A profissional agendando a si mesma para testar não conta.
+
+**Ativação D7 = contas ativas ÷ todos os cadastros com 7 dias completos.** Como
+a janela leva 7 dias para fechar, a taxa só usa os cadastros que já completaram
+a janela, e só aparece quando pelo menos metade dos cadastros do recorte já
+fechou; antes disso o cartão mostra "—" e "Fecha em DD/MM". No **comparativo
+semanal**, a semana recente ainda está aberta, então o cartão usa a semana
+mais nova que já fechou (a escolhida, a anterior ou a de antes) contra a semana
+antes dela, como o slide ("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel
+busca essas semanas extras junto. No funil, a etapa 1º cliente em 7 dias de uma semana
+ainda aberta mostra "—" e "D7 fecha em DD/MM" e, embaixo, a mesma taxa do
+cartão: "última fechada: 8,2% (07–13/10)".
+Enquanto ainda há cadastros dentro da janela de 7 dias, a contagem da etapa
+vai subir: no lugar da seta de variação aparece **"parcial"** (com o "antes" ao
+lado), para não parecer queda. O nome "Conta ativa" saiu do funil porque a aba
+Evolução mensal usa "Contas ativas" com outro sentido (atendeu no mês). O cartão se chama "Ativação D7" ("de todos os
+cadastros"). No funil, a etapa 1º cliente em 7 dias mostra a contagem (que ainda sobe
+nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
+embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
+÷ quem concluiu o onboarding (~19–25%). Essa etapa não usa o "passo da etapa
+anterior", porque quem pula o onboarding também pode ativar — antes, ativos ÷
+onboarding dava ~21–27% e era lido como se fosse a ativação D7. A altura das faixas do funil é logarítmica, para caber de
+centenas de milhares de impressões a dezenas de contas, com piso de 30% da
+primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
+
+**Origem dos cadastros** (bloco abaixo do funil, só em "Todos os canais"): de
+onde veio cada cadastro segundo o **nosso banco**, não a plataforma de anúncio.
+O site grava a origem desde **23/10/26 às 8h59** (tabela `professional_tracking`:
+UTM, gclid, fbclid, página de entrada e site de onde a pessoa veio); antes disso
+o bloco avisa que não há dado, e os cadastros de 23/10 feitos antes das 8h59
+ficam de fora (a nota diz quantos).
+
+| Origem | Regra (na ordem) |
+|---|---|
+| Google Ads | tem gclid, ou UTM `google` com meio pago (cpc, ppc, paid…) |
+| Meta Ads | UTM `meta`/`facebook`/`instagram` com meio pago (paid_social, cpc…), ou fbclid com campanha |
+| OpenAI Ads | UTM `openai` |
+| Orgânico → Busca | sem anúncio, veio do Google ou de outro buscador |
+| Orgânico → Redes sociais | sem anúncio, veio de Instagram, Facebook, TikTok etc. (ou fbclid sem campanha) |
+| Orgânico → Direto | sem UTM e sem site de origem (digitou o endereço ou link salvo) |
+| Orgânico → Outros sites | qualquer outro site, inclusive o ChatGPT sem anúncio; e anúncio de outra rede |
+| Sem origem | o site não gravou a origem desse cadastro |
+
+O bloco tem uma barra 100% (Google, Meta, OpenAI, Orgânico e Sem origem
+hachurado; cores validadas para daltonismo) e uma tabela: cadastros, parcela
+(com "antes X%" quando o período anterior também tem origem), onboarding,
+ativação D7 por origem (a coluna aparece quando os cadastros do período fecham
+os 7 dias) e **custo real por cadastro** = investimento das campanhas de
+cadastro do canal ÷ cadastros que o banco registrou vindos dele. Passando o
+mouse no custo, aparece o que a plataforma diz ter trazido, para comparar. No
+celular, a tabela fica com origem, cadastros, parcela e custo real.
+
+**Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
+(custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
+laranja.
+
+**Dica de cada cartão (passar o mouse, ou tocar no "i" no celular):** com o
+mouse parado no cartão, o resto da página desfoca e o cartão fica em
+destaque, com a dica logo abaixo. A dica é curta: nome, fórmula em uma
+linha e, em "Todos os canais", o valor de cada canal (Google, Meta, OpenAI)
+com a variação, mais a linha **Geral**. O geral é a soma de tudo, não a média
+dos três (CPM = investimento total ÷ impressões totais × 1.000). Onboarding,
+custo por onboarding e ativação só existem no total.
+
+**Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
+`google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
+pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
+cadastros, onboarding e ativação por dia de cadastro (Brasília), sem os IDs
+de teste e com as contas excluídas (inclui maduros, ativos maduros, onboarding
+maduros e ativos com onboarding entre os maduros; dados guardados no navegador
+na versão `v:5`).
+O conector `openai_ads` do Windsor **agora traz `conversions`** — agosto bate
+com o export do Ads Manager (117). O GA4 não está mais conectado no Windsor, por
+isso "Visitas na página" só aparece no Meta (landing page view do pixel).
+
+**Ao vivo e retrato:** dentro do claude.ai o painel atualiza sozinho ao abrir
+(se os dados tiverem mais de 30 minutos) e pelo botão Atualizar. Fora dele
+mostra o retrato gravado no arquivo — 01/08 a 12/10/2026, conferido campanha a
+campanha contra os totais do Windsor e do Metabase. O último resultado ao vivo
+fica salvo no navegador (`v2:dados`), junto com os filtros (`v2:filtros`).
+
 ## Identidade visual
 
 O front segue o **Manual da Identidade Visual euSUPER! (2026)**: azul
