@@ -149,6 +149,33 @@ onboarding dava ~21–27% e era lido como se fosse a ativação D7. A altura das
 centenas de milhares de impressões a dezenas de contas, com piso de 30% da
 primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
+**Origem dos cadastros** (bloco abaixo do funil, só em "Todos os canais"): de
+onde veio cada cadastro segundo o **nosso banco**, não a plataforma de anúncio.
+O site grava a origem desde **23/10/26 às 8h59** (tabela `professional_tracking`:
+UTM, gclid, fbclid, página de entrada e site de onde a pessoa veio); antes disso
+o bloco avisa que não há dado, e os cadastros de 23/10 feitos antes das 8h59
+ficam de fora (a nota diz quantos).
+
+| Origem | Regra (na ordem) |
+|---|---|
+| Google Ads | tem gclid, ou UTM `google` com meio pago (cpc, ppc, paid…) |
+| Meta Ads | UTM `meta`/`facebook`/`instagram` com meio pago (paid_social, cpc…), ou fbclid com campanha |
+| OpenAI Ads | UTM `openai` |
+| Orgânico → Busca | sem anúncio, veio do Google ou de outro buscador |
+| Orgânico → Redes sociais | sem anúncio, veio de Instagram, Facebook, TikTok etc. (ou fbclid sem campanha) |
+| Orgânico → Direto | sem UTM e sem site de origem (digitou o endereço ou link salvo) |
+| Orgânico → Outros sites | qualquer outro site, inclusive o ChatGPT sem anúncio; e anúncio de outra rede |
+| Sem origem | o site não gravou a origem desse cadastro |
+
+O bloco tem uma barra 100% (Google, Meta, OpenAI, Orgânico e Sem origem
+hachurado; cores validadas para daltonismo) e uma tabela: cadastros, parcela
+(com "antes X%" quando o período anterior também tem origem), onboarding,
+ativação D7 por origem (a coluna aparece quando os cadastros do período fecham
+os 7 dias) e **custo real por cadastro** = investimento das campanhas de
+cadastro do canal ÷ cadastros que o banco registrou vindos dele. Passando o
+mouse no custo, aparece o que a plataforma diz ter trazido, para comparar. No
+celular, a tabela fica com origem, cadastros, parcela e custo real.
+
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
 laranja.
