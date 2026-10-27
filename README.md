@@ -20,10 +20,13 @@ derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
 segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** no
 topo fixa a escolha neste navegador (`v2:tema`).
 
-Formato de resumo: filtros num cartão que sobe sobre a faixa, quatro números
-principais (investimento, cadastros, custo por cadastro, taxa de conversão),
-quatro mini blocos numa linha, na ordem do funil (CPM, onboarding concluído,
-custo por onboarding e ativação D7) e o funil na largura toda.
+Formato de resumo: filtros num cartão que sobe sobre a faixa e, logo abaixo, o
+funil na largura toda, compacto (330px) para caber na primeira tela junto com os
+filtros (testado em 1440×900). Depois, os quatro números principais
+(investimento, cadastros, custo por cadastro, taxa de conversão) e quatro mini
+blocos numa linha, na ordem do funil (CPM, onboarding concluído, custo por
+onboarding e ativação D7). A explicação da escala logarítmica do funil fica no
+"i"; a legenda embaixo só aparece quando há campanha fora do funil.
 
 **Os quatro principais são só do tráfego pago.** Cadastros = conversões que
 Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
