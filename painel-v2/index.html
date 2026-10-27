@@ -577,7 +577,7 @@ button,select,input{font-family:inherit}
       </div>
       <div class="semanas" id="semanas" hidden>
         <button type="button" class="sem-bt" id="semAnt" aria-label="Voltar uma semana">‹</button>
-        <div class="sem"><small>Semana anterior</small><b id="semAntes">—</b></div>
+        <div class="sem"><small id="semRotAntes">Semana anterior</small><b id="semAntes">—</b></div>
         <span class="sem-vs" aria-hidden="true">vs</span>
         <div class="sem atual"><small id="semRot">Semana atual</small><b id="semAtual">—</b></div>
         <button type="button" class="sem-bt" id="semProx" aria-label="Avançar uma semana">›</button>
@@ -1272,7 +1272,9 @@ function periodo(){
   return {de,ate};
 }
 function comparacao(p){
-  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.de,-1)};   /* sempre a semana anterior inteira */
+  /* semanal: os mesmos dias da semana anterior. Com a semana em andamento
+     (ex.: qua a seg), compara qua a seg com qua a seg; fechada, semana inteira */
+  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.ate,-7)};
   if(!p||fComp.value==="nenhuma") return null;
   if(ehMes(p.de,p.ate)){                      /* mês fechado: o mês anterior inteiro */
     const a=D(p.de), fim=new Date(a.getFullYear(),a.getMonth(),0,12);
@@ -1300,7 +1302,9 @@ function pintarSemanas(){
   const p=periodo(), c=comparacao(p);
   document.getElementById("semAtual").textContent=`${dataCurta(p.de)} a ${dataCurta(p.ate)}`;
   document.getElementById("semAntes").textContent=`${dataCurta(c.de)} a ${dataCurta(c.ate)}`;
-  document.getElementById("semRot").textContent=SEM_OFF>0?"Semana":dias(p.de,p.ate)<7?"Semana atual · parcial":"Semana atual";
+  const parcial=dias(p.de,p.ate)<7;
+  document.getElementById("semRot").textContent=SEM_OFF>0?"Semana":parcial?"Semana atual · parcial":"Semana atual";
+  document.getElementById("semRotAntes").textContent=parcial?"Mesmos dias da anterior":"Semana anterior";
   document.getElementById("semProx").disabled=SEM_OFF===0;
 }
 
@@ -2011,7 +2015,7 @@ function pintar(){
   /* frase de estado */
   const falta=faltando(p,canal), faltaC=c?faltando(c,canal):[];
   const n=dias(p.de,p.ate);
-  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b>${n<7?` (em andamento, ${n} de 7 dias)`:""} comparada com <b>semana ${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
+  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b>${n<7?` (em andamento, ${n} de 7 dias)`:""} comparada com ${n<7?"os mesmos dias da semana anterior, ":""}<b>${n<7?"":"semana "}${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
     `<b>${falar(p.de,p.ate)}</b>`+(c?` comparado com <b>${falar(c.de,c.ate)}</b>`:"")+
     ` · ${ehMes(p.de,p.ate)?"mês fechado":`${n} dia${n>1?"s":""}`}`;
   let cls="frase"+(DADOS.fonte==="vivo"?" vivo":"");

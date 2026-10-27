@@ -97,7 +97,9 @@ embaixo das rodadas.
 **quarta a terça**, as mesmas do relatório semanal do marketing. A semana atual
 é a que contém ontem; se ainda está em andamento, vai até ontem e aparece como
 "Semana atual · parcial" (ex.: na terça 27/10, 21/10 a 26/10, 6 de 7 dias),
-sempre contra a semana anterior inteira — como o slide. Na quarta, a semana
+comparada com **os mesmos dias da semana anterior** (ex.: 21–26/10 contra
+14–19/10): assim investimento, cadastros e onboarding não caem só por faltar
+um dia, e os selos de atenção só acendem quando a queda é real. Na quarta, a semana
 atual está fechada: em 21/10, 14/10 a 20/10 contra 07/10 a 13/10. As setas
 ‹ › andam de semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
 ao sair, volta a que estava escolhida.
