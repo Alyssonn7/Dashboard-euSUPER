@@ -89,7 +89,7 @@ filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 (21 a 26/10),
 pouco no Meta (17,9% contra 17,8% das visitas na página). OpenAI fora desta
 rodada (a campanha nova da LP4 ainda não teve conversões). As taxas saem dos
 dados das plataformas (Windsor) e a ligação campanha → página foi conferida no
-banco (origem gravada). A dica de cada rodada mostra também a base (cadastros ÷
+banco (origem gravada). Cada rodada mostra as duas taxas de conversão nas pontas do cabo (a da vencedora em verde). A dica de cada rodada mostra também a base (cadastros ÷
 cliques ou visitas) e o custo por cadastro de cada página; `obs` mostra a nota
 embaixo das rodadas.
 

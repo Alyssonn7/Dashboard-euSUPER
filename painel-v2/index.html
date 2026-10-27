@@ -345,7 +345,12 @@ button,select,input{font-family:inherit}
 .cabo i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
   background:var(--cinza);border:3px solid var(--painel);box-shadow:0 0 0 1px var(--borda-forte)}
 .rod.vence .cabo i{background:var(--verde)}
-.cabo-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--texto-2)}
+/* as duas taxas nas pontas do cabo; a da vencedora em verde */
+.cabo-l{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.cabo-l span{display:flex;align-items:baseline;gap:5px;font-size:18px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cabo-l small{font-size:11px;font-weight:700;color:var(--texto-2)}
+.cabo-l .lid{color:var(--bom)}
+.cabo-l em{font-style:normal;font-size:11px;color:var(--texto-2);text-align:center}
 .ab-fim{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .ab-fim p{margin:0;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
   font-size:14.5px;line-height:1.45;color:var(--texto)}
@@ -2449,7 +2454,8 @@ function pintarAB(){
     return `<li class="rod${r.ganha?" vence":""}${r.ganha&&!r.folga?" pouco":""}" tabindex="0" data-html data-dica="${esc(d)}">
       <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
       <div class="cabo"><i style="left:${pos.toFixed(1)}%"></i></div>
-      <div class="cabo-l"><span>A</span><span>B</span></div></li>`;
+      <div class="cabo-l"><span class="${r.ganha==="a"?"lid":""}"><small>A</small>${pct(r.a,2)}</span>
+        <em>taxa de conversão</em><span class="${r.ganha==="b"?"lid":""}">${pct(r.b,2)}<small>B</small></span></div></li>`;
   }).join("");
   el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div></div>
     <div class="placar">${time("a")}
