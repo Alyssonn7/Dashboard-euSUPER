@@ -159,8 +159,9 @@ ficam de fora (a nota diz quantos).
 | Origem | Regra (na ordem) |
 |---|---|
 | Google Ads | tem gclid, ou UTM `google` com meio pago (cpc, ppc, paid…) |
-| Meta Ads | UTM `meta`/`facebook`/`instagram` com meio pago (paid_social, cpc…), ou fbclid com campanha |
+| Meta Ads | UTM `meta`/`facebook`/`instagram` com meio pago (paid_social, cpc…), fbclid com campanha, ou fonte `meta` sem meio vinda do Facebook/Instagram (anúncio com UTM incompleta) |
 | OpenAI Ads | UTM `openai` |
+| Orgânico → Bio do Instagram | o próprio Instagram marca o link da bio (`utm_content=link_in_bio`) |
 | Orgânico → Busca | sem anúncio, veio do Google ou de outro buscador |
 | Orgânico → Redes sociais | sem anúncio, veio de Instagram, Facebook, TikTok etc. (ou fbclid sem campanha) |
 | Orgânico → Direto | sem UTM e sem site de origem (digitou o endereço ou link salvo) |

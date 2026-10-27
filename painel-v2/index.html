@@ -617,7 +617,7 @@ button,select,input{font-family:inherit}
                     cadastros que já completaram 7 dias, ativos entre esses,
                     maduros com onboarding concluído, ativos entre esses]
    ========================================================================= */
-const RETRATO={v:5, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 21/10/2026 (método do relatório semanal) */, fonte:"retrato",
+const RETRATO={v:6, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 21/10/2026 (método do relatório semanal) */, fonte:"retrato",
  cobre:{"de":"2026-08-01","ate":"2026-10-12"},
  midia:{
   google:{cob:[["2026-08-01","2026-10-12"]],
@@ -1164,6 +1164,7 @@ const ORIGENS=[
   {k:"meta",n:"Meta Ads",cor:"var(--meta)",canal:"meta",d:"Clicou num anúncio do Instagram ou Facebook (UTM paga)."},
   {k:"openai",n:"OpenAI Ads",cor:"var(--openai)",canal:"openai",d:"Clicou num anúncio do ChatGPT (UTM da OpenAI)."},
   {k:"org",n:"Orgânico",cor:"var(--organico)",m:"Chegou sem clicar em anúncio",d:"Veio sem anúncio. A soma das linhas abaixo.",sub:[
+    {k:"bio",n:"Bio do Instagram",m:"Link da bio do perfil",d:"Clicou no link da bio do Instagram. O próprio Instagram marca esse link (link_in_bio)."},
     {k:"busca",n:"Busca",m:"Achou no Google, sem anúncio",d:"Achou pelo Google ou outro buscador, sem clicar em anúncio."},
     {k:"social",n:"Redes sociais",m:"Instagram, Facebook e outras redes, sem anúncio",d:"Veio de uma rede social sem clicar em anúncio. O link da bio do Instagram chega marcado pelo próprio Instagram (link_in_bio)."},
     {k:"direto",n:"Direto",m:"Digitou o site ou veio de WhatsApp e e-mail",d:"Digitou o endereço, abriu um link salvo ou veio de WhatsApp/e-mail, que não dizem de onde a pessoa veio."},
@@ -1336,7 +1337,7 @@ function fechar(x){
     });
     midia[c]={cob:x.midia[c].cob, camp, l};
   });
-  return {v:5, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
+  return {v:6, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
     base:{cob:x.base.cob, l:Object.keys(x.base.dias).sort().map(d=>[d,...x.base.dias[d]])},
     origem:{cob:x.origem.cob, l:Object.keys(x.origem.dias).sort().flatMap(d=>Object.entries(x.origem.dias[d]).map(([k,v])=>[d,k,...v]))}};
 }
@@ -1352,10 +1353,10 @@ let DADOS=abrir(RETRATO);
 const GUARDA="v2:dados";
 try{
   const s=JSON.parse(localStorage.getItem(GUARDA)||"null");
-  /* v5: base.l no método do relatório semanal (horário de Brasília, com
-     contas excluídas, ativação só com cliente real); o que estava salvo
+  /* v6: origem com "Bio do Instagram" e fonte "meta" sem meio contando
+     como Meta Ads (v5: método do relatório semanal); o que estava salvo
      antes é descartado */
-  if(s&&s.v===5&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
+  if(s&&s.v===6&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
 }catch(e){}
 function guardar(){try{localStorage.setItem(GUARDA,JSON.stringify(fechar(DADOS)))}catch(e){}}
 
@@ -1438,9 +1439,11 @@ async function qOpenai(de,ate){
    esses, para não punir quem acabou de entrar */
 /* cadastros do recorte, um por linha, com ativação e, se pedida, a origem.
    Origem, na ordem: antes do rastreamento · sem registro · Google Ads (gclid
-   ou UTM paga) · Meta Ads (UTM paga ou fbclid com campanha) · OpenAI Ads ·
-   outro anúncio · busca orgânica (pelo site de onde veio) · redes sociais ·
-   direto (sem UTM e sem site de origem) · outros sites */
+   ou UTM paga) · Meta Ads (UTM paga, fbclid com campanha, ou fonte "meta"
+   sem meio vinda do Facebook/Instagram: anúncio com UTM incompleta) ·
+   OpenAI Ads · outro anúncio · bio do Instagram (o Instagram marca
+   utm_content=link_in_bio) · busca orgânica (pelo site de onde veio) ·
+   redes sociais · direto (sem UTM e sem site de origem) · outros sites */
 const SQL_PAGO="('cpc','ppc','paid','paid_search','paid_social','paidsocial','ads','cpm','display')";
 function cteCadastros(de,ate,comOrigem){
   return `WITH teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id),
@@ -1467,9 +1470,11 @@ c AS (
       WHEN t.tem IS NULL THEN 'sem'
       WHEN t.gclid IS NOT NULL OR (t.src IN ('google','google_ads','adwords') AND t.med IN ${SQL_PAGO}) THEN 'google'
       WHEN (t.src IN ('meta','facebook','fb','instagram','ig') AND t.med IN ${SQL_PAGO})
-        OR (t.fbclid IS NOT NULL AND t.camp <> '') THEN 'meta'
+        OR (t.fbclid IS NOT NULL AND t.camp <> '')
+        OR (t.src = 'meta' AND t.med = '' AND (t.fbclid IS NOT NULL OR t.ref ~ '(facebook|instagram)')) THEN 'meta'
       WHEN t.src IN ('openai','openai_ads') THEN 'openai'
       WHEN t.med IN ${SQL_PAGO} THEN 'outros'
+      WHEN t.cont = 'link_in_bio' THEN 'bio'
       WHEN (t.med = 'organic' AND t.src IN ('google','bing','yahoo','duckduckgo'))
         OR t.ref ~ '(^|[.])(google|bing|yahoo|duckduckgo|ecosia|yandex|baidu)[.]' THEN 'busca'
       WHEN t.fbclid IS NOT NULL OR t.src IN ('instagram','facebook','fb','ig','meta','tiktok','linkedin','youtube','whatsapp','threads','x','twitter')
@@ -1481,6 +1486,7 @@ c AS (
   LEFT JOIN LATERAL (
     SELECT true AS tem, t.gclid, t.fbclid, coalesce(t.utm_campaign,'') AS camp,
       lower(trim(coalesce(t.utm_source,''))) AS src, lower(trim(coalesce(t.utm_medium,''))) AS med,
+      lower(trim(coalesce(t.utm_content,''))) AS cont,
       lower(coalesce(substring(t.referrer from '^[a-z-]+:(?://)?([^/?#:]*)'),'')) AS ref
     FROM professional_tracking t WHERE t.professional_id = pr.id
     ORDER BY t.created_at LIMIT 1) t ON true`:""}
