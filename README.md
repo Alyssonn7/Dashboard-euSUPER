@@ -83,9 +83,15 @@ de conversão maior**, exatamente como os dados lidos nos gerenciadores mostram;
 a marca diz a margem: **por pouco** (menos de 2 p.p.) ou **com folga** (2 p.p.
 ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam em
 `TESTE_AB` e aparecem ao passar o mouse em cada rodada. O bloco **não segue os
-filtros**: mostra o período do próprio teste. Hoje: Teste A/B 03 com as duas
-semanas (06/10 a 20/10): A (miaapp.com.br) 3 × 0 B — com folga no Meta, por
-pouco no Google e na OpenAI.
+filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 (21 a 26/10), A = miaapp.com.br contra B = lp4.miaapp.com.br
+(a mesma página com vídeo no topo): B 2 × 0 — com folga no Google (27,3% contra
+20,9% dos cliques, 22 a 26/10, porque a campanha da B começou em 22/10) e por
+pouco no Meta (17,9% contra 17,8% das visitas na página). OpenAI fora desta
+rodada (a campanha nova da LP4 ainda não teve conversões). As taxas saem dos
+dados das plataformas (Windsor) e a ligação campanha → página foi conferida no
+banco (origem gravada). A dica de cada rodada mostra também a base (cadastros ÷
+cliques ou visitas) e o custo por cadastro de cada página; `obs` mostra a nota
+embaixo das rodadas.
 
 **Comparativo semanal** (opção do "Período de visualização"): semanas de
 **quarta a terça**, as mesmas do relatório semanal do marketing. A semana atual

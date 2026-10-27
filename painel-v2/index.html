@@ -330,7 +330,7 @@ button,select,input{font-family:inherit}
 .score span{font-size:22px;color:var(--texto-2)}
 .score small{font-size:12px;color:var(--texto-2);white-space:nowrap}
 /* rodadas: um cabo de guerra por canal */
-.rodadas{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rodadas{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:12px}
 .rod{display:flex;flex-direction:column;gap:9px;padding:13px 16px 11px;border:1px solid var(--borda);border-radius:10px;cursor:help;min-width:0}
 .rod:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
 .rod-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -2388,23 +2388,30 @@ function pintarEvo(){
    a = página A (controle), b = página B (desafiante).
    ========================================================================= */
 const TESTE_AB={
-  nome:"Teste A/B 03",
-  de:"2026-10-06", ate:"2026-10-20",
+  nome:"Teste A/B 04",
+  de:"2026-10-21", ate:"2026-10-26",
   paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
-           b:{url:"lp3.miaapp.com.br", desc:"layout novo, mesmo texto"}},
-  vencedora:"a",
-  /* taxa de conversão (%) lida nos gerenciadores pelo Alysson em 21/10.
+           b:{url:"lp4.miaapp.com.br", desc:"a mesma página, com vídeo no topo"}},
+  vencedora:"b",
+  /* taxa de conversão (%) e custo por cadastro, calculados em 27/10 com os
+     dados das plataformas (Windsor): Google = cadastros ÷ cliques (22 a 26/10,
+     a campanha da B começou em 22/10); Meta = cadastros ÷ visitas na página
+     (21 a 26/10), como no Teste 03. Campanha → página conferida no banco:
+     Google "pesquisa_miaapp" → A, "pesquisa_lp4_vsl" → B; Meta "Page
+     principal" e "[CAMPANHA DE VENDA]" → A, "TESTE A/B 1" e "TESTE A/B 2"
+     (LP4 VSL) → B. OpenAI fora: a campanha nova da LP4 não teve conversões.
      Quem tem a taxa maior vence a rodada, como os dados mostram. */
   canais:[
-    {n:"Google Ads", a:17.14, b:16.08},
-    {n:"Meta Ads",   a:21.03, b:15.63},
-    {n:"OpenAI Ads", a:13.72, b:13.24}
+    {n:"Google Ads", a:20.87, b:27.33, custo:{a:16.58, b:12.80}, base:{a:"43 de 206 cliques", b:"44 de 161 cliques"}},
+    {n:"Meta Ads",   a:17.78, b:17.86, custo:{a:12.11, b:11.72}, base:{a:"48 de 270 visitas", b:"45 de 252 visitas"}}
   ],
   /* uma linha cada: os founders leem o placar, não o texto.
-     Leitura nossa, do Clarity: o topo da A tem o celular com a conversa no
-     WhatsApp e o link de agendamento; o topo da B é só texto e botões. */
-  porque:"A mostra o produto funcionando no topo. Quem vem do Meta precisa ver antes de se cadastrar.",
-  proximo:"Teste A/B 04, por 7 dias: a A contra a mesma A com uma VSL no topo."
+     Leitura do Clarity (mapas de calor de 21 a 26/10): na B, o play do vídeo é
+     um dos pontos mais tocados; na A, o mais tocado é o botão do topo. No Meta,
+     62% dos cliques viram visita na B, contra 72% na A. */
+  porque:"O vídeo prende: o play é um dos pontos mais tocados da B. No Google, quem já pesquisou converte mais com ele. No Meta a B ganhou por pouco, mas mais gente desiste antes de ela abrir.",
+  proximo:"Usar a B no Google. No Meta, deixar a B abrir mais rápido (vídeo mais leve) e repetir por 7 dias.",
+  obs:"OpenAI fora desta rodada: a campanha nova da LP4 ainda não teve conversões. Google de 22 a 26/10 (a B começou em 22/10)."
 };
 /* placar de jogo: as páginas são os times, cada canal é uma rodada e vence
    quem teve a taxa de conversão maior (igual = empate). Vitória por menos de
@@ -2435,6 +2442,9 @@ function pintarAB(){
     const d=`<b>${esc(r.n)}</b><p class="m">Taxa de conversão</p>`+
       `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(r.a,2)}</span></div>`+
       `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(r.b,2)}</span></div>`+
+      (r.base?`<p class="m">A: ${esc(r.base.a)} · B: ${esc(r.base.b)}</p>`:"")+
+      (r.custo?`<p class="m" style="margin-top:6px">Custo por cadastro</p>`+
+        `<div class="lin"><span>A</span><span>${brl(r.custo.a)}</span></div><div class="lin"><span>B</span><span>${brl(r.custo.b)}</span></div>`:"")+
       (r.ganha?`<p class="m">Diferença: ${ppTxt(Math.abs(dif))} para ${r.ganha.toUpperCase()}</p>`:"");
     return `<li class="rod${r.ganha?" vence":""}${r.ganha&&!r.folga?" pouco":""}" tabindex="0" data-html data-dica="${esc(d)}">
       <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
@@ -2445,7 +2455,8 @@ function pintarAB(){
     <div class="placar">${time("a")}
       <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div>${emp?`<small>${emp} empate${emp===1?"":"s"}</small>`:""}</div>
       ${time("b")}</div>
-    <ol class="rodadas" aria-label="Rodadas por canal">${rodadas}</ol>
+    <ol class="rodadas" aria-label="Rodadas por canal" style="--n:${rod.length}">${rodadas}</ol>
+    ${T.obs?`<p class="legenda-f">${esc(T.obs)}</p>`:""}
     <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;
 }
 
