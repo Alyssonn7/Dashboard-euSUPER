@@ -94,13 +94,14 @@ cliques ou visitas) e o custo por cadastro de cada página; `obs` mostra a nota
 embaixo das rodadas.
 
 **Comparativo semanal** (opção do "Período de visualização"): semanas de
-**quarta a terça**, as mesmas do relatório semanal do marketing. A semana atual
-é a que contém ontem; se ainda está em andamento, vai até ontem e aparece como
-"Semana atual · parcial" (ex.: na terça 27/10, 21/10 a 26/10, 6 de 7 dias),
-comparada com **os mesmos dias da semana anterior** (ex.: 21–26/10 contra
-14–19/10): assim investimento, cadastros e onboarding não caem só por faltar
-um dia, e os selos de atenção só acendem quando a queda é real. Na quarta, a semana
-atual está fechada: em 21/10, 14/10 a 20/10 contra 07/10 a 13/10. As setas
+**terça a segunda**, porque a reunião com os fundadores é na terça: no dia da
+reunião a semana que terminou ontem está completa (em 27/10, 20/10 a 26/10
+contra 13/10 a 19/10). Em outros dias a semana atual está em andamento, vai até
+ontem e aparece como "Semana atual · parcial", comparada com **os mesmos dias
+da semana anterior** (ex.: na quinta 29/10, 27–28/10 contra 20–21/10): assim
+investimento, cadastros e onboarding não caem só por faltar dia, e os selos de
+atenção só acendem quando a queda é real. (Até 27/10 as semanas iam de quarta a
+terça, como o slide do marketing; na terça a semana sempre aparecia incompleta.) As setas
 ‹ › andam de semana em semana. Nesse modo a comparação fica travada em "Semana anterior";
 ao sair, volta a que estava escolhida.
 

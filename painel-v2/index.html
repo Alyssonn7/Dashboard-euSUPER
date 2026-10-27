@@ -1251,11 +1251,12 @@ function periodo(){
   if(v==="14d") return {de:soma(o,-13),ate:o};
   if(v==="30d") return {de:soma(o,-29),ate:o};
   if(v==="mes") return {de:o.slice(0,8)+"01", ate:o};
-  /* comparativo semanal: semanas de quarta a terça, como o relatório semanal.
-     A semana atual é a que contém ontem; em andamento, vai só até ontem.
-     As setas andam de 7 em 7 */
+  /* comparativo semanal: semanas de terça a segunda, porque a reunião com os
+     fundadores é na terça: no dia da reunião a semana que terminou ontem está
+     completa. A semana atual é a que contém ontem; em andamento, vai só até
+     ontem. As setas andam de 7 em 7 */
   if(v==="semanal"){
-    const qua=soma(o,-((D(o).getDay()+4)%7)), de=soma(qua,-7*SEM_OFF), fim=soma(de,6);
+    const ter=soma(o,-((D(o).getDay()+5)%7)), de=soma(ter,-7*SEM_OFF), fim=soma(de,6);
     return {de, ate:fim>o?o:fim};
   }
   if(v==="semana"){
@@ -1273,7 +1274,7 @@ function periodo(){
 }
 function comparacao(p){
   /* semanal: os mesmos dias da semana anterior. Com a semana em andamento
-     (ex.: qua a seg), compara qua a seg com qua a seg; fechada, semana inteira */
+     (ex.: ter a qui), compara ter a qui com ter a qui; fechada, semana inteira */
   if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.ate,-7)};
   if(!p||fComp.value==="nenhuma") return null;
   if(ehMes(p.de,p.ate)){                      /* mês fechado: o mês anterior inteiro */
@@ -1285,7 +1286,7 @@ function comparacao(p){
 }
 
 /* ------------------------------------------------- comparativo semanal
-   SEM_OFF = quantas semanas para trás (0 = a semana de quarta a terça que contém ontem).
+   SEM_OFF = quantas semanas para trás (0 = a semana de terça a segunda que contém ontem).
    No modo semanal a comparação fica presa em "Semana anterior"; a escolha
    que havia antes volta quando sai do modo. */
 let SEM_OFF=0;
