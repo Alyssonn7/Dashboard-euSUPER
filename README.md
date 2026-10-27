@@ -113,45 +113,41 @@ carregado.
 
 | Filtro | Funil | De onde vem o cadastro |
 |---|---|---|
-| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → 1º cliente em 7 dias | Metabase (todos os cadastros, com ou sem anúncio) |
+| Todos os canais | Impressões → Cliques → Cadastros → Onboarding concluído → 1º agendamento em 7 dias | Metabase (todos os cadastros, com ou sem anúncio) |
 | Um canal ou uma campanha | Impressões → Cliques → (Visitas na página, só Meta) → Cadastros | Conversão reportada pela própria plataforma |
 
 Onboarding e ativação só existem no total porque nenhuma fonte grava a
 origem do cadastro.
 
-**Mesmo método do relatório semanal do marketing** (conferido em 21/10: semana
-07–13/10 = 503 cadastros, 40,6% de onboarding, 8,2% de ativação, igual ao
-slide):
+**Mesmo critério do painel euSUPER!** (consulta do time de dev, 27/10/26;
+conferido: semana 07–13/10 = 503 cadastros e 48 ativados = 9,5%; 14–20/10 =
+485 e 49 = 10,1%):
 
 - dia do cadastro no **horário de Brasília** (o banco grava em UTC);
+- contas internas fora: e-mail com **"bitboundaire"**;
 - contas **excluídas depois continuam contando** como cadastro;
-- **1º cliente em 7 dias (a etapa que antes se chamava "Conta ativa") = pelo
-  menos um agendamento de cliente com e-mail e telefone
-  diferentes dos da profissional**, criado nos 7 dias depois do cadastro
-  (`event_client` ligado a `event_scheduled.professional_id`, `created_at` do
-  cliente dentro da janela, rascunho `DRAFT` não conta, telefone comparado pelos
-  9 últimos dígitos). A profissional agendando a si mesma para testar não conta.
+- **ativado = pelo menos 1 agendamento** (`event_scheduled`, rascunho `DRAFT`
+  não conta), **feito pelo cliente ou pela profissional**, criado até 7 dias
+  depois do cadastro.
 
-**Ativação D7 = contas ativas ÷ todos os cadastros com 7 dias completos.** Como
-a janela leva 7 dias para fechar, a taxa só usa os cadastros que já completaram
-a janela, e só aparece quando pelo menos metade dos cadastros do recorte já
-fechou; antes disso o cartão mostra "—" e "Fecha em DD/MM". No **comparativo
-semanal**, a semana recente ainda está aberta, então o cartão usa a semana
-mais nova que já fechou (a escolhida, a anterior ou a de antes) contra a semana
-antes dela, como o slide ("Cadastros de 07/10 a 13/10 · 41 de 503"); o painel
-busca essas semanas extras junto. No funil, a etapa 1º cliente em 7 dias de uma semana
-ainda aberta mostra "—" e "D7 fecha em DD/MM" e, embaixo, a mesma taxa do
-cartão: "última fechada: 8,2% (07–13/10)".
-Enquanto ainda há cadastros dentro da janela de 7 dias, a contagem da etapa
-vai subir: no lugar da seta de variação aparece **"parcial"** (com o "antes" ao
-lado), para não parecer queda. O nome "Conta ativa" saiu do funil porque a aba
-Evolução mensal usa "Contas ativas" com outro sentido (atendeu no mês). O cartão se chama "Ativação D7" ("de todos os
-cadastros"). No funil, a etapa 1º cliente em 7 dias mostra a contagem (que ainda sobe
-nos períodos recentes), a ativação D7 no meio da faixa ("dos cadastros (D7)") e,
-embaixo, a taxa de quem fez o onboarding: só quem concluiu o onboarding e ativou
-÷ quem concluiu o onboarding (~19–25%). Essa etapa não usa o "passo da etapa
-anterior", porque quem pula o onboarding também pode ativar — antes, ativos ÷
-onboarding dava ~21–27% e era lido como se fosse a ativação D7. A altura das faixas do funil é logarítmica, para caber de
+**Ativação D7 = ativados ÷ todos os cadastros do período**, como no painel
+euSUPER!. Em período recente parte dos cadastros ainda está dentro dos 7 dias:
+a taxa é **parcial** e ainda sobe. O cartão mostra "41 de 363 cadastros ·
+parcial: 327 ainda dentro dos 7 dias", e o funil escreve "dos cadastros
+(parcial)". Até 27/10 o painel usava a regra do slide do marketing (só
+agendamento de cliente com e-mail e telefone diferentes dos da profissional,
+8,2% em 07–13/10) e só mostrava a taxa com metade dos cadastros fora da
+janela; no semanal, pegava a última semana fechada. Isso saiu: agora o número
+é o mesmo do painel euSUPER! para o mesmo período.
+
+A etapa do funil se chama **"1º agendamento em 7 dias"** (antes "Conta ativa"
+e "1º cliente em 7 dias"). Ela mostra a contagem, a ativação D7 no meio da
+faixa e, embaixo, a taxa de quem fez o onboarding (ativados com onboarding ÷
+quem concluiu o onboarding). Essa etapa não usa o "passo da etapa anterior",
+porque quem pula o onboarding também pode ativar. Enquanto ainda há cadastros
+dentro dos 7 dias, a contagem vai subir: no lugar da seta de variação aparece
+**"parcial"**. A aba Evolução mensal usa "Contas ativas" com outro sentido
+(atendeu no mês). A altura das faixas do funil é logarítmica, para caber de
 centenas de milhares de impressões a dezenas de contas, com piso de 30% da
 primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
@@ -207,10 +203,10 @@ custo por onboarding e ativação só existem no total.
 **Fontes (quatro chamadas por intervalo):** Windsor.ai `get_data` para
 `google_ads` (326-604-5511), `facebook` (604915332642452) e `openai_ads` (sem
 pino de conta), todas por dia e campanha; Metabase `execute_sql` na base 4 com
-cadastros, onboarding e ativação por dia de cadastro (Brasília), sem os IDs
-de teste e com as contas excluídas (inclui maduros, ativos maduros, onboarding
-maduros e ativos com onboarding entre os maduros; dados guardados no navegador
-na versão `v:5`).
+cadastros, onboarding e ativação por dia de cadastro (Brasília), sem as contas
+internas (bitboundaire) e com as contas excluídas (colunas: cadastros,
+onboarding, ativados, maduros, ativados com onboarding; dados guardados no
+navegador na versão `v:7`).
 O conector `openai_ads` do Windsor **agora traz `conversions`** — agosto bate
 com o export do Ads Manager (117). O GA4 não está mais conectado no Windsor, por
 isso "Visitas na página" só aparece no Meta (landing page view do pixel).

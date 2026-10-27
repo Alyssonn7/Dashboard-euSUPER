@@ -618,11 +618,11 @@ button,select,input{font-family:inherit}
    CPC, CPM, taxas e custos por cadastro são calculados na hora.
    midia[canal].l: [dia, campanha (índice em camp), impressões, cliques,
                     investimento, cadastros da plataforma, visitas na página]
-   base.l:         [dia, cadastros, onboarding concluído, contas ativas em 7 dias,
-                    cadastros que já completaram 7 dias, ativos entre esses,
-                    maduros com onboarding concluído, ativos entre esses]
+   base.l:         [dia, cadastros, onboarding concluído, ativados em 7 dias,
+                    cadastros que já completaram 7 dias, ativados entre quem
+                    concluiu o onboarding]
    ========================================================================= */
-const RETRATO={v:6, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 21/10/2026 (método do relatório semanal) */, fonte:"retrato",
+const RETRATO={v:7, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 27/10/2026 (ativação no critério do painel euSUPER!) */, fonte:"retrato",
  cobre:{"de":"2026-08-01","ate":"2026-10-12"},
  midia:{
   google:{cob:[["2026-08-01","2026-10-12"]],
@@ -1084,79 +1084,79 @@ const RETRATO={v:6, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 21
  },
  base:{cob:[["2026-08-01","2026-10-12"]],
   l:[
-["2026-08-01",13,12,0,13,0,12,0],
-["2026-08-02",11,10,1,11,1,10,1],
-["2026-08-03",8,7,1,8,1,7,1],
-["2026-08-04",12,9,1,12,1,9,1],
-["2026-08-05",15,13,2,15,2,13,2],
-["2026-08-06",6,6,0,6,0,6,0],
-["2026-08-07",4,1,0,4,0,1,0],
-["2026-08-08",5,5,0,5,0,5,0],
-["2026-08-09",7,6,3,7,3,6,3],
-["2026-08-10",7,5,0,7,0,5,0],
-["2026-08-11",10,9,0,10,0,9,0],
-["2026-08-12",7,7,0,7,0,7,0],
-["2026-08-13",5,5,2,5,2,5,2],
-["2026-08-14",4,4,1,4,1,4,1],
-["2026-08-15",4,4,1,4,1,4,1],
-["2026-08-16",1,1,0,1,0,1,0],
-["2026-08-17",4,4,0,4,0,4,0],
-["2026-08-18",24,20,3,24,3,20,3],
-["2026-08-19",23,20,3,23,3,20,3],
-["2026-08-20",32,30,2,32,2,30,2],
-["2026-08-21",26,21,1,26,1,21,1],
-["2026-08-22",18,15,3,18,3,15,3],
-["2026-08-23",8,6,2,8,2,6,2],
-["2026-08-24",4,3,1,4,1,3,1],
-["2026-08-25",5,3,1,5,1,3,1],
-["2026-08-26",10,9,0,10,0,9,0],
-["2026-08-27",5,5,0,5,0,5,0],
-["2026-08-28",8,7,0,8,0,7,0],
-["2026-08-29",9,9,3,9,3,9,3],
-["2026-08-30",25,21,2,25,2,21,2],
-["2026-08-31",35,28,3,35,3,28,3],
-["2026-09-01",29,24,3,29,3,24,3],
-["2026-09-02",17,14,2,17,2,14,2],
-["2026-09-03",38,28,4,38,4,28,4],
-["2026-09-04",25,21,2,25,2,21,2],
-["2026-09-05",17,15,2,17,2,15,2],
-["2026-09-06",23,17,3,23,3,17,3],
-["2026-09-07",33,28,6,33,6,28,6],
-["2026-09-08",40,33,3,40,3,33,3],
-["2026-09-09",51,42,7,51,7,42,7],
-["2026-09-10",47,41,8,47,8,41,8],
-["2026-09-11",47,38,2,47,2,38,2],
-["2026-09-12",30,24,3,30,3,24,3],
-["2026-09-13",22,20,2,22,2,20,2],
-["2026-09-14",35,23,5,35,5,23,5],
-["2026-09-15",30,20,1,30,1,20,1],
-["2026-09-16",54,26,4,54,4,26,4],
-["2026-09-17",52,16,8,52,8,16,6],
-["2026-09-18",74,22,10,74,10,22,9],
-["2026-09-19",47,19,5,47,5,19,5],
-["2026-09-20",27,10,3,27,3,10,2],
-["2026-09-21",32,9,1,32,1,9,1],
-["2026-09-22",68,19,5,68,5,19,4],
-["2026-09-23",73,26,7,73,7,26,6],
-["2026-09-24",61,19,0,61,0,19,0],
-["2026-09-25",42,17,8,42,8,17,7],
-["2026-09-26",41,14,3,41,3,14,2],
-["2026-09-27",44,13,4,44,4,13,4],
-["2026-09-28",59,18,4,59,4,18,4],
-["2026-09-29",58,22,6,58,6,22,5],
-["2026-09-30",66,19,6,66,6,19,4],
-["2026-10-01",64,23,5,64,5,23,5],
-["2026-10-02",62,23,5,62,5,23,4],
-["2026-10-03",48,20,3,48,3,20,3],
-["2026-10-04",50,10,0,50,0,10,0],
-["2026-10-05",71,26,9,71,9,26,9],
-["2026-10-06",68,37,11,68,11,37,10],
-["2026-10-07",79,36,4,79,4,36,4],
-["2026-10-08",82,33,9,82,9,33,9],
-["2026-10-09",74,25,6,74,6,25,5],
-["2026-10-10",60,25,6,60,6,25,6],
-["2026-10-11",73,32,5,73,5,32,5],
-["2026-10-12",70,21,2,70,2,21,2]
+["2026-08-01",13,12,1,13,1],
+["2026-08-02",11,10,1,11,1],
+["2026-08-03",8,7,1,8,1],
+["2026-08-04",12,9,2,12,2],
+["2026-08-05",15,13,3,15,3],
+["2026-08-06",6,6,0,6,0],
+["2026-08-07",4,1,0,4,0],
+["2026-08-08",5,5,0,5,0],
+["2026-08-09",7,6,4,7,4],
+["2026-08-10",7,5,0,7,0],
+["2026-08-11",10,9,1,10,1],
+["2026-08-12",7,7,0,7,0],
+["2026-08-13",5,5,2,5,2],
+["2026-08-14",4,4,1,4,1],
+["2026-08-15",4,4,1,4,1],
+["2026-08-16",1,1,0,1,0],
+["2026-08-17",4,4,0,4,0],
+["2026-08-18",24,20,5,24,5],
+["2026-08-19",23,20,4,23,4],
+["2026-08-20",32,30,2,32,2],
+["2026-08-21",26,21,1,26,1],
+["2026-08-22",18,15,4,18,4],
+["2026-08-23",8,6,3,8,3],
+["2026-08-24",4,3,1,4,1],
+["2026-08-25",5,3,1,5,1],
+["2026-08-26",10,9,0,10,0],
+["2026-08-27",4,4,0,4,0],
+["2026-08-28",8,7,1,8,1],
+["2026-08-29",9,9,3,9,3],
+["2026-08-30",25,21,3,25,3],
+["2026-08-31",35,28,5,35,5],
+["2026-09-01",29,24,3,29,3],
+["2026-09-02",17,14,4,17,4],
+["2026-09-03",38,28,5,38,5],
+["2026-09-04",25,21,2,25,2],
+["2026-09-05",17,15,2,17,2],
+["2026-09-06",23,17,4,23,4],
+["2026-09-07",33,28,6,33,6],
+["2026-09-08",40,33,5,40,5],
+["2026-09-09",51,42,11,51,11],
+["2026-09-10",47,41,11,47,11],
+["2026-09-11",47,38,7,47,7],
+["2026-09-12",30,24,5,30,5],
+["2026-09-13",22,20,5,22,5],
+["2026-09-14",35,23,7,35,7],
+["2026-09-15",30,20,1,30,1],
+["2026-09-16",54,26,8,54,8],
+["2026-09-17",52,16,12,52,10],
+["2026-09-18",74,22,11,74,10],
+["2026-09-19",47,19,5,47,5],
+["2026-09-20",27,10,4,27,3],
+["2026-09-21",32,9,3,32,3],
+["2026-09-22",68,19,6,68,5],
+["2026-09-23",73,26,10,73,9],
+["2026-09-24",61,19,0,61,0],
+["2026-09-25",42,17,9,42,7],
+["2026-09-26",41,14,4,41,3],
+["2026-09-27",44,13,4,44,4],
+["2026-09-28",59,18,4,59,4],
+["2026-09-29",58,22,7,58,6],
+["2026-09-30",66,19,9,66,5],
+["2026-10-01",64,23,7,64,5],
+["2026-10-02",62,23,9,62,8],
+["2026-10-03",48,20,4,48,4],
+["2026-10-04",50,10,4,50,3],
+["2026-10-05",70,26,12,70,11],
+["2026-10-06",68,37,13,68,12],
+["2026-10-07",79,36,8,79,6],
+["2026-10-08",82,33,10,82,10],
+["2026-10-09",74,26,6,74,5],
+["2026-10-10",60,25,6,60,6],
+["2026-10-11",73,32,5,73,5],
+["2026-10-12",70,21,3,70,2]
   ]}
 };
 
@@ -1287,16 +1287,6 @@ function comparacao(p){
    No modo semanal a comparação fica presa em "Semana anterior"; a escolha
    que havia antes volta quando sai do modo. */
 let SEM_OFF=0;
-/* ativação D7 no semanal: a semana recente ainda não fechou a janela de 7
-   dias, então o cartão usa a semana mais nova que já fechou (a escolhida, a
-   anterior ou a de antes), contra a semana antes dela — como o relatório
-   semanal ("cadastros de 07–13/10"). Devolve as 4 semanas, da escolhida para trás */
-function semanasAtiv(p,c){
-  const w=[p,c];
-  for(let k=0;k<2;k++){ const u=w[w.length-1]; w.push({de:soma(u.de,-7), ate:soma(u.de,-1)}); }
-  return w;
-}
-const intervalo=w=>w.de.slice(5,7)===w.ate.slice(5,7)?`${w.de.slice(8,10)}–${curta(w.ate)}`:`${curta(w.de)}–${curta(w.ate)}`;
 const dataCurta=s=>`${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(2,4)}`;
 function modoSemanal(){
   const sem=fPeriodo.value==="semanal";
@@ -1316,8 +1306,8 @@ function pintarSemanas(){
 
 /* ------------------------------------------------- dados em memória
    DADOS.midia[canal] = {cob:[[de,ate]...], linhas:[{d,c,t,imp,cli,custo,cad,vis}]}
-   DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativMad,onbMad,ativOnbMad]}}
-   DADOS.origem       = {cob:[[de,ate]...], dias:{dia:{origem:[cad,onb,mad,ativMad]}}}
+   DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativOnb]}}
+   DADOS.origem       = {cob:[[de,ate]...], dias:{dia:{origem:[cad,onb,mad,ativ]}}}
    cob = intervalos de dias já consultados (dia sem linha = dia sem gasto) */
 function abrir(enc){
   const m={};
@@ -1342,7 +1332,7 @@ function fechar(x){
     });
     midia[c]={cob:x.midia[c].cob, camp, l};
   });
-  return {v:6, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
+  return {v:7, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
     base:{cob:x.base.cob, l:Object.keys(x.base.dias).sort().map(d=>[d,...x.base.dias[d]])},
     origem:{cob:x.origem.cob, l:Object.keys(x.origem.dias).sort().flatMap(d=>Object.entries(x.origem.dias[d]).map(([k,v])=>[d,k,...v]))}};
 }
@@ -1358,10 +1348,10 @@ let DADOS=abrir(RETRATO);
 const GUARDA="v2:dados";
 try{
   const s=JSON.parse(localStorage.getItem(GUARDA)||"null");
-  /* v6: origem com "Bio do Instagram" e fonte "meta" sem meio contando
-     como Meta Ads (v5: método do relatório semanal); o que estava salvo
-     antes é descartado */
-  if(s&&s.v===6&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
+  /* v7: ativação no critério do painel euSUPER! (dev): agendamento do
+     cliente ou da profissional, sobre todos os cadastros do período; o que
+     estava salvo antes é descartado */
+  if(s&&s.v===7&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
 }catch(e){}
 function guardar(){try{localStorage.setItem(GUARDA,JSON.stringify(fechar(DADOS)))}catch(e){}}
 
@@ -1434,14 +1424,15 @@ async function qOpenai(de,ate){
     date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
       t:"",imp:+x.impressions||0,cli:+x.clicks||0,custo:+x.spend||0,cad:+x.conversions||0,vis:null}));
 }
-/* mesmo método do relatório semanal do marketing (Metabase):
+/* mesmo critério do painel euSUPER! (consulta do time de dev, 27/10/26):
    · dia do cadastro no horário de Brasília (o banco grava em UTC);
+   · contas internas fora: e-mail com "bitboundaire";
    · contas excluídas depois continuam contando como cadastro;
-   · 1º cliente em 7 dias (ativação) = pelo menos um agendamento de cliente com e-mail e telefone
-     diferentes dos da profissional (autoagendamento de teste não conta),
-     criado nos 7 dias depois do cadastro; rascunho não conta.
-   "maduro" = o cadastro já completou os 7 dias; a taxa de ativação só usa
-   esses, para não punir quem acabou de entrar */
+   · ativado = pelo menos 1 agendamento (rascunho não conta), feito pelo
+     cliente ou pela profissional, criado até 7 dias depois do cadastro;
+   · taxa de ativação = ativados ÷ todos os cadastros do período. Em período
+     recente parte dos cadastros ainda está dentro dos 7 dias: a taxa é
+     parcial e ainda sobe ("maduro" = já completou os 7 dias) */
 /* cadastros do recorte, um por linha, com ativação e, se pedida, a origem.
    Origem, na ordem: antes do rastreamento · sem registro · Google Ads (gclid
    ou UTM paga) · Meta Ads (UTM paga, fbclid com campanha, ou fonte "meta"
@@ -1451,25 +1442,19 @@ async function qOpenai(de,ate){
    redes sociais · direto (sem UTM e sem site de origem) · outros sites */
 const SQL_PAGO="('cpc','ppc','paid','paid_search','paid_social','paidsocial','ads','cpm','display')";
 function cteCadastros(de,ate,comOrigem){
-  return `WITH teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id),
+  return `WITH interno AS (SELECT id FROM professional WHERE email ILIKE '%bitboundaire%'),
 pr AS (
   SELECT p.id, p.created_at, p.onboarding_step,
-    (p.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date AS dia,
-    coalesce(lower(trim(p.email)),'') AS email,
-    right(regexp_replace(coalesce(p.phone_number,''),'[^0-9]','','g'),9) AS fone
+    (p.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date AS dia
   FROM professional p
-  WHERE p.id NOT IN (SELECT id FROM teste)
+  WHERE p.id NOT IN (SELECT id FROM interno)
     AND p.created_at >= DATE '${de}' AND p.created_at < DATE '${ate}' + 2),
 c AS (
   SELECT pr.dia, pr.onboarding_step,
     (pr.created_at + interval '7 days' <= now()) AS maduro,
     EXISTS (SELECT 1 FROM event_scheduled es
-      JOIN event_client ec ON ec.event_scheduled_id = es.id
       WHERE es.professional_id = pr.id AND es.status <> 'DRAFT'
-        AND ec.created_at >= pr.created_at
-        AND ec.created_at < pr.created_at + interval '7 days'
-        AND coalesce(lower(trim(ec.email)),'') <> pr.email
-        AND right(regexp_replace(coalesce(ec.phone_number,''),'[^0-9]','','g'),9) <> pr.fone) AS ativo${comOrigem?`,
+        AND es.created_at < pr.created_at + interval '7 days') AS ativo${comOrigem?`,
     CASE
       WHEN pr.created_at < (SELECT min(created_at) FROM professional_tracking) - interval '10 minutes' THEN 'antes'
       WHEN t.tem IS NULL THEN 'sem'
@@ -1501,11 +1486,9 @@ function sqlBase(de,ate){
   return cteCadastros(de,ate,false)+`
 SELECT dia, count(*) AS cadastros,
   count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
-  count(*) FILTER (WHERE ativo) AS ativos_7d,
+  count(*) FILTER (WHERE ativo) AS ativados,
   count(*) FILTER (WHERE maduro) AS maduros,
-  count(*) FILTER (WHERE maduro AND ativo) AS ativos_maduros,
-  count(*) FILTER (WHERE maduro AND onboarding_step = 'FINISHED') AS onboarding_maduros,
-  count(*) FILTER (WHERE maduro AND ativo AND onboarding_step = 'FINISHED') AS ativos_onb_maduros
+  count(*) FILTER (WHERE ativo AND onboarding_step = 'FINISHED') AS ativados_onb
 FROM c GROUP BY 1 ORDER BY 1`;
 }
 function sqlOrigem(de,ate){
@@ -1513,13 +1496,13 @@ function sqlOrigem(de,ate){
 SELECT dia, origem, count(*) AS cadastros,
   count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
   count(*) FILTER (WHERE maduro) AS maduros,
-  count(*) FILTER (WHERE maduro AND ativo) AS ativos_maduros
+  count(*) FILTER (WHERE ativo) AS ativados
 FROM c GROUP BY 1,2 ORDER BY 1,2`;
 }
 async function qBase(de,ate){
   const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlBase(de,ate)});
   if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
-  return p.data.rows.map(r=>[String(r[0]).slice(0,10),...[1,2,3,4,5,6,7].map(i=>+r[i]||0)]);
+  return p.data.rows.map(r=>[String(r[0]).slice(0,10),...[1,2,3,4,5].map(i=>+r[i]||0)]);
 }
 async function qOrigem(de,ate){
   const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlOrigem(de,ate)});
@@ -1535,7 +1518,6 @@ async function atualizar(){
   const c=comparacao(p);
   /* uma consulta por intervalo; se as janelas se encostam, vira uma só */
   let rs=juntar(c?[[c.de,c.ate]]:[],p.de,p.ate);
-  if(fPeriodo.value==="semanal"&&c) rs=juntar(rs,semanasAtiv(p,c)[3].de,c.ate);
   puxando=true; pintarTopo();
   FALHAS={}; let algum=false;
   const fontes={google:qGoogle, meta:qMeta, openai:qOpenai};
@@ -1595,7 +1577,7 @@ function noFunil(k,x){
 }
 
 function agregar(de,ate,canal,campanha){
-  const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativMad:0,onbMad:0,ativOnbMad:0,
+  const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativOnb:0,
     canal:{},camp:{},dia:{},fora:{}};
   CANAIS.forEach(k=>{
     if(canal!=="todos"&&canal!==k) return;
@@ -1613,8 +1595,7 @@ function agregar(de,ate,canal,campanha){
   });
   Object.entries(DADOS.base.dias).forEach(([d,v])=>{
     if(d<de||d>ate) return;
-    r.cadReal+=v[0]; r.onb+=v[1]; r.ativ+=v[2]; r.mad+=v[3]||0; r.ativMad+=v[4]||0;
-    r.onbMad+=v[5]||0; r.ativOnbMad+=v[6]||0;
+    r.cadReal+=v[0]; r.onb+=v[1]; r.ativ+=v[2]; r.mad+=v[3]||0; r.ativOnb+=v[4]||0;
     (r.dia[d]||(r.dia[d]={inv:{},cad:0})).real=v[0];
   });
   r.nCamp=Object.values(r.camp).filter(c=>c.inv>0).length;
@@ -1639,9 +1620,6 @@ function faltando(p,canal){
 
 /* ------------------------------------------------- métricas dos cartões
    dir: +1 = subir é bom · -1 = cair é bom · 0 = sem julgamento */
-/* a ativação D7 só aparece quando a janela de 7 dias já fechou para pelo
-   menos metade dos cadastros do recorte; antes disso a taxa é ruído */
-const d7Fechado=a=>!!a&&a.mad>0&&a.mad*2>=a.cadReal;
 const M={
   inv:     {r:"Investimento em anúncios", f:brl, dir:0, v:a=>a.inv},
   /* tráfego pago: cadastros que Google, Meta e OpenAI atribuem a si */
@@ -1656,7 +1634,9 @@ const M={
   /* ativação D7 oficial: ativos ÷ TODOS os cadastros com 7 dias completos
      (o mesmo número do Metabase e do Oráculo). Taxa, e não contagem: compara
      períodos com maturidades diferentes de forma justa */
-  ativ:    {r:"Ativação D7", f:v=>pct(v), dir:1, v:a=>d7Fechado(a)?cem(a.ativMad,a.mad):null},
+  /* critério do painel euSUPER!: ativados ÷ todos os cadastros do período
+     (em período recente é parcial: quem está dentro dos 7 dias ainda pode ativar) */
+  ativ:    {r:"Ativação D7", f:v=>pct(v), dir:1, v:a=>cem(a.ativ,a.cadReal)},
   /* modo canal/campanha: cadastro = o que a plataforma reporta */
   cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
   cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
@@ -1673,7 +1653,7 @@ const FORMULA={
   cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros atribuídos ÷ cliques totais",
   onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
   cpm:"Investimento total ÷ impressões totais × 1.000",
-  ativ:"Agendaram um cliente em até 7 dias ÷ todos os cadastros com 7 dias completos",
+  ativ:"Tiveram 1+ agendamento em até 7 dias ÷ cadastros do período (critério do painel euSUPER!)",
   cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
   fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
   invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
@@ -1924,13 +1904,13 @@ function frase(cls,html){
 
 /* ------------------------------------------------- origem dos cadastros */
 function agregarOrigem(de,ate){
-  const zero=()=>({cad:0,onb:0,mad:0,ativMad:0}), r={}, tot=zero(); let antes=0;
+  const zero=()=>({cad:0,onb:0,mad:0,ativ:0}), r={}, tot=zero(); let antes=0;
   Object.entries(DADOS.origem.dias).forEach(([d,ks])=>{
     if(d<de||d>ate) return;
     Object.entries(ks).forEach(([k,v])=>{
       if(k==="antes"){antes+=v[0];return}
       const o=r[k]||(r[k]=zero());
-      [o,tot].forEach(x=>{x.cad+=v[0];x.onb+=v[1];x.mad+=v[2];x.ativMad+=v[3]});
+      [o,tot].forEach(x=>{x.cad+=v[0];x.onb+=v[1];x.mad+=v[2];x.ativ+=v[3]});
     });
   });
   /* orgânico = soma das origens sem anúncio */
@@ -1939,7 +1919,7 @@ function agregarOrigem(de,ate){
   r.org=org;
   return {r,tot,antes};
 }
-const taxaD7=x=>x&&x.mad>0&&x.mad*2>=x.cad?cem(x.ativMad,x.mad):null;
+const taxaD7=x=>x&&x.cad?cem(x.ativ,x.cad):null;
 const DICA_ORIGEM="Origem = de onde a pessoa veio quando se cadastrou, gravada pelo nosso site: link do anúncio (UTM), "+
   "identificador do clique (gclid no Google, fbclid no Meta) e site de onde veio. É o banco que diz, não a plataforma de anúncio.";
 function blocoOrigem(p,c){
@@ -1967,9 +1947,9 @@ function blocoOrigem(p,c){
       return `<span class="${o.cor?"":"hach"}" style="flex:${v} 1 0;${o.cor?`background:${o.cor}`:""}" data-html data-dica="${esc(
         `<b>${esc(o.n)}</b><div class="lin"><span>Cadastros</span><span>${num(v)}</span></div><div class="lin"><span>Parcela</span><span>${pct(sh)}</span></div>`)}">${sh>=8?Math.round(sh)+"%":""}</span>`}).join("")+`</div>`;
 
-  const comAtiv=[tot,...Object.values(r)].some(x=>taxaD7(x)!=null);
+  const comAtiv=true, parcialD7=tot.mad<tot.cad;
   const linha=(o,sub)=>{
-    const x=r[o.k]||{cad:0,onb:0,mad:0,ativMad:0}, sh=x.cad/tot.cad*100, pb=rb?parc(o.k,rb):null;
+    const x=r[o.k]||{cad:0,onb:0,mad:0,ativ:0}, sh=x.cad/tot.cad*100, pb=rb?parc(o.k,rb):null;
     let custo="";
     if(o.canal){
       const inv=m.canal[o.canal]?m.canal[o.canal].inv:0, plat=m.canal[o.canal]?m.canal[o.canal].cad:0;
@@ -1995,7 +1975,7 @@ function blocoOrigem(p,c){
   const notas=`Custo real = investimento do canal ÷ cadastros que o banco registrou vindos dele (passe o mouse para comparar com o que a plataforma diz). `+
     (de0>p.de||antes?`Origem gravada desde ${curta(TRACK_INICIO)}, 8h59`+(de0>p.de?`: aqui entram ${dias(de0,p.ate)} de ${dias(p.de,p.ate)} dias do período`:"")+
       (antes?`; ${num(antes)} cadastro${antes>1?"s":""} de antes disso fica${antes>1?"m":""} de fora`:"")+". ":"")+
-    (comAtiv?"":`Ativação D7 por origem: fecha em ${curta(soma(p.ate,7))}.`);
+    (parcialD7?`Ativação D7 parcial: ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias.`:"");
   /* observação: o orgânico e o sem origem em palavras, com o que está sendo investigado */
   const og=r.org, sem=r.sem||{cad:0,onb:0}, ps=v=>pct(v/tot.cad*100);
   const subs=ORIGENS.find(o=>o.k==="org").sub.map(s=>({n:s.n,v:n(s.k)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
@@ -2061,19 +2041,9 @@ function pintar(){
   if(modoReal){
     /* onboarding e ativação só existem sobre o total de cadastros do Metabase */
     const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} de ${num(a.cadReal)} cadastros no total`:"";
-    let aAt=a, bAt=b, co=null;
-    if(fPeriodo.value==="semanal"&&c){
-      const w=semanasAtiv(p,c), tem=x=>cobre(DADOS.base.cob,x.de,x.ate);
-      for(let k=0;k<3&&tem(w[k]);k++){
-        const x=k===0?a:agregar(w[k].de,w[k].ate,canal,camp);
-        if(!d7Fechado(x)) continue;
-        aAt=x; bAt=tem(w[k+1])?agregar(w[k+1].de,w[k+1].ate,canal,camp):null; co=k>0?w[k]:null; break;
-      }
-    }
-    const pend=aAt.cadReal-aAt.mad;
-    const sAtiv=!d7Fechado(aAt)?`Fecha em ${curta(soma(p.ate,7))} · ${num(pend)} cadastro${pend===1?"":"s"} na janela`:
-      (co?`Cadastros de ${curta(co.de)} a ${curta(co.ate)}`:"De todos os cadastros")+
-      ` · ${num(aAt.ativMad)} de ${num(aAt.mad)}`+(pend>0?` · ${num(pend)} ainda na janela`:"");
+    const pend=a.cadReal-a.mad;
+    const sAtiv=`${num(a.ativ)} de ${num(a.cadReal)} cadastros`+
+      (pend>0?` · parcial: ${num(pend)} ainda dentro dos 7 dias`:"");
     /* ordem de apresentação, de cima para baixo como o funil:
        1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
        2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
@@ -2083,7 +2053,7 @@ function pintar(){
     cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx,"Atribuídos por Google, Meta e OpenAI")+
       kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
       kpi("quarto","cpm",a,b,t,tb,ctx)+kpi("quarto","onb",a,b,t,tb,ctx,sOnb)+
-      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",aAt,bAt,t,tb,ctx,sAtiv);
+      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",a,b,t,tb,ctx,sAtiv);
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
@@ -2095,15 +2065,12 @@ function pintar(){
          de quem fez o onboarding fica embaixo, só com quem fez e ativou */
       /* parcial: ainda há cadastros na janela de 7 dias, a contagem vai subir;
          no lugar da seta (que pareceria queda) aparece "parcial" */
-      {n:"1º cliente em 7 dias",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"ativação",parcial:a.cadReal>a.mad,
+      {n:"1º agendamento em 7 dias",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"ativação",parcial:pend>0,
         p:M.ativ.v(a), pb:b&&M.ativ.v(b), pRot:"Ativação D7, de todos os cadastros",
-        pRef:d7Fechado(a)?"dos cadastros (D7)":`D7 fecha em ${curta(soma(p.ate,7))}`,
-        x:d7Fechado(a)?{v:cem(a.ativOnbMad,a.onbMad), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"}:
-          /* semana ainda aberta: a taxa da última semana fechada, a mesma do cartão */
-          co&&M.ativ.v(aAt)!=null?{v:M.ativ.v(aAt), rot:`Última semana fechada (${intervalo(co)})`,
-            t:`última fechada: ${pct(M.ativ.v(aAt))}\u00a0(${intervalo(co).replace("–","\u2060–\u2060")})`}:null,
-        nota:"Agendou um cliente (não a si mesma) em até 7 dias. As taxas só usam cadastros com 7 dias completos."+
-        (a.cadReal>a.mad?` ${num(a.cadReal-a.mad)} ainda na janela.`:"")}
+        pRef:pend>0?"dos cadastros (parcial)":"dos cadastros (D7)",
+        x:{v:cem(a.ativOnb,a.onb), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"},
+        nota:"Pelo menos 1 agendamento (do cliente ou da profissional) em até 7 dias. Mesmo critério do painel euSUPER!."+
+        (pend>0?` ${num(pend)} cadastros ainda dentro dos 7 dias: a taxa ainda sobe.`:"")}
     ];
   } else {
     cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cadC",a,b,t,tb,ctx)+kpi("principal","cpaC",a,b,t,tb,ctx)+kpi("principal","taxaC",a,b,t,tb,ctx)+
@@ -2146,7 +2113,7 @@ function pintar(){
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
     `Cadastros, onboarding e ativação: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro no horário de Brasília, contando também as contas excluídas depois. `+
-    `1º cliente em 7 dias = pelo menos um agendamento de cliente com e-mail e telefone diferentes dos da profissional, nos 7 dias depois do cadastro; ativação D7 = quem teve o 1º cliente em 7 dias ÷ todos os cadastros com 7 dias completos (mesmo método do relatório semanal). `+
+    `Ativação D7 = cadastros com pelo menos 1 agendamento (do cliente ou da profissional) em até 7 dias ÷ todos os cadastros do período, sem contas internas (bitboundaire); mesmo critério do painel euSUPER!. Em período recente a taxa é parcial e ainda sobe. `+
     `No Meta Ads, clique é clique no link. Taxas e custos são calculados aqui, a partir das contagens. `+
     `Selo laranja de atenção: a métrica piorou 10% ou mais contra a comparação.`;
 }
@@ -2170,9 +2137,7 @@ function aoMudar(){
   lembrar(); pintar();
   const p=periodo(); if(!p||!MCP) return;
   const c=comparacao(p);
-  /* no semanal, a ativação D7 usa até 3 semanas para trás: também precisam estar carregadas */
-  const semAtiv=fPeriodo.value==="semanal"&&c&&!cobre(DADOS.base.cob,semanasAtiv(p,c)[3].de,c.ate);
-  if(faltando(p,"todos").length||(c&&faltando(c,"todos").length)||faltaOrigem(p)||(c&&faltaOrigem(c))||semAtiv) atualizar();
+  if(faltando(p,"todos").length||(c&&faltando(c,"todos").length)||faltaOrigem(p)||(c&&faltaOrigem(c))) atualizar();
 }
 fPeriodo.addEventListener("change",()=>{
   if(fPeriodo.value==="custom"){const p0=periodo(); if(p0){dDe.value=p0.de;dAte.value=p0.ate}}
