@@ -176,6 +176,15 @@ cadastro do canal ÷ cadastros que o banco registrou vindos dele. Passando o
 mouse no custo, aparece o que a plataforma diz ter trazido, para comparar. No
 celular, a tabela fica com origem, cadastros, parcela e custo real.
 
+Para a reunião, o bloco se explica sozinho: cada linha do orgânico e o "Sem
+origem" têm um mini-texto embaixo do nome (ex.: "Direto — digitou o site ou
+veio de WhatsApp e e-mail"), e abaixo do total há uma **observação** com o
+orgânico e o sem origem do período em palavras (quantos, o maior grupo, quantos
+dos sem origem não terminaram o onboarding e o provável motivo: a pessoa cria a
+conta e sai antes de o site anotar a origem, que é gravada uns 30 segundos depois)
+e a caixa **Em investigação**, com o que o time de desenvolvimento e o de
+marketing estão fazendo. Esse texto fica em `ORIGEM_INVESTIGA`, no topo do código.
+
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
 laranja.
