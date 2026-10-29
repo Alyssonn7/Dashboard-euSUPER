@@ -4,8 +4,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
 <script>
-/* tema escolhido no botão vale já na primeira pintura, sem piscar */
-try{var t0=localStorage.getItem("v2:tema");if(t0==="dark"||t0==="light")document.documentElement.setAttribute("data-theme",t0)}catch(e){}
+/* o painel abre sempre no modo claro, já na primeira pintura, sem piscar;
+   o escuro só vale se a pessoa escolheu no botão (guardado neste navegador) */
+try{var t0=localStorage.getItem("v2:tema")}catch(e){}
+document.documentElement.setAttribute("data-theme",t0==="dark"?"dark":"light");
 </script>
 
 <style>
@@ -2166,29 +2168,26 @@ fCamp.addEventListener("change",aoMudar);
 btAtualizar.addEventListener("click",()=>{ABA==="evo"?atualizarEvo():atualizar()});
 
 /* ------------------------------------------------- tema claro / escuro
-   sem escolha guardada, vale o tema do claude.ai (ou do sistema); o botão
-   fixa a escolha neste navegador */
+   o padrão é o modo claro, mesmo com o claude.ai ou o sistema no escuro;
+   o botão troca e guarda a escolha neste navegador */
 const TEMA="v2:tema", raiz=document.documentElement;
 const btTema=document.getElementById("btTema"), txTema=document.getElementById("txTema");
-const mqEscuro=window.matchMedia?matchMedia("(prefers-color-scheme: dark)"):null;
-function temaAtual(){
-  const t=raiz.getAttribute("data-theme");
-  return t==="dark"||t==="light"?t:(mqEscuro&&mqEscuro.matches?"dark":"light");
-}
+let tema=raiz.getAttribute("data-theme")==="dark"?"dark":"light";
 function marcarTema(){
-  const escuro=temaAtual()==="dark";
+  const escuro=tema==="dark";
   btTema.classList.toggle("escuro",escuro);
   txTema.textContent=escuro?"modo claro":"modo escuro";
   btTema.setAttribute("aria-label",escuro?"Mudar para o modo claro":"Mudar para o modo escuro");
 }
 btTema.addEventListener("click",()=>{
-  const novo=temaAtual()==="dark"?"light":"dark";
-  raiz.setAttribute("data-theme",novo);
-  try{localStorage.setItem(TEMA,novo)}catch(e){}
+  tema=tema==="dark"?"light":"dark";
+  raiz.setAttribute("data-theme",tema);
+  try{localStorage.setItem(TEMA,tema)}catch(e){}
   marcarTema();
 });
-if(mqEscuro&&mqEscuro.addEventListener) mqEscuro.addEventListener("change",marcarTema);
-new MutationObserver(marcarTema).observe(raiz,{attributes:true,attributeFilter:["data-theme"]});
+/* se a página de fora trocar o tema, volta para o escolhido aqui */
+new MutationObserver(()=>{if(raiz.getAttribute("data-theme")!==tema) raiz.setAttribute("data-theme",tema)})
+  .observe(raiz,{attributes:true,attributeFilter:["data-theme"]});
 marcarTema();
 
 /* =========================================================================

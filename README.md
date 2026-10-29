@@ -16,9 +16,9 @@ alta e ícones da marca. Fonte Gilroy quando instalada, Outfit no lugar.
 
 **Tema claro e escuro.** O claro é o do manual (fundo branco). O escuro é
 derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
-`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. Sem escolha, o painel
-segue o tema do claude.ai ou do sistema; o botão **modo escuro / modo claro** no
-topo fixa a escolha neste navegador (`v2:tema`).
+`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. O painel abre sempre no
+**modo claro**, mesmo com o claude.ai ou o sistema no escuro; o botão **modo
+escuro / modo claro** no topo troca e guarda a escolha neste navegador (`v2:tema`).
 
 Formato de resumo: filtros num cartão que sobe sobre a faixa e, logo abaixo, o
 funil na largura toda, compacto (330px) para caber na primeira tela junto com os
