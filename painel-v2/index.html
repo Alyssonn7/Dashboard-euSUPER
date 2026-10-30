@@ -1,0 +1,2510 @@
+<title>Funil de Cadastro euSUPER!</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
+<script>
+/* o painel abre sempre no modo claro, já na primeira pintura, sem piscar;
+   o escuro só vale se a pessoa escolheu no botão (guardado neste navegador) */
+try{var t0=localStorage.getItem("v2:tema")}catch(e){}
+document.documentElement.setAttribute("data-theme",t0==="dark"?"dark":"light");
+</script>
+
+<style>
+/* =========================================================================
+   Painel v2 — funil de cadastro, na identidade visual euSUPER!.
+   Layout: faixa azul da marca no topo (degradê oficial, barra do "!" a
+   22,5° e o círculo laranja); filtros num cartão que sobe sobre a faixa;
+   depois os quatro números principais, os seis mini blocos, o funil na
+   largura toda e os gráficos por dia.
+   Dois temas. Claro: o do manual, fundo branco. Escuro: derivado do azul da
+   marca, com o cinza e o azul claro como cor de texto. Sem escolha, segue o
+   tema do claude.ai / do sistema; o botão no topo fixa a escolha.
+   Fonte: Gilroy quando instalada; Outfit (Google Fonts) no lugar.
+   ========================================================================= */
+:root{
+  --fonte:"Gilroy","Outfit",-apple-system,"Segoe UI",sans-serif;
+  --gut:clamp(16px,3vw,40px);
+  /* cores da marca: iguais nos dois temas */
+  --azul:#008CF5; --azul-2:#1760B9; --laranja:#F9902A; --verde:#05B27C;
+  --cinza:#87B1DB; --azul-claro:#D7FFF7; --branco:#FEFEFE; --tinta:#0A1A30;
+  /* tema claro */
+  --fundo:#FEFEFE; --painel:#FEFEFE; --campo:#FEFEFE;
+  /* linhas reforçadas a pedido (21/10): cartões, campos, divisórias e grade */
+  --borda:#A8C5E4; --borda-campo:#9DBDE0; --borda-forte:#7FA6D3; --grade:#D3E3F3;
+  --texto:#1760B9; --texto-2:#4A76A8; --titulo:#008CF5;
+  --bom:#027A56; --bom-bg:#DCF5EC;
+  --ruim:#A9520C; --ruim-bg:#FDEEDD;
+  --neutro:#1760B9; --neutro-bg:#EAF2FB;
+  --alerta-v:#C05E0F; --alerta-borda:#F9C48F;
+  --cad-barra:#1760B9;
+  --google:#008CF5; --meta:#F9902A; --openai:#05B27C; --organico:#1760B9;
+  --dica-bg:#FEFEFE; --dica-borda:#A8C5E4; --dica-texto:#1760B9; --dica-m:#4A76A8;
+  --sombra-dica:0 14px 34px -12px rgba(23,96,185,.4);
+  --veu:rgba(10,26,48,.22);
+  --sombra:0 2px 4px rgba(23,96,185,.06),0 18px 40px -18px rgba(23,96,185,.35);
+  --foco:rgba(0,140,245,.28);
+  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234A76A8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --fundo:#0A1A30; --painel:#10243F; --campo:#0A1A30;
+    --borda:#30557F; --borda-campo:#3B6394; --borda-forte:#4C78AC; --grade:#24456B;
+    --texto:#FEFEFE; --texto-2:#87B1DB; --titulo:#D7FFF7;
+    --bom:#3FD9A4; --bom-bg:#0B3B33;
+    --ruim:#FFB067; --ruim-bg:#3A2614;
+    --neutro:#D7FFF7; --neutro-bg:#19385F;
+    --alerta-v:#FFB067; --alerta-borda:#F9902A;
+    --cad-barra:#008CF5;
+    --dica-bg:#0A1A30; --dica-borda:#3B6394; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
+    --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
+    --foco:rgba(0,140,245,.45);
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --fundo:#0A1A30; --painel:#10243F; --campo:#0A1A30;
+  --borda:#30557F; --borda-campo:#3B6394; --borda-forte:#4C78AC; --grade:#24456B;
+  --texto:#FEFEFE; --texto-2:#87B1DB; --titulo:#D7FFF7;
+  --bom:#3FD9A4; --bom-bg:#0B3B33;
+  --ruim:#FFB067; --ruim-bg:#3A2614;
+  --neutro:#D7FFF7; --neutro-bg:#19385F;
+  --alerta-v:#FFB067; --alerta-borda:#F9902A;
+  --cad-barra:#008CF5;
+  --dica-bg:#0A1A30; --dica-borda:#3B6394; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
+  --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
+  --foco:rgba(0,140,245,.45);
+  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--texto);font-family:var(--fonte);
+  font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,select,input{font-family:inherit}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------------- faixa da marca ---------------- */
+.topo{position:relative;overflow:hidden;color:var(--branco);
+  background:linear-gradient(160deg,var(--azul) 0%,var(--azul-2) 100%);
+  padding-left:max(var(--gut),env(safe-area-inset-left,0px));
+  padding-right:max(var(--gut),env(safe-area-inset-right,0px));padding-block:24px 116px}
+.topo-arte{position:absolute;inset:0;pointer-events:none}
+/* a barra do "!" do logo, inclinada a 22,5°, e o círculo laranja */
+.topo-arte .ex{position:absolute;right:200px;top:96px;width:150px;height:460px;background:var(--azul-claro);transform:skewX(-22.5deg)}
+.topo-arte .bola{position:absolute;right:-150px;bottom:-400px;width:560px;height:560px;border-radius:50%;background:var(--laranja)}
+.topo-in{position:relative;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+.topo-l{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}
+.marca svg{width:40px;height:40px;flex:none;display:block}
+.marca span{font-size:14px;font-weight:500;color:var(--azul-claro);letter-spacing:.02em}
+.atual{font-size:14px;color:var(--branco)}
+.btn,.bt-tema{font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;
+  height:46px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.btn{color:var(--azul-2);background:var(--branco);border:none;padding:0 26px}
+.btn:hover{background:var(--azul-claro)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:disabled:hover{background:var(--branco)}
+.btn .gira{width:14px;height:14px;border:2px solid rgba(23,96,185,.25);border-top-color:var(--azul-2);
+  border-radius:50%;animation:gira .8s linear infinite;display:none}
+.btn.indo .gira{display:block}
+@keyframes gira{to{transform:rotate(360deg)}}
+.bt-tema{color:var(--branco);background:transparent;border:1.5px solid rgba(254,254,254,.75);padding:0 18px 0 14px;gap:8px}
+.bt-tema:hover{background:rgba(254,254,254,.14);border-color:var(--branco)}
+.bt-tema svg{width:18px;height:18px;flex:none;display:block}
+.bt-tema .sol{display:none} .bt-tema.escuro .sol{display:block} .bt-tema.escuro .lua{display:none}
+.btn:focus-visible,.bt-tema:focus-visible{outline:2px solid var(--branco);outline-offset:3px}
+.topo-t{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.topo-t h1{margin:0;font-size:clamp(40px,5vw,58px);line-height:.95;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.topo-t p{margin:0;font-size:clamp(15px,1.5vw,20px);max-width:52ch}
+
+/* ---------------- página ---------------- */
+.pagina{position:relative;margin-top:-84px;
+  padding-left:max(var(--gut),env(safe-area-inset-left,0px));
+  padding-right:max(var(--gut),env(safe-area-inset-right,0px));padding-block:0 56px}
+.conteudo{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+
+/* ---------------- filtros ---------------- */
+.filtro{background:var(--painel);border:1px solid var(--borda);border-radius:12px;box-shadow:var(--sombra);
+  padding:22px 24px 18px;display:flex;flex-direction:column;gap:16px}
+.filtros,.datas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 20px}
+.campo{display:flex;flex-direction:column;gap:6px;min-width:0}
+.campo label{font-size:13px;font-weight:500;color:var(--texto-2)}
+.campo .rot{display:flex;align-items:center;gap:6px}
+.campo select,.campo input{appearance:none;-webkit-appearance:none;width:100%;min-width:0;height:46px;
+  background-color:var(--campo);color:var(--texto);border:1.5px solid var(--borda-campo);border-radius:8px;
+  font-size:15px;font-weight:500;padding:0 38px 0 14px;cursor:pointer;
+  background-image:var(--chev);background-repeat:no-repeat;background-position:right 14px center;text-overflow:ellipsis}
+.campo input{padding-right:12px;background-image:none;cursor:text}
+.campo select:hover,.campo input:hover{border-color:var(--cinza)}
+.campo select:focus-visible,.campo input:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
+.campo optgroup{font-style:normal}
+/* comparativo semanal: a semana anterior à esquerda, a analisada à direita */
+.semanas{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.sem{flex:1 1 170px;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;
+  padding:8px 14px;border-radius:8px;border:1.5px solid var(--borda-campo);background:var(--campo)}
+.sem small{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.sem b{font-size:16px;font-weight:600;color:var(--texto);font-variant-numeric:tabular-nums}
+.sem.atual{border-color:var(--azul)}
+.sem-vs{align-self:center;font-size:13px;font-weight:600;color:var(--texto-2)}
+.sem-bt{flex:none;width:46px;min-height:46px;border-radius:8px;border:1.5px solid var(--borda-campo);background:var(--campo);
+  color:var(--texto);font-family:inherit;font-size:22px;line-height:1;cursor:pointer}
+.sem-bt:hover:not(:disabled){border-color:var(--cinza)}
+.sem-bt:disabled{opacity:.4;cursor:default}
+.sem-bt:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
+.campo select:disabled{cursor:default;opacity:.75}
+.frase{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin:0;font-size:14px;color:var(--texto-2)}
+.frase span{flex:1;min-width:0}
+.frase b{color:var(--texto);font-weight:600}
+.selo{display:inline-flex;align-items:center;gap:6px;flex:none;font-style:normal;font-weight:600;font-size:12px;
+  letter-spacing:.04em;text-transform:uppercase;border-radius:99px;padding:4px 10px;
+  background:var(--neutro-bg);color:var(--neutro)}
+.selo::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cinza)}
+.frase.vivo .selo{background:var(--bom-bg);color:var(--bom)} .frase.vivo .selo::before{background:var(--verde)}
+.frase.mal .selo{background:var(--ruim-bg);color:var(--ruim)} .frase.mal .selo::before{background:var(--laranja)}
+
+/* ---------------- avisos de fonte ---------------- */
+.avisos{display:flex;flex-direction:column;gap:8px}
+.avisos:empty{display:none}
+.aviso{display:flex;gap:10px;align-items:flex-start;background:var(--neutro-bg);border:1px solid var(--borda-campo);
+  color:var(--neutro);border-radius:10px;padding:12px 16px;font-size:13.5px;line-height:1.5}
+.aviso b{font-weight:600}
+.aviso.erro{background:var(--ruim-bg);border-color:var(--alerta-borda);color:var(--ruim)}
+
+/* ---------------- grade do resumo ----------------
+   12 colunas: os quatro principais ocupam 3 cada (4 por linha), os mini blocos
+   4 cada (3 por linha) ou 3 quando a linha tem quatro ("quarto"); o funil vai
+   na largura toda. Nenhuma linha fica com buraco. */
+.resumo{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.resumo .kpi{grid-column:span 3}
+.resumo .kpi.mini{grid-column:span 4}
+.resumo .kpi.mini.quarto{grid-column:span 3}
+.cx{background:var(--painel);border:1px solid var(--borda);border-radius:12px;min-width:0}
+.kpi{position:relative;padding:20px 22px;display:flex;flex-direction:column;gap:10px;
+  transition:transform .18s ease,box-shadow .18s ease}
+/* foco no cartão: o véu desfoca o resto da página e o cartão sobe na frente */
+.kpi.em-foco{z-index:26;transform:translateY(-3px) scale(1.02);box-shadow:0 0 0 2px var(--azul),var(--sombra-dica)}
+.kpi.alerta.em-foco{box-shadow:0 0 0 2px var(--laranja),var(--sombra-dica)}
+#veu{position:fixed;inset:0;z-index:25;pointer-events:none;opacity:0;visibility:hidden;background:var(--veu);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);transition:opacity .18s ease,visibility 0s linear .18s}
+#veu.on{opacity:1;visibility:visible;transition:opacity .18s ease}
+.kpi header{display:flex;align-items:center;gap:10px}
+.kpi-ic svg{width:34px;height:34px;display:block}
+.kpi-r{flex:1;min-width:0;font-size:15px;font-weight:500;color:var(--texto-2);line-height:1.3}
+.kpi-x{display:flex;align-items:center;gap:8px;flex:none}
+.kpi-v{font-size:clamp(26px,2.5vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.05;
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-d{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--texto-2);min-height:22px}
+.delta{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.delta.up{color:var(--bom)} .delta.down{color:var(--ruim)} .delta.flat{color:var(--neutro)}
+.kpi-d .delta{border-radius:99px;padding:2px 9px}
+.kpi-d .delta.up{background:var(--bom-bg)} .kpi-d .delta.down{background:var(--ruim-bg)} .kpi-d .delta.flat{background:var(--neutro-bg)}
+.kpi-s{font-size:12.5px;color:var(--texto-2)}
+.kpi.mini{padding:14px 18px 13px;gap:6px}
+.kpi.mini header{align-items:flex-start}
+.kpi.mini .kpi-r{font-size:14px}
+.kpi.mini .kpi-v{font-size:clamp(20px,1.8vw,24px);letter-spacing:-.01em;line-height:1.1}
+.kpi.mini .kpi-d{font-size:12.5px}
+.kpi.mini .kpi-d .delta{padding:1px 8px}
+/* alerta: piorou 10% ou mais — selo laranja, número e borda em laranja */
+.kpi.alerta{border-color:var(--alerta-borda)}
+.kpi.alerta .kpi-v{color:var(--alerta-v)}
+.atencao{display:inline-flex;align-items:center;gap:5px;background:var(--laranja);color:var(--tinta);
+  font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px 3px 5px}
+.atencao svg{width:10px;height:13px;display:block}
+.info{width:18px;height:18px;flex:none;border-radius:50%;border:1.4px solid var(--texto-2);
+  color:var(--texto-2);background:none;font-size:11px;font-weight:700;line-height:1;display:grid;
+  place-items:center;cursor:help;padding:0;font-family:Georgia,serif;font-style:italic}
+.info:hover,.info:focus-visible{border-color:var(--azul);color:var(--azul);outline:none}
+
+/* ---------------- funil ---------------- */
+.funil-cx{grid-column:1/-1;padding:18px 24px 14px;display:flex;flex-direction:column;gap:10px}
+.cx-t{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.cx-t h2{margin:0;font-size:clamp(24px,2.4vw,32px);font-weight:700;line-height:1.05;color:var(--titulo);text-wrap:balance}
+.cx-t h2 small{font-size:.56em;font-weight:500;color:var(--texto-2);letter-spacing:0}
+.cx-t p{margin:6px 0 0;font-size:14px;color:var(--texto-2);max-width:90ch}
+/* funil horizontal na largura toda, compacto para caber na primeira tela:
+   cada coluna tem três faixas que casam com o desenho — números em cima
+   (76px), a forma no meio, custo embaixo (40px). Título e subtítulo na mesma linha */
+.funil-cx .cx-t>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 14px}
+.funil-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.funil-cx .cx-t p{margin:0;font-size:13px}
+.funil{position:relative;height:260px}
+.funil>svg{position:absolute;left:0;right:0;top:76px;bottom:40px;width:100%;height:calc(100% - 116px)}
+.funil-cols{position:absolute;inset:0;display:grid}
+.fc{position:relative;display:grid;grid-template-rows:76px minmax(0,1fr) 40px;padding:0 14px;min-width:0;
+  cursor:default;outline:none}
+.fc+.fc::before{content:"";position:absolute;left:0;top:4px;bottom:4px;border-left:1px dashed var(--borda-forte)}
+.fc:focus-visible{box-shadow:inset 0 0 0 2px var(--azul);border-radius:8px}
+/* título, número e comparação centralizados na coluna, alinhados com a taxa
+   do meio e o custo de baixo; o número desce um pouco do título */
+.fc-topo{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;min-width:0}
+.fc-topo .fc-n{justify-content:center;max-width:100%}
+.fc-topo .fc-v{margin-top:4px}
+.fc-topo .fc-d{max-width:100%}
+.fc-n{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--texto-2);min-width:0}
+.fc-n svg{width:20px;height:20px;flex:none;display:block}
+.fc-n span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-v{font-size:clamp(20px,1.8vw,26px);font-weight:700;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
+.fc-d{font-size:12.5px;color:var(--texto-2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-meio{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--branco);
+  text-shadow:0 1px 2px rgba(10,26,48,.35);min-height:0}
+.fc-p{font-size:clamp(18px,1.6vw,22px);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.fc-p small{display:block;font-size:12px;font-weight:500;opacity:.92;margin-top:3px;letter-spacing:0}
+.fc-p small.fc-x{margin-top:5px;padding-top:5px;border-top:1px solid rgba(254,254,254,.35);font-size:11.5px;opacity:.85}
+.fc-pe{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;gap:0;padding-bottom:0;font-size:12.5px;line-height:1.35;
+  color:var(--texto-2);font-variant-numeric:tabular-nums;white-space:nowrap;min-width:0}
+.fc-pe b{color:var(--texto);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.legenda-f{margin:0;font-size:12.5px;color:var(--texto-2)}
+.legenda-f b{color:var(--texto);font-weight:600}
+/* no celular o funil vira lista: uma barra por etapa */
+.funil-lista{display:none;flex-direction:column;gap:16px}
+.fl header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.fl .fc-v{font-size:20px}
+.fl-b{height:12px;border-radius:99px;background:var(--grade);overflow:hidden;margin:6px 0 4px}
+.fl-b i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--azul),var(--azul-2))}
+.fl small{display:block;font-size:12.5px;color:var(--texto-2);line-height:1.5}
+.vazio{display:grid;place-items:center;text-align:center;color:var(--texto-2);font-size:14px;padding:30px 16px;flex:1}
+.vazio b{color:var(--texto);font-size:16px}
+
+/* ---------------- gráficos diários ---------------- */
+.dupla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.graf-cx{padding:22px 24px 18px}
+.graf-cx .cx-t{align-items:flex-end;flex-wrap:wrap}
+.graf-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.graf-cx .cx-t p{margin-top:2px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--texto-2);margin-top:10px}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+.leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.graf{position:relative;height:190px;margin:16px 0 0 48px}
+.graf-y{position:absolute;inset:0;pointer-events:none}
+.graf-y div{position:absolute;left:0;right:0;border-top:1px solid var(--grade)}
+.graf-y div.zero{border-top-color:var(--borda-forte)}
+.graf-y span{position:absolute;right:calc(100% + 8px);top:-8px;font-size:11.5px;color:var(--texto-2);
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+.graf-b{position:absolute;inset:0;display:flex;align-items:flex-end;gap:3px}
+.gb{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0;outline:none;cursor:default}
+.gb .pilha{display:flex;flex-direction:column-reverse;width:100%;max-width:28px;margin:0 auto;
+  border-radius:4px 4px 0 0;overflow:hidden}
+.gb .pilha i{display:block;width:100%}
+.gb .pilha i+i{border-bottom:2px solid var(--painel)}
+.gb:hover .pilha,.gb:focus-visible .pilha{opacity:.8}
+.graf-x{display:flex;gap:3px;margin:8px 0 0 48px;height:16px;position:relative}
+.graf-x span{position:absolute;font-size:11.5px;color:var(--texto-2);transform:translateX(-50%);white-space:nowrap}
+
+.rodape{margin:0;font-size:12.5px;color:var(--texto-2);line-height:1.6;max-width:110ch}
+.rodape b{color:var(--texto);font-weight:600}
+
+/* dica flutuante (cartões, funil e barras) */
+#dica{position:fixed;z-index:30;pointer-events:none;background:var(--dica-bg);border:1px solid var(--dica-borda);
+  color:var(--dica-texto);border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.5;max-width:300px;
+  box-shadow:var(--sombra-dica)}
+#dica b{font-weight:600} #dica .m{color:var(--dica-m)}
+#dica p{margin:4px 0 0}
+#dica .sep{border-top:1px solid var(--dica-borda);margin:9px 0 6px}
+#dica .lin{display:flex;justify-content:space-between;gap:16px;font-variant-numeric:tabular-nums}
+#dica .lin+.lin{margin-top:2px}
+#dica .lin.tot{border-top:1px solid var(--dica-borda);margin-top:5px;padding-top:5px;font-weight:600}
+#dica .lin .delta{font-size:11.5px;margin-left:4px}
+.kpi[data-dica]{cursor:help}
+#dica .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+
+
+/* ---------------- teste A/B: placar de jogo (largura toda, abaixo dos gráficos) ---------------- */
+.ab-cx{padding:22px 24px 20px;display:flex;flex-direction:column;gap:18px}
+.ab-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
+.time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
+  border:1.5px solid var(--borda);border-radius:12px}
+.time.b{flex-direction:row-reverse;text-align:right}
+.time div{min-width:0}
+.time b{display:block;font-size:17px;font-weight:700;color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time small{display:block;font-size:12.5px;color:var(--texto-2)}
+.ab-l{width:42px;height:42px;flex:none;border-radius:10px;display:grid;place-items:center;font-size:20px;font-weight:700;
+  background:var(--neutro-bg);color:var(--neutro)}
+.time.vence{border-color:var(--verde);background:var(--bom-bg)}
+.time.vence .ab-l{background:var(--verde);color:var(--tinta)}
+.trofeu{position:absolute;top:-11px;left:16px;display:inline-flex;align-items:center;gap:5px;font-style:normal;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:3px 10px 3px 7px;
+  background:var(--verde);color:var(--tinta)}
+.time.b .trofeu{left:auto;right:16px}
+.trofeu svg{width:14px;height:14px;display:block}
+.score{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 6px}
+.score div{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.score b{font-size:44px;font-weight:700;line-height:1;color:var(--texto)}
+.score span{font-size:22px;color:var(--texto-2)}
+.score small{font-size:12px;color:var(--texto-2);white-space:nowrap}
+/* rodadas: um cabo de guerra por canal */
+.rodadas{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:12px}
+.rod{display:flex;flex-direction:column;gap:9px;padding:13px 16px 11px;border:1px solid var(--borda);border-radius:10px;cursor:help;min-width:0}
+.rod:focus-visible{outline:2px solid var(--azul);outline-offset:2px}
+.rod-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rod-t b{font-size:15px;font-weight:600;color:var(--texto)}
+.rod-t span{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.rod.vence .rod-t span{color:var(--bom)}
+.rod-t small{display:inline-block;margin-left:4px;font-size:10.5px;letter-spacing:.04em;border-radius:99px;padding:1px 7px;
+  background:var(--bom-bg);color:var(--bom)}
+.rod.pouco .rod-t small{background:var(--neutro-bg);color:var(--neutro)}
+.cabo{position:relative;height:8px;border-radius:99px;background:var(--grade);margin:4px 8px 0}
+.cabo::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;border-left:2px solid var(--borda-forte)}
+.cabo i{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;
+  background:var(--cinza);border:3px solid var(--painel);box-shadow:0 0 0 1px var(--borda-forte)}
+.rod.vence .cabo i{background:var(--verde)}
+/* as duas taxas nas pontas do cabo; a da vencedora em verde */
+.cabo-l{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.cabo-l span{display:flex;align-items:baseline;gap:5px;font-size:18px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cabo-l small{font-size:11px;font-weight:700;color:var(--texto-2)}
+.cabo-l .lid{color:var(--bom)}
+.cabo-l em{font-style:normal;font-size:11px;color:var(--texto-2);text-align:center}
+.ab-fim{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ab-fim p{margin:0;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
+  font-size:14.5px;line-height:1.45;color:var(--texto)}
+.ab-fim b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
+.ab-fim .prox{background:var(--bom-bg)} .ab-fim .prox b{color:var(--bom)}
+/* ---------------- abas (no topo azul) ---------------- */
+.abas{display:inline-flex;gap:4px;padding:4px;margin-top:10px;align-self:flex-start;max-width:100%;overflow-x:auto;
+  border-radius:6px;background:rgba(10,26,48,.24)}
+.abas button{font-family:inherit;font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
+  color:var(--branco);background:transparent;border:0;border-radius:4px;height:38px;padding:0 16px;cursor:pointer}
+.abas button[aria-selected="true"]{background:var(--branco);color:var(--azul-2)}
+.abas button:not([aria-selected="true"]):hover{background:rgba(254,254,254,.14)}
+.abas button:focus-visible{outline:2px solid var(--branco);outline-offset:2px}
+.aba{display:flex;flex-direction:column;gap:24px}
+
+/* ---------------- aba evolução mensal ---------------- */
+.evo-cab{padding:18px 24px}
+.evo-cartoes{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}
+/* o mês que ainda não acabou aparece mais claro no gráfico */
+.gb.parcial .pilha{opacity:.5}
+.evo-tab{padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px}
+.evo-tab .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.rolagem{overflow-x:auto;min-width:0}
+.evo-tab table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.evo-tab th,.evo-tab td{padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--grade)}
+.evo-tab thead th{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2);
+  border-bottom-color:var(--borda-forte)}
+.evo-tab th:first-child{text-align:left}
+.evo-tab tbody th{font-weight:600;color:var(--texto)}
+.evo-tab tbody th small{font-weight:500;color:var(--texto-2);font-size:12px}
+.evo-tab td{color:var(--texto)}
+.evo-tab td .delta{display:inline-block;min-width:62px;margin-left:8px;font-size:12px;text-align:right}
+.evo-tab tr.parcial th,.evo-tab tr.parcial td{background:var(--neutro-bg)}
+.evo-tab tbody tr:last-child th,.evo-tab tbody tr:last-child td{border-bottom:0}
+
+/* ---------------- origem dos cadastros ----------------
+   barra 100% (um segmento por origem, 2px de respiro) e tabela embaixo, que
+   também é a legenda. Cores: os 3 canais pagos + orgânico (validadas para
+   daltonismo); "sem origem" vai hachurado, neutro */
+.origem-cx{grid-column:1/-1;padding:24px 28px 20px;display:flex;flex-direction:column;gap:16px}
+.origem-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.org-barra{display:flex;gap:2px;height:40px}
+.org-barra span{min-width:4px;border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  color:#FEFEFE;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.org-barra .hach,.org-tab .sw.hach{background:repeating-linear-gradient(135deg,var(--grade) 0 4px,var(--borda) 4px 6px);color:var(--texto)}
+.org-tab{overflow-x:auto;min-width:0}
+.org-tab table{width:100%;min-width:600px;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.org-tab th,.org-tab td{padding:9px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--grade)}
+.org-tab thead th{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2);
+  border-bottom-color:var(--borda-forte)}
+.org-tab th:first-child{text-align:left}
+.org-tab tbody th{font-weight:600;color:var(--texto)}
+.org-tab td{color:var(--texto)}
+.org-tab .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:9px;vertical-align:-1px}
+.org-tab tr.sub th{font-weight:500;color:var(--texto-2);padding-left:31px}
+.org-tab tr.sub td{color:var(--texto-2)}
+.org-tab td small{font-size:12px;color:var(--texto-2);margin-left:6px}
+.org-tab tfoot th,.org-tab tfoot td{font-weight:700;border-bottom:0;border-top:1px solid var(--borda-forte)}
+.org-tab [data-dica]{cursor:help}
+.org-tab small.org-m{display:block;margin-top:1px;font-size:12px;font-weight:400;color:var(--texto-2);white-space:normal;letter-spacing:0}
+.org-tab small.org-m.com-sw{margin-left:19px}
+.org-obs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.org-obs p{margin:0;display:flex;flex-direction:column;gap:4px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
+  font-size:13.5px;line-height:1.45;color:var(--texto)}
+.org-obs b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
+.org-obs .inv{grid-column:1/-1;background:var(--bom-bg)} .org-obs .inv b{color:var(--bom)}
+.org-tab .so-cel{display:none}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:1180px){
+  .resumo,.evo-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rodadas{grid-template-columns:minmax(0,1fr)}
+  .rod{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:4px 16px}
+  .rod .rod-t{grid-row:1/3;flex-direction:column;gap:2px}
+  .rod .cabo{margin-top:6px}
+  .resumo .kpi,.resumo .kpi.mini,.resumo .kpi.mini.quarto{grid-column:auto}
+  /* em duas colunas, um último cartão sozinho ocupa a linha inteira
+     (o funil é o 1º filho, então número ímpar de cartões = último em posição par) */
+  .resumo .kpi.mini:last-child:nth-child(even){grid-column:1/-1}
+  .fc{padding:0 10px}
+  .filtros,.datas{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:820px){.dupla{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:700px){
+  .funil{display:none} .funil-lista{display:flex}
+  .org-tab table{min-width:0;font-size:13px}
+  .org-tab th,.org-tab td{padding:8px 5px}
+  .org-tab tbody th,.org-tab tfoot th{white-space:nowrap}
+  .org-tab .so-pc{display:none} .org-tab .so-cel{display:inline}
+  .org-tab thead th{white-space:normal;font-size:10.5px;letter-spacing:.04em;vertical-align:bottom}
+  .org-tab tr.sub th{padding-left:19px}
+  .org-tab .op{display:none}
+  .org-tab td small{display:block;margin:2px 0 0}
+  .org-tab small.org-m{font-size:11px}
+  .org-obs{grid-template-columns:minmax(0,1fr)}
+  .topo{padding-block:20px 96px}
+  .topo-in{gap:28px}
+  .topo-arte .ex{right:40px;top:70px;width:60px;height:260px}
+  .topo-arte .bola{right:-90px;bottom:-230px;width:300px;height:300px}
+  .topo-t{max-width:300px}
+  .pagina{margin-top:-64px}
+  .conteudo{gap:20px}
+}
+@media (max-width:560px){
+  .ab-cx{padding:18px 16px 16px}
+  .placar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px}
+  .time{flex-direction:column!important;text-align:center!important;padding:18px 8px 12px;gap:8px}
+  .time b{font-size:13px;white-space:normal}
+  .time small{font-size:11.5px}
+  .ab-l{width:34px;height:34px;font-size:16px}
+  .trofeu{left:50%!important;right:auto!important;transform:translateX(-50%)}
+  .score b{font-size:32px} .score span{font-size:17px}
+  .rod{grid-template-columns:84px minmax(0,1fr)}
+  .ab-fim{grid-template-columns:minmax(0,1fr)}
+  /* semanas uma sobre a outra, setas nas laterais */
+  .semanas{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}
+  .sem-vs{display:none}
+  .sem-bt{width:44px}
+  #semAnt{grid-column:1;grid-row:1/3}
+  .semanas .sem{grid-column:2;grid-row:1}
+  .semanas .sem.atual{grid-row:2}
+  #semProx{grid-column:3;grid-row:1/3}
+  .abas button{padding:0 10px;font-size:12px;letter-spacing:.04em}
+  .evo-cab{padding:14px 16px}
+  .evo-tab{padding:18px 16px 14px}
+  .marca svg{width:32px;height:32px}
+  .marca span{display:none}
+  .atual{order:5;flex-basis:100%;font-size:12.5px}
+  .bt-tema{width:44px;height:44px;padding:0;justify-content:center}
+  .bt-tema span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .btn{height:44px;padding:0 18px;font-size:13px}
+  .filtro{padding:16px;gap:12px}
+  .filtros,.datas{grid-template-columns:minmax(0,1fr);gap:12px}
+  .kpi{padding:16px 14px} .kpi.mini{padding:13px 14px 12px}
+  .kpi header{gap:8px}
+  .kpi-ic svg{width:24px;height:24px}
+  .kpi-r,.kpi.mini .kpi-r{font-size:13px}
+  .kpi-x{gap:6px}
+  /* em duas colunas estreitas o valor pode quebrar depois do "R$" em vez de sumir em "…" */
+  .kpi-v{font-size:clamp(19px,5.6vw,22px);white-space:normal}
+  .kpi.mini .kpi-v{font-size:clamp(18px,5vw,20px)}
+  /* no celular o selo de atenção fica só com o "!" */
+  .atencao{padding:3px 5px}
+  .atencao span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .funil-cx,.origem-cx{padding:20px 16px 16px} .graf-cx{padding:18px 16px 14px}
+  .graf,.graf-x{margin-left:42px}
+}
+@media (max-width:380px){
+  .resumo,.evo-cartoes{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+
+<header class="topo">
+  <div class="topo-arte" aria-hidden="true"><i class="ex"></i><i class="bola"></i></div>
+  <div class="topo-in">
+    <div class="topo-l">
+      <div class="marca">
+        <svg viewBox="0 0 24 24" role="img" aria-label="euSUPER!"><path fill="#FEFEFE" d="M3.4 8.4h4.7l2.7 7.2H6.1z"/><path fill="#FEFEFE" d="M16.3 3.2H21l-4.2 10.2h-4.7z"/><circle fill="#FEFEFE" cx="16.6" cy="18.6" r="2.6"/></svg>
+        <span>painel de tráfego · v2</span>
+      </div>
+      <span class="atual" id="atual" aria-live="polite">—</span>
+      <button class="bt-tema" type="button" id="btTema" aria-label="Mudar para o modo escuro">
+        <svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 1 1 9.4 4a6.6 6.6 0 0 0 10.6 10.6z"/></svg>
+        <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <span id="txTema">modo escuro</span>
+      </button>
+      <button class="btn" type="button" id="btAtualizar"><span class="gira" aria-hidden="true"></span><span id="txAtualizar">Atualizar</span></button>
+    </div>
+    <div class="topo-t">
+      <h1 id="titulo">funil de cadastro</h1>
+      <p id="subtitulo">Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa.</p>
+      <div class="abas" role="tablist" aria-label="Visões do painel">
+        <button type="button" role="tab" id="tabFunil" aria-selected="true" aria-controls="abaFunil">Funil de cadastro</button>
+        <button type="button" role="tab" id="tabEvo" aria-selected="false" aria-controls="abaEvo" tabindex="-1">Evolução mensal</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pagina">
+  <div class="conteudo">
+   <div class="aba" id="abaFunil" role="tabpanel" aria-labelledby="tabFunil">
+    <section class="filtro" aria-label="Filtros">
+      <div class="filtros">
+        <div class="campo">
+          <div class="rot"><label for="fPeriodo">Período de visualização</label>
+            <button type="button" class="info" data-dica="Todos os períodos terminam ontem: as plataformas só fecham o dia seguinte." aria-label="Sobre o período">i</button></div>
+          <select id="fPeriodo">
+            <option value="mes">Esse mês</option>
+            <option value="semanal">Comparativo semanal</option>
+            <option value="7d">Últimos 7 dias</option>
+            <option value="14d">Últimos 14 dias</option>
+            <option value="30d">Últimos 30 dias</option>
+            <option value="semana">Semana passada</option>
+            <option value="mespassado">Mês passado</option>
+            <option value="custom">Personalizado</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="fComp">Comparar com</label>
+          <select id="fComp">
+            <option value="mes">Mesmo período do mês anterior</option>
+            <option value="anterior">Período anterior</option>
+            <option value="nenhuma">Sem comparação</option>
+            <option value="semana" disabled hidden>Semana anterior</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="fCanal">Fonte de tráfego</label>
+          <select id="fCanal">
+            <option value="todos">Todos os canais</option>
+            <option value="google">Google Ads</option>
+            <option value="meta">Meta Ads</option>
+            <option value="openai">OpenAI Ads</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="fCamp">Campanha</label>
+          <select id="fCamp"><option value="">Todas as campanhas</option></select>
+        </div>
+      </div>
+      <div class="datas" id="datas" hidden>
+        <div class="campo"><label for="dDe">Início</label><input type="date" id="dDe" min="2025-07-01"></div>
+        <div class="campo"><label for="dAte">Fim</label><input type="date" id="dAte" min="2025-07-01"></div>
+      </div>
+      <div class="semanas" id="semanas" hidden>
+        <button type="button" class="sem-bt" id="semAnt" aria-label="Voltar uma semana">‹</button>
+        <div class="sem"><small id="semRotAntes">Semana anterior</small><b id="semAntes">—</b></div>
+        <span class="sem-vs" aria-hidden="true">vs</span>
+        <div class="sem atual"><small id="semRot">Semana atual</small><b id="semAtual">—</b></div>
+        <button type="button" class="sem-bt" id="semProx" aria-label="Avançar uma semana">›</button>
+      </div>
+      <p class="frase" id="frase"><em class="selo">retrato</em><span></span></p>
+    </section>
+
+    <div class="avisos" id="avisos" aria-live="polite"></div>
+    <section class="resumo" id="resumo" aria-label="Resumo do funil"></section>
+    <section class="dupla" id="graficos" aria-label="Evolução diária"></section>
+    <section class="cx ab-cx" id="testeAB" aria-label="Teste A/B das páginas"></section>
+    <p class="rodape" id="rodape"></p>
+   </div>
+   <div class="aba" id="abaEvo" role="tabpanel" aria-labelledby="tabEvo" hidden>
+    <section class="filtro evo-cab" aria-label="Período">
+      <p class="frase" id="fraseEvo"><em class="selo">retrato</em><span></span></p>
+    </section>
+    <div class="avisos" id="avisosEvo" aria-live="polite"></div>
+    <section class="evo-cartoes" id="evoCartoes" aria-label="Mês atual"></section>
+    <section class="dupla" id="evoGraf" aria-label="Evolução dos últimos 12 meses"></section>
+    <section class="cx evo-tab" aria-label="Mês a mês">
+      <div class="cx-t"><div><h2>mês a mês</h2><p>Valor de cada mês e a variação contra o mês anterior.</p></div></div>
+      <div class="rolagem"><table id="evoTabela"></table></div>
+      <p class="legenda-f" id="evoNota"></p>
+    </section>
+    <p class="rodape" id="rodapeEvo"></p>
+   </div>
+  </div>
+</main>
+<div id="veu" aria-hidden="true"></div>
+<div id="dica" role="tooltip" hidden></div>
+
+<script>
+/* =========================================================================
+   RETRATO GRAVADO — o que aparece antes de qualquer consulta ao vivo.
+   Linhas por dia e por campanha, puxadas do Windsor.ai e do Metabase e
+   conferidas contra os totais de cada campanha. Só contagens brutas: CTR,
+   CPC, CPM, taxas e custos por cadastro são calculados na hora.
+   midia[canal].l: [dia, campanha (índice em camp), impressões, cliques,
+                    investimento, cadastros da plataforma, visitas na página]
+   base.l:         [dia, cadastros, onboarding concluído, ativados em 7 dias,
+                    cadastros que já completaram 7 dias, ativados entre quem
+                    concluiu o onboarding]
+   ========================================================================= */
+const RETRATO={v:7, puxadoEm:1791990300000 /* anúncios em 13/10, Metabase em 27/10/2026 (ativação no critério do painel euSUPER!) */, fonte:"retrato",
+ cobre:{"de":"2026-08-01","ate":"2026-10-12"},
+ midia:{
+  google:{cob:[["2026-08-01","2026-10-12"]],
+   camp:[["CAMPANHA MEIO/FUNDO FUNIL C3 - [SEARCH] [LP01] 02/12/25","SEARCH"],["CAMPANHA PRINCIPAL (1)","SEARCH"],["CAMPANHA DECISÃO C4 - [SEARCH] [LP02] 01/04/26","SEARCH"],["CAMPANHA PRINCIPAL (1) TESTE A/B LP01","SEARCH"],["PMAX-01 (VÍDEO DUDA)","PERFORMANCE_MAX"],["Campanha - 20/08 (Search) (1-1)","SEARCH"],["Vídeo - YT","DEMAND_GEN"],["YT - Motion Horizontal V.1","DEMAND_GEN"],["CAMPANHA PRINCIPAL (1) [PESQUISA - LP1 - LUY]","SEARCH"],["CAMPANHA PRINCIPAL (1) [PESQUISA - LP2] 29/09/26","SEARCH"],["CAMPANHA PRINCIPAL (1) [PESQUISA - LP3] 07/10/26","SEARCH"]],
+   l:[
+["2026-08-01",0,461,34,91.0632,4],
+["2026-08-01",1,314,20,68.7379,1],
+["2026-08-01",2,347,26,72.1825,2],
+["2026-08-02",0,394,19,52.965,2],
+["2026-08-02",1,296,24,69.9346,2],
+["2026-08-02",2,376,24,69.5389,1],
+["2026-08-03",0,564,39,106.4282,3],
+["2026-08-03",1,328,23,64.4085,4],
+["2026-08-03",2,230,22,70.9018,0],
+["2026-08-04",0,693,41,106.6051,3],
+["2026-08-04",1,456,40,104.1095,0],
+["2026-08-04",2,366,23,70.2905,1],
+["2026-08-05",0,494,35,85.21,1],
+["2026-08-05",1,217,16,29.9182,2],
+["2026-08-05",2,462,42,104.2539,5],
+["2026-08-06",0,408,20,44.828,1],
+["2026-08-06",1,209,9,19.916,0],
+["2026-08-06",2,218,23,57.6026,2],
+["2026-08-07",0,312,21,47.5032,1],
+["2026-08-07",1,92,6,6.2536,0],
+["2026-08-07",2,361,16,31.1544,3],
+["2026-08-08",0,158,13,27.85,0],
+["2026-08-08",1,41,0,0,0],
+["2026-08-08",2,274,20,48.0936,6],
+["2026-08-09",0,129,5,11.0385,1],
+["2026-08-09",1,59,6,11.3768,1],
+["2026-08-09",2,266,13,26.6395,2],
+["2026-08-10",0,155,7,11.77,0],
+["2026-08-10",1,158,8,10.308,0],
+["2026-08-10",2,467,33,53.6733,4],
+["2026-08-11",0,146,5,7.4535,0],
+["2026-08-11",1,164,7,11.3118,1],
+["2026-08-11",2,522,43,88.3085,5],
+["2026-08-12",0,84,5,8.9082,0],
+["2026-08-12",1,376,28,50.8175,1],
+["2026-08-12",2,256,8,15.7657,1],
+["2026-08-13",1,651,34,57.6059,2],
+["2026-08-14",1,501,34,57.617,1],
+["2026-08-15",1,103,13,25.1642,0],
+["2026-08-15",3,56,0,0,0],
+["2026-08-16",1,98,3,4.46,0],
+["2026-08-16",3,98,3,6.16,0],
+["2026-08-17",1,111,5,7.2444,0],
+["2026-08-17",3,127,5,13.5759,0],
+["2026-08-18",1,102,4,5.62,0],
+["2026-08-18",2,4,1,1.37,0],
+["2026-08-18",3,113,9,13.6919,0],
+["2026-08-18",4,6161,128,60.0591,0],
+["2026-08-19",0,2,0,0,0],
+["2026-08-19",1,202,16,78.37,0],
+["2026-08-19",3,175,20,87.9563,0],
+["2026-08-19",4,5864,272,105.2514,0],
+["2026-08-20",1,470,49,166.9805,0],
+["2026-08-20",4,874,52,15.6116,0],
+["2026-08-20",5,36,5,14.408,0],
+["2026-08-20",6,5891,97,24.4147,0],
+["2026-08-21",5,468,45,96.572,0],
+["2026-08-21",6,6695,72,79.7724,0],
+["2026-08-22",5,264,29,45.4465,0],
+["2026-08-22",6,1465,13,36.2584,0],
+["2026-08-23",5,86,10,18.8524,0],
+["2026-08-24",1,161,16,39.6256,3],
+["2026-08-24",5,61,8,10.1102,0],
+["2026-08-24",6,9763,45,68.861,0],
+["2026-08-25",1,272,14,48.3642,2],
+["2026-08-25",5,9,2,0.99,1],
+["2026-08-25",6,996,9,33.115,0],
+["2026-08-26",1,397,39,159.4691,3],
+["2026-08-26",5,2,0,0,0],
+["2026-08-27",1,288,19,73.8487,3],
+["2026-08-27",5,77,8,15.8148,0],
+["2026-08-28",1,322,27,47.5028,5],
+["2026-08-29",1,206,19,31.8407,1],
+["2026-08-30",1,164,12,21.6186,2],
+["2026-08-31",1,368,31,52.2038,5],
+["2026-09-01",1,443,38,62.9571,8],
+["2026-09-02",1,439,37,81.3602,8],
+["2026-09-03",1,487,38,65.9567,8],
+["2026-09-04",1,292,11,16.66,2],
+["2026-09-05",1,351,21,48.6741,2],
+["2026-09-06",1,455,50,105.1926,5],
+["2026-09-07",1,743,52,116.6297,10],
+["2026-09-08",1,1508,137,319.9815,11],
+["2026-09-09",1,1592,115,319.6774,20],
+["2026-09-10",1,1504,123,319.9916,12],
+["2026-09-11",1,1011,85,191.1697,12],
+["2026-09-12",1,1130,98,244.847,15],
+["2026-09-13",1,1082,82,234.6067,12],
+["2026-09-14",1,1619,125,320.2978,14],
+["2026-09-15",1,771,68,175.3545,8],
+["2026-09-16",1,503,58,193.1779,11],
+["2026-09-17",1,709,67,199.6191,14],
+["2026-09-18",1,800,63,168.2827,11],
+["2026-09-19",1,545,53,160.1975,6],
+["2026-09-20",1,444,53,162.8111,6],
+["2026-09-21",1,733,64,174.1943,11],
+["2026-09-22",1,1676,128,333.5088,19],
+["2026-09-23",1,511,46,138.4622,11],
+["2026-09-23",7,11523,86,120.4146,0],
+["2026-09-23",8,335,34,108.4805,8],
+["2026-09-24",1,379,46,119.1804,5],
+["2026-09-24",7,2969,33,117.3379,0],
+["2026-09-24",8,389,43,127.8384,7],
+["2026-09-25",1,615,47,129.6977,3],
+["2026-09-25",8,439,38,119.2211,9],
+["2026-09-26",1,457,44,148.4588,5],
+["2026-09-26",8,416,37,119.4662,8],
+["2026-09-27",1,520,44,130.2076,9],
+["2026-09-27",8,442,22,60.3953,5],
+["2026-09-28",1,373,38,130.761,6],
+["2026-09-28",8,857,53,185.8358,12],
+["2026-09-29",1,785,83,232.0138,10],
+["2026-09-29",8,501,36,128.6239,7],
+["2026-09-30",1,375,27,79.5296,3],
+["2026-09-30",9,248,17,48.3993,2],
+["2026-10-01",1,356,30,131.0268,8],
+["2026-10-01",9,487,42,128.3937,4],
+["2026-10-02",1,369,33,120.7834,7],
+["2026-10-02",9,391,44,138.9978,9],
+["2026-10-03",1,426,21,71.1735,2],
+["2026-10-03",9,361,32,111.0156,6],
+["2026-10-04",1,255,29,99.6991,5],
+["2026-10-04",9,191,17,44.1092,5],
+["2026-10-05",1,834,65,206.8011,14],
+["2026-10-05",9,597,45,119.7647,6],
+["2026-10-06",1,466,49,160.6544,7],
+["2026-10-06",9,766,67,200.2598,16],
+["2026-10-07",1,524,45,158.6468,10],
+["2026-10-07",9,693,58,192.5077,11],
+["2026-10-08",1,735,71,193.4899,10],
+["2026-10-08",10,649,62,201.4865,14],
+["2026-10-09",1,825,73,216.1594,9],
+["2026-10-09",10,767,64,210.2731,8],
+["2026-10-10",1,456,48,136.9306,6],
+["2026-10-10",10,534,51,145.3178,9],
+["2026-10-11",1,346,40,132.3876,7],
+["2026-10-11",10,586,47,186.8064,6],
+["2026-10-12",1,359,23,89.7219,5],
+["2026-10-12",10,586,48,180.0948,8]
+  ]},
+  meta:{cob:[["2026-08-01","2026-10-12"]],
+   camp:[["[CAMPANHA VISITA AO PERFIL - 15/05] 01","OUTCOME_TRAFFIC"],["[CAMPANHA VISITA AO PERFIL - 15/05] 02","OUTCOME_TRAFFIC"],["[CAMPANHA VISITA AO SITE - 15/05] - ESTÁTICO","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [1] - 06/08","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [2] - 06/08","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [3] - 06/08","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [4] - 12/08","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [5] - 12/08","OUTCOME_TRAFFIC"],["[VISITA AO PERFIL] [DUDA] [CARROSSEL] [6] - 12/08","OUTCOME_TRAFFIC"],["CAMPANHA DE CONVERSÃO 01-DUDA","OUTCOME_SALES"],["CBO - [CAMPANHA DE SIGNUP] 21/08","OUTCOME_SALES"],["ABO - Page principal (CONVERSÃO)","OUTCOME_SALES"],["[MOTION CLAUDE]","OUTCOME_SALES"],["[CAMPANHA DE VENDA] Page Principal","OUTCOME_SALES"],["MOTION - V.2","OUTCOME_SALES"],["ABO - TESTE A/B (CONVERSÃO) (Page luy) 22/09/26","OUTCOME_SALES"],["ABO - TESTE A/B (CONVERSÃO) (Page LP2) 29/09/26","OUTCOME_SALES"],["ABO - TESTE A/B (CONVERSÃO) (Page LP2) 29/09/26 - 2","OUTCOME_SALES"],["ABO - TESTE A/B 1 (CONVERSÃO) (Page LP3) 07/10/26","OUTCOME_SALES"],["ABO - TESTE A/B 2 (CONVERSÃO) (Page LP3) 07/10/26","OUTCOME_SALES"]],
+   l:[
+["2026-08-01",0,4106,71,17.75,0,0],
+["2026-08-01",1,2790,97,18.51,0,0],
+["2026-08-01",2,762,126,16.18,0,73],
+["2026-08-02",0,5083,81,22.32,0,0],
+["2026-08-02",1,3979,113,23.33,0,0],
+["2026-08-02",2,1150,179,26.89,0,117],
+["2026-08-03",0,5367,72,21.86,0,0],
+["2026-08-03",1,4325,103,19.35,0,0],
+["2026-08-03",2,1250,124,17.73,0,62],
+["2026-08-04",0,5400,68,19.69,0,0],
+["2026-08-04",1,3134,86,15.47,0,0],
+["2026-08-04",2,800,69,10.98,0,33],
+["2026-08-05",0,335,9,1.97,0,0],
+["2026-08-05",1,1524,46,8.44,0,0],
+["2026-08-05",2,357,27,5.22,0,17],
+["2026-08-06",3,1189,37,13.81,0,1],
+["2026-08-06",4,2492,56,14.53,0,0],
+["2026-08-06",5,2403,73,14.03,0,0],
+["2026-08-07",3,1781,57,18.76,0,0],
+["2026-08-07",4,4295,102,20.66,0,0],
+["2026-08-07",5,4554,127,21.57,0,1],
+["2026-08-08",3,2405,70,19.68,0,0],
+["2026-08-08",4,3900,92,17.03,0,0],
+["2026-08-08",5,3895,97,16.67,0,0],
+["2026-08-09",3,4035,104,25.87,0,0],
+["2026-08-09",4,6052,141,24.05,0,0],
+["2026-08-09",5,5563,141,22.89,0,0],
+["2026-08-10",3,3800,97,21.28,0,2],
+["2026-08-10",4,5797,141,21.45,0,0],
+["2026-08-10",5,5245,119,20.85,0,0],
+["2026-08-11",3,4019,68,18.61,0,0],
+["2026-08-11",4,5155,111,18.37,0,0],
+["2026-08-11",5,4990,123,19.32,0,0],
+["2026-08-12",3,3462,94,17.73,0,0],
+["2026-08-12",4,4801,98,17.82,0,0],
+["2026-08-12",5,4700,129,18.86,0,0],
+["2026-08-13",3,3382,90,20.48,0,0],
+["2026-08-13",4,4879,114,19.78,0,0],
+["2026-08-13",5,4628,123,19.43,0,0],
+["2026-08-14",3,2955,70,17.56,0,0],
+["2026-08-14",4,4370,118,18.93,0,0],
+["2026-08-14",5,4171,127,18.34,0,0],
+["2026-08-14",6,2065,46,15,0,0],
+["2026-08-14",7,1735,58,15.57,0,0],
+["2026-08-14",8,3262,76,15.07,0,0],
+["2026-08-15",3,2771,76,18.34,0,0],
+["2026-08-15",4,4691,116,19.53,0,0],
+["2026-08-15",5,4458,133,20.21,0,0],
+["2026-08-15",6,2362,84,18.1,0,0],
+["2026-08-15",7,2109,71,17.66,0,0],
+["2026-08-15",8,3657,99,18.28,0,0],
+["2026-08-16",3,3254,84,23.14,0,0],
+["2026-08-16",4,5851,152,23.53,0,0],
+["2026-08-16",5,4922,166,23.91,0,3],
+["2026-08-16",6,3471,130,24.81,0,0],
+["2026-08-16",7,2489,111,24.32,0,0],
+["2026-08-16",8,3369,161,26.95,0,0],
+["2026-08-17",3,2532,75,19.6,0,1],
+["2026-08-17",4,4998,127,19.36,0,0],
+["2026-08-17",5,3592,127,19.28,0,0],
+["2026-08-17",6,3158,102,20.54,0,0],
+["2026-08-17",7,2012,118,20.81,0,0],
+["2026-08-17",8,2209,135,21.74,0,0],
+["2026-08-18",3,2641,69,20.61,0,0],
+["2026-08-18",4,1191,34,4.76,0,0],
+["2026-08-18",5,1183,45,6.92,0,1],
+["2026-08-18",6,785,34,5.7,0,0],
+["2026-08-18",7,644,42,6.79,0,0],
+["2026-08-18",8,590,29,5.31,0,0],
+["2026-08-18",9,653,25,41.71,0,15],
+["2026-08-19",3,1362,50,10.06,0,0],
+["2026-08-19",9,1176,27,51.26,0,17],
+["2026-08-20",9,909,26,56.89,0,13],
+["2026-08-21",10,52,0,4,0,0],
+["2026-08-22",10,1802,29,85.96,0,22],
+["2026-08-23",10,1599,28,59.08,0,15],
+["2026-08-24",9,355,39,46.25,1,33],
+["2026-08-24",10,3973,19,11.13,0,2],
+["2026-08-25",9,823,77,110.47,1,57],
+["2026-08-25",10,3787,43,147.98,0,29],
+["2026-08-26",9,559,72,81.56,2,51],
+["2026-08-26",10,20646,87,130.8,1,37],
+["2026-08-27",9,371,33,40.56,0,21],
+["2026-08-27",10,486,5,24.8,0,3],
+["2026-08-28",9,785,18,57.88,2,16],
+["2026-08-28",11,1233,13,68.9,2,9],
+["2026-08-29",9,263,1,20.68,1,1],
+["2026-08-29",11,1690,53,141.27,3,32],
+["2026-08-30",11,5154,97,250.9,11,58],
+["2026-08-31",10,0,0,0,2,0],
+["2026-08-31",11,5085,73,165.69,13,45],
+["2026-09-01",11,4771,76,150.49,13,44],
+["2026-09-02",11,4170,65,113.52,7,46],
+["2026-09-03",11,4992,83,149.74,17,64],
+["2026-09-04",11,3435,49,96.05,11,33],
+["2026-09-05",11,4423,60,123.32,8,43],
+["2026-09-06",11,7550,107,200.27,10,76],
+["2026-09-07",11,6027,83,158.54,10,62],
+["2026-09-08",11,4925,72,123.84,10,42],
+["2026-09-09",11,4415,53,132.22,12,40],
+["2026-09-10",11,5659,93,152.02,20,65],
+["2026-09-11",11,6838,102,157.38,15,77],
+["2026-09-12",11,4998,81,124.87,8,57],
+["2026-09-13",11,6419,103,167.6,9,78],
+["2026-09-14",11,5785,84,149.2,10,56],
+["2026-09-15",11,5819,71,146.73,11,48],
+["2026-09-16",11,7175,96,197.6,18,66],
+["2026-09-16",12,813,15,43.37,1,10],
+["2026-09-17",11,6554,90,168.14,9,63],
+["2026-09-17",12,863,4,47.94,0,2],
+["2026-09-17",13,1,0,0.08,0,0],
+["2026-09-18",11,6393,99,176.06,16,68],
+["2026-09-18",12,533,8,27.96,1,6],
+["2026-09-18",13,4175,40,83.45,7,24],
+["2026-09-19",11,4662,66,126.71,10,44],
+["2026-09-19",13,4201,58,96.24,10,43],
+["2026-09-19",14,835,10,32.69,2,8],
+["2026-09-20",11,2963,37,73.68,2,26],
+["2026-09-20",13,4778,55,122.71,3,46],
+["2026-09-20",14,1630,33,107.66,3,22],
+["2026-09-21",11,3134,42,77.85,2,24],
+["2026-09-21",13,3534,57,66.23,6,44],
+["2026-09-21",14,1259,22,71.66,4,19],
+["2026-09-22",11,4207,76,94.99,12,52],
+["2026-09-22",13,3942,47,78.7,8,42],
+["2026-09-22",14,1706,25,96.96,4,20],
+["2026-09-22",15,231,3,4.22,1,2],
+["2026-09-23",11,4280,60,91.15,10,43],
+["2026-09-23",13,4419,32,76.65,8,27],
+["2026-09-23",14,1707,18,89.27,0,10],
+["2026-09-23",15,3747,51,100.92,8,35],
+["2026-09-24",11,4359,77,101.96,17,52],
+["2026-09-24",13,4377,60,85.78,7,47],
+["2026-09-24",14,1159,14,66.97,1,7],
+["2026-09-24",15,3819,51,101.18,8,35],
+["2026-09-25",11,4440,33,87.41,3,23],
+["2026-09-25",13,3253,38,54.89,2,28],
+["2026-09-25",14,0,0,0,1,0],
+["2026-09-25",15,2446,37,50.68,6,28],
+["2026-09-26",11,3640,49,86.77,4,32],
+["2026-09-26",13,2051,29,40.12,4,26],
+["2026-09-26",15,1954,31,44.82,1,18],
+["2026-09-27",11,3718,56,101.92,4,51],
+["2026-09-27",13,2619,61,60.62,4,45],
+["2026-09-27",15,2931,40,64.66,5,26],
+["2026-09-28",11,3339,52,90.91,9,35],
+["2026-09-28",13,2334,32,51.31,6,30],
+["2026-09-28",15,2132,29,46.79,7,24],
+["2026-09-29",11,3145,52,87,13,31],
+["2026-09-29",13,2505,37,47.15,1,26],
+["2026-09-29",15,1278,21,27.66,4,15],
+["2026-09-29",16,1014,11,23.22,6,7],
+["2026-09-29",17,1215,7,23.8,1,5],
+["2026-09-30",11,3834,61,111.56,11,43],
+["2026-09-30",13,2920,62,58.84,11,47],
+["2026-09-30",16,5831,65,115.73,9,42],
+["2026-09-30",17,2690,30,62.4,6,19],
+["2026-10-01",11,3495,48,89.78,10,34],
+["2026-10-01",13,3043,47,50.76,8,32],
+["2026-10-01",16,6099,80,97.26,11,57],
+["2026-10-01",17,3003,41,50.98,7,30],
+["2026-10-02",11,3581,58,77.68,9,38],
+["2026-10-02",13,3095,39,42.52,9,36],
+["2026-10-02",16,5976,55,79.58,5,36],
+["2026-10-02",17,2589,18,39.77,0,14],
+["2026-10-03",11,4043,66,70.85,13,44],
+["2026-10-03",13,2912,48,37.98,6,30],
+["2026-10-03",16,5373,49,67.11,5,38],
+["2026-10-03",17,2266,30,36.81,3,19],
+["2026-10-04",11,6126,70,101.74,10,48],
+["2026-10-04",13,4257,61,54.4,9,48],
+["2026-10-04",16,7271,79,87.42,7,49],
+["2026-10-04",17,3091,31,55.64,0,24],
+["2026-10-05",11,3734,48,72.87,7,32],
+["2026-10-05",13,4239,49,48.42,8,37],
+["2026-10-05",16,7084,81,87.21,11,60],
+["2026-10-05",17,2072,31,39.76,4,27],
+["2026-10-06",11,3630,40,82.54,5,23],
+["2026-10-06",13,2801,24,39.85,4,17],
+["2026-10-06",16,4495,35,78.61,5,22],
+["2026-10-06",17,2406,21,47.78,3,20],
+["2026-10-07",11,4063,38,99.89,8,21],
+["2026-10-07",13,4450,36,53.38,5,25],
+["2026-10-07",16,4704,51,80.98,6,39],
+["2026-10-07",17,1995,16,39.38,3,12],
+["2026-10-07",18,1439,18,18.39,3,16],
+["2026-10-07",19,2461,25,38.3,1,15],
+["2026-10-08",11,4292,61,94.45,8,33],
+["2026-10-08",13,3966,36,50.46,7,29],
+["2026-10-08",18,3892,39,53.93,2,29],
+["2026-10-08",19,7175,77,99.34,12,48],
+["2026-10-09",11,3235,39,91.92,10,26],
+["2026-10-09",13,4096,43,55.89,9,29],
+["2026-10-09",18,3368,48,49.43,6,37],
+["2026-10-09",19,5113,57,82.63,8,43],
+["2026-10-10",11,3226,39,85.65,9,26],
+["2026-10-10",13,3422,33,47.4,7,24],
+["2026-10-10",18,2866,39,37.97,9,36],
+["2026-10-10",19,3932,54,67.1,8,36],
+["2026-10-11",11,4252,62,117.52,9,43],
+["2026-10-11",13,4838,67,64.1,8,52],
+["2026-10-11",18,4837,56,63.9,3,39],
+["2026-10-11",19,6867,89,125.31,14,72],
+["2026-10-12",11,4143,55,101.36,5,32],
+["2026-10-12",13,5681,62,57.41,10,45],
+["2026-10-12",18,5584,71,56.22,4,56],
+["2026-10-12",19,6200,84,94.9,9,63]
+  ]},
+  openai:{cob:[["2026-08-01","2026-10-12"]],
+   camp:[["[CAMPANHA DE SIGNUP]",""],["[CAMPANHA DE SIGNUP] [02]",""],["[CAMPANHA DE SIGNUP] - Page Luy (Lp2)",""],["[CAMPANHA DE SIGNUP] - Page (Lp3)",""]],
+   l:[
+["2026-08-17",0,2498,34,49.62,0],
+["2026-08-18",0,3913,143,49.46,13],
+["2026-08-19",0,3601,99,52.11,10],
+["2026-08-20",0,3006,141,43.79,18],
+["2026-08-21",0,5753,163,72.08,14],
+["2026-08-21",1,6907,131,90.83,6],
+["2026-08-22",0,6065,153,76.34,14],
+["2026-08-22",1,3876,74,44.85,3],
+["2026-08-23",0,1813,22,30.51,6],
+["2026-08-23",1,636,12,15.24,0],
+["2026-08-24",0,4,0,0,0],
+["2026-08-24",1,1,0,0,0],
+["2026-08-29",0,800,14,16.9,3],
+["2026-08-29",1,4000,37,78.82,2],
+["2026-08-30",0,2765,65,51.79,9],
+["2026-08-30",1,2335,47,51.76,4],
+["2026-08-31",0,2665,87,51.22,10],
+["2026-08-31",1,1753,35,34.07,5],
+["2026-09-01",0,1632,16,34.75,2],
+["2026-09-01",1,1076,18,48.11,1],
+["2026-09-02",0,1,0,0,0],
+["2026-09-02",1,1,0,0,0],
+["2026-09-03",0,4267,97,99.79,7],
+["2026-09-03",1,3582,91,99.9,4],
+["2026-09-04",0,2958,41,63,4],
+["2026-09-04",1,3979,61,81.41,5],
+["2026-09-05",0,1851,37,49.28,5],
+["2026-09-05",1,791,25,33.42,3],
+["2026-09-06",0,1217,30,55.84,3],
+["2026-09-06",1,1725,35,57.33,1],
+["2026-09-07",0,2151,74,58.08,9],
+["2026-09-07",1,1580,54,53.93,9],
+["2026-09-08",0,2133,58,50.12,7],
+["2026-09-08",1,1812,63,53.58,3],
+["2026-09-09",0,1790,57,47.89,9],
+["2026-09-09",1,1913,40,47.5,7],
+["2026-09-10",0,2705,55,47.62,8],
+["2026-09-10",1,1593,35,46.58,4],
+["2026-09-11",0,1583,51,44.59,11],
+["2026-09-11",1,1585,30,50.02,3],
+["2026-09-12",1,1308,31,40.45,6],
+["2026-09-13",1,786,6,59.98,0],
+["2026-09-14",0,3470,91,73.94,2],
+["2026-09-14",1,4417,51,55.62,4],
+["2026-09-15",0,6241,77,100.76,5],
+["2026-09-15",1,4164,49,70.24,3],
+["2026-09-16",0,2261,57,102.89,13],
+["2026-09-16",1,926,22,30.17,0],
+["2026-09-17",0,2916,79,76.11,7],
+["2026-09-17",1,111,2,0.7,1],
+["2026-09-18",0,4664,132,66.2,13],
+["2026-09-18",1,234,13,5.75,3],
+["2026-09-19",0,495,19,11.45,5],
+["2026-09-19",1,4501,57,139.75,3],
+["2026-09-20",1,4,0,0,0],
+["2026-09-22",0,15379,199,281.97,15],
+["2026-09-23",0,8479,202,179.16,22],
+["2026-09-23",2,4186,48,78.58,3],
+["2026-09-24",0,6918,75,192.33,4],
+["2026-09-24",2,1941,22,77.31,3],
+["2026-09-25",0,2590,52,108.98,3],
+["2026-09-25",2,1751,40,54.91,2],
+["2026-09-26",0,2078,41,40.84,5],
+["2026-09-26",2,1678,26,45.65,6],
+["2026-09-27",0,2885,63,82.81,8],
+["2026-09-27",2,2445,49,71.51,7],
+["2026-09-28",0,3041,77,79.86,4],
+["2026-09-28",2,2663,49,71.63,5],
+["2026-09-29",0,4842,71,105,6],
+["2026-09-29",2,3616,81,87.55,5],
+["2026-09-30",0,4019,106,92.51,13],
+["2026-09-30",2,3380,41,69.74,4],
+["2026-10-01",0,2154,41,70.78,5],
+["2026-10-01",2,3078,42,62.7,5],
+["2026-10-02",0,1702,52,74.31,9],
+["2026-10-02",2,1915,40,64.21,8],
+["2026-10-03",0,2100,52,54.24,8],
+["2026-10-03",2,1380,16,41.48,1],
+["2026-10-04",0,2463,33,86.34,2],
+["2026-10-04",2,2253,33,76.3,1],
+["2026-10-05",0,4636,41,164.72,5],
+["2026-10-05",2,3551,58,112.09,7],
+["2026-10-06",0,1202,28,71.46,5],
+["2026-10-06",2,4384,79,103.44,17],
+["2026-10-07",0,3961,93,104.25,17],
+["2026-10-07",2,6598,98,144.99,5],
+["2026-10-07",3,6381,47,172.69,2],
+["2026-10-08",0,4722,57,117.72,8],
+["2026-10-08",2,21,0,0.32,1],
+["2026-10-08",3,2820,85,65.06,16],
+["2026-10-09",0,3166,77,82.22,7],
+["2026-10-09",3,1371,24,42.65,5],
+["2026-10-10",0,1952,46,48.8,4],
+["2026-10-10",3,1753,35,40.25,3],
+["2026-10-11",0,3192,47,102.58,5],
+["2026-10-11",3,4105,96,100.86,12],
+["2026-10-12",0,3664,87,89.43,0],
+["2026-10-12",3,3439,43,108.82,0]
+  ]}
+ },
+ base:{cob:[["2026-08-01","2026-10-12"]],
+  l:[
+["2026-08-01",13,12,1,13,1],
+["2026-08-02",11,10,1,11,1],
+["2026-08-03",8,7,1,8,1],
+["2026-08-04",12,9,2,12,2],
+["2026-08-05",15,13,3,15,3],
+["2026-08-06",6,6,0,6,0],
+["2026-08-07",4,1,0,4,0],
+["2026-08-08",5,5,0,5,0],
+["2026-08-09",7,6,4,7,4],
+["2026-08-10",7,5,0,7,0],
+["2026-08-11",10,9,1,10,1],
+["2026-08-12",7,7,0,7,0],
+["2026-08-13",5,5,2,5,2],
+["2026-08-14",4,4,1,4,1],
+["2026-08-15",4,4,1,4,1],
+["2026-08-16",1,1,0,1,0],
+["2026-08-17",4,4,0,4,0],
+["2026-08-18",24,20,5,24,5],
+["2026-08-19",23,20,4,23,4],
+["2026-08-20",32,30,2,32,2],
+["2026-08-21",26,21,1,26,1],
+["2026-08-22",18,15,4,18,4],
+["2026-08-23",8,6,3,8,3],
+["2026-08-24",4,3,1,4,1],
+["2026-08-25",5,3,1,5,1],
+["2026-08-26",10,9,0,10,0],
+["2026-08-27",4,4,0,4,0],
+["2026-08-28",8,7,1,8,1],
+["2026-08-29",9,9,3,9,3],
+["2026-08-30",25,21,3,25,3],
+["2026-08-31",35,28,5,35,5],
+["2026-09-01",29,24,3,29,3],
+["2026-09-02",17,14,4,17,4],
+["2026-09-03",38,28,5,38,5],
+["2026-09-04",25,21,2,25,2],
+["2026-09-05",17,15,2,17,2],
+["2026-09-06",23,17,4,23,4],
+["2026-09-07",33,28,6,33,6],
+["2026-09-08",40,33,5,40,5],
+["2026-09-09",51,42,11,51,11],
+["2026-09-10",47,41,11,47,11],
+["2026-09-11",47,38,7,47,7],
+["2026-09-12",30,24,5,30,5],
+["2026-09-13",22,20,5,22,5],
+["2026-09-14",35,23,7,35,7],
+["2026-09-15",30,20,1,30,1],
+["2026-09-16",54,26,8,54,8],
+["2026-09-17",52,16,12,52,10],
+["2026-09-18",74,22,11,74,10],
+["2026-09-19",47,19,5,47,5],
+["2026-09-20",27,10,4,27,3],
+["2026-09-21",32,9,3,32,3],
+["2026-09-22",68,19,6,68,5],
+["2026-09-23",73,26,10,73,9],
+["2026-09-24",61,19,0,61,0],
+["2026-09-25",42,17,9,42,7],
+["2026-09-26",41,14,4,41,3],
+["2026-09-27",44,13,4,44,4],
+["2026-09-28",59,18,4,59,4],
+["2026-09-29",58,22,7,58,6],
+["2026-09-30",66,19,9,66,5],
+["2026-10-01",64,23,7,64,5],
+["2026-10-02",62,23,9,62,8],
+["2026-10-03",48,20,4,48,4],
+["2026-10-04",50,10,4,50,3],
+["2026-10-05",70,26,12,70,11],
+["2026-10-06",68,37,13,68,12],
+["2026-10-07",79,36,8,79,6],
+["2026-10-08",82,33,10,82,10],
+["2026-10-09",74,26,6,74,5],
+["2026-10-10",60,25,6,60,6],
+["2026-10-11",73,32,5,73,5],
+["2026-10-12",70,21,3,70,2]
+  ]}
+};
+
+const CONTAS={google:"326-604-5511", meta:"604915332642452", metabaseDb:4};
+/* origem do cadastro: o banco grava desde 23/10/26 às 8h59 (professional_tracking:
+   UTM, gclid, fbclid, página de entrada e site de onde a pessoa veio) */
+const TRACK_INICIO="2026-10-23";
+const ORIGENS=[
+  {k:"google",n:"Google Ads",cor:"var(--google)",canal:"google",d:"Clicou num anúncio do Google (gclid ou UTM paga)."},
+  {k:"meta",n:"Meta Ads",cor:"var(--meta)",canal:"meta",d:"Clicou num anúncio do Instagram ou Facebook (UTM paga)."},
+  {k:"openai",n:"OpenAI Ads",cor:"var(--openai)",canal:"openai",d:"Clicou num anúncio do ChatGPT (UTM da OpenAI)."},
+  {k:"org",n:"Orgânico",cor:"var(--organico)",m:"Chegou sem clicar em anúncio",d:"Veio sem anúncio. A soma das linhas abaixo.",sub:[
+    {k:"bio",n:"Bio do Instagram",m:"Link da bio do perfil",d:"Clicou no link da bio do Instagram. O próprio Instagram marca esse link (link_in_bio)."},
+    {k:"busca",n:"Busca",m:"Achou no Google, sem anúncio",d:"Achou pelo Google ou outro buscador, sem clicar em anúncio."},
+    {k:"social",n:"Redes sociais",m:"Instagram, Facebook e outras redes, sem anúncio",d:"Veio de uma rede social sem clicar em anúncio. O link da bio do Instagram chega marcado pelo próprio Instagram (link_in_bio)."},
+    {k:"direto",n:"Direto",m:"Digitou o site ou veio de WhatsApp e e-mail",d:"Digitou o endereço, abriu um link salvo ou veio de WhatsApp/e-mail, que não dizem de onde a pessoa veio."},
+    {k:"outros",n:"Outros sites",m:"Link em outro site ou no ChatGPT",d:"Link em outro site, inclusive o ChatGPT sem anúncio."}]},
+  {k:"sem",n:"Sem origem",cor:null,m:"O site não registrou de onde veio",d:"O site não gravou de onde veio este cadastro."}
+];
+/* o que está sendo feito sobre a origem (aparece na observação do bloco); atualizar quando mudar */
+const ORIGEM_INVESTIGA={dev:"gravar a origem no mesmo momento em que a conta é criada",
+  mkt:"conferir os links dos anúncios e o navegador do Instagram"};
+const IDS_TESTE="1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
+const CANAIS=["google","meta","openai"];
+const NOME={google:"Google Ads", meta:"Meta Ads", openai:"OpenAI Ads", base:"Metabase"};
+const COR={google:"var(--google)", meta:"var(--meta)", openai:"var(--openai)"};
+
+/* ícones no estilo do manual: barras inclinadas e círculos, nas cores da marca */
+const svg40=c=>`<svg viewBox="0 0 40 40" aria-hidden="true">${c}</svg>`;
+const IC={
+  inv: svg40(`<polygon fill="#F9902A" points="10,15 34,15 36.5,9 12.5,9"/><polygon fill="#008CF5" points="3,33 28,33 34,19 9,19"/>`),
+  pessoas: svg40(`<circle fill="#F9902A" cx="9" cy="15" r="3.6"/><polygon fill="#F9902A" points="5.5,36 12,33 12,21.5 5.5,24.5"/><circle fill="#05B27C" cx="20" cy="8" r="3.6"/><polygon fill="#05B27C" points="16.8,29 23.2,26 23.2,14.5 16.8,17.5"/><circle fill="#008CF5" cx="31" cy="15" r="3.6"/><polygon fill="#008CF5" points="28,36 34.5,33 34.5,21.5 28,24.5"/>`),
+  custo: svg40(`<circle fill="#008CF5" cx="11" cy="11" r="4.6"/><polygon fill="#F9902A" points="25,5 33,5 21,35 13,35"/><circle fill="#87B1DB" cx="30" cy="30" r="4.6"/>`),
+  taxa: svg40(`<polygon fill="#008CF5" points="3,17 11,17 17,33 9,33"/><polygon fill="#05B27C" points="28,5 36,5 25,33 17,33"/>`),
+  imp: svg40(`<polygon fill="#F9902A" points="5,37 12,34 12,22 5,25"/><polygon fill="#05B27C" points="16.5,35 23.5,32 23.5,13 16.5,16"/><polygon fill="#008CF5" points="28,33 35,30 35,3 28,6"/>`),
+  cli: svg40(`<circle fill="#008CF5" cx="11" cy="25" r="6"/><polygon fill="#F9902A" points="19,32 27,32 36,12 28,12"/>`),
+  vis: svg40(`<polygon fill="#87B1DB" points="12,5 33,5 25,35 4,35"/><circle fill="#F9902A" cx="31" cy="29" r="5.5"/>`),
+  cad: svg40(`<circle fill="#008CF5" cx="20" cy="9" r="5.5"/><polygon fill="#87B1DB" points="14.5,37 25.5,32 25.5,17 14.5,22"/>`),
+  onb: svg40(`<circle fill="#F9902A" cx="6" cy="9" r="3.4"/><polygon fill="#F9902A" points="13,12.5 31,12.5 34,6 16,6"/><circle fill="#05B27C" cx="6" cy="20" r="3.4"/><polygon fill="#05B27C" points="13,23.5 31,23.5 34,17 16,17"/><circle fill="#008CF5" cx="6" cy="31" r="3.4"/><polygon fill="#008CF5" points="13,34.5 31,34.5 34,28 16,28"/>`),
+  ativ: svg40(`<polygon fill="#87B1DB" points="2,11 9.5,11 15,26 7.5,26"/><circle fill="#008CF5" cx="20" cy="24" r="5.5"/><polygon fill="#05B27C" points="30.5,11 38,11 32.5,26 25,26"/>`)
+};
+/* ícone de cada um dos quatro cartões principais, nos dois modos */
+const IC_KPI={inv:"inv", cad:"pessoas", cadC:"pessoas", cpa:"custo", cpaC:"custo", taxa:"taxa", taxaC:"taxa"};
+const SELO_ALERTA=`<span class="atencao" title="Piorou 10% ou mais contra a comparação"><svg viewBox="0 0 20 26" aria-hidden="true"><polygon fill="currentColor" points="10,0 19,0 12,16 3,16"/><circle fill="currentColor" cx="5.5" cy="21.5" r="4"/></svg><span>atenção</span></span>`;
+
+/* ---------------------------------------------------------- formatação */
+const nf0=new Intl.NumberFormat("pt-BR",{maximumFractionDigits:0});
+const nf1=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1});
+const nf2=new Intl.NumberFormat("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=v=>v==null||!isFinite(v)?"—":nf0.format(v);
+const num1=v=>v==null||!isFinite(v)?"—":nf1.format(v);
+const brl=v=>v==null||!isFinite(v)?"—":"R$ "+nf2.format(v);
+const pct=(v,c)=>v==null||!isFinite(v)?"—":(c===2?nf2:nf1).format(v)+"%";
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const div=(a,b)=>(a==null||b==null||!b)?null:a/b;
+const cem=(a,b)=>div(a,b)!=null?div(a,b)*100:null;
+const MESES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+
+/* ---------------------------------------------------------- datas (ISO) */
+const dataOk=iso=>/^\d{4}-\d{2}-\d{2}$/.test(iso||"")&&!isNaN(new Date(iso+"T12:00:00"));
+const D=iso=>new Date(iso+"T12:00:00");
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const soma=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return iso(d)};
+const dias=(a,b)=>Math.round((D(b)-D(a))/86400000)+1;
+const ontem=()=>{const d=new Date();d.setDate(d.getDate()-1);return iso(d)};
+const fimDoMes=(a,m)=>new Date(a,m+1,0).getDate();
+function ehMes(de,ate){
+  const a=D(de),b=D(ate);
+  return a.getDate()===1&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()
+    &&b.getDate()===fimDoMes(b.getFullYear(),b.getMonth());
+}
+/* recua um mês mantendo o dia (31/10 vira 30/09) */
+function mesAntes(s){
+  const d=D(s),a=d.getFullYear(),m=d.getMonth()-1,y=m<0?a-1:a,mm=(m+12)%12;
+  return iso(new Date(y,mm,Math.min(d.getDate(),fimDoMes(y,mm)),12));
+}
+/* "1 a 12 de outubro", "28 de setembro a 4 de outubro", "setembro de 2026" */
+function falar(de,ate){
+  const a=D(de),b=D(ate),ano=String(new Date().getFullYear());
+  if(ehMes(de,ate)) return `${MESES[a.getMonth()]} de ${a.getFullYear()}`;
+  const yA=de.slice(0,4)!==ano?` de ${de.slice(0,4)}`:"", yB=ate.slice(0,4)!==ano?` de ${ate.slice(0,4)}`:"";
+  if(de===ate) return `${a.getDate()} de ${MESES[a.getMonth()]}${yA}`;
+  if(a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear()) return `${a.getDate()} a ${b.getDate()} de ${MESES[a.getMonth()]}${yA}`;
+  return `${a.getDate()} de ${MESES[a.getMonth()]}${a.getFullYear()!==b.getFullYear()?yA:""} a ${b.getDate()} de ${MESES[b.getMonth()]}${yB}`;
+}
+const curta=s=>{const d=D(s);return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`};
+
+/* o período escolhido nos filtros: sempre termina ontem, no máximo */
+function periodo(){
+  const o=ontem(), v=fPeriodo.value;
+  if(v==="7d")  return {de:soma(o,-6), ate:o};
+  if(v==="14d") return {de:soma(o,-13),ate:o};
+  if(v==="30d") return {de:soma(o,-29),ate:o};
+  if(v==="mes") return {de:o.slice(0,8)+"01", ate:o};
+  /* comparativo semanal: semanas de terça a segunda, porque a reunião com os
+     fundadores é na terça: no dia da reunião a semana que terminou ontem está
+     completa. A semana atual é a que contém ontem; em andamento, vai só até
+     ontem. As setas andam de 7 em 7 */
+  if(v==="semanal"){
+    const ter=soma(o,-((D(o).getDay()+5)%7)), de=soma(ter,-7*SEM_OFF), fim=soma(de,6);
+    return {de, ate:fim>o?o:fim};
+  }
+  if(v==="semana"){
+    const h=new Date(), dow=(h.getDay()+6)%7, fim=new Date(h); fim.setDate(h.getDate()-dow-1);
+    const f=iso(fim); return {de:soma(f,-6), ate:f};
+  }
+  if(v==="mespassado"){
+    const h=new Date(), fim=new Date(h.getFullYear(),h.getMonth(),0,12);
+    return {de:iso(new Date(fim.getFullYear(),fim.getMonth(),1,12)), ate:iso(fim)};
+  }
+  let de=dDe.value, ate=dAte.value;
+  if(!dataOk(de)||!dataOk(ate)) return null;
+  if(ate>o) ate=o; if(de>ate) return null;
+  return {de,ate};
+}
+function comparacao(p){
+  /* semanal: os mesmos dias da semana anterior. Com a semana em andamento
+     (ex.: ter a qui), compara ter a qui com ter a qui; fechada, semana inteira */
+  if(p&&fPeriodo.value==="semanal") return {de:soma(p.de,-7), ate:soma(p.ate,-7)};
+  if(!p||fComp.value==="nenhuma") return null;
+  if(ehMes(p.de,p.ate)){                      /* mês fechado: o mês anterior inteiro */
+    const a=D(p.de), fim=new Date(a.getFullYear(),a.getMonth(),0,12);
+    return {de:iso(new Date(fim.getFullYear(),fim.getMonth(),1,12)), ate:iso(fim)};
+  }
+  if(fComp.value==="mes") return {de:mesAntes(p.de), ate:mesAntes(p.ate)};
+  const n=dias(p.de,p.ate); return {de:soma(p.de,-n), ate:soma(p.de,-1)};
+}
+
+/* ------------------------------------------------- comparativo semanal
+   SEM_OFF = quantas semanas para trás (0 = a semana de terça a segunda que contém ontem).
+   No modo semanal a comparação fica presa em "Semana anterior"; a escolha
+   que havia antes volta quando sai do modo. */
+let SEM_OFF=0;
+const dataCurta=s=>`${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(2,4)}`;
+function modoSemanal(){
+  const sem=fPeriodo.value==="semanal";
+  if(sem&&fComp.value!=="semana"){ fComp.dataset.prev=fComp.value; fComp.value="semana"; }
+  if(!sem&&fComp.value==="semana"){ fComp.value=fComp.dataset.prev||"mes"; }
+  fComp.disabled=sem;
+}
+function pintarSemanas(){
+  const sem=fPeriodo.value==="semanal", el=document.getElementById("semanas");
+  el.hidden=!sem; if(!sem) return;
+  const p=periodo(), c=comparacao(p);
+  document.getElementById("semAtual").textContent=`${dataCurta(p.de)} a ${dataCurta(p.ate)}`;
+  document.getElementById("semAntes").textContent=`${dataCurta(c.de)} a ${dataCurta(c.ate)}`;
+  const parcial=dias(p.de,p.ate)<7;
+  document.getElementById("semRot").textContent=SEM_OFF>0?"Semana":parcial?"Semana atual · parcial":"Semana atual";
+  document.getElementById("semRotAntes").textContent=parcial?"Mesmos dias da anterior":"Semana anterior";
+  document.getElementById("semProx").disabled=SEM_OFF===0;
+}
+
+/* ------------------------------------------------- dados em memória
+   DADOS.midia[canal] = {cob:[[de,ate]...], linhas:[{d,c,t,imp,cli,custo,cad,vis}]}
+   DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativOnb]}}
+   DADOS.origem       = {cob:[[de,ate]...], dias:{dia:{origem:[cad,onb,mad,ativ]}}}
+   cob = intervalos de dias já consultados (dia sem linha = dia sem gasto) */
+function abrir(enc){
+  const m={};
+  CANAIS.forEach(c=>{
+    const x=enc.midia[c]||{cob:[],camp:[],l:[]};
+    m[c]={cob:x.cob.map(i=>i.slice()), linhas:x.l.map(r=>({d:r[0],c:x.camp[r[1]][0],t:x.camp[r[1]][1],
+      imp:r[2],cli:r[3],custo:r[4],cad:r[5],vis:r.length>6?r[6]:null}))};
+  });
+  const dd={}; (enc.base.l||[]).forEach(r=>{dd[r[0]]=r.slice(1)});
+  const od={}, eo=enc.origem||{cob:[],l:[]};
+  eo.l.forEach(r=>{(od[r[0]]||(od[r[0]]={}))[r[1]]=r.slice(2)});
+  return {puxadoEm:enc.puxadoEm, fonte:enc.fonte, midia:m, base:{cob:enc.base.cob.map(i=>i.slice()), dias:dd},
+    origem:{cob:eo.cob.map(i=>i.slice()), dias:od}};
+}
+function fechar(x){
+  const midia={};
+  CANAIS.forEach(c=>{
+    const camp=[], idx={};
+    const l=x.midia[c].linhas.map(r=>{
+      const k=r.c+"\u0001"+r.t; if(!(k in idx)){idx[k]=camp.length;camp.push([r.c,r.t])}
+      const a=[r.d,idx[k],r.imp,r.cli,r.custo,r.cad]; if(r.vis!=null)a.push(r.vis); return a;
+    });
+    midia[c]={cob:x.midia[c].cob, camp, l};
+  });
+  return {v:7, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
+    base:{cob:x.base.cob, l:Object.keys(x.base.dias).sort().map(d=>[d,...x.base.dias[d]])},
+    origem:{cob:x.origem.cob, l:Object.keys(x.origem.dias).sort().flatMap(d=>Object.entries(x.origem.dias[d]).map(([k,v])=>[d,k,...v]))}};
+}
+function juntar(cob,de,ate){
+  const t=[...cob,[de,ate]].sort((a,b)=>a[0]<b[0]?-1:1), r=[];
+  t.forEach(i=>{const u=r[r.length-1];
+    if(u&&soma(u[1],1)>=i[0]){ if(i[1]>u[1]) u[1]=i[1]; } else r.push(i.slice());});
+  return r;
+}
+const cobre=(cob,de,ate)=>cob.some(i=>i[0]<=de&&i[1]>=ate);
+
+let DADOS=abrir(RETRATO);
+const GUARDA="v2:dados";
+try{
+  const s=JSON.parse(localStorage.getItem(GUARDA)||"null");
+  /* v7: ativação no critério do painel euSUPER! (dev): agendamento do
+     cliente ou da profissional, sobre todos os cadastros do período; o que
+     estava salvo antes é descartado */
+  if(s&&s.v===7&&s.puxadoEm>RETRATO.puxadoEm) DADOS=abrir(s);
+}catch(e){}
+function guardar(){try{localStorage.setItem(GUARDA,JSON.stringify(fechar(DADOS)))}catch(e){}}
+
+/* ------------------------------------------------- consulta ao vivo */
+const CONSERTO={
+  needs_reauth:s=>`A conexão com o ${s} expirou. Reconecte em claude.ai → Configurações → Conectores.`,
+  server_not_connected:s=>`O conector ${s} não está adicionado nesta conta. Adicione em claude.ai → Configurações → Conectores.`,
+  selection_required:s=>`Há mais de uma conexão do ${s}. Escolha uma no aviso do claude.ai e clique em Atualizar.`,
+  not_in_manifest:s=>`O acesso ao ${s} foi recusado para este painel. Libere no menu de permissões do artefato.`,
+  approval_required:s=>`A consulta ao ${s} precisa de aprovação. Clique em Atualizar e aprove.`,
+  blocked_by_policy:s=>`A organização bloqueou o ${s} para esta conta.`,
+  server_unavailable:s=>`O ${s} não respondeu a tempo. Tente atualizar de novo em instantes.`,
+  rate_limited:s=>`Limite de consultas do ${s} atingido. Espere um pouco e atualize.`,
+  not_granted:()=>`A consulta ao vivo não foi liberada neste navegador.`,
+  capability_disabled:()=>`A consulta ao vivo não está disponível nesta visualização.`,
+  tool_error:(s,m)=>`O ${s} recusou a consulta${m?": "+m:"."}`
+};
+const msgErro=(e,serv)=>{const f=CONSERTO[e&&e.code];return f?f(serv,e&&e.message):`O ${serv} não devolveu dados${e&&e.message?": "+e.message:"."}`};
+
+let MCP=undefined;   /* undefined = ainda conferindo; null = sem consulta ao vivo */
+let FALHAS={};       /* fonte -> mensagem */
+const espera=ms=>new Promise(r=>setTimeout(r,ms));
+async function chamar(serv,tool,input){
+  for(let t=0;t<2;t++){
+    try{ return (await MCP.callTool(serv,tool,input,{cache:{refresh:true}})).payload; }
+    catch(e){ if(t===1||!(e&&e.retryable)) throw e; await espera((e.retryAfterMs)||700+Math.random()*600); }
+  }
+}
+/* resposta sem a lista de linhas é erro, nunca "zero": um erro do conector
+   que voltasse vazio apareceria no painel como dia sem gasto.
+   Formatos do Windsor: o atual é {status:"done", data:[...]}; o antigo era
+   {result:[...]} e continua aceito. */
+function linhas(p){
+  if(p&&Array.isArray(p.data)) return p.data;
+  if(p&&Array.isArray(p.result)) return p.result;
+  throw {code:"tool_error",message:(p&&p.error)?String(p.error).slice(0,200):"a resposta veio sem linhas"};
+}
+/* relatório grande: o Windsor responde {status:"pending", poll_after_seconds}
+   sem linhas, e a mesma chamada, repetida, continua o mesmo relatório. Repete
+   no intervalo que ele pede, por até 5 minutos. */
+async function windsor(input){
+  const ini=Date.now();
+  for(;;){
+    const p=await chamar("Windsor.ai","get_data",input);
+    if(!(p&&p.status==="pending")) return linhas(p);
+    if(Date.now()-ini>5*60000) throw {code:"tool_error",message:"o relatório ainda está sendo gerado; tente atualizar em alguns minutos"};
+    await espera(Math.min(60,Math.max(5,+p.poll_after_seconds||10))*1000);
+  }
+}
+
+async function qGoogle(de,ate){
+  return (await windsor({connector:"google_ads",accounts:[CONTAS.google],
+    fields:["date","campaign","advertising_channel_type","impressions","clicks","cost","conversions"],
+    date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
+      t:x.advertising_channel_type||"",imp:+x.impressions||0,cli:+x.clicks||0,custo:+x.cost||0,
+      cad:+x.conversions||0,vis:null}));
+}
+async function qMeta(de,ate){
+  return (await windsor({connector:"facebook",accounts:[CONTAS.meta],
+    fields:["date","campaign","campaign_objective","spend","impressions","actions_link_click",
+            "actions_landing_page_view","actions_complete_registration"],
+    date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
+      t:x.campaign_objective||"",imp:+x.impressions||0,cli:+x.actions_link_click||0,custo:+x.spend||0,
+      cad:+x.actions_complete_registration||0,vis:+x.actions_landing_page_view||0}));
+}
+/* sem filtro de conta: o id da conta muda a cada reconexão */
+async function qOpenai(de,ate){
+  return (await windsor({connector:"openai_ads",
+    fields:["date","campaign","impressions","clicks","spend","conversions"],
+    date_from:de,date_to:ate})).map(x=>({d:String(x.date).slice(0,10),c:x.campaign||"(sem nome)",
+      t:"",imp:+x.impressions||0,cli:+x.clicks||0,custo:+x.spend||0,cad:+x.conversions||0,vis:null}));
+}
+/* mesmo critério do painel euSUPER! (consulta do time de dev, 27/10/26):
+   · dia do cadastro no horário de Brasília (o banco grava em UTC);
+   · contas internas fora: e-mail com "bitboundaire";
+   · contas excluídas depois continuam contando como cadastro;
+   · ativado = pelo menos 1 agendamento (rascunho não conta), feito pelo
+     cliente ou pela profissional, criado até 7 dias depois do cadastro;
+   · taxa de ativação = ativados ÷ todos os cadastros do período. Em período
+     recente parte dos cadastros ainda está dentro dos 7 dias: a taxa é
+     parcial e ainda sobe ("maduro" = já completou os 7 dias) */
+/* cadastros do recorte, um por linha, com ativação e, se pedida, a origem.
+   Origem, na ordem: antes do rastreamento · sem registro · Google Ads (gclid
+   ou UTM paga) · Meta Ads (UTM paga, fbclid com campanha, ou fonte "meta"
+   sem meio vinda do Facebook/Instagram: anúncio com UTM incompleta) ·
+   OpenAI Ads · outro anúncio · bio do Instagram (o Instagram marca
+   utm_content=link_in_bio) · busca orgânica (pelo site de onde veio) ·
+   redes sociais · direto (sem UTM e sem site de origem) · outros sites */
+const SQL_PAGO="('cpc','ppc','paid','paid_search','paid_social','paidsocial','ads','cpm','display')";
+function cteCadastros(de,ate,comOrigem){
+  return `WITH interno AS (SELECT id FROM professional WHERE email ILIKE '%bitboundaire%'),
+pr AS (
+  SELECT p.id, p.created_at, p.onboarding_step,
+    (p.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date AS dia
+  FROM professional p
+  WHERE p.id NOT IN (SELECT id FROM interno)
+    AND p.created_at >= DATE '${de}' AND p.created_at < DATE '${ate}' + 2),
+c AS (
+  SELECT pr.dia, pr.onboarding_step,
+    (pr.created_at + interval '7 days' <= now()) AS maduro,
+    EXISTS (SELECT 1 FROM event_scheduled es
+      WHERE es.professional_id = pr.id AND es.status <> 'DRAFT'
+        AND es.created_at < pr.created_at + interval '7 days') AS ativo${comOrigem?`,
+    CASE
+      WHEN pr.created_at < (SELECT min(created_at) FROM professional_tracking) - interval '10 minutes' THEN 'antes'
+      WHEN t.tem IS NULL THEN 'sem'
+      WHEN t.gclid IS NOT NULL OR (t.src IN ('google','google_ads','adwords') AND t.med IN ${SQL_PAGO}) THEN 'google'
+      WHEN (t.src IN ('meta','facebook','fb','instagram','ig') AND t.med IN ${SQL_PAGO})
+        OR (t.fbclid IS NOT NULL AND t.camp <> '')
+        OR (t.src = 'meta' AND t.med = '' AND (t.fbclid IS NOT NULL OR t.ref ~ '(facebook|instagram)')) THEN 'meta'
+      WHEN t.src IN ('openai','openai_ads') THEN 'openai'
+      WHEN t.med IN ${SQL_PAGO} THEN 'outros'
+      WHEN t.cont = 'link_in_bio' THEN 'bio'
+      WHEN (t.med = 'organic' AND t.src IN ('google','bing','yahoo','duckduckgo'))
+        OR t.ref ~ '(^|[.])(google|bing|yahoo|duckduckgo|ecosia|yandex|baidu)[.]' THEN 'busca'
+      WHEN t.fbclid IS NOT NULL OR t.src IN ('instagram','facebook','fb','ig','meta','tiktok','linkedin','youtube','whatsapp','threads','x','twitter')
+        OR t.ref ~ '(instagram|facebook|tiktok|linkedin|youtube|threads|whatsapp|(^|[.])t[.]co$|(^|[.])x[.]com$)' THEN 'social'
+      WHEN t.src IN ('','direct','(direct)') AND (t.ref = '' OR t.ref ~ '(miaapp|eusuper)') THEN 'direto'
+      ELSE 'outros'
+    END AS origem`:""}
+  FROM pr${comOrigem?`
+  LEFT JOIN LATERAL (
+    SELECT true AS tem, t.gclid, t.fbclid, coalesce(t.utm_campaign,'') AS camp,
+      lower(trim(coalesce(t.utm_source,''))) AS src, lower(trim(coalesce(t.utm_medium,''))) AS med,
+      lower(trim(coalesce(t.utm_content,''))) AS cont,
+      lower(coalesce(substring(t.referrer from '^[a-z-]+:(?://)?([^/?#:]*)'),'')) AS ref
+    FROM professional_tracking t WHERE t.professional_id = pr.id
+    ORDER BY t.created_at LIMIT 1) t ON true`:""}
+  WHERE pr.dia BETWEEN DATE '${de}' AND DATE '${ate}')`;
+}
+function sqlBase(de,ate){
+  return cteCadastros(de,ate,false)+`
+SELECT dia, count(*) AS cadastros,
+  count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
+  count(*) FILTER (WHERE ativo) AS ativados,
+  count(*) FILTER (WHERE maduro) AS maduros,
+  count(*) FILTER (WHERE ativo AND onboarding_step = 'FINISHED') AS ativados_onb
+FROM c GROUP BY 1 ORDER BY 1`;
+}
+function sqlOrigem(de,ate){
+  return cteCadastros(de,ate,true)+`
+SELECT dia, origem, count(*) AS cadastros,
+  count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
+  count(*) FILTER (WHERE maduro) AS maduros,
+  count(*) FILTER (WHERE ativo) AS ativados
+FROM c GROUP BY 1,2 ORDER BY 1,2`;
+}
+async function qBase(de,ate){
+  const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlBase(de,ate)});
+  if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
+  return p.data.rows.map(r=>[String(r[0]).slice(0,10),...[1,2,3,4,5].map(i=>+r[i]||0)]);
+}
+async function qOrigem(de,ate){
+  const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlOrigem(de,ate)});
+  if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
+  return p.data.rows.map(r=>[String(r[0]).slice(0,10),String(r[1]),...[2,3,4,5].map(i=>+r[i]||0)]);
+}
+
+let puxando=false, pendente=false;
+async function atualizar(){
+  if(!MCP) return;
+  if(puxando){ pendente=true; return; }   /* pedido durante uma busca: confere de novo no fim */
+  const p=periodo(); if(!p) return;
+  const c=comparacao(p);
+  /* uma consulta por intervalo; se as janelas se encostam, vira uma só */
+  let rs=juntar(c?[[c.de,c.ate]]:[],p.de,p.ate);
+  puxando=true; pintarTopo();
+  FALHAS={}; let algum=false;
+  const fontes={google:qGoogle, meta:qMeta, openai:qOpenai};
+  const serv={google:"Windsor.ai",meta:"Windsor.ai",openai:"Windsor.ai",base:"Metabase"};
+  await Promise.all(rs.flatMap(([de,ate])=>[
+    ...CANAIS.map(async k=>{
+      try{
+        const novas=await fontes[k](de,ate), m=DADOS.midia[k];
+        m.linhas=m.linhas.filter(r=>r.d<de||r.d>ate).concat(novas.filter(r=>r.d>=de&&r.d<=ate));
+        m.cob=juntar(m.cob,de,ate); algum=true;
+      }catch(e){ FALHAS[k]=`${NOME[k]}: ${msgErro(e,serv[k])}`; }
+    }),
+    (async()=>{
+      try{
+        const novas=await qBase(de,ate), b=DADOS.base;
+        Object.keys(b.dias).forEach(d=>{if(d>=de&&d<=ate) delete b.dias[d]});
+        novas.forEach(r=>{b.dias[r[0]]=r.slice(1)});
+        b.cob=juntar(b.cob,de,ate); algum=true;
+      }catch(e){ FALHAS.base=`Metabase: ${msgErro(e,serv.base)}`; }
+    })(),
+    /* origem: só existe a partir de TRACK_INICIO; antes disso não há o que buscar */
+    (async()=>{
+      try{
+        const o=DADOS.origem, d0=de<TRACK_INICIO?TRACK_INICIO:de;
+        if(ate>=TRACK_INICIO){
+          const novas=await qOrigem(d0,ate);
+          Object.keys(o.dias).forEach(d=>{if(d>=d0&&d<=ate) delete o.dias[d]});
+          novas.forEach(r=>{(o.dias[r[0]]||(o.dias[r[0]]={}))[r[1]]=r.slice(2)});
+          algum=true;
+        }
+        o.cob=juntar(o.cob,de,ate);
+      }catch(e){ FALHAS.origem=`Origem dos cadastros: ${msgErro(e,serv.base)}`; }
+    })()
+  ]));
+  if(algum){ DADOS.puxadoEm=Date.now(); DADOS.fonte="vivo"; guardar(); }
+  puxando=false;
+  pintar();
+  if(pendente){ pendente=false; aoMudar(); }
+}
+
+/* ------------------------------------------------- agregação */
+/* o funil só conta campanhas de cadastro; as de divulgação ficam fora de
+   tudo, inclusive do investimento.
+   · Meta: o objetivo da campanha separa. Conversão (OUTCOME_SALES/LEADS) é
+     cadastro; tráfego, engajamento e reconhecimento (ex.: visita ao perfil do
+     Instagram) são divulgação.
+   · Google: o tipo da campanha separa. Pesquisa (SEARCH) é cadastro; vídeo,
+     Demand Gen, Display e Performance Max são divulgação.
+   · OpenAI: todas as campanhas são de cadastro. */
+const OBJ_CADASTRO=new Set(["OUTCOME_SALES","OUTCOME_LEADS","CONVERSIONS","LEAD_GENERATION"]);
+function noFunil(k,x){
+  if(!x.t) return true;
+  const t=String(x.t).toUpperCase();
+  if(k==="meta") return OBJ_CADASTRO.has(t);
+  if(k==="google") return t==="SEARCH";
+  return true;
+}
+
+function agregar(de,ate,canal,campanha){
+  const r={inv:0,imp:0,cli:0,cad:0,vis:0,temVis:false,cadReal:0,onb:0,ativ:0,mad:0,ativOnb:0,
+    canal:{},camp:{},dia:{},fora:{}};
+  CANAIS.forEach(k=>{
+    if(canal!=="todos"&&canal!==k) return;
+    r.canal[k]={inv:0,imp:0,cli:0,cad:0,vis:0};
+    DADOS.midia[k].linhas.forEach(x=>{
+      if(x.d<de||x.d>ate) return;
+      if(!noFunil(k,x)){ r.fora[x.c]=(r.fora[x.c]||0)+x.custo; return; }   /* guardado só para o aviso */
+      if(campanha&&campanha!==k+"|"+x.c) return;
+      const ck=k+"|"+x.c, c=r.camp[ck]||(r.camp[ck]={k,nome:x.c,t:x.t,inv:0,imp:0,cli:0,cad:0,vis:0});
+      const dd=r.dia[x.d]||(r.dia[x.d]={inv:{},cad:0});
+      for(const o of [r,r.canal[k],c]){o.inv+=x.custo;o.imp+=x.imp;o.cli+=x.cli;o.cad+=x.cad;if(x.vis!=null)o.vis+=x.vis}
+      if(x.vis!=null) r.temVis=true;
+      dd.inv[k]=(dd.inv[k]||0)+x.custo; dd.cad+=x.cad;
+    });
+  });
+  Object.entries(DADOS.base.dias).forEach(([d,v])=>{
+    if(d<de||d>ate) return;
+    r.cadReal+=v[0]; r.onb+=v[1]; r.ativ+=v[2]; r.mad+=v[3]||0; r.ativOnb+=v[4]||0;
+    (r.dia[d]||(r.dia[d]={inv:{},cad:0})).real=v[0];
+  });
+  r.nCamp=Object.values(r.camp).filter(c=>c.inv>0).length;
+  r.dias=dias(de,ate);
+  return r;
+}
+/* "Fora do funil: VISITA AO PERFIL - OUTUBRO (R$ 390,06)" — só quando houve gasto */
+function foraTxt(a){
+  const l=Object.entries(a.fora).filter(([,v])=>v>0).sort((x,y)=>y[1]-x[1]);
+  if(!l.length) return "";
+  const nomes=l.slice(0,3).map(([n,v])=>`${esc(n)} (${brl(v)})`).join(", ")+(l.length>3?` e mais ${l.length-3}`:"");
+  return ` <b>Fora do funil</b> por serem campanhas de divulgação, não de cadastro: ${nomes}.`;
+}
+/* origem: falta só dos dias a partir de TRACK_INICIO; não trava o resto do painel */
+const faltaOrigem=x=>x.ate>=TRACK_INICIO&&!cobre(DADOS.origem.cob,x.de<TRACK_INICIO?TRACK_INICIO:x.de,x.ate);
+/* o que falta carregar para mostrar este período com estes filtros */
+function faltando(p,canal){
+  const f=CANAIS.filter(k=>(canal==="todos"||canal===k)&&!cobre(DADOS.midia[k].cob,p.de,p.ate));
+  if(canal==="todos"&&!cobre(DADOS.base.cob,p.de,p.ate)) f.push("base");
+  return f;
+}
+
+/* ------------------------------------------------- métricas dos cartões
+   dir: +1 = subir é bom · -1 = cair é bom · 0 = sem julgamento */
+const M={
+  inv:     {r:"Investimento em anúncios", f:brl, dir:0, v:a=>a.inv},
+  /* tráfego pago: cadastros que Google, Meta e OpenAI atribuem a si */
+  cad:     {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
+  /* custo por cadastro = só canais de anúncio: investimento ÷ cadastros atribuídos */
+  cpa:     {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
+  /* a conversão deste funil é o cadastro: cadastros ÷ cliques */
+  taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
+  onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
+  custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
+  cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
+  /* ativação D7 oficial: ativos ÷ TODOS os cadastros com 7 dias completos
+     (o mesmo número do Metabase e do Oráculo). Taxa, e não contagem: compara
+     períodos com maturidades diferentes de forma justa */
+  /* critério do painel euSUPER!: ativados ÷ todos os cadastros do período
+     (em período recente é parcial: quem está dentro dos 7 dias ainda pode ativar) */
+  ativ:    {r:"Ativação D7", f:v=>pct(v), dir:1, v:a=>cem(a.ativ,a.cadReal)},
+  /* modo canal/campanha: cadastro = o que a plataforma reporta */
+  cadC:    {r:"Cadastros", f:num, dir:1, v:a=>a.cad},
+  cpaC:    {r:"Custo por cadastro", f:brl, dir:-1, v:a=>div(a.inv,a.cad)},
+  taxaC:   {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
+  fInv:    {r:"Fatia do investimento", f:v=>pct(v), dir:0, v:(a,t)=>div(a.inv,t.inv)!=null?div(a.inv,t.inv)*100:null},
+  fCad:    {r:"Fatia dos cadastros atribuídos", f:v=>pct(v), dir:1, v:(a,t)=>div(a.cad,t.cad)!=null?div(a.cad,t.cad)*100:null},
+  invDia:  {r:"Investimento por dia", f:brl, dir:0, v:a=>a.inv/a.dias},
+  cadDia:  {r:"Cadastros por dia", f:num1, dir:1, v:a=>a.cad/a.dias},
+  nCamp:   {r:"Campanhas com gasto", f:num, dir:0, v:a=>a.nCamp}
+};
+/* fórmula de cada cartão em uma linha: é o que a dica mostra embaixo do nome */
+const FORMULA={
+  inv:"Soma do gasto em anúncios", cad:"Conversões de Google, Meta e OpenAI somadas",
+  cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros atribuídos ÷ cliques totais",
+  onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
+  cpm:"Investimento total ÷ impressões totais × 1.000",
+  ativ:"Tiveram 1+ agendamento em até 7 dias ÷ cadastros do período (critério do painel euSUPER!)",
+  cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
+  fInv:"Gasto do recorte ÷ gasto dos 3 canais", fCad:"Cadastros do recorte ÷ total atribuído",
+  invDia:"Investimento ÷ dias", cadDia:"Cadastros atribuídos ÷ dias", nCamp:"Campanhas com gasto no período"
+};
+/* variação: a seta diz a direção; a cor diz se foi bom ou ruim */
+function variacao(a,b,dir){
+  if(a==null||b==null||!isFinite(a)||!isFinite(b)) return null;
+  if(b===0) return a>0?{txt:"▲ vinha de 0",cls:dir===0?"flat":dir>0?"up":"down",p:Infinity}:null;
+  const p=(a-b)/Math.abs(b)*100, s=p>0?"▲ ":p<0?"▼ ":"";
+  const bom=dir===0?null:(dir>0?p>0:p<0);
+  return {p,txt:s+nf1.format(Math.abs(p))+"%",cls:Math.abs(p)<0.5||bom===null?"flat":bom?"up":"down",
+    alerta:bom===false&&Math.abs(p)>=10};
+}
+
+/* ------------------------------------------------- dica flutuante */
+const dica=document.getElementById("dica");
+function mostrarDica(el,x,y){
+  const h=el.getAttribute("data-dica"); if(!h){dica.hidden=true;return}
+  dica.innerHTML=el.hasAttribute("data-html")?h:esc(h); dica.hidden=false;
+  const r=dica.getBoundingClientRect(), W=innerWidth, H=innerHeight;
+  let l=x+14, t=y+14; if(l+r.width>W-8) l=Math.max(8,x-r.width-14); if(t+r.height>H-8) t=Math.max(8,y-r.height-14);
+  /* nos cartões a dica fica presa logo abaixo (ou acima) do cartão, sem cobrir o número */
+  if(el.classList.contains("kpi")){
+    const c=el.getBoundingClientRect();
+    l=Math.min(Math.max(8,c.left),W-r.width-8);
+    t=c.bottom+8; if(t+r.height>H-8) t=Math.max(8,c.top-r.height-8);
+  }
+  dica.style.left=l+"px"; dica.style.top=t+"px";
+}
+document.addEventListener("mousemove",e=>{
+  const el=e.target.closest&&e.target.closest("[data-dica]");
+  if(el) mostrarDica(el,e.clientX,e.clientY); else dica.hidden=true;
+});
+document.addEventListener("focusin",e=>{
+  const el=e.target.closest&&e.target.closest("[data-dica]");
+  if(el){const r=el.getBoundingClientRect(); mostrarDica(el,r.left+r.width/2,r.bottom);} else dica.hidden=true;
+});
+document.addEventListener("focusout",()=>{dica.hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){dica.hidden=true;focar(null)}});
+document.addEventListener("scroll",()=>{dica.hidden=true;focar(null)},true);
+
+/* foco no cartão: com o mouse parado num cartão (ou o "i" focado pelo
+   teclado ou pelo toque), o resto da página desfoca atrás do véu e o cartão
+   sobe na frente, junto com a dica. A pausa de entrada evita piscar quando o
+   mouse só atravessa a tela; de um cartão para outro a troca é direta. */
+const veu=document.getElementById("veu");
+let cartaoFoco=null, tFoco=0;
+function focar(el){
+  clearTimeout(tFoco);
+  if(el&&!el.isConnected) el=null;
+  if(cartaoFoco===el) return;
+  if(cartaoFoco) cartaoFoco.classList.remove("em-foco");
+  cartaoFoco=el;
+  if(el) el.classList.add("em-foco");
+  veu.classList.toggle("on",!!el);
+}
+document.addEventListener("mouseover",e=>{
+  const k=e.target.closest?e.target.closest(".kpi"):null;
+  clearTimeout(tFoco);
+  if(k===cartaoFoco) return;
+  tFoco=setTimeout(()=>focar(k),k?(cartaoFoco?0:160):120);
+});
+document.documentElement.addEventListener("mouseleave",()=>focar(null));
+document.addEventListener("focusin",e=>{const k=e.target.closest&&e.target.closest(".kpi"); focar(k||null)});
+document.addEventListener("focusout",e=>{if(!e.relatedTarget||!e.relatedTarget.closest||!e.relatedTarget.closest(".kpi")) focar(null)});
+
+/* ------------------------------------------------- desenho */
+const fPeriodo=document.getElementById("fPeriodo"), fComp=document.getElementById("fComp");
+const fCanal=document.getElementById("fCanal"), fCamp=document.getElementById("fCamp");
+const dDe=document.getElementById("dDe"), dAte=document.getElementById("dAte"), elDatas=document.getElementById("datas");
+const btAtualizar=document.getElementById("btAtualizar"), txAtualizar=document.getElementById("txAtualizar");
+const elAtual=document.getElementById("atual"), elFrase=document.getElementById("frase"), elAvisos=document.getElementById("avisos");
+const elResumo=document.getElementById("resumo"), elGraf=document.getElementById("graficos");
+const elRod=document.getElementById("rodape");
+
+/* dica do cartão: nome, fórmula e, em "todos os canais", o valor de cada canal
+   e o geral (a soma de tudo, não a média dos três). Cadastro, custo por
+   cadastro e taxa de conversão vêm do Metabase, que não tem canal: a abertura
+   ali é o que cada plataforma atribui a si. Onboarding e ativação só no total. */
+const POR_CANAL={
+  inv:    {f:brl, v:c=>c.inv, dir:0, fatia:"inv"},
+  cpm:    {f:brl, v:c=>div(c.inv,c.imp)!=null?div(c.inv,c.imp)*1000:null, dir:-1},
+  cpa:    {f:brl, v:c=>div(c.inv,c.cad), dir:-1},
+  cad:    {f:num, v:c=>c.cad, dir:1, fatia:"cad"},
+  taxa:   {f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
+  onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
+};
+function dicaCartao(k,a,b,ctx){
+  const m=M[k], pc=ctx.rotulo==="todos"?POR_CANAL[k]:null;
+  let h=`<b>${esc(m.r)}</b><p class="m">${FORMULA[k]||""}</p>`;
+  if(!pc) return h;
+  if(pc.so) return h+`<p class="m">Sem abertura por canal.</p>`;
+  const ks=CANAIS.filter(c=>a.canal[c]&&(a.canal[c].inv>0||a.canal[c].imp>0));
+  if(!ks.length) return h;
+  h+=`<div class="sep"></div>`+ks.map(c=>{
+    const x=a.canal[c], v=pc.v(x), vb=b&&b.canal[c]?pc.v(b.canal[c]):null, vr=b?variacao(v,vb,pc.dir):null;
+    const fat=pc.fatia&&a[pc.fatia]?` <span class="m">${pct(x[pc.fatia]/a[pc.fatia]*100)}</span>`:"";
+    return `<div class="lin"><span><i class="sw" style="background:${COR[c]}"></i>${NOME[c]}</span>`+
+      `<span>${pc.f(v)}${fat}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}</span></div>`;
+  }).join("");
+  return h+`<div class="lin tot"><span>Geral</span><span>${m.f(m.v(a))}</span></div>`;
+}
+
+/* tipo: "principal" (os quatro grandes, com ícone), "mini" (três por linha)
+   ou "quarto" (mini numa linha de quatro) */
+function kpi(tipo,k,a,b,t,tb,ctx,sub){
+  const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
+  const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
+  const mini=tipo!=="principal", alerta=!!(vr&&vr.alerta);
+  const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
+  /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
+  return `<article class="cx kpi${mini?" mini":""}${tipo==="quarto"?" quarto":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
+    <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
+      <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
+    <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
+    <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}${antes}</div>
+    ${sub?`<div class="kpi-s">${sub}</div>`:""}
+  </article>`;
+}
+
+/* altura das faixas em escala logarítmica: de centenas de milhares de
+   impressões a dezenas de contas, tudo continua visível */
+function funil(etapas,temComp,inv){
+  if(!etapas.length||!(etapas[0].v>0)) return `<div class="vazio">Sem impressões neste recorte. Escolha outro período ou outra fonte.</div>`;
+  const n=etapas.length, topo=Math.log10(etapas[0].v+1);
+  /* piso de 38%: no funil compacto as faixas finais (dezenas de contas) ainda
+     ficam altas o bastante para o % e as duas linhas de texto, sem mudar a ordem */
+  const h=etapas.map(e=>200*(.38+.62*Math.max(0,Math.log10((e.v||0)+1)/topo)));
+  const W=n*100, y=v=>100-v/2, yb=v=>100+v/2;
+  let top=`M0,${y(h[0])}`, bot="";
+  for(let i=0;i<n;i++){
+    const x1=i===0?0:i*100+22, x2=i===n-1?W:i*100+78;
+    if(i>0) top+=` C${i*100},${y(h[i-1])} ${i*100},${y(h[i])} ${x1},${y(h[i])}`;
+    top+=` L${x2},${y(h[i])}`;
+  }
+  for(let i=n-1;i>=0;i--){
+    const x1=i===0?0:i*100+22, x2=i===n-1?W:i*100+78;
+    bot+=` L${x2},${yb(h[i])} L${x1},${yb(h[i])}`;
+    if(i>0) bot+=` C${i*100},${yb(h[i])} ${i*100},${yb(h[i-1])} ${i*100-22},${yb(h[i-1])}`;
+  }
+  const svg=`<svg viewBox="0 0 ${W} 200" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="gf" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#008CF5"/><stop offset="1" stop-color="#1760B9"/></linearGradient></defs>
+    <path d="${top}${bot} Z" fill="url(#gf)"/></svg>`;
+  const p2=v=>pct(v,v!=null&&v<1?2:1);
+  const info=etapas.map((e,i)=>{
+    /* a etapa pode trocar o % do meio (p) e trazer uma segunda taxa (x) */
+    const passo=e.p!==undefined?e.p:i===0?100:cem(e.v,etapas[i-1].v);
+    const doTopo=div(e.v,etapas[0].v)!=null?div(e.v,etapas[0].v)*100:null;
+    const vr=temComp&&!e.parcial?variacao(e.v,e.b,1):null;
+    const passoB=!temComp?null:e.p!==undefined?e.pb:i>0&&e.b!=null&&etapas[i-1].b?e.b/etapas[i-1].b*100:null;
+    /* custo de cada etapa: CPM no topo, depois investimento ÷ etapa */
+    const c=i===0?(div(inv,e.v)!=null?div(inv,e.v)*1000:null):div(inv,e.cv!==undefined?e.cv:e.v);
+    const custo=c!=null?`${brl(c)} ${i===0?"por mil":"por "+e.u}`:"";
+    const ref=e.pRef||(i===0?"topo do funil":etapas[i-1].ref);
+    const d=`<b>${esc(e.n)}</b><div class="lin"><span>Total</span><span>${num(e.v)}</span></div>`+
+      (i>0?`<div class="lin"><span>${esc(e.pRot||"Da etapa anterior")}</span><span>${p2(passo)}</span></div>`+
+           (e.x?`<div class="lin"><span>${esc(e.x.rot)}</span><span>${p2(e.x.v)}</span></div>`:"")+
+           `<div class="lin"><span>Do topo do funil</span><span>${p2(doTopo)}</span></div>`:"")+
+      (custo?`<div class="lin"><span>Custo</span><span>${custo}</span></div>`:"")+
+      (temComp?`<div class="lin m"><span>Antes</span><span>${num(e.b)}${passoB!=null?` · ${p2(passoB)}`:""}</span></div>`:"")+
+      (e.nota?`<div class="m" style="margin-top:4px">${esc(e.nota)}</div>`:"");
+    return {e,i,passo,doTopo,vr,custo,ref,d};
+  });
+  const cols=info.map(({e,i,passo,doTopo,vr,custo,ref,d})=>
+    `<div class="fc" tabindex="0" data-html data-dica="${esc(d)}" aria-label="${esc(e.n)}: ${num(e.v)}">
+      <div class="fc-topo"><span class="fc-n" title="${esc(e.n)}">${IC[e.ic]||""}<span>${esc(e.n)}</span></span>
+        <b class="fc-v">${num(e.v)}</b>
+        <span class="fc-d">${e.parcial?`<span class="delta flat">parcial</span>${temComp&&e.b!=null?` antes ${num(e.b)}`:""}`:
+          vr?`<span class="delta ${vr.cls}">${vr.txt}</span> antes ${num(e.b)}`:"&nbsp;"}</span></div>
+      <div class="fc-meio"><span class="fc-p">${i===0?"100%":p2(passo)}<small>${esc(ref)}</small>${e.x?`<small class="fc-x">${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}</small>`:""}</span></div>
+      <div class="fc-pe">${custo?`<b>${custo}</b>`:""}<span>${i===0?"&nbsp;":p2(doTopo)+" do topo"}</span></div>
+    </div>`).join("");
+  const lista=info.map(({e,i,passo,vr,custo,ref})=>
+    `<div class="fl"><header><span class="fc-n">${IC[e.ic]||""}<span>${esc(e.n)}</span></span><b class="fc-v">${num(e.v)}</b></header>
+      <div class="fl-b"><i style="width:${h[i]/2}%"></i></div>
+      <small>${i===0?"Topo do funil":`${passo!=null?p2(passo)+" ":""}${esc(ref)}`}${e.x?` · ${esc(e.x.t||p2(e.x.v)+" "+e.x.ref)}`:""}${custo?" · "+custo:""}${e.parcial?` · <span class="delta flat">parcial</span>`:vr?` · <span class="delta ${vr.cls}">${vr.txt}</span>`:""}</small></div>`).join("");
+  return `<div class="funil">${svg}<div class="funil-cols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${cols}</div></div>
+    <div class="funil-lista">${lista}</div>`;
+}
+
+/* teto "redondo" do eixo, com degraus finos para a barra mais alta ocupar o gráfico */
+const teto=v=>{if(!(v>0))return 1;const e=Math.pow(10,Math.floor(Math.log10(v))),f=v/e;
+  return [1,1.2,1.5,2,2.5,3,4,5,6,8,10].find(s=>f<=s+1e-9)*e};
+const reais=v=>v>=1000?"R$ "+(v%1000?nf1:nf0).format(v/1000)+" mil":"R$ "+nf0.format(v);
+/* barras por dia (ou por semana, em períodos longos), em HTML para o texto
+   não deformar; pilha com 2px de respiro entre os canais */
+function barras(per,a,series,valor,fmt,dicaDe){
+  const n=dias(per.de,per.ate), semanal=n>62, grupos=[];
+  for(let i=0;i<n;i++){
+    const d=soma(per.de,i);
+    if(semanal&&(D(d).getDay()+6)%7!==0&&grupos.length){grupos[grupos.length-1].dias.push(d);continue}
+    grupos.push({d,dias:[d]});
+  }
+  const val=(g,k)=>g.dias.reduce((s,d)=>s+(valor(a.dia[d],k)||0),0);
+  const tot=grupos.map(g=>series.reduce((s,x)=>s+val(g,x.k),0));
+  const mx=teto(Math.max(0,...tot));
+  const ticks=[0,.5,1].map(f=>`<div class="${f===0?"zero":""}" style="bottom:${f*100}%;top:auto"><span>${fmt(mx*f)}</span></div>`).join("");
+  const cols=grupos.map((g,i)=>{
+    const segs=series.map(x=>{const v=val(g,x.k);
+      return v>0&&tot[i]>0?`<i style="height:${v/tot[i]*100}%;background:${x.cor}"></i>`:""}).join("");
+    const rot=semanal?`Semana de ${curta(g.d)}`:`${curta(g.d)} · ${["dom","seg","ter","qua","qui","sex","sáb"][D(g.d).getDay()]}`;
+    return `<div class="gb" data-html data-dica="${esc(`<b>${rot}</b>`+dicaDe(g,val))}">
+      <div class="pilha" style="height:${tot[i]/mx*100}%${tot[i]>0?";min-height:2px":""}">${segs}</div></div>`;
+  }).join("");
+  const passo=Math.max(1,Math.ceil(grupos.length/6));
+  const xs=grupos.map((g,i)=>i%passo===0?`<span style="left:${(i+.5)/grupos.length*100}%">${curta(g.d)}</span>`:"").join("");
+  return `<div class="graf" role="img" aria-label="Gráfico de barras ${semanal?"por semana":"por dia"}"><div class="graf-y">${ticks}</div><div class="graf-b">${cols}</div></div>
+    <div class="graf-x">${xs}</div>`;
+}
+
+function opcoesCampanha(p,c){
+  const canal=fCanal.value, atual=fCamp.value, acc={};
+  CANAIS.forEach(k=>{
+    if(canal!=="todos"&&canal!==k) return;
+    DADOS.midia[k].linhas.forEach(x=>{
+      const dentro=(x.d>=p.de&&x.d<=p.ate)||(c&&x.d>=c.de&&x.d<=c.ate); if(!dentro||!noFunil(k,x)) return;
+      const key=k+"|"+x.c; acc[key]=acc[key]||{k,nome:x.c,inv:0};
+      if(x.d>=p.de&&x.d<=p.ate) acc[key].inv+=x.custo;
+    });
+  });
+  let h=`<option value="">Todas as campanhas</option>`;
+  CANAIS.forEach(k=>{
+    const l=Object.values(acc).filter(o=>o.k===k).sort((a,b)=>b.inv-a.inv); if(!l.length) return;
+    h+=`<optgroup label="${NOME[k]}">`+l.map(o=>`<option value="${esc(k+"|"+o.nome)}">${esc(o.nome)}</option>`).join("")+`</optgroup>`;
+  });
+  fCamp.innerHTML=h;
+  fCamp.value=acc[atual]?atual:"";
+}
+
+function rotuloTempo(x){
+  if(!x.puxadoEm) return "—";
+  const min=Math.round((Date.now()-x.puxadoEm)/60000);
+  const q=new Date(x.puxadoEm), hm=`${String(q.getHours()).padStart(2,"0")}:${String(q.getMinutes()).padStart(2,"0")}`;
+  if(x.fonte!=="vivo") return `Retrato gravado em ${curta(iso(q))} às ${hm}`;
+  if(min<1) return "Atualizado agora";
+  if(min<60) return `Atualizado há ${min} minuto${min>1?"s":""}`;
+  const h=Math.floor(min/60); if(h<24) return `Atualizado há ${h} hora${h>1?"s":""}`;
+  return `Atualizado em ${curta(iso(q))} às ${hm}`;
+}
+
+/* frase de estado com o selo: ao vivo (verde), retrato gravado (azul) ou atenção (laranja) */
+function frase(cls,html){
+  elFrase.className=cls;
+  elFrase.querySelector(".selo").textContent=cls.includes("mal")?"atenção":cls.includes("vivo")?"ao vivo":"retrato";
+  elFrase.querySelector("span").innerHTML=html;
+}
+
+/* ------------------------------------------------- origem dos cadastros */
+function agregarOrigem(de,ate){
+  const zero=()=>({cad:0,onb:0,mad:0,ativ:0}), r={}, tot=zero(); let antes=0;
+  Object.entries(DADOS.origem.dias).forEach(([d,ks])=>{
+    if(d<de||d>ate) return;
+    Object.entries(ks).forEach(([k,v])=>{
+      if(k==="antes"){antes+=v[0];return}
+      const o=r[k]||(r[k]=zero());
+      [o,tot].forEach(x=>{x.cad+=v[0];x.onb+=v[1];x.mad+=v[2];x.ativ+=v[3]});
+    });
+  });
+  /* orgânico = soma das origens sem anúncio */
+  const org=zero();
+  ORIGENS.find(o=>o.k==="org").sub.forEach(s=>{const x=r[s.k]; if(x) for(const f in org) org[f]+=x[f]});
+  r.org=org;
+  return {r,tot,antes};
+}
+const taxaD7=x=>x&&x.cad?cem(x.ativ,x.cad):null;
+const DICA_ORIGEM="Origem = de onde a pessoa veio quando se cadastrou, gravada pelo nosso site: link do anúncio (UTM), "+
+  "identificador do clique (gclid no Google, fbclid no Meta) e site de onde veio. É o banco que diz, não a plataforma de anúncio.";
+function blocoOrigem(p,c){
+  const de0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
+  const sub=`De onde veio cada cadastro, segundo o nosso banco (Metabase)`+
+    (p.ate>=TRACK_INICIO?` · ${curta(de0)} a ${curta(p.ate)}`:"")+".";
+  const art=h=>`<article class="cx origem-cx" aria-label="Origem dos cadastros">
+    <div class="cx-t"><div><h2>origem dos cadastros</h2><p>${sub}</p></div>
+      <button type="button" class="info" data-dica="${esc(DICA_ORIGEM)}" aria-label="Como a origem é medida">i</button></div>${h}</article>`;
+  if(p.ate<TRACK_INICIO) return art(`<div class="vazio">A origem de cada cadastro começou a ser gravada em ${dataCurta(TRACK_INICIO)}. Escolha um período a partir dessa data, como o Comparativo semanal.</div>`);
+  if(!cobre(DADOS.origem.cob,de0,p.ate)) return art(`<div class="vazio">${puxando?"Buscando as origens…":
+    MCP?"Clique em Atualizar para carregar as origens.":"Abra o painel no claude.ai e clique em Atualizar para carregar as origens."}</div>`);
+  const {r,tot,antes}=agregarOrigem(de0,p.ate);
+  if(!tot.cad) return art(`<div class="vazio">Nenhum cadastro com origem registrada neste período.</div>`);
+  /* comparação: só a parcela, e só quando o período anterior inteiro já tem origem */
+  let rb=null;
+  if(c&&c.de>=TRACK_INICIO&&cobre(DADOS.origem.cob,c.de,c.ate)){ const x=agregarOrigem(c.de,c.ate); if(x.tot.cad) rb=x; }
+  /* custo real: investimento das campanhas de cadastro do canal nos mesmos dias ÷ cadastros que chegaram por ele */
+  const m=agregar(de0,p.ate,"todos","");
+  const n=k=>(r[k]||{cad:0}).cad, parc=(k,x)=>x&&x.tot.cad?(x.r[k]||{cad:0}).cad/x.tot.cad*100:null;
+
+  const segs=ORIGENS.map(o=>({o,v:n(o.k)})).filter(x=>x.v>0);
+  const barra=`<div class="org-barra" role="img" aria-label="${esc(segs.map(x=>`${x.o.n} ${pct(x.v/tot.cad*100)}`).join(", "))}">`+
+    segs.map(({o,v})=>{const sh=v/tot.cad*100;
+      return `<span class="${o.cor?"":"hach"}" style="flex:${v} 1 0;${o.cor?`background:${o.cor}`:""}" data-html data-dica="${esc(
+        `<b>${esc(o.n)}</b><div class="lin"><span>Cadastros</span><span>${num(v)}</span></div><div class="lin"><span>Parcela</span><span>${pct(sh)}</span></div>`)}">${sh>=8?Math.round(sh)+"%":""}</span>`}).join("")+`</div>`;
+
+  const comAtiv=true, parcialD7=tot.mad<tot.cad;
+  const linha=(o,sub)=>{
+    const x=r[o.k]||{cad:0,onb:0,mad:0,ativ:0}, sh=x.cad/tot.cad*100, pb=rb?parc(o.k,rb):null;
+    let custo="";
+    if(o.canal){
+      const inv=m.canal[o.canal]?m.canal[o.canal].inv:0, plat=m.canal[o.canal]?m.canal[o.canal].cad:0;
+      const d=`<b>${esc(o.n)}</b><div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div>`+
+        `<div class="lin"><span>Cadastros no banco</span><span>${num(x.cad)}</span></div>`+
+        `<div class="lin"><span>A plataforma diz</span><span>${num(plat)}</span></div>`;
+      custo=`<span data-html data-dica="${esc(d)}">${x.cad?brl(inv/x.cad):inv>0?"nenhum":"—"}</span>`;
+    }
+    const sw=sub?"":`<i class="sw${o.cor?"":" hach"}" style="${o.cor?`background:${o.cor}`:""}"></i>`;
+    return `<tr${sub?' class="sub"':""}><th scope="row">${sw}<span data-dica="${esc(o.d)}">${esc(o.n)}</span>${o.m?`<small class="org-m${sw?" com-sw":""}">${esc(o.m)}</small>`:""}</th><td>${num(x.cad)}</td>`+
+      `<td>${pct(sh)}${pb!=null?`<small>antes ${pct(pb)}</small>`:""}</td><td class="op">${x.cad?pct(x.onb/x.cad*100):"—"}</td>`+
+      (comAtiv?`<td class="op">${pct(taxaD7(x))}</td>`:"")+`<td>${custo}</td></tr>`;
+  };
+  const corpo=ORIGENS.map(o=>{
+    if(o.k==="sem"&&!n("sem")) return "";
+    return linha(o,false)+(o.sub?o.sub.filter(s=>n(s.k)>0).map(s=>linha(s,true)).join(""):"");
+  }).join("");
+  const tabela=`<div class="org-tab"><table>
+    <thead><tr><th scope="col">Origem</th><th scope="col">Cadastros</th><th scope="col">Parcela</th><th scope="col" class="op">Onboarding</th>${comAtiv?`<th scope="col" class="op">Ativação D7</th>`:""}<th scope="col"><span class="so-pc">Custo real por cadastro</span><span class="so-cel">Custo real</span></th></tr></thead>
+    <tbody>${corpo}</tbody>
+    <tfoot><tr><th scope="row">Total</th><td>${num(tot.cad)}</td><td>100%</td><td class="op">${pct(tot.onb/tot.cad*100)}</td>${comAtiv?`<td class="op">${pct(taxaD7(tot))}</td>`:""}<td></td></tr></tfoot>
+  </table></div>`;
+  const notas=`Custo real = investimento do canal ÷ cadastros que o banco registrou vindos dele (passe o mouse para comparar com o que a plataforma diz). `+
+    (de0>p.de||antes?`Origem gravada desde ${curta(TRACK_INICIO)}, 8h59`+(de0>p.de?`: aqui entram ${dias(de0,p.ate)} de ${dias(p.de,p.ate)} dias do período`:"")+
+      (antes?`; ${num(antes)} cadastro${antes>1?"s":""} de antes disso fica${antes>1?"m":""} de fora`:"")+". ":"")+
+    (parcialD7?`Ativação D7 parcial: ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias.`:"");
+  /* observação: o orgânico e o sem origem em palavras, com o que está sendo investigado */
+  const og=r.org, sem=r.sem||{cad:0,onb:0}, ps=v=>pct(v/tot.cad*100);
+  const subs=ORIGENS.find(o=>o.k==="org").sub.map(s=>({n:s.n,v:n(s.k)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const txOrg=og.cad?`${num(og.cad)} cadastro${og.cad>1?"s chegaram":" chegou"} sem anúncio. O maior grupo é ${subs[0].n} (${num(subs[0].v)}). `+
+    `Direto também inclui links de WhatsApp e e-mail, que não dizem de onde a pessoa veio.`:"Nenhum cadastro chegou sem anúncio neste período.";
+  const parou=sem.cad-sem.onb;
+  const txSem=sem.cad?`${num(sem.cad)} cadastro${sem.cad>1?"s":""} sem registro de onde ${sem.cad>1?"vieram":"veio"}; ${num(parou)} de ${num(sem.cad)} não ${parou===1?"terminou":"terminaram"} o onboarding. `+
+    `Provável motivo: a pessoa cria a conta e sai logo, antes de o site anotar a origem (ele anota uns 30 segundos depois).`:"Todos os cadastros do período tiveram a origem registrada.";
+  const obs=`<div class="org-obs">
+    <p><b>Orgânico · ${ps(og.cad)}</b><span>${txOrg}</span></p>
+    <p><b>Sem origem · ${ps(sem.cad)}</b><span>${txSem}</span></p>
+    <p class="inv"><b>🔍 Em investigação</b><span>Time de desenvolvimento: ${esc(ORIGEM_INVESTIGA.dev)}. Time de marketing: ${esc(ORIGEM_INVESTIGA.mkt)}.</span></p>
+  </div>`;
+  return art(barra+tabela+obs+`<p class="legenda-f">${notas}</p>`);
+}
+
+function pintar(){
+  focar(null);   /* os cartões vão ser redesenhados */
+  elDatas.hidden=fPeriodo.value!=="custom";
+  pintarSemanas();
+  const p=periodo(), c=comparacao(p);
+  pintarTopo();
+
+  if(!p){
+    frase("frase mal","<b>Datas incompletas.</b> Escolha início e fim, com o início antes do fim.");
+    elResumo.innerHTML=elGraf.innerHTML=""; return;
+  }
+  opcoesCampanha(p,c);
+  const camp=fCamp.value, canal=camp?camp.split("|")[0]:fCanal.value;
+  const modoReal=canal==="todos"&&!camp;
+  const ctx={rotulo:canal, sufixo:canal!=="todos"?NOME[canal]:""};
+
+  /* frase de estado */
+  const falta=faltando(p,canal), faltaC=c?faltando(c,canal):[];
+  const n=dias(p.de,p.ate);
+  let fr=fPeriodo.value==="semanal"?`<b>Semana ${dataCurta(p.de)} a ${dataCurta(p.ate)}</b>${n<7?` (em andamento, ${n} de 7 dias)`:""} comparada com ${n<7?"os mesmos dias da semana anterior, ":""}<b>${n<7?"":"semana "}${dataCurta(c.de)} a ${dataCurta(c.ate)}</b>`:
+    `<b>${falar(p.de,p.ate)}</b>`+(c?` comparado com <b>${falar(c.de,c.ate)}</b>`:"")+
+    ` · ${ehMes(p.de,p.ate)?"mês fechado":`${n} dia${n>1?"s":""}`}`;
+  let cls="frase"+(DADOS.fonte==="vivo"?" vivo":"");
+  if(falta.length||faltaC.length){
+    cls="frase mal";
+    fr+=MCP?` · <b>buscando dados que ainda não estão no painel…</b>`:` · faltam dados deste período, que só chegam com o painel aberto no claude.ai`;
+  }
+  frase(cls,fr);
+
+  /* avisos das fontes que falharam na última atualização */
+  elAvisos.innerHTML=Object.values(FALHAS).map(m=>`<div class="aviso erro" role="status"><span>${esc(m)}</span></div>`).join("")+
+    (MCP===null&&(falta.length||faltaC.length)?`<div class="aviso"><span><b>Consulta ao vivo indisponível aqui.</b> O retrato gravado cobre de ${curta(RETRATO.cobre.de)} a ${curta(RETRATO.cobre.ate)}. Para outros períodos, abra o painel no claude.ai e clique em Atualizar.</span></div>`:"");
+
+  if(falta.length){
+    const quais=falta.map(k=>NOME[k]).join(", ");
+    elResumo.innerHTML=`<div class="cx vazio" style="grid-column:1/-1;min-height:220px">
+      <div><b>Este período ainda não foi carregado.</b><br>
+      Falta: ${esc(quais)}. ${MCP?"Clique em Atualizar para buscar.":"Abra o painel no claude.ai e clique em Atualizar."}</div></div>`;
+    elGraf.innerHTML=""; return;
+  }
+  const temComp=!!c&&!faltaC.length;
+  const a=agregar(p.de,p.ate,canal,camp), b=temComp?agregar(c.de,c.ate,canal,camp):null;
+  const t=agregar(p.de,p.ate,"todos",""), tb=temComp?agregar(c.de,c.ate,"todos",""):null;
+
+  /* cartões */
+  let cartoes, etapas;
+  if(modoReal){
+    /* onboarding e ativação só existem sobre o total de cadastros do Metabase */
+    const sOnb=a.cadReal?`${pct(a.onb/a.cadReal*100)} de ${num(a.cadReal)} cadastros no total`:"";
+    const pend=a.cadReal-a.mad;
+    const sAtiv=`${num(a.ativ)} de ${num(a.cadReal)} cadastros`+
+      (pend>0?` · parcial: ${num(pend)} ainda dentro dos 7 dias`:"");
+    /* ordem de apresentação, de cima para baixo como o funil:
+       1. resumo: quanto gastou, quantos cadastros, quanto custou cada um, quanto converte
+       2. mídia: custo de aparecer e o que as plataformas dizem ter trazido
+       3. depois do cadastro: onboarding (volume e custo) e ativação */
+    /* cadastros, custo por cadastro e taxa de conversão só do tráfego pago:
+       cadastros que Google, Meta e OpenAI atribuem a si */
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx,"Atribuídos por Google, Meta e OpenAI")+
+      kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
+      kpi("quarto","cpm",a,b,t,tb,ctx)+kpi("quarto","onb",a,b,t,tb,ctx,sOnb)+
+      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",a,b,t,tb,ctx,sAtiv);
+    etapas=[
+      {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
+      {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
+      /* o total vem do Metabase; o custo usa os cadastros atribuídos pelos canais, igual ao cartão */
+      {n:"Cadastros (total)",ic:"cad",v:a.cadReal,b:b&&b.cadReal,cv:a.cad,u:"cadastro atribuído",ref:"dos cadastros",nota:"Metabase, com ou sem anúncio."},
+      {n:"Onboarding concluído",ic:"onb",v:a.onb,b:b&&b.onb,u:"onboarding",ref:"dos onboardings"},
+      /* o % do meio é a ativação D7 oficial (de todos os cadastros), não o passo
+         desde o onboarding: quem pula o onboarding também pode ativar. A taxa
+         de quem fez o onboarding fica embaixo, só com quem fez e ativou */
+      /* parcial: ainda há cadastros na janela de 7 dias, a contagem vai subir;
+         no lugar da seta (que pareceria queda) aparece "parcial" */
+      {n:"1º agendamento em 7 dias",ic:"ativ",v:a.ativ,b:b&&b.ativ,u:"ativação",parcial:pend>0,
+        p:M.ativ.v(a), pb:b&&M.ativ.v(b), pRot:"Ativação D7, de todos os cadastros",
+        pRef:pend>0?"dos cadastros (parcial)":"dos cadastros (D7)",
+        x:{v:cem(a.ativOnb,a.onb), ref:"de quem fez o onboarding", rot:"De quem fez o onboarding"},
+        nota:"Pelo menos 1 agendamento (do cliente ou da profissional) em até 7 dias. Mesmo critério do painel euSUPER!."+
+        (pend>0?` ${num(pend)} cadastros ainda dentro dos 7 dias: a taxa ainda sobe.`:"")}
+    ];
+  } else {
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cadC",a,b,t,tb,ctx)+kpi("principal","cpaC",a,b,t,tb,ctx)+kpi("principal","taxaC",a,b,t,tb,ctx)+
+      /* linha do gasto, depois linha do resultado */
+      kpi("mini","invDia",a,b,t,tb,ctx)+kpi("mini","fInv",a,b,t,tb,ctx)+kpi("mini","nCamp",a,b,t,tb,ctx)+
+      kpi("mini","cpm",a,b,t,tb,ctx)+kpi("mini","cadDia",a,b,t,tb,ctx)+kpi("mini","fCad",a,b,t,tb,ctx);
+    etapas=[{n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
+      {n:canal==="meta"?"Cliques no link":"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques"}];
+    if(a.temVis) etapas.push({n:"Visitas na página",ic:"vis",v:a.vis,b:b&&b.vis,u:"visita",ref:"das visitas",nota:"Meta: a página carregou."});
+    etapas.push({n:`Cadastros (${NOME[canal]})`,ic:"cad",v:a.cad,b:b&&b.cad,u:"cadastro",nota:"Conversão da plataforma."});
+  }
+  /* títulos em minúsculas, como pede o manual; o recorte vai ao lado, menor */
+  const titulo="funil de cadastro"+(modoReal?"":` <small>· ${camp?esc(camp.split("|").slice(1).join("|")):NOME[canal]}</small>`);
+  const sub=modoReal?"Todos os canais. Topo do funil nos anúncios (Windsor.ai), do cadastro em diante no Metabase.":
+    "Por canal, o cadastro é o que a plataforma reporta. Onboarding, ativação e a origem gravada no banco ficam em Todos os canais.";
+  /* o funil vem primeiro, logo abaixo do filtro, para caber na primeira tela;
+     os cartões de métricas vêm depois. A explicação da escala fica no "i" e a
+     legenda embaixo só aparece quando há campanha fora do funil */
+  const fora=foraTxt(a);
+  elResumo.innerHTML=`<article class="cx funil-cx">
+    <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
+      <button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa. Faixas em escala logarítmica, para caber de impressões a ativações." aria-label="Como ler o funil">i</button></div>
+    ${funil(etapas,temComp,a.inv)}
+    ${fora?`<p class="legenda-f">${fora.trim()}</p>`:""}
+  </article>`+cartoes+(modoReal?blocoOrigem(p,temComp?c:null):"");
+
+  /* gráficos diários */
+  const sCanais=CANAIS.filter(k=>a.canal[k]).map(k=>({k,nome:NOME[k],cor:COR[k]}));
+  const leg=sCanais.length>1?`<div class="leg">${sCanais.map(s=>`<span><i style="background:${s.cor}"></i>${s.nome}</span>`).join("")}</div>`:"";
+  const gInv=barras(p,a,sCanais,(d,k)=>d&&d.inv[k],reais,
+    (g,val)=>sCanais.map(s=>`<div class="lin"><span><i class="sw" style="background:${s.cor}"></i>${s.nome}</span><span>${brl(val(g,s.k))}</span></div>`).join("")+
+      (sCanais.length>1?`<div class="lin"><span>Total</span><span>${brl(sCanais.reduce((x,s)=>x+val(g,s.k),0))}</span></div>`:""));
+  const corCad=modoReal?"var(--cad-barra)":COR[canal];
+  const gCad=barras(p,a,[{k:"cad",cor:corCad}],(d)=>d&&(modoReal?d.real:d.cad),v=>(v%1?nf1:nf0).format(v),
+    (g,val)=>{const cad=val(g,"cad"),inv=g.dias.reduce((s,d)=>s+Object.values((a.dia[d]||{inv:{}}).inv).reduce((x,y)=>x+y,0),0);
+      /* custo por cadastro sempre pelos cadastros atribuídos pelos canais */
+      const atr=g.dias.reduce((s,d)=>s+((a.dia[d]||{}).cad||0),0);
+      return `<div class="lin"><span>Cadastros</span><span>${num(cad)}</span></div>`+
+        (modoReal?`<div class="lin"><span>Atribuídos pelos canais</span><span>${num(atr)}</span></div>`:"")+
+        `<div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div><div class="lin"><span>Custo por cadastro</span><span>${brl(div(inv,atr))}</span></div>`});
+  const longo=dias(p.de,p.ate)>62?"por semana":"por dia";
+  elGraf.innerHTML=`<article class="cx graf-cx"><div class="cx-t"><div><h2>investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div></div>${leg}${gInv}</article>
+    <article class="cx graf-cx"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div></div>${gCad}</article>`;
+
+  elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
+    `Cadastros, onboarding e ativação: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro no horário de Brasília, contando também as contas excluídas depois. `+
+    `Ativação D7 = cadastros com pelo menos 1 agendamento (do cliente ou da profissional) em até 7 dias ÷ todos os cadastros do período, sem contas internas (bitboundaire); mesmo critério do painel euSUPER!. Em período recente a taxa é parcial e ainda sobe. `+
+    `No Meta Ads, clique é clique no link. Taxas e custos são calculados aqui, a partir das contagens. `+
+    `Selo laranja de atenção: a métrica piorou 10% ou mais contra a comparação.`;
+}
+
+/* ------------------------------------------------- filtros e memória */
+const FILTROS="v2:filtros";
+function lembrar(){try{localStorage.setItem(FILTROS,JSON.stringify({p:fPeriodo.value,c:fComp.value==="semana"?(fComp.dataset.prev||"mes"):fComp.value,k:fCanal.value,m:fCamp.value,de:dDe.value,ate:dAte.value}))}catch(e){}}
+try{
+  const f=JSON.parse(localStorage.getItem(FILTROS)||"null");
+  if(f){ if(f.p)fPeriodo.value=f.p; if(f.c)fComp.value=f.c; if(f.k)fCanal.value=f.k;
+    if(f.de)dDe.value=f.de; if(f.ate)dAte.value=f.ate; if(f.m) fCamp.dataset.ini=f.m; }
+}catch(e){}
+if(!fPeriodo.value) fPeriodo.value="mes";
+modoSemanal();
+dDe.max=dAte.max=ontem();
+if(!dataOk(dDe.value)){const p0=periodo()||{de:soma(ontem(),-6),ate:ontem()}; dDe.value=p0.de; dAte.value=p0.ate;}
+
+/* quando o recorte pede dias que ainda não estão no painel e a consulta ao
+   vivo existe, busca sozinho */
+function aoMudar(){
+  lembrar(); pintar();
+  const p=periodo(); if(!p||!MCP) return;
+  const c=comparacao(p);
+  if(faltando(p,"todos").length||(c&&faltando(c,"todos").length)||faltaOrigem(p)||(c&&faltaOrigem(c))) atualizar();
+}
+fPeriodo.addEventListener("change",()=>{
+  if(fPeriodo.value==="custom"){const p0=periodo(); if(p0){dDe.value=p0.de;dAte.value=p0.ate}}
+  if(fPeriodo.value==="semanal") SEM_OFF=0;
+  modoSemanal(); aoMudar();
+});
+document.getElementById("semAnt").addEventListener("click",()=>{SEM_OFF++; aoMudar()});
+document.getElementById("semProx").addEventListener("click",()=>{if(SEM_OFF>0){SEM_OFF--; aoMudar()}});
+[fComp,dDe,dAte].forEach(el=>el.addEventListener("change",aoMudar));
+fCanal.addEventListener("change",()=>{fCamp.value="";aoMudar()});
+fCamp.addEventListener("change",aoMudar);
+btAtualizar.addEventListener("click",()=>{ABA==="evo"?atualizarEvo():atualizar()});
+
+/* ------------------------------------------------- tema claro / escuro
+   o padrão é o modo claro, mesmo com o claude.ai ou o sistema no escuro;
+   o botão troca e guarda a escolha neste navegador */
+const TEMA="v2:tema", raiz=document.documentElement;
+const btTema=document.getElementById("btTema"), txTema=document.getElementById("txTema");
+let tema=raiz.getAttribute("data-theme")==="dark"?"dark":"light";
+function marcarTema(){
+  const escuro=tema==="dark";
+  btTema.classList.toggle("escuro",escuro);
+  txTema.textContent=escuro?"modo claro":"modo escuro";
+  btTema.setAttribute("aria-label",escuro?"Mudar para o modo claro":"Mudar para o modo escuro");
+}
+btTema.addEventListener("click",()=>{
+  tema=tema==="dark"?"light":"dark";
+  raiz.setAttribute("data-theme",tema);
+  try{localStorage.setItem(TEMA,tema)}catch(e){}
+  marcarTema();
+});
+/* se a página de fora trocar o tema, volta para o escolhido aqui */
+new MutationObserver(()=>{if(raiz.getAttribute("data-theme")!==tema) raiz.setAttribute("data-theme",tema)})
+  .observe(raiz,{attributes:true,attributeFilter:["data-theme"]});
+marcarTema();
+
+/* =========================================================================
+   ABA "EVOLUÇÃO MENSAL" — a base inteira mês a mês, últimos 12 meses.
+   Tudo do Metabase, sem as contas de teste:
+   · usuários cadastrados: contas existentes no fim do mês (sem as apagadas)
+   · contas ativas: profissionais com pelo menos um atendimento no mês
+   · serviços realizados: agendamentos confirmados cujo horário já passou
+   · valor: soma do preço que o profissional cadastrou no serviço (centavos ÷ 100)
+   Crescimento contra o mês anterior; o mês atual, que está pela metade, é
+   comparado com os mesmos dias do mês anterior (linha "ref" da consulta).
+   A consulta traz 13 meses: o mais antigo só serve de base para o
+   crescimento do primeiro mês mostrado.
+   ========================================================================= */
+/* retrato: [mês, total, novos, ativos, serviços, com preço, valor] */
+const EVO_RETRATO={puxadoEm:Date.UTC(2026,9,19,15,5) /* Metabase em 19/10/2026 12:05 (Brasília) */, fonte:"retrato",
+  ate:"2026-10-19T15:05:43Z",
+  meses:[["2025-10",140,4,1,3,3,1500],["2025-11",148,7,3,9,9,4337.5],["2025-12",359,205,8,28,27,5542.5],
+    ["2026-01",742,367,31,77,46,5630],["2026-02",1032,311,24,151,60,8104],["2026-03",1342,313,79,880,233,18990],
+    ["2026-04",1619,276,88,1335,447,30218.9],["2026-05",1919,298,109,1418,532,33643],["2026-06",2226,307,109,1608,669,50346],
+    ["2026-07",2509,284,109,2099,857,78202.49],["2026-08",2849,341,120,2051,777,69713.05],["2026-09",4100,1252,186,2219,716,62033.96],
+    ["2026-10",5335,1236,168,1751,603,52159]],
+  ref:["2026-09",3521,670,141,1401,454,41369.99]};
+const evoLinha=a=>({mes:a[0],total:a[1],novos:a[2],ativos:a[3],servicos:a[4],comPreco:a[5],valor:a[6]});
+const evoArr=o=>[o.mes,o.total,o.novos,o.ativos,o.servicos,o.comPreco,o.valor];
+const abrirEvo=x=>({puxadoEm:x.puxadoEm,fonte:x.fonte,ate:x.ate,meses:x.meses.map(evoLinha),ref:x.ref?evoLinha(x.ref):null});
+let EVO=abrirEvo(EVO_RETRATO);
+const GUARDA_EVO="v2:evolucao";
+try{
+  const s=JSON.parse(localStorage.getItem(GUARDA_EVO)||"null");
+  if(s&&s.v===1&&s.puxadoEm>EVO_RETRATO.puxadoEm) EVO=abrirEvo(s);
+}catch(e){}
+function guardarEvo(){try{localStorage.setItem(GUARDA_EVO,JSON.stringify({v:1,puxadoEm:EVO.puxadoEm,fonte:EVO.fonte,ate:EVO.ate,
+  meses:EVO.meses.map(evoArr),ref:EVO.ref?evoArr(EVO.ref):null}))}catch(e){}}
+
+function sqlEvolucao(){
+  return `WITH teste AS (SELECT unnest(ARRAY[${IDS_TESTE}]) AS id),
+m AS (
+  SELECT ini, LEAST(ini + interval '1 month', now()) AS fim, false AS ref
+  FROM generate_series(date_trunc('month', now()) - interval '12 months', date_trunc('month', now()), interval '1 month') AS ini
+  UNION ALL
+  SELECT date_trunc('month', now() - interval '1 month'), now() - interval '1 month', true),
+p AS (SELECT id, created_at, deleted_at FROM professional WHERE id NOT IN (SELECT id FROM teste)),
+s AS (SELECT es.professional_id, es.start_datetime, COALESCE((e.et_price->>'amount')::numeric, 0) / 100 AS valor
+      FROM event_scheduled es JOIN event e ON e.id = es.event_id
+      WHERE es.status::text = 'CONFERENCE_SCHEDULED' AND es.professional_id NOT IN (SELECT id FROM teste))
+SELECT m.ini::date AS mes, m.ref,
+  (SELECT count(*) FROM p WHERE p.created_at < m.fim AND (p.deleted_at IS NULL OR p.deleted_at >= m.fim)) AS total,
+  (SELECT count(*) FROM p WHERE p.created_at >= m.ini AND p.created_at < m.fim AND p.deleted_at IS NULL) AS novos,
+  (SELECT count(DISTINCT professional_id) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS ativos,
+  (SELECT count(*) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS servicos,
+  (SELECT count(*) FROM s WHERE s.valor > 0 AND s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS com_preco,
+  (SELECT COALESCE(round(sum(valor), 2), 0) FROM s WHERE s.start_datetime >= m.ini AND s.start_datetime < m.fim) AS valor,
+  m.fim AS ate
+FROM m ORDER BY m.ref, m.ini`;
+}
+let puxandoEvo=false, FALHA_EVO="";
+async function atualizarEvo(){
+  if(!MCP||puxandoEvo) return;
+  puxandoEvo=true; FALHA_EVO=""; pintarTopo();
+  try{
+    const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlEvolucao()});
+    const rows=p&&p.data&&p.data.rows;
+    if(!Array.isArray(rows)||!rows.length) throw {code:"tool_error",message:"resposta sem linhas"};
+    const meses=[]; let ref=null, ate="";
+    rows.forEach(r=>{
+      const o={mes:String(r[0]).slice(0,7),total:+r[2]||0,novos:+r[3]||0,ativos:+r[4]||0,servicos:+r[5]||0,comPreco:+r[6]||0,valor:+r[7]||0};
+      if(r[1]===true||r[1]==="true") ref=o; else {meses.push(o); ate=String(r[8]||"")}
+    });
+    meses.sort((a,b)=>a.mes<b.mes?-1:1);
+    EVO={puxadoEm:Date.now(),fonte:"vivo",ate,meses,ref}; guardarEvo();
+  }catch(e){ FALHA_EVO=`Metabase: ${msgErro(e,"Metabase")}`; }
+  puxandoEvo=false; pintarEvo();
+}
+
+/* "2026-10" → "out/26" e "outubro de 2026" */
+const mesCurto=m=>`${MESES[+m.slice(5,7)-1].slice(0,3)}/${m.slice(2,4)}`;
+const mesLongo=m=>`${MESES[+m.slice(5,7)-1]} de ${m.slice(0,4)}`;
+const mesNome=m=>MESES[+m.slice(5,7)-1];
+/* o mês atual está pela metade quando a consulta parou antes do fim dele */
+function evoCorte(){
+  const ms=EVO.meses, ult=ms[ms.length-1];
+  const dia=EVO.ate&&EVO.ate.slice(0,7)===ult.mes?+EVO.ate.slice(8,10):0;
+  return {parcial:!!dia&&!!EVO.ref, dia};
+}
+/* crescimento do mês i: contra o anterior; no mês pela metade, contra os mesmos dias do anterior */
+function evoCresc(i,campo){
+  const ms=EVO.meses, {parcial}=evoCorte();
+  const b=i===ms.length-1&&parcial?EVO.ref[campo]:(i>0?ms[i-1][campo]:null);
+  return variacao(ms[i][campo],b,1);
+}
+const EVO_M=[
+  {k:"total",r:"Usuários cadastrados",ic:"pessoas",f:num,cor:"var(--azul)",h2:"usuários cadastrados",p:"Total de contas no fim de cada mês",
+   formula:"Contas existentes no fim do mês, sem as de teste e as apagadas"},
+  {k:"ativos",r:"Contas ativas",ic:"ativ",f:num,cor:"var(--verde)",h2:"contas ativas",p:"Profissionais com pelo menos um atendimento no mês",
+   formula:"Profissionais com pelo menos um atendimento realizado no mês"},
+  {k:"servicos",r:"Serviços realizados",ic:"taxa",f:num,cor:"var(--cad-barra)",h2:"serviços realizados",p:"Agendamentos confirmados cujo horário já passou",
+   formula:"Agendamentos confirmados cujo horário já passou, sem os cancelados"},
+  {k:"valor",r:"Valor dos serviços",ic:"inv",f:brl,cor:"var(--laranja)",h2:"valor dos serviços",p:"Soma do preço que o profissional cadastrou",
+   formula:"Soma do preço cadastrado pelo profissional em cada serviço realizado"}
+];
+/* barras mês a mês, no mesmo desenho dos gráficos diários; o mês pela metade fica mais claro */
+function barrasMes(m){
+  const ms=EVO.meses, ini=Math.max(0,ms.length-12), vis=ms.slice(ini), {parcial,dia}=evoCorte();
+  const mx=teto(Math.max(0,...vis.map(o=>o[m.k])));
+  const fy=m.k==="valor"?reais:v=>nf0.format(v);
+  const ticks=[0,.5,1].map(f=>`<div class="${f===0?"zero":""}" style="bottom:${f*100}%;top:auto"><span>${fy(mx*f)}</span></div>`).join("");
+  const cols=vis.map((o,j)=>{
+    const i=ini+j, ult=i===ms.length-1&&parcial, vr=evoCresc(i,m.k);
+    const d=`<b>${mesLongo(o.mes)}</b>${ult?` <span class="m">até dia ${dia}</span>`:""}`+
+      `<div class="lin"><span>${m.r}</span><span>${m.f(o[m.k])}</span></div>`+
+      (vr?`<div class="lin"><span>${ult?`vs 1 a ${dia} de ${mesNome(EVO.ref.mes)}`:"vs mês anterior"}</span><span class="delta ${vr.cls}">${vr.txt}</span></div>`:"");
+    return `<div class="gb${ult?" parcial":""}" data-html data-dica="${esc(d)}">
+      <div class="pilha" style="height:${o[m.k]/mx*100}%${o[m.k]>0?";min-height:2px":""}"><i style="height:100%;background:${m.cor}"></i></div></div>`;
+  }).join("");
+  const xs=vis.map((o,j)=>(vis.length-1-j)%2===0?`<span style="left:${(j+.5)/vis.length*100}%">${mesCurto(o.mes)}</span>`:"").join("");
+  return `<article class="cx graf-cx"><div class="cx-t"><div><h2>${m.h2}</h2><p>${m.p}</p></div></div>
+    <div class="graf" role="img" aria-label="${esc(m.r)} por mês, últimos 12 meses"><div class="graf-y">${ticks}</div><div class="graf-b">${cols}</div></div>
+    <div class="graf-x">${xs}</div></article>`;
+}
+
+const elEvoFrase=document.getElementById("fraseEvo"), elEvoAvisos=document.getElementById("avisosEvo");
+const elEvoCartoes=document.getElementById("evoCartoes"), elEvoGraf=document.getElementById("evoGraf");
+const elEvoTabela=document.getElementById("evoTabela"), elEvoNota=document.getElementById("evoNota"), elEvoRod=document.getElementById("rodapeEvo");
+function pintarEvo(){
+  focar(null);
+  pintarTopo();
+  const ms=EVO.meses, n=ms.length, ult=ms[n-1], {parcial,dia}=evoCorte();
+  const vis=ms.slice(Math.max(0,n-12));
+  const refTxt=parcial?`${dia===1?"1":`1 a ${dia}`} de ${mesNome(EVO.ref.mes)}`:"";
+  /* frase de estado */
+  const cls="frase"+(EVO.fonte==="vivo"?" vivo":"");
+  elEvoFrase.className=cls;
+  elEvoFrase.querySelector(".selo").textContent=puxandoEvo?"atualizando":EVO.fonte==="vivo"?"ao vivo":"retrato";
+  elEvoFrase.querySelector("span").innerHTML=`<b>Últimos 12 meses</b> · ${mesCurto(vis[0].mes)} a ${mesCurto(ult.mes)}`+
+    (parcial?` · ${mesNome(ult.mes)} até dia ${dia}, comparado com <b>${refTxt}</b>`:"");
+  elEvoAvisos.innerHTML=FALHA_EVO?`<div class="aviso erro" role="status"><span>${esc(FALHA_EVO)}</span></div>`:"";
+
+  /* cartões do mês atual */
+  elEvoCartoes.innerHTML=EVO_M.map(m=>{
+    const vr=evoCresc(n-1,m.k), b=parcial?EVO.ref[m.k]:(n>1?ms[n-2][m.k]:null);
+    const antes=b==null?"":parcial?(m.k==="total"?`em ${dia}/${EVO.ref.mes.slice(5,7)}: ${m.f(b)}`:`${refTxt}: ${m.f(b)}`):`${mesNome(ms[n-2].mes)}: ${m.f(b)}`;
+    const sub=m.k==="total"?`+${num(ult.novos)} novos em ${mesNome(ult.mes)}`:m.k==="servicos"?`${num(ult.comPreco)} com preço preenchido`:
+      m.k==="valor"?"Preço declarado, não é pagamento confirmado":"Com pelo menos um atendimento no mês";
+    const d=`<b>${m.r}</b><p class="m">${m.formula}</p>`+(parcial?`<p class="m">${mesNome(ult.mes)} até dia ${dia}, comparado com ${refTxt}.</p>`:"");
+    return `<article class="cx kpi" data-html data-dica="${esc(d)}">
+      <header><span class="kpi-ic">${IC[m.ic]}</span><span class="kpi-r">${m.r}</span>
+        <span class="kpi-x"><button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
+      <div class="kpi-v" title="${esc(m.f(ult[m.k]))}">${m.f(ult[m.k])}</div>
+      <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}${antes?`<span class="num">${antes}</span>`:""}</div>
+      <div class="kpi-s">${sub}</div></article>`;
+  }).join("");
+
+  /* um gráfico por métrica */
+  elEvoGraf.innerHTML=EVO_M.map(barrasMes).join("");
+
+  /* tabela, do mês mais recente para o mais antigo */
+  const corpo=vis.map((o,j)=>{
+    const i=n-vis.length+j, u=i===n-1&&parcial;
+    return `<tr${u?' class="parcial"':""}><th scope="row">${mesLongo(o.mes)}${u?` <small>até dia ${dia}*</small>`:""}</th>`+
+      EVO_M.map(m=>{const vr=evoCresc(i,m.k);
+        return `<td>${m.f(o[m.k])}${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:`<span class="delta flat">—</span>`}</td>`}).join("")+`</tr>`;
+  }).reverse().join("");
+  elEvoTabela.innerHTML=`<thead><tr><th scope="col">Mês</th>${EVO_M.map(m=>`<th scope="col">${m.r}</th>`).join("")}</tr></thead><tbody>${corpo}</tbody>`;
+  elEvoNota.textContent="Variação contra o mês anterior."+(parcial?` *No mês atual, contra os mesmos dias do mês anterior (${refTxt}).`:"");
+
+  elEvoRod.innerHTML=`<b>De onde vem cada número.</b> Metabase, base Mia Production, sem as contas de teste. `+
+    `Usuários cadastrados: contas existentes no fim de cada mês, sem as apagadas. `+
+    `Conta ativa: profissional com pelo menos um atendimento realizado no mês. `+
+    `Serviço realizado: agendamento confirmado cujo horário já passou, sem os cancelados; o sistema não registra quando o cliente falta. `+
+    `Valor: soma do preço que o profissional cadastrou no serviço. Não é pagamento confirmado, e serviços com preço R$ 0 não somam.`;
+}
+
+
+/* =========================================================================
+   TESTE A/B DAS PÁGINAS — bloco fixo, não segue os filtros: mostra o teste
+   do período dele, em palavras: o resultado de cada canal, o que deu certo,
+   por que converteu mais e o próximo passo. Os números ficam guardados aqui e
+   aparecem só na dica de cada canal (passar o mouse).
+   Para trocar de teste, basta substituir TESTE_AB.
+   a = página A (controle), b = página B (desafiante).
+   ========================================================================= */
+const TESTE_AB={
+  nome:"Teste A/B 04",
+  de:"2026-10-21", ate:"2026-10-26",
+  paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
+           b:{url:"lp4.miaapp.com.br", desc:"a mesma página, com vídeo no topo"}},
+  vencedora:"b",
+  /* taxa de conversão (%) e custo por cadastro, calculados em 27/10 com os
+     dados das plataformas (Windsor): Google = cadastros ÷ cliques (22 a 26/10,
+     a campanha da B começou em 22/10); Meta = cadastros ÷ visitas na página
+     (21 a 26/10), como no Teste 03. Campanha → página conferida no banco:
+     Google "pesquisa_miaapp" → A, "pesquisa_lp4_vsl" → B; Meta "Page
+     principal" e "[CAMPANHA DE VENDA]" → A, "TESTE A/B 1" e "TESTE A/B 2"
+     (LP4 VSL) → B. OpenAI fora: a campanha nova da LP4 não teve conversões.
+     Quem tem a taxa maior vence a rodada, como os dados mostram. */
+  canais:[
+    {n:"Google Ads", a:20.87, b:27.33, custo:{a:16.58, b:12.80}, base:{a:"43 de 206 cliques", b:"44 de 161 cliques"}},
+    {n:"Meta Ads",   a:17.78, b:17.86, custo:{a:12.11, b:11.72}, base:{a:"48 de 270 visitas", b:"45 de 252 visitas"}}
+  ],
+  /* uma linha cada: os founders leem o placar, não o texto.
+     Leitura do Clarity (mapas de calor de 21 a 26/10): na B, o play do vídeo é
+     um dos pontos mais tocados; na A, o mais tocado é o botão do topo. No Meta,
+     62% dos cliques viram visita na B, contra 72% na A. */
+  porque:"O vídeo prende: o play é um dos pontos mais tocados da B. No Google, quem já pesquisou converte mais com ele. No Meta a B ganhou por pouco, mas mais gente desiste antes de ela abrir.",
+  proximo:"Usar a B no Google. No Meta, deixar a B abrir mais rápido (vídeo mais leve) e repetir por 7 dias.",
+  obs:"OpenAI fora desta rodada: a campanha nova da LP4 ainda não teve conversões. Google de 22 a 26/10 (a B começou em 22/10)."
+};
+/* placar de jogo: as páginas são os times, cada canal é uma rodada e vence
+   quem teve a taxa de conversão maior (igual = empate). Vitória por menos de
+   2 p.p. leva a marca "por pouco"; a partir daí, "com folga". O "cabo de
+   guerra" puxa para o lado de quem converteu mais (escala de ±8 p.p.); os
+   números ficam na dica de cada rodada. */
+const FOLGA_PP=2;
+const ppTxt=v=>nf2.format(v)+" p.p.";
+const TROFEU=`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10v4a5 5 0 0 1-10 0V3z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M7 5H4v1a4 4 0 0 0 4 4M17 5h3v1a4 4 0 0 1-4 4"/><path fill="currentColor" d="M10.5 12h3v4h-3zM8 17h8v3H8z"/></svg>`;
+function pintarAB(){
+  const el=document.getElementById("testeAB"), T=TESTE_AB;
+  if(!T){ el.hidden=true; return; }
+  const P=T.paginas;
+  const rod=T.canais.map(c=>{
+    const lider=c.a===c.b?null:c.b>c.a?"b":"a";
+    return {...c, ganha:lider, folga:Math.abs(c.a-c.b)>=FOLGA_PP};
+  });
+  const pts={a:rod.filter(r=>r.ganha==="a").length, b:rod.filter(r=>r.ganha==="b").length};
+  const emp=rod.filter(r=>!r.ganha).length;
+  const time=k=>{const vence=T.vencedora===k;
+    return `<div class="time ${k}${vence?" vence":""}">
+      ${vence?`<em class="trofeu">${TROFEU}venceu</em>`:""}
+      <span class="ab-l">${k.toUpperCase()}</span>
+      <div><b>${esc(P[k].url).replace(/^([^.]+\.)(?=.*\..*\.)/,"$1<wbr>")}</b><small>${esc(P[k].desc)}</small></div></div>`;};
+  const rodadas=rod.map(r=>{
+    const dif=r.a-r.b, pos=50-Math.max(-1,Math.min(1,dif/8))*44;
+    const res=r.ganha?`${r.ganha.toUpperCase()} venceu <small>${r.folga?"com folga":"por pouco"}</small>`:"empate";
+    const d=`<b>${esc(r.n)}</b><p class="m">Taxa de conversão</p>`+
+      `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(r.a,2)}</span></div>`+
+      `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(r.b,2)}</span></div>`+
+      (r.base?`<p class="m">A: ${esc(r.base.a)} · B: ${esc(r.base.b)}</p>`:"")+
+      (r.custo?`<p class="m" style="margin-top:6px">Custo por cadastro</p>`+
+        `<div class="lin"><span>A</span><span>${brl(r.custo.a)}</span></div><div class="lin"><span>B</span><span>${brl(r.custo.b)}</span></div>`:"")+
+      (r.ganha?`<p class="m">Diferença: ${ppTxt(Math.abs(dif))} para ${r.ganha.toUpperCase()}</p>`:"");
+    return `<li class="rod${r.ganha?" vence":""}${r.ganha&&!r.folga?" pouco":""}" tabindex="0" data-html data-dica="${esc(d)}">
+      <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
+      <div class="cabo"><i style="left:${pos.toFixed(1)}%"></i></div>
+      <div class="cabo-l"><span class="${r.ganha==="a"?"lid":""}"><small>A</small>${pct(r.a,2)}</span>
+        <em>taxa de conversão</em><span class="${r.ganha==="b"?"lid":""}">${pct(r.b,2)}<small>B</small></span></div></li>`;
+  }).join("");
+  el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div></div>
+    <div class="placar">${time("a")}
+      <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div>${emp?`<small>${emp} empate${emp===1?"":"s"}</small>`:""}</div>
+      ${time("b")}</div>
+    <ol class="rodadas" aria-label="Rodadas por canal" style="--n:${rod.length}">${rodadas}</ol>
+    ${T.obs?`<p class="legenda-f">${esc(T.obs)}</p>`:""}
+    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;
+}
+
+/* ------------------------------------------------- abas */
+const ABA_GUARDA="v2:aba";
+const TITULOS={funil:["funil de cadastro","Do anúncio à primeira agenda: quanto converte e quanto custa cada etapa."],
+  evo:["evolução mensal","Os últimos 12 meses da base: cadastros, contas ativas e serviços realizados."]};
+const tabs={funil:document.getElementById("tabFunil"), evo:document.getElementById("tabEvo")};
+const paineis={funil:document.getElementById("abaFunil"), evo:document.getElementById("abaEvo")};
+let ABA="funil";
+try{const a=localStorage.getItem(ABA_GUARDA); if(a==="evo") ABA="evo"}catch(e){}
+if(location.hash==="#evolucao") ABA="evo"; else if(location.hash==="#funil") ABA="funil";
+/* topo: título, "atualizado há", botão Atualizar — sempre da aba aberta */
+function pintarTopo(){
+  const evo=ABA==="evo", ind=evo?puxandoEvo:puxando;
+  document.getElementById("titulo").textContent=TITULOS[ABA][0];
+  document.getElementById("subtitulo").textContent=TITULOS[ABA][1];
+  elAtual.textContent=rotuloTempo(evo?EVO:DADOS);
+  btAtualizar.disabled=!MCP||ind;
+  btAtualizar.classList.toggle("indo",ind);
+  txAtualizar.textContent=ind?"Atualizando…":"Atualizar";
+  btAtualizar.title=MCP===null?"A consulta ao vivo só funciona com o painel aberto no claude.ai.":
+    evo?"Puxar de novo do Metabase":"Puxar de novo do Windsor.ai e do Metabase";
+}
+const velhoFunil=()=>!DADOS.puxadoEm||DADOS.fonte!=="vivo"||Date.now()-DADOS.puxadoEm>30*60000;
+const velhoEvo=()=>!EVO.puxadoEm||EVO.fonte!=="vivo"||Date.now()-EVO.puxadoEm>30*60000;
+function abrirAba(a,foco){
+  ABA=a;
+  try{localStorage.setItem(ABA_GUARDA,a)}catch(e){}
+  Object.keys(tabs).forEach(k=>{
+    const on=k===a; tabs[k].setAttribute("aria-selected",on?"true":"false"); tabs[k].tabIndex=on?0:-1; paineis[k].hidden=!on;
+  });
+  if(foco) tabs[a].focus();
+  dica.hidden=true; focar(null);
+  if(a==="evo") pintarEvo(); else pintar();
+  if(MCP){ if(a==="evo"&&velhoEvo()) atualizarEvo(); else if(a==="funil"&&velhoFunil()) atualizar(); }
+}
+Object.keys(tabs).forEach(k=>{
+  tabs[k].addEventListener("click",()=>{if(ABA!==k) abrirAba(k)});
+  tabs[k].addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault(); abrirAba(ABA==="funil"?"evo":"funil",true)}
+  });
+});
+
+/* primeira pintura com o que está gravado; a campanha lembrada volta
+   depois que a lista existe */
+pintar();
+if(fCamp.dataset.ini){
+  if([...fCamp.options].some(o=>o.value===fCamp.dataset.ini)){fCamp.value=fCamp.dataset.ini;pintar()}
+  delete fCamp.dataset.ini;
+}
+pintarAB();
+abrirAba(ABA);
+setInterval(pintarTopo,30000);
+
+/* consulta ao vivo: só existe dentro do claude.ai. Ao abrir, se os dados
+   têm mais de 30 minutos ou o período não está carregado, atualiza sozinho */
+((window.claude&&window.claude.use)?window.claude.use("mcp"):Promise.resolve(null))
+  .then(m=>{MCP=m||null}).catch(()=>{MCP=null})
+  .then(()=>{
+    pintar(); if(ABA==="evo") pintarEvo();
+    if(!MCP) return;
+    if(ABA==="evo"){ if(velhoEvo()) atualizarEvo(); return; }
+    const p=periodo(), c=p&&comparacao(p);
+    if(p&&(velhoFunil()||faltando(p,"todos").length||(c&&faltando(c,"todos").length))) atualizar();
+  });
+</script>
