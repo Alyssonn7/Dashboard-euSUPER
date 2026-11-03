@@ -323,6 +323,10 @@ button,select,input{font-family:inherit}
 .ab-tog:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
 .ab-tog svg{width:18px;height:18px;display:block;transition:transform .2s}
 .ab-cx.fechado .ab-tog svg{transform:rotate(180deg)}
+.funil-cx .cx-t{cursor:pointer}
+.funil-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
+.funil-corpo{display:flex;flex-direction:column;gap:10px}
+.funil-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
 .time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
   border:1.5px solid var(--borda);border-radius:12px}
@@ -1803,6 +1807,28 @@ const dDe=document.getElementById("dDe"), dAte=document.getElementById("dAte"), 
 const btAtualizar=document.getElementById("btAtualizar"), txAtualizar=document.getElementById("txAtualizar");
 const elAtual=document.getElementById("atual"), elFrase=document.getElementById("frase"), elAvisos=document.getElementById("avisos");
 const elResumo=document.getElementById("resumo"), elGraf=document.getElementById("graficos");
+/* minimizar/expandir o bloco do funil: a setinha ou o título; o "i" continua
+   só mostrando a dica. A escolha fica guardada neste navegador */
+const FUNIL_ABERTO="v2:funilAberto";
+let funilAberto=true;
+try{funilAberto=localStorage.getItem(FUNIL_ABERTO)!=="0"}catch(e){}
+function marcarFunil(){
+  const el=document.getElementById("funilCx"), corpo=document.getElementById("funilCorpo");
+  if(!el||!corpo) return;
+  const bt=el.querySelector(".ab-tog");
+  el.classList.toggle("fechado",!funilAberto);
+  corpo.hidden=!funilAberto;
+  bt.setAttribute("aria-expanded",String(funilAberto));
+  bt.setAttribute("aria-label",funilAberto?"Minimizar o funil":"Expandir o funil");
+  bt.title=funilAberto?"Minimizar":"Expandir";
+}
+elResumo.addEventListener("click",e=>{
+  const t=e.target.closest(".funil-cx .cx-t");
+  if(!t||e.target.closest(".info")) return;
+  funilAberto=!funilAberto;
+  try{localStorage.setItem(FUNIL_ABERTO,funilAberto?"1":"0")}catch(e){}
+  marcarFunil();
+});
 const elRod=document.getElementById("rodape");
 
 /* dica do cartão: nome, fórmula e, em "todos os canais", o valor de cada canal
@@ -2166,12 +2192,16 @@ function pintar(){
      os cartões de métricas vêm depois. A explicação da escala fica no "i" e a
      legenda embaixo só aparece quando há campanha fora do funil */
   const fora=foraTxt(a);
-  elResumo.innerHTML=`<article class="cx funil-cx">
+  elResumo.innerHTML=`<article class="cx funil-cx" id="funilCx">
     <div class="cx-t"><div><h2>${titulo}</h2><p>${sub}</p></div>
-      <button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa. Faixas em escala logarítmica, para caber de impressões a ativações." aria-label="Como ler o funil">i</button></div>
+      <div class="cx-acoes"><button type="button" class="info" data-dica="Em cima: total e comparação. No meio: quanto passou da etapa anterior. Embaixo: custo da etapa. Faixas em escala logarítmica, para caber de impressões a ativações." aria-label="Como ler o funil">i</button>
+      <button type="button" class="ab-tog" aria-controls="funilCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div></div>
+    <div class="funil-corpo" id="funilCorpo">
     ${funil(etapas,temComp,a.inv)}
     ${fora?`<p class="legenda-f">${fora.trim()}</p>`:""}
+    </div>
   </article>`+cartoes+(modoReal?blocoOrigem(p,temComp?c:null):"");
+  marcarFunil();
 
   /* gráficos diários */
   const sCanais=CANAIS.filter(k=>a.canal[k]).map(k=>({k,nome:NOME[k],cor:COR[k]}));
