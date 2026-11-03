@@ -366,36 +366,33 @@ button,select,input{font-family:inherit}
 .cabo-l small{font-size:11px;font-weight:700;color:var(--texto-2)}
 .cabo-l .lid{color:var(--bom)}
 .cabo-l em{font-style:normal;font-size:11px;color:var(--texto-2);text-align:center}
-/* história dos testes: o que aprendemos + decisão do mês, e um cartão por teste */
-.ab-top{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.ab-apr,.ab-dec{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:12px}
-.ab-apr{background:var(--neutro-bg)}
-.ab-dec{background:var(--bom-bg);border:1.5px solid var(--verde)}
-.ab-dec-t{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
-.ab-dec .ab-dec-t{color:var(--bom)}
-.ab-dec h3{margin:0;font-size:clamp(17px,1.5vw,20px);font-weight:700;line-height:1.25;color:var(--texto)}
-.ab-apr ul,.ab-dec ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:14px;line-height:1.45;color:var(--texto)}
-.ab-hist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.hc{display:flex;flex-direction:column;gap:8px;padding:13px 15px 14px;border:1px solid var(--borda);border-radius:10px;min-width:0}
-.hc.hc-dest{border-color:var(--verde)}
-.hc header{display:flex;align-items:center;gap:10px}
-.hc-n{width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;
-  background:var(--neutro-bg);color:var(--neutro)}
-.hc.hc-dest .hc-n{background:var(--verde);color:var(--tinta)}
-.hc header b{display:block;font-size:14.5px;font-weight:700;color:var(--texto)}
-.hc header small{display:block;font-size:12px;color:var(--texto-2)}
-.hc p{margin:0}
-.hc-vs{display:flex;flex-direction:column;gap:3px;font-size:13px;line-height:1.35;color:var(--texto)}
-.hc-vs span{display:flex;gap:6px}
-.hc-vs i{flex:none;font-style:normal;font-size:11px;font-weight:700;color:var(--texto-2);width:12px;padding-top:1px}
-.hc-res{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.hc-res b{font-size:14px;font-weight:700;color:var(--texto)}
-.hc-res em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:99px;
-  padding:2px 8px;background:var(--bom-bg);color:var(--bom)}
-.hc-apr{font-size:13px;line-height:1.45;color:var(--texto-2)}
-@media (max-width:1180px){.ab-hist{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:820px){.ab-top{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:560px){.ab-hist{grid-template-columns:minmax(0,1fr)}}
+/* caminho dos testes: um passo por teste, setas entre eles, a decisão no fim */
+.ab-cam{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:26px}
+.cam{position:relative;display:flex;flex-direction:column;gap:5px;padding:14px 16px;border:1px solid var(--borda);border-radius:12px;min-width:0}
+.cam+.cam::before{content:"";position:absolute;left:-19px;top:50%;width:12px;height:12px;margin-top:-6px;
+  border-top:2.4px solid var(--texto-2);border-right:2.4px solid var(--texto-2);transform:rotate(45deg)}
+.cam-q{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.cam-d{font-size:14px;font-weight:600;line-height:1.3;color:var(--texto)}
+.cam-r{margin-top:4px;font-size:16px;font-weight:700;line-height:1.2;color:var(--bom)}
+.cam-p{font-size:12px;font-weight:600;color:var(--texto-2)}
+.cam-l{margin-top:4px;padding-top:8px;border-top:1px solid var(--borda);font-size:13px;line-height:1.35;color:var(--texto)}
+.cam.fim{background:var(--bom-bg);border:1.5px solid var(--verde)}
+.cam.fim .cam-q{color:var(--bom)}
+.cam-t{font-size:17px;font-weight:700;line-height:1.25;color:var(--texto)}
+.cam.fim ul{margin:2px 0 0;padding-left:16px;display:grid;gap:2px;font-size:13px;line-height:1.35;color:var(--texto)}
+.cam-c{margin-top:4px;font-size:12.5px;font-weight:600;color:var(--texto-2)}
+.ab-det-bt{align-self:center;display:inline-flex;align-items:center;gap:6px;background:none;cursor:pointer;
+  border:1.5px solid var(--borda-campo);border-radius:99px;padding:8px 16px;font:inherit;font-size:13px;font-weight:600;color:var(--texto-2)}
+.ab-det-bt:hover{border-color:var(--cinza);color:var(--texto)}
+.ab-det-bt:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
+.ab-det-bt svg{width:15px;height:15px;transition:transform .2s}
+.ab-det-bt[aria-expanded="true"] svg{transform:rotate(180deg)}
+.ab-det{display:flex;flex-direction:column;gap:18px}
+/* telas menores: os passos ficam um embaixo do outro, com a seta para baixo */
+@media (max-width:1000px){
+  .ab-cam{grid-template-columns:minmax(0,1fr);gap:24px}
+  .cam+.cam::before{left:50%;top:-18px;margin:0 0 0 -6px;transform:rotate(135deg)}
+}
 /* dentro da página (Clarity) e o vídeo da B */
 .ab-pag{display:flex;flex-direction:column;gap:10px}
 .ab-sub{margin:4px 0 0;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--texto-2)}
@@ -2424,39 +2421,25 @@ function pintarEvo(){
    21/10 e play automático com som em 28/10). O Teste 04 aparece em detalhe
    logo abaixo, com os números de TESTE_AB.
    ========================================================================= */
-const HIST_SUB="Outubro · 4 testes de página, de 22/09 a 02/11";
-const APRENDIZADOS=[
-  "Mostrar o produto no topo converte mais. As duas páginas sem o celular do topo perderam nos 3 canais (Testes 02 e 03).",
-  "Uma semana engana. Nos Testes 03 e 04, o resultado da 1ª semana mudou quando o teste ficou mais tempo no ar.",
-  "O vídeo ajuda quem já está procurando: no Google, a página com vídeo ganhou nas duas semanas."
-];
-const DECISAO_LP={
-  titulo:"Decisão para novembro",
-  decisao:"A LP4 (a principal com vídeo no topo) vira a página principal",
-  motivos:[
-    "Foi a única desafiante que ganhou da principal em um canal nas duas semanas: Google, 25,9% contra 21,4%, com cadastro mais barato.",
-    "Na página, mais gente clica em “Criar meu link grátis” (20,2% contra 17,1%) e menos gente sai na hora (7,1% contra 9,7%).",
-    "Cuidado: no Meta e na OpenAI a principal ainda converteu um pouco mais. Acompanhar esses dois canais nas 2 primeiras semanas."
-  ]
-};
+const HIST_SUB="Outubro: o que testamos e o caminho até a página de novembro";
+/* um passo por teste, em poucas palavras: o duelo, quem ganhou e a lição.
+   "Principal" = a página do Luy, que virou a principal no Teste 01 */
 const TESTES_HIST=[
-  {nome:"Teste A/B 01", quando:"22 a 28/09",
-   a:"página antiga da Mia", b:"página nova, feita com o Luy (lp1)",
-   resultado:"B ganhou 3 × 0", marca:"virou a principal em 29/09",
-   aprendeu:"Página direta, com um botão de cadastro forte, converteu mais nos 3 canais."},
-  {nome:"Teste A/B 02", quando:"29/09 a 06/10",
-   a:"principal (a do Luy)", b:"página da Mia sem o celular do topo (lp2)",
-   resultado:"A ganhou 3 × 0",
-   aprendeu:"Sem o celular mostrando o produto, converteu menos, principalmente no Meta (23,6% contra 17,5%)."},
-  {nome:"Teste A/B 03", quando:"06 a 20/10",
-   a:"principal", b:"a mesma da Mia sem o celular, com o texto da principal (lp3)",
-   resultado:"A ganhou 3 × 0",
-   aprendeu:"Só trocar o texto não resolveu. Na 1ª semana a lp3 parecia ganhar; com 14 dias, a principal ganhou nos 3 canais."},
-  {nome:"Teste A/B 04", quando:"20/10 a 02/11",
-   a:"principal", b:"a mesma principal com vídeo no topo (lp4)",
-   resultado:"A ganhou 2 × 1", marca:"vira a principal em novembro",
-   aprendeu:"A LP4 ganhou no Google com folga. No Meta (quase empate) e na OpenAI, a principal ainda converteu um pouco mais."}
+  {n:"Teste 01", quando:"22 a 28/09", duelo:"Mia antiga × Luy",
+   res:"Luy ganhou", placar:"3 × 0 · virou a principal", licao:"Página direta converte mais"},
+  {n:"Teste 02", quando:"29/09 a 06/10", duelo:"Principal × Mia sem o celular",
+   res:"Principal ganhou", placar:"3 × 0", licao:"Sem o produto no topo, perde"},
+  {n:"Teste 03", quando:"06 a 20/10", duelo:"Principal × Mia com texto novo",
+   res:"Principal ganhou", placar:"3 × 0", licao:"Só trocar o texto não basta"},
+  {n:"Teste 04", quando:"20/10 a 02/11", duelo:"Principal × principal com vídeo",
+   res:"Vídeo ganhou no Google", placar:"Meta e OpenAI: principal", licao:"Vídeo ajuda quem já procura"}
 ];
+/* o último passo do caminho: a decisão do mês */
+const DECISAO_LP={
+  quando:"Novembro", titulo:"LP4 (com vídeo) vira a principal",
+  motivos:["Ganhou no Google nas 2 semanas","Mais cliques em “Criar meu link”"],
+  cuidado:"Acompanhar Meta e OpenAI"
+};
 
 /* =========================================================================
    TESTE A/B DAS PÁGINAS — bloco fixo, não segue os filtros: mostra o teste
@@ -2564,30 +2547,29 @@ function pintarAB(){
   /* a história dos testes (um cartão por teste) e a decisão do mês, em cima;
      o último teste em detalhe, embaixo */
   const H=TESTES_HIST, DEC=DECISAO_LP;
-  const historia=!H?"":`<div class="ab-top">
-      <div class="ab-apr"><b class="ab-dec-t">O que aprendemos em outubro</b>
-        <ul>${APRENDIZADOS.map(m=>`<li>${esc(m)}</li>`).join("")}</ul></div>
-      <div class="ab-dec"><b class="ab-dec-t">${esc(DEC.titulo)}</b>
-        <h3>${esc(DEC.decisao)}</h3><ul>${DEC.motivos.map(m=>`<li>${esc(m)}</li>`).join("")}</ul></div>
-    </div>
-    <p class="ab-sub">Os testes, um por vez</p>
-    <ol class="ab-hist">${H.map((t,i)=>`<li class="hc${t.marca?" hc-dest":""}">
-      <header><span class="hc-n">${i+1}</span><div><b>${esc(t.nome)}</b><small>${esc(t.quando)}</small></div></header>
-      <p class="hc-vs"><span><i>A</i>${esc(t.a)}</span><span><i>B</i>${esc(t.b)}</span></p>
-      <p class="hc-res"><b>${esc(t.resultado)}</b>${t.marca?`<em>${esc(t.marca)}</em>`:""}</p>
-      <p class="hc-apr">${esc(t.aprendeu)}</p></li>`).join("")}</ol>
-    <p class="ab-sub">${esc(T.nome)} em detalhe · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p>`;
-  el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${H?esc(HIST_SUB):`${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}`}</p></div>
-      <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
-    <div class="ab-corpo" id="abCorpo">
-    ${historia}
-    <div class="placar">${time("a")}
+  const caminho=!H?"":`<ol class="ab-cam" aria-label="Caminho dos testes">${H.map(t=>`<li class="cam">
+      <span class="cam-q">${esc(t.n)} · ${esc(t.quando)}</span>
+      <b class="cam-d">${esc(t.duelo)}</b>
+      <span class="cam-r">${esc(t.res)}</span><small class="cam-p">${esc(t.placar)}</small>
+      <span class="cam-l">${esc(t.licao)}</span></li>`).join("")}
+    ${DEC?`<li class="cam fim"><span class="cam-q">${esc(DEC.quando)}</span>
+      <b class="cam-t">${esc(DEC.titulo)}</b>
+      <ul>${DEC.motivos.map(m=>`<li>${esc(m)}</li>`).join("")}</ul>
+      <span class="cam-c">${esc(DEC.cuidado)}</span></li>`:""}</ol>`;
+  const detalhe=`<div class="placar">${time("a")}
       <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div>${emp?`<small>${emp} empate${emp===1?"":"s"}</small>`:""}</div>
       ${time("b")}</div>
     <ol class="rodadas" aria-label="Rodadas por canal" style="--n:${rod.length}">${rodadas}</ol>
     ${T.obs?`<p class="legenda-f">${esc(T.obs)}</p>`:""}
     ${pagina}
-    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>
+    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;
+  el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${H?esc(HIST_SUB):`${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}`}</p></div>
+      <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
+    <div class="ab-corpo" id="abCorpo">
+    ${H?`${caminho}
+    <button type="button" class="ab-det-bt" aria-expanded="false" aria-controls="abDet">Ver detalhes do ${esc(T.nome)}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="ab-det" id="abDet" hidden><p class="ab-sub">${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p>${detalhe}</div>`:detalhe}
     </div>`;
   marcarAB();
 }
@@ -2605,6 +2587,14 @@ function marcarAB(){
   bt.title=abAberto?"Minimizar":"Expandir";
 }
 document.getElementById("testeAB").addEventListener("click",e=>{
+  const det=e.target.closest(".ab-det-bt");
+  if(det){
+    const caixa=document.getElementById("abDet"), abre=caixa.hidden;
+    caixa.hidden=!abre;
+    det.setAttribute("aria-expanded",String(abre));
+    det.firstChild.textContent=(abre?"Esconder detalhes do ":"Ver detalhes do ")+TESTE_AB.nome+"\n      ";
+    return;
+  }
   if(!e.target.closest(".cx-t")) return;
   abAberto=!abAberto;
   try{localStorage.setItem(AB_ABERTO,abAberto?"1":"0")}catch(e){}
