@@ -425,12 +425,18 @@ button,select,input{font-family:inherit}
 .vsl-lab span+span{text-align:right}
 .vsl-lab b{font-size:22px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--texto-2)}
 .vsl-lab .sim{color:var(--texto)} .vsl-lab .sim b{color:var(--bom)}
+/* a frase embaixo das barras; os motivos ocupam a 3ª coluna inteira */
+.vsl-ins{grid-column:1/3;grid-row:2;margin:0;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;
+  background:color-mix(in srgb,var(--verde) 16%,transparent);font-size:15px;line-height:1.4;font-weight:600;color:var(--texto)}
+.vsl-ins b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bom)}
+.vsl-pos{grid-column:3;grid-row:1/span 2}
 .vsl-pos ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
 .vsl-pos li{position:relative;padding-left:26px;font-size:14px;line-height:1.35;color:var(--texto)}
 .vsl-pos li::before{content:"";position:absolute;left:0;top:1px;width:17px;height:17px;border-radius:50%;background:var(--verde)}
 .vsl-pos li::after{content:"";position:absolute;left:6px;top:4px;width:4px;height:8px;border:solid var(--tinta);
   border-width:0 2px 2px 0;transform:rotate(45deg)}
-@media (max-width:1200px){.vsl-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .vsl-pos{grid-column:1/-1}}
+@media (max-width:1200px){.vsl-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .vsl-pos,.vsl-ins{grid-column:1/-1;grid-row:auto}}
 @media (max-width:900px){.ab-duo{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.vsl-g{grid-template-columns:minmax(0,1fr)} .vsl{padding:16px 14px}}
 @media (max-width:560px){.tl-i{grid-template-columns:28px minmax(0,1fr)} .tl-r{grid-column:2;justify-self:start}
@@ -2561,7 +2567,10 @@ const TESTE_AB={
         "Mais cliques em “Criar meu link grátis”",
         "Menos gente saindo na hora",
         "Explica o produto logo no topo, onde todo mundo olha"
-      ]
+      ],
+      /* a leitura das barras em uma frase (o celular começa o vídeo mudo:
+         das 442 vezes que ele começou sozinho, 319 foram sem som) */
+      insight:"O vídeo ajuda, mas hoje só 3 em cada 10 ouvem. O próximo passo é colocar legenda para os outros 7 entenderem sem som."
     }
   },
   /* uma linha cada: os founders leem o placar, não o texto.
@@ -2653,6 +2662,7 @@ function pintarAB(){
       <div class="vsl-g">
         <div class="vsl-c"><p class="vsl-p">Quem ouviu o vídeo?</p>${barra({c:"sim",p:pO,n:"ouviram com som"},{c:"nao",p:100-pO,n:"não ouviram"})}</div>
         <div class="vsl-c"><p class="vsl-p">Até onde assistiram?</p>${barra({c:"nao",p:100-pM,n:"viram de 0 a 50%"},{c:"sim",p:pM,n:"viram de 50 a 100%"})}</div>
+        ${V.insight?`<p class="vsl-ins"><b>O que isso mostra</b>${esc(V.insight)}</p>`:""}
         <div class="vsl-c vsl-pos"><p class="vsl-p">Por que foi bom ter o vídeo?</p>
           <ul>${V.positivos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>
       </div></div>`;

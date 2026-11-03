@@ -89,8 +89,10 @@ OpenAI e, da Clarity, clique em "Criar meu link grátis" e saída rápida (a mel
 de cada linha em verde) e o que acompanhar nos próximos dias. Embaixo dos dois,
 na largura toda, **o vídeo da LP4**, feito para ler em segundos: uma barra de
 quem ouviu com som (29%) e quem não ouviu (71%), outra de até onde assistiram
-(71% de 0 a 50%, 29% de 50 a 100%) e 4 motivos curtos, sem número, de por que
-foi bom ter o vídeo. Os números de pessoas (407 de 1.381 visitas, 117 passaram
+(71% de 0 a 50%, 29% de 50 a 100%), embaixo delas uma frase com **o que isso
+mostra** (só 3 em cada 10 ouvem; o próximo passo é legenda no vídeo, porque o
+celular começa o vídeo mudo) e 4 motivos curtos, sem número, de por que foi bom
+ter o vídeo. Os números de pessoas (407 de 1.381 visitas, 117 passaram
 da metade, 73 até o fim) ficam só no "i" (`TESTE_AB.pagina.vsl`). Os números da tabela saem de `TESTE_AB`. As taxas dos Testes 01 a 03 vêm do
 Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson); o que mudou em cada
 página, do histórico do Lovable ("SEM Mockup" = sem o celular do topo; "Copy--SEM
