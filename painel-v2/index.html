@@ -366,6 +366,19 @@ button,select,input{font-family:inherit}
 .cabo-l small{font-size:11px;font-weight:700;color:var(--texto-2)}
 .cabo-l .lid{color:var(--bom)}
 .cabo-l em{font-style:normal;font-size:11px;color:var(--texto-2);text-align:center}
+/* dentro da página (Clarity) e o vídeo da B */
+.ab-pag{display:flex;flex-direction:column;gap:10px}
+.ab-sub{margin:4px 0 0;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--texto-2)}
+.ab-cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cmp{padding:12px 16px;border:1px solid var(--borda);border-radius:10px}
+.cmp em{font-size:12.5px}
+.ab-vid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.vt{display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);min-width:0}
+.vt b{font-size:26px;font-weight:700;line-height:1.05;color:var(--texto);font-variant-numeric:tabular-nums}
+.vt span{font-size:13.5px;line-height:1.35;color:var(--texto)}
+.vt small{font-size:12px;color:var(--texto-2)}
+@media (max-width:820px){.ab-vid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.ab-cmp{grid-template-columns:minmax(0,1fr)}}
 .ab-fim{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .ab-fim p{margin:0;display:flex;flex-direction:column;gap:3px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
   font-size:14.5px;line-height:1.45;color:var(--texto)}
@@ -2381,29 +2394,46 @@ function pintarEvo(){
    ========================================================================= */
 const TESTE_AB={
   nome:"Teste A/B 04",
-  de:"2026-10-21", ate:"2026-10-26",
+  de:"2026-10-20", ate:"2026-11-02",
   paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
            b:{url:"lp4.miaapp.com.br", desc:"a mesma página, com vídeo no topo"}},
-  vencedora:"b",
-  /* taxa de conversão (%) e custo por cadastro, calculados em 27/10 com os
-     dados das plataformas (Windsor): Google = cadastros ÷ cliques (22 a 26/10,
-     a campanha da B começou em 22/10); Meta = cadastros ÷ visitas na página
-     (21 a 26/10), como no Teste 03. Campanha → página conferida no banco:
-     Google "pesquisa_miaapp" → A, "pesquisa_lp4_vsl" → B; Meta "Page
-     principal" e "[CAMPANHA DE VENDA]" → A, "TESTE A/B 1" e "TESTE A/B 2"
-     (LP4 VSL) → B. OpenAI fora: a campanha nova da LP4 não teve conversões.
+  /* sem troféu: o resultado ficou dividido entre os canais */
+  vencedora:null,
+  /* taxa de conversão (%) e custo por cadastro, calculados em 03/11 com os
+     dados das plataformas (Windsor), teste estendido até 02/11: Google =
+     cadastros ÷ cliques (22/10 a 02/11, a campanha da B começou em 22/10);
+     Meta = cadastros ÷ visitas na página (21/10 a 02/11); OpenAI = cadastros ÷
+     cliques (21/10 a 01/11, o 02/11 ainda não fechou na OpenAI). Campanha →
+     página conferida no banco: Google "pesquisa_miaapp" → A, "pesquisa_lp4_vsl"
+     → B; Meta "Page principal" e "[CAMPANHA DE VENDA]" → A, "TESTE A/B 1" e
+     "TESTE A/B 2" (LP4 VSL) → B; OpenAI "[CAMPANHA DE SIGNUP]"
+     ("signup_miaapp") → A, as duas "(Lp4 - VSL)" ("signup_lp4_vsl") → B.
      Quem tem a taxa maior vence a rodada, como os dados mostram. */
   canais:[
-    {n:"Google Ads", a:20.87, b:27.33, custo:{a:16.58, b:12.80}, base:{a:"43 de 206 cliques", b:"44 de 161 cliques"}},
-    {n:"Meta Ads",   a:17.78, b:17.86, custo:{a:12.11, b:11.72}, base:{a:"48 de 270 visitas", b:"45 de 252 visitas"}}
+    {n:"Google Ads", a:21.37, b:25.87, custo:{a:16.93, b:15.05}, base:{a:"100 de 468 cliques", b:"111 de 429 cliques"}},
+    {n:"Meta Ads",   a:18.20, b:17.21, custo:{a:12.37, b:12.54}, base:{a:"105 de 577 visitas", b:"116 de 674 visitas"}},
+    {n:"OpenAI Ads", a:16.27, b:14.06, custo:{a:6.89, b:14.81}, base:{a:"81 de 498 cliques", b:"53 de 377 cliques"}}
   ],
+  /* o que acontece dentro da página (Microsoft Clarity, 20/10 a 02/11),
+     lido pelo Claude no navegador em 03/11. menor:true = quanto menor, melhor */
+  pagina:{
+    itens:[
+      {n:"clicou em “Criar meu link grátis”", a:17.10, b:20.20},
+      {n:"saiu na hora (voltou rápido)", a:9.65, b:7.10, menor:true}
+    ],
+    video:[
+      {v:"32%", t:"das visitas viram o vídeo começar", s:"442 de 1.381"},
+      {v:"407", t:"ouviram com som", s:"29% das visitas"},
+      {v:"29%", t:"de quem ouviu chegou na metade", s:"117 de 407"},
+      {v:"18%", t:"de quem ouviu viu até o fim", s:"73 de 407 · 5% das visitas"}
+    ],
+    obs:"Clarity, 20/10 a 02/11. Na A, 19% dos toques são em “Entrar” (clientes fazendo login), o que puxa a taxa de clique dela para baixo. O vídeo sem som não registra até onde foi visto, e o play automático entrou depois de 27/10."
+  },
   /* uma linha cada: os founders leem o placar, não o texto.
-     Leitura do Clarity (mapas de calor de 21 a 26/10): na B, o play do vídeo é
-     um dos pontos mais tocados; na A, o mais tocado é o botão do topo. No Meta,
-     62% dos cliques viram visita na B, contra 72% na A. */
-  porque:"O vídeo prende: o play é um dos pontos mais tocados da B. No Google, quem já pesquisou converte mais com ele. No Meta a B ganhou por pouco, mas mais gente desiste antes de ela abrir.",
-  proximo:"Usar a B no Google. No Meta, deixar a B abrir mais rápido (vídeo mais leve) e repetir por 7 dias.",
-  obs:"OpenAI fora desta rodada: a campanha nova da LP4 ainda não teve conversões. Google de 22 a 26/10 (a B começou em 22/10)."
+     No Meta, 62% dos cliques viram visita na B, contra 72% na A. */
+  porque:"No Google a B converte mais e custa menos. No Meta é quase empate, e a B perde mais gente antes de abrir (o vídeo pesa). Na OpenAI a A foi melhor, mas a campanha da B ficou 5 dias sem cadastro no início.",
+  proximo:"Usar a B como principal no Google e no Meta, onde ela não perde. Na OpenAI, manter a A até a B ter mais dados. Deixar o vídeo mais leve.",
+  obs:"Google de 22/10 a 02/11 (a B começou em 22/10). Meta de 21/10 a 02/11. OpenAI de 21/10 a 01/11 (o dia 02/11 ainda não fechou na OpenAI)."
 };
 /* placar de jogo: as páginas são os times, cada canal é uma rodada e vence
    quem teve a taxa de conversão maior (igual = empate). Vitória por menos de
@@ -2444,6 +2474,19 @@ function pintarAB(){
       <div class="cabo-l"><span class="${r.ganha==="a"?"lid":""}"><small>A</small>${pct(r.a,2)}</span>
         <em>taxa de conversão</em><span class="${r.ganha==="b"?"lid":""}">${pct(r.b,2)}<small>B</small></span></div></li>`;
   }).join("");
+  /* dentro da página (Clarity): a mesma leitura das rodadas, A à esquerda e
+     B à direita, a melhor em verde; e o vídeo da B em quatro números */
+  const C=T.pagina;
+  const pagina=!C?"":`<div class="ab-pag">
+      <p class="ab-sub">Na página · Microsoft Clarity</p>
+      <div class="ab-cmp">${C.itens.map(it=>{
+        const bMelhor=it.menor?it.b<it.a:it.b>it.a;
+        return `<div class="cmp cabo-l"><span class="${bMelhor?"":"lid"}"><small>A</small>${pct(it.a)}</span>
+          <em>${esc(it.n)}</em><span class="${bMelhor?"lid":""}">${pct(it.b)}<small>B</small></span></div>`;}).join("")}</div>
+      ${C.video?`<p class="ab-sub">O vídeo da B</p>
+      <div class="ab-vid">${C.video.map(v=>`<div class="vt"><b>${esc(v.v)}</b><span>${esc(v.t)}</span><small>${esc(v.s)}</small></div>`).join("")}</div>`:""}
+      ${C.obs?`<p class="legenda-f">${esc(C.obs)}</p>`:""}
+    </div>`;
   el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
     <div class="ab-corpo" id="abCorpo">
@@ -2452,6 +2495,7 @@ function pintarAB(){
       ${time("b")}</div>
     <ol class="rodadas" aria-label="Rodadas por canal" style="--n:${rod.length}">${rodadas}</ol>
     ${T.obs?`<p class="legenda-f">${esc(T.obs)}</p>`:""}
+    ${pagina}
     <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>
     </div>`;
   marcarAB();

@@ -88,13 +88,19 @@ ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam 
 `TESTE_AB` e aparecem ao passar o mouse em cada rodada. A **setinha** no canto do
 título (ou um clique no próprio título) minimiza e expande o bloco; a escolha
 fica guardada neste navegador (`v2:abAberto`). O bloco **não segue os
-filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 (21 a 26/10), A = miaapp.com.br contra B = lp4.miaapp.com.br
-(a mesma página com vídeo no topo): B 2 × 0 — com folga no Google (27,3% contra
-20,9% dos cliques, 22 a 26/10, porque a campanha da B começou em 22/10) e por
-pouco no Meta (17,9% contra 17,8% das visitas na página). OpenAI fora desta
-rodada (a campanha nova da LP4 ainda não teve conversões). As taxas saem dos
-dados das plataformas (Windsor) e a ligação campanha → página foi conferida no
-banco (origem gravada). Cada rodada mostra as duas taxas de conversão nas pontas do cabo (a da vencedora em verde). A dica de cada rodada mostra também a base (cadastros ÷
+filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 estendido
+(20/10 a 02/11), A = miaapp.com.br contra B = lp4.miaapp.com.br (a mesma página
+com vídeo no topo): A 2 × 1 B, sem troféu, porque o resultado ficou dividido.
+B com folga no Google (25,9% contra 21,4% dos cliques, 22/10 a 02/11, e custo por
+cadastro menor); A por pouco no Meta (18,2% contra 17,2% das visitas na página)
+e com folga na OpenAI (16,3% contra 14,1% dos cliques, 21/10 a 01/11; a campanha
+da B ficou 5 dias sem cadastro no início). As taxas saem dos dados das
+plataformas (Windsor) e a ligação campanha → página foi conferida no banco
+(origem gravada; na OpenAI pelo `utm_campaign`). Abaixo das rodadas, **"Na
+página"** compara as duas páginas com dados do Microsoft Clarity (clique no
+botão de cadastro e saída rápida, lidos à mão pelo Claude no navegador) e **"O
+vídeo da B"** mostra quantos viram o vídeo começar, ouviram com som, chegaram na
+metade e viram até o fim (`TESTE_AB.pagina`). Cada rodada mostra as duas taxas de conversão nas pontas do cabo (a da vencedora em verde). A dica de cada rodada mostra também a base (cadastros ÷
 cliques ou visitas) e o custo por cadastro de cada página; `obs` mostra a nota
 embaixo das rodadas.
 
