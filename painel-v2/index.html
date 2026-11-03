@@ -331,6 +331,8 @@ button,select,input{font-family:inherit}
 .origem-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
 .origem-corpo{display:flex;flex-direction:column;gap:16px}
 .origem-cx.fechado .ab-tog svg{transform:rotate(180deg)}
+#graficos .graf-cx .cx-t{cursor:pointer;align-items:flex-start;flex-wrap:nowrap}
+#graficos .graf-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
 .time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
   border:1.5px solid var(--borda);border-radius:12px}
@@ -1886,6 +1888,21 @@ elResumo.addEventListener("click",e=>{
   }else return;
   marcarFunil();
 });
+/* os gráficos por dia (investimento e cadastros) abrem e fecham juntos,
+   pela setinha ou pelo título de qualquer um deles (v2:grafAberto) */
+const GRAF_ABERTO="v2:grafAberto";
+let grafAberto=true;
+try{grafAberto=localStorage.getItem(GRAF_ABERTO)!=="0"}catch(e){}
+function marcarGraf(){
+  marcarBloco("grafInv","grafInvCorpo",grafAberto,"os gráficos por dia");
+  marcarBloco("grafCad","grafCadCorpo",grafAberto,"os gráficos por dia");
+}
+elGraf.addEventListener("click",e=>{
+  if(!e.target.closest(".graf-cx .cx-t")) return;
+  grafAberto=!grafAberto;
+  try{localStorage.setItem(GRAF_ABERTO,grafAberto?"1":"0")}catch(e){}
+  marcarGraf();
+});
 const elRod=document.getElementById("rodape");
 
 /* dica do cartão: nome, fórmula e, em "todos os canais", o valor de cada canal
@@ -2277,8 +2294,13 @@ function pintar(){
         (modoReal?`<div class="lin"><span>Atribuídos pelos canais</span><span>${num(atr)}</span></div>`:"")+
         `<div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div><div class="lin"><span>Custo por cadastro</span><span>${brl(div(inv,atr))}</span></div>`});
   const longo=dias(p.de,p.ate)>62?"por semana":"por dia";
-  elGraf.innerHTML=`<article class="cx graf-cx"><div class="cx-t"><div><h2>investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div></div>${leg}${gInv}</article>
-    <article class="cx graf-cx"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div></div>${gCad}</article>`;
+  /* os dois gráficos abrem e fecham juntos: a setinha de qualquer um deles */
+  const tog=id=>`<button type="button" class="ab-tog" aria-controls="${id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button>`;
+  elGraf.innerHTML=`<article class="cx graf-cx" id="grafInv"><div class="cx-t"><div><h2>investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div>${tog("grafInvCorpo")}</div>
+      <div id="grafInvCorpo">${leg}${gInv}</div></article>
+    <article class="cx graf-cx" id="grafCad"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div>${tog("grafCadCorpo")}</div>
+      <div id="grafCadCorpo">${gCad}</div></article>`;
+  marcarGraf();
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
     `Cadastros, onboarding e ativação: Metabase, base Mia Production, sem as contas de teste, pela data do cadastro no horário de Brasília, contando também as contas excluídas depois. `+

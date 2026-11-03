@@ -30,6 +30,8 @@ onboarding e ativação D7). A explicação da escala logarítmica do funil fica
 no canto do funil (ou um clique no título) minimiza e expande o bloco inteiro;
 a escolha fica guardada neste navegador (`v2:funilAberto`). O bloco **origem dos
 cadastros** tem a mesma setinha, independente da do funil (`v2:origemAberto`).
+Os **gráficos por dia** (investimento e cadastros) também têm a setinha; os dois
+abrem e fecham juntos, pela seta ou pelo título de qualquer um (`v2:grafAberto`).
 
 **Os quatro principais são só do tráfego pago.** Cadastros = conversões que
 Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =
