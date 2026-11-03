@@ -28,7 +28,8 @@ blocos numa linha, na ordem do funil (CPM, onboarding concluído, custo por
 onboarding e ativação D7). A explicação da escala logarítmica do funil fica no
 "i"; a legenda embaixo só aparece quando há campanha fora do funil. A **setinha**
 no canto do funil (ou um clique no título) minimiza e expande o bloco inteiro;
-a escolha fica guardada neste navegador (`v2:funilAberto`).
+a escolha fica guardada neste navegador (`v2:funilAberto`). O bloco **origem dos
+cadastros** tem a mesma setinha, independente da do funil (`v2:origemAberto`).
 
 **Os quatro principais são só do tráfego pago.** Cadastros = conversões que
 Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =

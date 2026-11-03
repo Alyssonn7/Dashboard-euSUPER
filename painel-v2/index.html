@@ -327,6 +327,10 @@ button,select,input{font-family:inherit}
 .funil-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
 .funil-corpo{display:flex;flex-direction:column;gap:10px}
 .funil-cx.fechado .ab-tog svg{transform:rotate(180deg)}
+.origem-cx .cx-t{cursor:pointer}
+.origem-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
+.origem-corpo{display:flex;flex-direction:column;gap:16px}
+.origem-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
 .time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
   border:1.5px solid var(--borda);border-radius:12px}
@@ -1853,21 +1857,33 @@ const elResumo=document.getElementById("resumo"), elGraf=document.getElementById
 const FUNIL_ABERTO="v2:funilAberto";
 let funilAberto=true;
 try{funilAberto=localStorage.getItem(FUNIL_ABERTO)!=="0"}catch(e){}
-function marcarFunil(){
-  const el=document.getElementById("funilCx"), corpo=document.getElementById("funilCorpo");
+/* o bloco de origem dos cadastros funciona igual (v2:origemAberto) */
+const ORIGEM_ABERTO="v2:origemAberto";
+let origemAberto=true;
+try{origemAberto=localStorage.getItem(ORIGEM_ABERTO)!=="0"}catch(e){}
+function marcarBloco(id,corpoId,aberto,nome){
+  const el=document.getElementById(id), corpo=document.getElementById(corpoId);
   if(!el||!corpo) return;
   const bt=el.querySelector(".ab-tog");
-  el.classList.toggle("fechado",!funilAberto);
-  corpo.hidden=!funilAberto;
-  bt.setAttribute("aria-expanded",String(funilAberto));
-  bt.setAttribute("aria-label",funilAberto?"Minimizar o funil":"Expandir o funil");
-  bt.title=funilAberto?"Minimizar":"Expandir";
+  el.classList.toggle("fechado",!aberto);
+  corpo.hidden=!aberto;
+  bt.setAttribute("aria-expanded",String(aberto));
+  bt.setAttribute("aria-label",(aberto?"Minimizar ":"Expandir ")+nome);
+  bt.title=aberto?"Minimizar":"Expandir";
+}
+function marcarFunil(){
+  marcarBloco("funilCx","funilCorpo",funilAberto,"o funil");
+  marcarBloco("origemCx","origemCorpo",origemAberto,"a origem dos cadastros");
 }
 elResumo.addEventListener("click",e=>{
-  const t=e.target.closest(".funil-cx .cx-t");
-  if(!t||e.target.closest(".info")) return;
-  funilAberto=!funilAberto;
-  try{localStorage.setItem(FUNIL_ABERTO,funilAberto?"1":"0")}catch(e){}
+  if(e.target.closest(".info")) return;
+  if(e.target.closest(".funil-cx .cx-t")){
+    funilAberto=!funilAberto;
+    try{localStorage.setItem(FUNIL_ABERTO,funilAberto?"1":"0")}catch(e){}
+  }else if(e.target.closest(".origem-cx .cx-t")){
+    origemAberto=!origemAberto;
+    try{localStorage.setItem(ORIGEM_ABERTO,origemAberto?"1":"0")}catch(e){}
+  }else return;
   marcarFunil();
 });
 const elRod=document.getElementById("rodape");
@@ -2069,9 +2085,11 @@ function blocoOrigem(p,c){
   const de0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
   const sub=`De onde veio cada cadastro, segundo o nosso banco (Metabase)`+
     (p.ate>=TRACK_INICIO?` · ${curta(de0)} a ${curta(p.ate)}`:"")+".";
-  const art=h=>`<article class="cx origem-cx" aria-label="Origem dos cadastros">
+  const art=h=>`<article class="cx origem-cx" id="origemCx" aria-label="Origem dos cadastros">
     <div class="cx-t"><div><h2>origem dos cadastros</h2><p>${sub}</p></div>
-      <button type="button" class="info" data-dica="${esc(DICA_ORIGEM)}" aria-label="Como a origem é medida">i</button></div>${h}</article>`;
+      <div class="cx-acoes"><button type="button" class="info" data-dica="${esc(DICA_ORIGEM)}" aria-label="Como a origem é medida">i</button>
+      <button type="button" class="ab-tog" aria-controls="origemCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div></div>
+    <div class="origem-corpo" id="origemCorpo">${h}</div></article>`;
   if(p.ate<TRACK_INICIO) return art(`<div class="vazio">A origem de cada cadastro começou a ser gravada em ${dataCurta(TRACK_INICIO)}. Escolha um período a partir dessa data, como o Comparativo semanal.</div>`);
   if(!cobre(DADOS.origem.cob,de0,p.ate)) return art(`<div class="vazio">${puxando?"Buscando as origens…":
     MCP?"Clique em Atualizar para carregar as origens.":"Abra o painel no claude.ai e clique em Atualizar para carregar as origens."}</div>`);
