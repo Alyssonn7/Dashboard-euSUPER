@@ -79,12 +79,13 @@ duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
 **Testes A/B de outubro** (bloco de teste A/B): feito para apresentar rápido aos
-founders. É um **caminho de 5 passos** ligados por setas: Teste 01 → 02 → 03 → 04
-→ Novembro. Cada teste mostra só o duelo, quem ganhou e a lição em poucas
-palavras; o último passo é a decisão (a LP4, a principal com vídeo, vira a
-principal em novembro, acompanhando Meta e OpenAI). O detalhe do Teste 04
-(placar por canal, Clarity, vídeo, por quê e próximo) fica escondido atrás do
-botão **"Ver detalhes do Teste A/B 04"**. As taxas dos Testes 01 a 03 vêm do
+founders. São **dois blocos lado a lado**: à esquerda, **os 4 testes** numa
+linha do tempo (cada um com o duelo, a lição em poucas palavras e quem ganhou);
+à direita, **a principal de novembro (LP4, a principal com vídeo no topo)** com
+uma tabela LP4 × principal: conversão e custo por cadastro em Google, Meta e
+OpenAI e, da Clarity, clique em "Criar meu link grátis" e saída rápida (a melhor
+de cada linha em verde), mais uma linha do vídeo e o que acompanhar nos próximos
+dias. Os números da tabela saem de `TESTE_AB`. As taxas dos Testes 01 a 03 vêm do
 Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson); o que mudou em cada
 página, do histórico do Lovable ("SEM Mockup" = sem o celular do topo; "Copy--SEM
 Mockup" com o texto da principal; LP4 com vídeo em 21/10 e play automático com
