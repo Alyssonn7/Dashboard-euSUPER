@@ -86,8 +86,12 @@ linha do tempo (cada um com o duelo, a lição em poucas palavras e quem ganhou)
 à direita, **a principal de novembro (LP4, a principal com vídeo no topo)** com
 uma tabela LP4 × principal: conversão e custo por cadastro em Google, Meta e
 OpenAI e, da Clarity, clique em "Criar meu link grátis" e saída rápida (a melhor
-de cada linha em verde), mais uma linha do vídeo e o que acompanhar nos próximos
-dias. Os números da tabela saem de `TESTE_AB`. As taxas dos Testes 01 a 03 vêm do
+de cada linha em verde) e o que acompanhar nos próximos dias. Embaixo dos dois,
+na largura toda, **o vídeo da LP4 (VSL)** em três partes: quem ouviu com som e
+quem não ouviu (407 e 974 das 1.381 visitas), até onde os 407 assistiram numa
+barra só (0 a 50%, 50 a 99% e até o fim, dos marcos de progresso do vídeo na
+Clarity) e 4 motivos curtos, com números, de por que foi bom ter o vídeo
+(`TESTE_AB.pagina.vsl`). Os números da tabela saem de `TESTE_AB`. As taxas dos Testes 01 a 03 vêm do
 Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson); o que mudou em cada
 página, do histórico do Lovable ("SEM Mockup" = sem o celular do topo; "Copy--SEM
 Mockup" com o texto da principal; LP4 com vídeo em 21/10 e play automático com

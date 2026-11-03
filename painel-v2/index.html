@@ -409,7 +409,31 @@ button,select,input{font-family:inherit}
 .win-t tr.win-g th{padding:10px 0 2px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
 .win-v,.win-p{margin:0;display:flex;flex-direction:column;gap:2px;font-size:13.5px;line-height:1.4;color:var(--texto)}
 .win-v b,.win-p b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bom)}
+.win-p{margin-top:auto}
+/* o vídeo da LP4: largura toda, embaixo dos dois cartões */
+.vsl{grid-column:1/-1;display:flex;flex-direction:column;gap:12px;padding:18px 20px;border-radius:12px;
+  background:var(--bom-bg);border:1.5px solid var(--verde)}
+.vsl-g{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr) minmax(0,1.3fr);gap:18px 28px}
+.vsl-c{display:flex;flex-direction:column;gap:10px;min-width:0}
+.vsl-c .ab-sub{margin:0}
+.vsl-bar{display:flex;height:14px;border-radius:99px;overflow:hidden;gap:2px}
+.vsl-bar i{display:block;height:100%}
+.vsl .fim{background:var(--verde)} .vsl .meio{background:var(--azul)}
+.vsl .cedo{background:var(--cinza)} .vsl .nao{background:color-mix(in srgb,var(--cinza) 45%,transparent)}
+.vsl-leg{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.vsl-leg li{display:grid;grid-template-columns:10px 46px minmax(0,1fr) auto;align-items:baseline;gap:8px;font-size:13.5px;color:var(--texto)}
+.vsl-leg li>i{width:10px;height:10px;border-radius:3px;align-self:center}
+.vsl-leg b{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.vsl-leg small{font-size:12px;color:var(--texto-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.vsl-pos ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.vsl-pos li{position:relative;padding-left:24px;font-size:13.5px;line-height:1.4;color:var(--texto)}
+.vsl-pos li::before{content:"";position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;background:var(--verde)}
+.vsl-pos li::after{content:"";position:absolute;left:5px;top:5px;width:4px;height:7px;border:solid var(--tinta);
+  border-width:0 2px 2px 0;transform:rotate(45deg)}
+.vsl-pos b{color:var(--bom)}
+@media (max-width:1200px){.vsl-g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .vsl-pos{grid-column:1/-1}}
 @media (max-width:900px){.ab-duo{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.vsl-g{grid-template-columns:minmax(0,1fr)} .vsl{padding:16px 14px}}
 @media (max-width:560px){.tl-i{grid-template-columns:28px minmax(0,1fr)} .tl-r{grid-column:2;justify-self:start}
   .ab-lista,.ab-win{padding:16px 14px} .win-t tbody th{width:44%;font-size:13px} .win-t td b{font-size:15px}}
 /* dentro da página (Clarity) e o vídeo da B */
@@ -2525,7 +2549,29 @@ const TESTE_AB={
       {v:"29%", t:"de quem ouviu chegou na metade", s:"117 de 407"},
       {v:"18%", t:"de quem ouviu viu até o fim", s:"73 de 407 · 5% das visitas"}
     ],
-    obs:"Clarity, 20/10 a 02/11. Na A, 19% dos toques são em “Entrar” (clientes fazendo login), o que puxa a taxa de clique dela para baixo. O vídeo sem som não registra até onde foi visto, e o play automático com som entrou em 28/10."
+    obs:"Clarity, 20/10 a 02/11. Na A, 19% dos toques são em “Entrar” (clientes fazendo login), o que puxa a taxa de clique dela para baixo. O vídeo sem som não registra até onde foi visto, e o play automático com som entrou em 28/10.",
+    /* o vídeo da LP4 em detalhe (Clarity, 20/10 a 02/11, eventos do vsl.js).
+       "ouviram" = vsl_play, que conta o play automático com som (desde 28/10)
+       e o toque que liga o som. As faixas saem dos marcos de progresso:
+       vsl_progress_50 = 117 e vsl_progress_100 = 73, então 407−117 = 290
+       pararam antes da metade e 117−73 = 44 pararam entre a metade e o fim.
+       **texto** vira negrito. */
+    vsl:{
+      visitas:1381, ouviram:407,
+      faixas:[
+        {n:"0 a 50% do vídeo", c:"cedo"},
+        {n:"50 a 99% do vídeo", c:"meio"},
+        {n:"viu até o fim", c:"fim"}
+      ],
+      qtd:[290, 44, 73],
+      positivos:[
+        "No Google, mais cadastro e mais barato: **25,9%** contra 21,4%, e **R$ 15,05** por cadastro contra R$ 16,93.",
+        "Mais gente clicou em “Criar meu link grátis” (**20,2%** contra 17,1%) e menos gente saiu na hora (**7,1%** contra 9,7%).",
+        "**117 pessoas** passaram da metade do vídeo e **73** viram até o fim: ouviram a explicação do produto inteira.",
+        "**9 em cada 10** visitantes não chegam na metade da página. O vídeo mostra o produto logo no topo, onde todo mundo olha."
+      ],
+      obs:"Clarity, 20/10 a 02/11. “Ouviram” conta quem ligou o som e o play automático com som, que entrou em 28/10. Sem som, o vídeo não registra até onde foi visto."
+    }
   },
   /* uma linha cada: os founders leem o placar, não o texto.
      No Meta, 62% dos cliques viram visita na B, contra 72% na A. */
@@ -2600,18 +2646,39 @@ function pintarAB(){
       return `<tr><th>${esc(c.n)}</th>${cel(pct(c.b),bM,c.custo?brl(c.custo.b):"")}${cel(pct(c.a),!bM,c.custo?brl(c.custo.a):"")}</tr>`;}).join("");
   const linhasPag=C?C.itens.map(it=>{const bM=it.menor?it.b<it.a:it.b>it.a;
       return `<tr><th>${esc(it.n.charAt(0).toUpperCase()+it.n.slice(1))}</th>${cel(pct(it.b),bM)}${cel(pct(it.a),!bM)}</tr>`;}).join(""):"";
-  const vid=C&&C.video?C.video:null;
+  /* o vídeo da LP4, embaixo dos dois cartões: quem ouviu, até onde viu e
+     por que valeu a pena ter o vídeo */
+  const V=C&&C.vsl?C.vsl:null;
+  const negrito=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  const barra=(partes,rotulo)=>`<div class="vsl-bar" role="img" aria-label="${esc(rotulo)}">${partes.map(p=>
+      `<i class="${p.c}" style="width:${p.p}%"></i>`).join("")}</div>
+    <ul class="vsl-leg">${partes.map(p=>`<li><i class="${p.c}"></i><b>${p.p}%</b><span>${esc(p.n)}</span><small>${p.s}</small></li>`).join("")}</ul>`;
+  let vsl="";
+  if(V){
+    const nao=V.visitas-V.ouviram, pO=Math.round(V.ouviram/V.visitas*100);
+    const ouvir=[{c:"fim",p:pO,n:"ouviram com som",s:`${num(V.ouviram)} pessoas`},
+                 {c:"nao",p:100-pO,n:"não ouviram",s:`${num(nao)} pessoas`}];
+    const pF=V.qtd.map(q=>Math.round(q/V.ouviram*100)); pF[0]=100-pF[1]-pF[2];
+    const faixas=V.faixas.map((f,i)=>({c:f.c,p:pF[i],n:f.n,s:`${num(V.qtd[i])} pessoas`}));
+    vsl=`<div class="vsl"><span class="win-q">Vídeo no topo da LP4 (VSL)</span>
+      <div class="vsl-g">
+        <div class="vsl-c"><p class="ab-sub">Quem ouviu · ${num(V.visitas)} visitas</p>${barra(ouvir,`${pO}% ouviram com som, ${100-pO}% não ouviram`)}</div>
+        <div class="vsl-c"><p class="ab-sub">Até onde os ${num(V.ouviram)} assistiram</p>${barra(faixas,faixas.map(f=>`${f.n}: ${f.p}%`).join(", "))}</div>
+        <div class="vsl-c vsl-pos"><p class="ab-sub">Por que foi bom ter o vídeo</p>
+          <ul>${V.positivos.map(t=>`<li>${negrito(t)}</li>`).join("")}</ul></div>
+      </div>
+      ${V.obs?`<p class="legenda-f">${esc(V.obs)}</p>`:""}</div>`;
+  }
   const direita=!DEC?"":`<div class="ab-win"><span class="win-q">${esc(DEC.rotulo)}</span>
       <h3>${esc(DEC.titulo)}</h3><small class="win-u">${esc(DEC.url)} · ${esc(T.nome)}, ${dataCurta(T.de)} a ${dataCurta(T.ate)}</small>
       <table class="win-t"><thead><tr><th></th><th>LP4</th><th>Principal</th></tr></thead>
         <tbody><tr class="win-g"><th colspan="3">Anúncios · conversão e custo por cadastro</th></tr>${linhas}
         ${linhasPag?`<tr class="win-g"><th colspan="3">Na página (Clarity)</th></tr>${linhasPag}`:""}</tbody></table>
-      ${vid?`<p class="win-v"><b>Vídeo</b>${esc(vid[0].v)} das visitas viram começar · ${esc(vid[3].v)} de quem ouviu viu até o fim</p>`:""}
       <p class="win-p"><b>Próximos dias</b>${esc(DEC.proximos)}</p></div>`;
   el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${H?esc(HIST_SUB):`${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}`}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
     <div class="ab-corpo" id="abCorpo">
-    ${H?`<div class="ab-duo">${esquerda}${direita}</div>`:detalhe}
+    ${H?`<div class="ab-duo">${esquerda}${direita}${vsl}</div>`:detalhe}
     </div>`;
   marcarAB();
 }
