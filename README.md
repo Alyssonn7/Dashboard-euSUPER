@@ -78,6 +78,18 @@ Com essa regra, agosto perde R$ 1.673 (nove campanhas de tráfego no Meta e
 duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
+**Testes A/B de outubro** (no topo do bloco de teste A/B): para a reunião com os
+founders, o bloco começa com **"O que aprendemos em outubro"** (3 frases) e a
+**"Decisão para novembro"** (a LP4, a principal com vídeo no topo, vira a página
+principal, com os motivos e o cuidado com Meta e OpenAI). Depois, **um cartão por
+teste** (01 a 04): o que era a A e a B, o placar e o aprendizado. As taxas dos
+Testes 01 a 03 vêm do Painel Tráfego Pago (lidas nos gerenciadores pelo
+Alysson); o que mudou em cada página, do histórico do Lovable ("SEM Mockup" =
+sem o celular do topo; "Copy--SEM Mockup" com o texto da principal; LP4 com
+vídeo em 21/10 e play automático com som em 28/10). Tudo em `HIST_SUB`,
+`APRENDIZADOS`, `DECISAO_LP` e `TESTES_HIST`; o último teste segue em detalhe
+logo abaixo.
+
 **Teste A/B** (abaixo dos gráficos por dia): um **placar de jogo**, feito para
 a reunião semanal. As duas páginas são os times (a vencedora ganha o selo
 "venceu"), o placar fica no meio e cada canal é uma rodada com um "cabo de
