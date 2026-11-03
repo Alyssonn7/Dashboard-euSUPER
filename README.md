@@ -84,9 +84,10 @@ setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 founders. São **dois blocos lado a lado**: à esquerda, **os 4 testes** numa
 linha do tempo (cada um com o duelo, a lição em poucas palavras e quem ganhou);
 à direita, **a principal de novembro (LP4, a principal com vídeo no topo)** com
-uma tabela LP4 × principal: conversão e custo por cadastro em Google, Meta e
-OpenAI e, da Clarity, clique em "Criar meu link grátis" e saída rápida (a melhor
-de cada linha em verde) e o que acompanhar nos próximos dias. Embaixo dos dois,
+uma linha por canal (Google, Meta, OpenAI): a taxa de conversão arredondada, LP4
+contra principal, e o veredito da LP4 (**Ganhou**, **Quase empate** ou
+**Perdeu**, pela regra dos 2 p.p.), mais o que acompanhar nos próximos dias. O
+custo por cadastro e os números da Clarity ficam só no "i" do cartão. Embaixo dos dois,
 na largura toda, **o vídeo da LP4**, feito para ler em segundos: uma barra de
 quem ouviu com som (29%) e quem não ouviu (71%), outra de até onde assistiram
 (71% de 0 a 50%, 29% de 50 a 100%), embaixo delas uma frase com **o que isso

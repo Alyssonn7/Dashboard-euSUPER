@@ -410,6 +410,18 @@ button,select,input{font-family:inherit}
 .win-v,.win-p{margin:0;display:flex;flex-direction:column;gap:2px;font-size:13.5px;line-height:1.4;color:var(--texto)}
 .win-v b,.win-p b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bom)}
 .win-p{margin-top:auto}
+/* uma linha por canal: nome e taxa à esquerda, veredito à direita */
+.wl-cap{margin:4px 0 -4px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.wl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.wl-i{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0}
+.wl-i+.wl-i{border-top:1px solid color-mix(in srgb,var(--verde) 30%,transparent)}
+.wl-i div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wl-i b{font-size:17px;font-weight:700;color:var(--texto)}
+.wl-i small{font-size:13.5px;color:var(--texto-2);font-variant-numeric:tabular-nums}
+.wl-v{flex:none;font-style:normal;font-size:13px;font-weight:700;border-radius:99px;padding:5px 12px;white-space:nowrap}
+.wl-v.gan{background:var(--verde);color:var(--tinta)}
+.wl-v.emp{background:var(--neutro-bg);color:var(--neutro)}
+.wl-v.per{background:var(--ruim-bg);color:var(--ruim)}
 /* o vídeo da LP4: largura toda, embaixo dos dois cartões */
 .vsl{grid-column:1/-1;display:flex;flex-direction:column;gap:12px;padding:18px 20px;border-radius:12px;
   background:var(--bom-bg);border:1.5px solid var(--verde)}
@@ -2508,7 +2520,7 @@ const TESTES_HIST=[
    (b = LP4, a = principal) */
 const DECISAO_LP={
   rotulo:"Principal de novembro", titulo:"LP4 · a principal com vídeo no topo", url:"lp4.miaapp.com.br",
-  proximos:"Acompanhar Meta e OpenAI por 2 semanas e deixar o vídeo mais leve, para a página abrir mais rápido."
+  proximos:"Acompanhar Meta e OpenAI por 2 semanas e colocar legenda no vídeo."
 };
 
 /* =========================================================================
@@ -2640,12 +2652,18 @@ function pintarAB(){
       <span class="tl-n">${i+1}</span>
       <div class="tl-c"><small>${esc(t.n)} · ${esc(t.quando)}</small><b>${esc(t.duelo)}</b><span>${esc(t.licao)}</span></div>
       <em class="tl-r">${esc(t.res)}</em></li>`).join("")}</ol></div>`;
-  /* direita: a página que segue, LP4 contra a principal, a melhor em verde */
-  const cel=(v,melhor,extra)=>`<td class="${melhor?"lid":""}"><b>${v}</b>${extra?`<small>${extra}</small>`:""}</td>`;
-  const linhas=T.canais.map(c=>{const bM=c.b>c.a;
-      return `<tr><th>${esc(c.n)}</th>${cel(pct(c.b),bM,c.custo?brl(c.custo.b):"")}${cel(pct(c.a),!bM,c.custo?brl(c.custo.a):"")}</tr>`;}).join("");
-  const linhasPag=C?C.itens.map(it=>{const bM=it.menor?it.b<it.a:it.b>it.a;
-      return `<tr><th>${esc(it.n.charAt(0).toUpperCase()+it.n.slice(1))}</th>${cel(pct(it.b),bM)}${cel(pct(it.a),!bM)}</tr>`;}).join(""):"";
+  /* direita: a página que segue. Uma linha por canal, com o veredito da
+     LP4 (ganhou / quase empate / perdeu, pela regra dos 2 p.p.) e a taxa de
+     conversão arredondada; custo por cadastro e Clarity ficam só no "i". */
+  const r0=v=>Math.round(v)+"%";
+  const canaisLP=T.canais.map(c=>{const d=c.b-c.a;
+      const v=Math.abs(d)<FOLGA_PP?{c:"emp",t:"Quase empate"}:d>0?{c:"gan",t:"Ganhou"}:{c:"per",t:"Perdeu"};
+      const barato=c.custo&&c.custo.b<c.custo.a?" · mais barato":"";
+      return `<li class="wl-i"><div><b>${esc(c.n.replace(" Ads",""))}</b><small>${r0(c.b)} contra ${r0(c.a)}${barato}</small></div>
+        <em class="wl-v ${v.c}">${v.t}</em></li>`;}).join("");
+  const dicaLP="Taxa de conversão (cadastros ÷ cliques; no Meta, ÷ visitas na página) e custo por cadastro, LP4 contra principal. "+
+    T.canais.map(c=>`${c.n.replace(" Ads","")}: ${pct(c.b)} contra ${pct(c.a)}`+(c.custo?` (${brl(c.custo.b)} contra ${brl(c.custo.a)})`:"")).join("; ")+"."+
+    (C?" Clarity: "+C.itens.map(it=>`${it.n} ${pct(it.b)} contra ${pct(it.a)}`).join("; ")+".":"");
   /* o vídeo da LP4, embaixo dos dois cartões: duas barras (quem ouviu e
      até onde viu) e por que foi bom ter o vídeo. Os números de pessoas
      ficam só no "i", para não carregar o bloco. */
@@ -2667,11 +2685,11 @@ function pintarAB(){
           <ul>${V.positivos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>
       </div></div>`;
   }
-  const direita=!DEC?"":`<div class="ab-win"><span class="win-q">${esc(DEC.rotulo)}</span>
-      <h3>${esc(DEC.titulo)}</h3><small class="win-u">${esc(DEC.url)} · ${esc(T.nome)}, ${dataCurta(T.de)} a ${dataCurta(T.ate)}</small>
-      <table class="win-t"><thead><tr><th></th><th>LP4</th><th>Principal</th></tr></thead>
-        <tbody><tr class="win-g"><th colspan="3">Anúncios · conversão e custo por cadastro</th></tr>${linhas}
-        ${linhasPag?`<tr class="win-g"><th colspan="3">Na página (Clarity)</th></tr>${linhasPag}`:""}</tbody></table>
+  const direita=!DEC?"":`<div class="ab-win"><div class="vsl-h"><span class="win-q">${esc(DEC.rotulo)}</span>
+        <button type="button" class="info" data-dica="${esc(dicaLP)}" aria-label="Números da LP4">i</button></div>
+      <h3>${esc(DEC.titulo)}</h3><small class="win-u">${esc(DEC.url)} · teste de ${dataCurta(T.de).slice(0,5)} a ${dataCurta(T.ate).slice(0,5)}</small>
+      <p class="wl-cap">Conversão nos anúncios · LP4 contra principal</p>
+      <ul class="wl">${canaisLP}</ul>
       <p class="win-p"><b>Próximos dias</b>${esc(DEC.proximos)}</p></div>`;
   el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${H?esc(HIST_SUB):`${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}`}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
