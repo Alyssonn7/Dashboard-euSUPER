@@ -314,6 +314,15 @@ button,select,input{font-family:inherit}
 /* ---------------- teste A/B: placar de jogo (largura toda, abaixo dos gráficos) ---------------- */
 .ab-cx{padding:22px 24px 20px;display:flex;flex-direction:column;gap:18px}
 .ab-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+/* setinha para minimizar/expandir: o título inteiro também clica */
+.ab-cx .cx-t{cursor:pointer;align-items:center}
+.ab-corpo{display:flex;flex-direction:column;gap:18px}
+.ab-tog{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--borda-campo);background:var(--campo);
+  color:var(--texto-2);display:grid;place-items:center;cursor:pointer;padding:0}
+.ab-tog:hover{border-color:var(--cinza);color:var(--texto)}
+.ab-tog:focus-visible{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px var(--foco)}
+.ab-tog svg{width:18px;height:18px;display:block;transition:transform .2s}
+.ab-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
 .time{position:relative;display:flex;align-items:center;gap:12px;min-width:0;padding:16px 18px;
   border:1.5px solid var(--borda);border-radius:12px}
@@ -2435,14 +2444,37 @@ function pintarAB(){
       <div class="cabo-l"><span class="${r.ganha==="a"?"lid":""}"><small>A</small>${pct(r.a,2)}</span>
         <em>taxa de conversão</em><span class="${r.ganha==="b"?"lid":""}">${pct(r.b,2)}<small>B</small></span></div></li>`;
   }).join("");
-  el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div></div>
+  el.innerHTML=`<div class="cx-t"><div><h2>teste a/b</h2><p>${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}</p></div>
+      <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
+    <div class="ab-corpo" id="abCorpo">
     <div class="placar">${time("a")}
       <div class="score" aria-label="Placar: A ${pts.a}, B ${pts.b}, ${emp} empates"><div><b>${pts.a}</b><span>×</span><b>${pts.b}</b></div>${emp?`<small>${emp} empate${emp===1?"":"s"}</small>`:""}</div>
       ${time("b")}</div>
     <ol class="rodadas" aria-label="Rodadas por canal" style="--n:${rod.length}">${rodadas}</ol>
     ${T.obs?`<p class="legenda-f">${esc(T.obs)}</p>`:""}
-    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>`;
+    <div class="ab-fim"><p><b>Por quê</b>${esc(T.porque)}</p><p class="prox"><b>Próximo</b>${esc(T.proximo)}</p></div>
+    </div>`;
+  marcarAB();
 }
+/* minimizar/expandir o teste A/B: a escolha fica guardada neste navegador */
+const AB_ABERTO="v2:abAberto";
+let abAberto=true;
+try{abAberto=localStorage.getItem(AB_ABERTO)!=="0"}catch(e){}
+function marcarAB(){
+  const el=document.getElementById("testeAB"), corpo=document.getElementById("abCorpo"), bt=el.querySelector(".ab-tog");
+  if(!corpo||!bt) return;
+  el.classList.toggle("fechado",!abAberto);
+  corpo.hidden=!abAberto;
+  bt.setAttribute("aria-expanded",String(abAberto));
+  bt.setAttribute("aria-label",abAberto?"Minimizar teste A/B":"Expandir teste A/B");
+  bt.title=abAberto?"Minimizar":"Expandir";
+}
+document.getElementById("testeAB").addEventListener("click",e=>{
+  if(!e.target.closest(".cx-t")) return;
+  abAberto=!abAberto;
+  try{localStorage.setItem(AB_ABERTO,abAberto?"1":"0")}catch(e){}
+  marcarAB();
+});
 
 /* ------------------------------------------------- abas */
 const ABA_GUARDA="v2:aba";

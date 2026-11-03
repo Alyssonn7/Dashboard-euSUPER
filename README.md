@@ -85,7 +85,9 @@ guerra" puxado para quem converteu mais. Cada rodada vence quem teve a **taxa
 de conversão maior**, exatamente como os dados lidos nos gerenciadores mostram;
 a marca diz a margem: **por pouco** (menos de 2 p.p.) ou **com folga** (2 p.p.
 ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam em
-`TESTE_AB` e aparecem ao passar o mouse em cada rodada. O bloco **não segue os
+`TESTE_AB` e aparecem ao passar o mouse em cada rodada. A **setinha** no canto do
+título (ou um clique no próprio título) minimiza e expande o bloco; a escolha
+fica guardada neste navegador (`v2:abAberto`). O bloco **não segue os
 filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 (21 a 26/10), A = miaapp.com.br contra B = lp4.miaapp.com.br
 (a mesma página com vídeo no topo): B 2 × 0 — com folga no Google (27,3% contra
 20,9% dos cliques, 22 a 26/10, porque a campanha da B começou em 22/10) e por
