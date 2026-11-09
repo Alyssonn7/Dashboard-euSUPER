@@ -222,10 +222,16 @@ Para a reunião, o bloco se explica sozinho: cada linha do orgânico e o "Sem
 origem" têm um mini-texto embaixo do nome (ex.: "Direto — digitou o site ou
 veio de WhatsApp e e-mail"), e abaixo do total há uma **observação** com o
 orgânico e o sem origem do período em palavras (quantos, o maior grupo, quantos
-dos sem origem não terminaram o onboarding e o provável motivo: a pessoa cria a
-conta e sai antes de o site anotar a origem, que é gravada uns 30 segundos depois)
-e a caixa **Em investigação**, com o que o time de desenvolvimento e o de
-marketing estão fazendo. Esse texto fica em `ORIGEM_INVESTIGA`, no topo do código.
+dos sem origem não terminaram o onboarding e o motivo) e a caixa **Resolvido em
+06/11**. Até 06/11/26 o site gravava a origem uns 30 segundos depois do cadastro,
+e quem saía antes ficava sem origem (cerca de 8%). O time de desenvolvimento
+passou a gravar junto com o cadastro em 06/11, entre 12h18 e 12h43: desde então
+leva cerca de 1 segundo e 100% dos cadastros têm origem (conferido no banco em
+09/11). Se aparecer "sem origem" num período depois de 06/11, o painel pede para
+avisar o time de desenvolvimento. Esse texto fica em `ORIGEM_STATUS` e
+`ORIGEM_FIX`, no topo do código. A consulta só aceita a origem gravada até 1 dia
+depois do cadastro: quem se cadastrou sem origem e voltou semanas depois por um
+anúncio não ganha a origem dessa visita nova.
 
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam

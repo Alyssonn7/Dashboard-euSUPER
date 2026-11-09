@@ -1298,9 +1298,14 @@ const ORIGENS=[
     {k:"outros",n:"Outros sites",m:"Link em outro site ou no ChatGPT",d:"Link em outro site, inclusive o ChatGPT sem anúncio."}]},
   {k:"sem",n:"Sem origem",cor:null,m:"O site não registrou de onde veio",d:"O site não gravou de onde veio este cadastro."}
 ];
-/* o que está sendo feito sobre a origem (aparece na observação do bloco); atualizar quando mudar */
-const ORIGEM_INVESTIGA={dev:"gravar a origem no mesmo momento em que a conta é criada",
-  mkt:"conferir os links dos anúncios e o navegador do Instagram"};
+/* a correção da origem (aparece na observação do bloco). Até 06/11/26 o site
+   gravava a origem uns 30 s depois do cadastro e cerca de 8% ficavam sem
+   (quem saía antes). O time de dev passou a gravar junto com o cadastro em
+   06/11/26, entre 12h18 e 12h43: desde então ~1 s e 100% com origem
+   (conferido no banco em 09/11/26) */
+const ORIGEM_FIX="2026-11-06";
+const ORIGEM_STATUS={titulo:"✅ Resolvido em 06/11",
+  texto:"Desde 06/11, por volta de 12h40, o site grava a origem junto com o cadastro, em cerca de 1 segundo. Antes, gravava uns 30 segundos depois, e cerca de 8% dos cadastros ficavam sem origem."};
 const IDS_TESTE="1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
 const CANAIS=["google","meta","openai"];
 const NOME={google:"Google Ads", meta:"Meta Ads", openai:"OpenAI Ads", base:"Metabase"};
@@ -1606,6 +1611,7 @@ c AS (
       lower(trim(coalesce(t.utm_content,''))) AS cont,
       lower(coalesce(substring(t.referrer from '^[a-z-]+:(?://)?([^/?#:]*)'),'')) AS ref
     FROM professional_tracking t WHERE t.professional_id = pr.id
+      AND t.created_at < pr.created_at + interval '1 day'
     ORDER BY t.created_at LIMIT 1) t ON true`:""}
   WHERE pr.dia BETWEEN DATE '${de}' AND DATE '${ate}')`;
 }
@@ -2161,11 +2167,12 @@ function blocoOrigem(p,c){
     `Direto também inclui links de WhatsApp e e-mail, que não dizem de onde a pessoa veio.`:"Nenhum cadastro chegou sem anúncio neste período.";
   const parou=sem.cad-sem.onb;
   const txSem=sem.cad?`${num(sem.cad)} cadastro${sem.cad>1?"s":""} sem registro de onde ${sem.cad>1?"vieram":"veio"}; ${num(parou)} de ${num(sem.cad)} não ${parou===1?"terminou":"terminaram"} o onboarding. `+
-    `Provável motivo: a pessoa cria a conta e sai logo, antes de o site anotar a origem (ele anota uns 30 segundos depois).`:"Todos os cadastros do período tiveram a origem registrada.";
+    (de0>ORIGEM_FIX?`Desde 06/11 isso não deveria acontecer: vale avisar o time de desenvolvimento.`:
+      `Motivo: até 06/11 o site anotava a origem uns 30 segundos depois do cadastro, e quem saía antes ficava sem.`):"Todos os cadastros do período tiveram a origem registrada.";
   const obs=`<div class="org-obs">
     <p><b>Orgânico · ${ps(og.cad)}</b><span>${txOrg}</span></p>
     <p><b>Sem origem · ${ps(sem.cad)}</b><span>${txSem}</span></p>
-    <p class="inv"><b>🔍 Em investigação</b><span>Time de desenvolvimento: ${esc(ORIGEM_INVESTIGA.dev)}. Time de marketing: ${esc(ORIGEM_INVESTIGA.mkt)}.</span></p>
+    <p class="inv"><b>${esc(ORIGEM_STATUS.titulo)}</b><span>${esc(ORIGEM_STATUS.texto)}</span></p>
   </div>`;
   return art(barra+tabela+obs+`<p class="legenda-f">${notas}</p>`);
 }
