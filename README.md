@@ -244,6 +244,16 @@ avisar o time de desenvolvimento. Esse texto fica em `ORIGEM_STATUS` e
 depois do cadastro: quem se cadastrou sem origem e voltou semanas depois por um
 anúncio não ganha a origem dessa visita nova.
 
+**Comunicados para os founders** (`COMUNICADOS`, no topo do código): uma caixa
+laranja em cima do funil quando o período escolhido pega a data do aviso e o
+filtro é "todos os canais" ou o canal do aviso; no bloco de origem, a linha do
+canal ganha a marca **"em ajuste"** (passe o mouse para ler). Hoje: **OpenAI Ads
+em turbulência** desde 07/11. A OpenAI classificou a euSUPER! como serviço
+financeiro, que hoje não pode anunciar no Brasil, então não dá para criar
+campanhas novas (só uma segue ativa) e os cadastros caíram de cerca de 15 por dia
+para perto de zero; o Alysson está falando com o suporte da OpenAI. Quando
+resolver, preencher `ate` com a data: o aviso some dos períodos depois dela.
+
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
 laranja.

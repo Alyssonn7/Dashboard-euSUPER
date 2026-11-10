@@ -170,6 +170,15 @@ button,select,input{font-family:inherit}
   color:var(--neutro);border-radius:10px;padding:12px 16px;font-size:13.5px;line-height:1.5}
 .aviso b{font-weight:600}
 .aviso.erro{background:var(--ruim-bg);border-color:var(--alerta-borda);color:var(--ruim)}
+/* comunicado para os founders (ex.: turbulência num canal): laranja da marca, texto normal */
+.aviso.comunicado{background:color-mix(in srgb,var(--laranja) 10%,var(--painel));border-color:var(--alerta-borda);
+  border-left:4px solid var(--laranja);color:var(--texto);padding:14px 18px}
+.aviso.comunicado b{display:block;font-weight:700;color:var(--alerta-v);margin-bottom:2px}
+.aviso.comunicado small{display:block;margin-top:4px;font-size:12px;color:var(--texto-2)}
+.com-ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--laranja);
+  color:var(--tinta);font-weight:800;font-size:14px;margin-top:1px}
+.org-tab .org-tag{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:99px;font-style:normal;font-size:11px;
+  font-weight:700;letter-spacing:.02em;background:var(--laranja);color:var(--tinta);vertical-align:1px;cursor:help}
 
 /* ---------------- grade do resumo ----------------
    12 colunas: os quatro principais ocupam 3 cada (4 por linha), os mini blocos
@@ -1307,6 +1316,18 @@ const ORIGENS=[
    (quem saía antes). O time de dev passou a gravar junto com o cadastro em
    06/11/26, entre 12h18 e 12h43: desde então ~1 s e 100% com origem
    (conferido no banco em 09/11/26) */
+/* comunicados para os founders: aparecem em cima do funil quando o período
+   escolhido pega a data e o filtro é "todos os canais" ou o canal do aviso; no
+   bloco de origem, a linha do canal ganha a marca "em ajuste". Quando resolver,
+   preencher "ate" (o aviso some dos períodos depois dessa data) */
+const COMUNICADOS=[
+  {canal:"openai", desde:"2026-11-07", ate:null, atualizado:"10/11",
+   titulo:"OpenAI Ads em turbulência",
+   texto:"Desde 07/11 a OpenAI quase não entrega: caiu de cerca de 15 cadastros por dia para perto de zero. "+
+     "A OpenAI classificou a euSUPER! como serviço financeiro, que hoje não pode anunciar no Brasil, e por isso não conseguimos criar campanhas novas (só uma segue ativa). "+
+     "Já estamos falando com o suporte da OpenAI para resolver."}
+];
+const comunicadosDe=(p,canal)=>!p?[]:COMUNICADOS.filter(x=>(canal==="todos"||canal===x.canal)&&p.ate>=x.desde&&(!x.ate||p.de<=x.ate));
 const ORIGEM_FIX="2026-11-06";
 const ORIGEM_STATUS={titulo:"✅ Resolvido em 06/11",
   texto:"Desde 06/11, por volta de 12h40, o site grava a origem junto com o cadastro, em cerca de 1 segundo. Antes, gravava uns 30 segundos depois, e cerca de 8% dos cadastros ficavam sem origem."};
@@ -2174,7 +2195,9 @@ function blocoOrigem(p,c){
       cAtiv=`<span data-html data-dica="${esc(da)}">${x.ativ?brl(inv/x.ativ):inv>0?"nenhuma":"—"}</span>`;
     }
     const sw=sub?"":`<i class="sw${o.cor?"":" hach"}" style="${o.cor?`background:${o.cor}`:""}"></i>`;
-    return `<tr${sub?' class="sub"':""}><th scope="row">${sw}<span data-dica="${esc(o.d)}">${esc(o.n)}</span>${o.m?`<small class="org-m${sw?" com-sw":""}">${esc(o.m)}</small>`:""}</th><td>${num(x.cad)}</td>`+
+    const aj=o.canal?comunicadosDe(p,o.canal)[0]:null;
+    const tag=aj?`<em class="org-tag" data-html data-dica="${esc(`<b>${esc(aj.titulo)}</b><p class="m">${esc(aj.texto)}</p>`)}">em ajuste</em>`:"";
+    return `<tr${sub?' class="sub"':""}><th scope="row">${sw}<span data-dica="${esc(o.d)}">${esc(o.n)}</span>${tag}${o.m?`<small class="org-m${sw?" com-sw":""}">${esc(o.m)}</small>`:""}</th><td>${num(x.cad)}</td>`+
       `<td>${pct(sh)}${pb!=null?`<small>antes ${pct(pb)}</small>`:""}</td><td class="op">${x.cad?pct(x.onb/x.cad*100):"—"}</td>`+
       (comAtiv?`<td class="op">${pct(taxaD7(x))}</td>`:"")+`<td class="op">${custo}</td><td class="c-ativ">${cAtiv}</td></tr>`;
   };
@@ -2239,7 +2262,9 @@ function pintar(){
   frase(cls,fr);
 
   /* avisos das fontes que falharam na última atualização */
-  elAvisos.innerHTML=Object.values(FALHAS).map(m=>`<div class="aviso erro" role="status"><span>${esc(m)}</span></div>`).join("")+
+  elAvisos.innerHTML=comunicadosDe(p,canal).map(x=>`<div class="aviso comunicado" role="note"><span class="com-ic" aria-hidden="true">!</span>`+
+      `<span><b>${esc(x.titulo)}</b>${esc(x.texto)}<small>Atualizado em ${esc(x.atualizado)}.</small></span></div>`).join("")+
+    Object.values(FALHAS).map(m=>`<div class="aviso erro" role="status"><span>${esc(m)}</span></div>`).join("")+
     (MCP===null&&(falta.length||faltaC.length)?`<div class="aviso"><span><b>Consulta ao vivo indisponível aqui.</b> O retrato gravado cobre de ${curta(RETRATO.cobre.de)} a ${curta(RETRATO.cobre.ate)}. Para outros períodos, abra o painel no claude.ai e clique em Atualizar.</span></div>`:"");
 
   if(falta.length){
