@@ -233,14 +233,20 @@ Para a reunião, o bloco se explica sozinho: cada linha do orgânico e o "Sem
 origem" têm um mini-texto embaixo do nome (ex.: "Direto — digitou o site ou
 veio de WhatsApp e e-mail"), e abaixo do total há uma **observação** com o
 orgânico e o sem origem do período em palavras (quantos, o maior grupo, quantos
-dos sem origem não terminaram o onboarding e o motivo) e a caixa **Resolvido em
-06/11**. Até 06/11/26 o site gravava a origem uns 30 segundos depois do cadastro,
-e quem saía antes ficava sem origem (cerca de 8%). O time de desenvolvimento
-passou a gravar junto com o cadastro em 06/11, entre 12h18 e 12h43: desde então
-leva cerca de 1 segundo e 100% dos cadastros têm origem (conferido no banco em
-09/11). Se aparecer "sem origem" num período depois de 06/11, o painel pede para
-avisar o time de desenvolvimento. Esse texto fica em `ORIGEM_STATUS` e
-`ORIGEM_FIX`, no topo do código. A consulta só aceita a origem gravada até 1 dia
+dos sem origem não terminaram o onboarding e o motivo) e a caixa de
+**acompanhamento do sem origem**. Até 06/11/26 o site gravava a origem uns 30
+segundos depois do cadastro, e quem saía antes ficava sem origem (cerca de 8%). O
+time de desenvolvimento passou a gravar junto com o cadastro em 06/11, entre 12h18
+e 12h43: desde então leva cerca de 1 segundo (180 cadastros seguidos com origem
+até 10/11). A caixa mostra, no período escolhido, quantos ficaram sem origem
+depois da correção (dias inteiros, de 07/11 em diante) e antes dela, e a **chance
+de um cadastro ficar sem origem** (o teto provável, com 95% de confiança: regra
+de 3 quando não houve nenhum caso, Wilson quando houve; só com 30 cadastros ou
+mais). O esperado é perto de zero; se passar de 1 em cada 100 (`SEM_LIMITE`), a
+caixa fica laranja e pede para avisar o time de desenvolvimento. Período todo
+antes da correção: a caixa diz quanto ficou sem origem e que daqui para a frente
+o esperado é perto de zero. Fica em `ORIGEM_FIX`, `ORIGEM_FIX_DIA` e
+`SEM_LIMITE`, no topo do código. A consulta só aceita a origem gravada até 1 dia
 depois do cadastro: quem se cadastrou sem origem e voltou semanas depois por um
 anúncio não ganha a origem dessa visita nova.
 

@@ -515,6 +515,7 @@ button,select,input{font-family:inherit}
   font-size:13.5px;line-height:1.45;color:var(--texto)}
 .org-obs b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
 .org-obs .inv{grid-column:1/-1;background:var(--bom-bg)} .org-obs .inv b{color:var(--bom)}
+.org-obs .inv.fora{background:color-mix(in srgb,var(--laranja) 12%,var(--painel))} .org-obs .inv.fora b{color:var(--alerta-v)}
 .org-tab .so-cel{display:none}
 .org-tab td.c-ativ{font-weight:700}
 
@@ -1287,8 +1288,27 @@ const COMUNICADOS=[
 ];
 const comunicadosDe=(p,canal)=>!p?[]:COMUNICADOS.filter(x=>(canal==="todos"||canal===x.canal)&&p.ate>=x.desde&&(!x.ate||p.de<=x.ate));
 const ORIGEM_FIX="2026-11-06";
-const ORIGEM_STATUS={titulo:"✅ Resolvido em 06/11",
-  texto:"Desde 06/11, por volta de 12h40, o site grava a origem junto com o cadastro, em cerca de 1 segundo. Antes, gravava uns 30 segundos depois, e cerca de 8% dos cadastros ficavam sem origem."};
+/* acompanhamento do "sem origem" depois da correção: conta só os dias inteiros
+   depois dela (07/11 em diante). O esperado é perto de zero; acima de 1 em cada
+   100, o painel pede para avisar os devs */
+const ORIGEM_FIX_DIA="2026-11-07", SEM_LIMITE=1;
+/* teto provável (95% de confiança) da chance de um cadastro ficar sem origem:
+   regra de 3 quando não houve nenhum caso; Wilson quando houve */
+function teto95(k,n){
+  if(!n) return null;
+  if(!k) return 3/n*100;
+  const z=1.96, ph=k/n, z2=z*z;
+  return (ph+z2/(2*n)+z*Math.sqrt(ph*(1-ph)/n+z2/(4*n*n)))/(1+z2/n)*100;
+}
+function semPorFase(de,ate){
+  const f={antes:{n:0,s:0},depois:{n:0,s:0}};
+  Object.entries(DADOS.origem.dias).forEach(([d,ks])=>{
+    if(d<de||d>ate) return;
+    const x=d>=ORIGEM_FIX_DIA?f.depois:f.antes;
+    Object.entries(ks).forEach(([k,v])=>{ if(k==="antes") return; x.n+=v[0]; if(k==="sem") x.s+=v[0]; });
+  });
+  return f;
+}
 const IDS_TESTE="1,2,3,11,12,13,17,18,25,192,194,200,201,354,427,1163,1312,1488,1546,1547,2029";
 const CANAIS=["google","meta","openai"];
 const NOME={google:"Google Ads", meta:"Meta Ads", openai:"OpenAI Ads", base:"Metabase"};
@@ -2182,10 +2202,26 @@ function blocoOrigem(p,c){
   const txSem=sem.cad?`${num(sem.cad)} cadastro${sem.cad>1?"s":""} sem registro de onde ${sem.cad>1?"vieram":"veio"}; ${num(parou)} de ${num(sem.cad)} não ${parou===1?"terminou":"terminaram"} o onboarding. `+
     (de0>ORIGEM_FIX?`Desde 06/11 isso não deveria acontecer: vale avisar o time de desenvolvimento.`:
       `Motivo: até 06/11 o site anotava a origem uns 30 segundos depois do cadastro, e quem saía antes ficava sem.`):"Todos os cadastros do período tiveram a origem registrada.";
+  /* acompanhamento do sem origem: antes e depois da correção, neste período */
+  const fs=semPorFase(de0,p.ate), dp=fs.depois, an=fs.antes, pa=an.n?` Antes da correção, neste período: ${num(an.s)} de ${num(an.n)} (${pct(an.s/an.n*100)}).`:"";
+  let stTit, stTxt, stCls="inv";
+  if(dp.n){
+    const tx=dp.s/dp.n*100, ub=teto95(dp.s,dp.n), acima=tx>SEM_LIMITE;
+    stTit=acima?"⚠️ Sem origem acima do esperado":"✅ Sem origem: corrigido em 06/11";
+    stTxt=`Depois da correção (de 07/11 em diante): ${num(dp.s)} de ${num(dp.n)} cadastros sem origem (${pct(tx)}). `+
+      (dp.n>=30?`Chance de um cadastro ficar sem origem: menos de ${num(Math.max(1,Math.ceil(ub)))}%. `:"")+
+      (acima?`O esperado é no máximo 1 em cada 100: vale avisar o time de desenvolvimento.`:
+        `O esperado é perto de zero. Algum caso raro pode acontecer (internet que cai na hora do cadastro, bloqueador de anúncio); acima de 1 em cada 100, avisar os devs.`)+pa;
+    if(acima) stCls="inv fora";
+  }else{
+    stTit="✅ Resolvido em 06/11";
+    stTxt=`Neste período a correção ainda não existia: ${num(an.s)} de ${num(an.n)} cadastros ficaram sem origem (${pct(an.n?an.s/an.n*100:0)}). `+
+      `Desde 06/11, por volta de 12h40, o site grava a origem junto com o cadastro, em cerca de 1 segundo; daqui para a frente, o esperado é perto de zero.`;
+  }
   const obs=`<div class="org-obs">
     <p><b>Orgânico · ${ps(og.cad)}</b><span>${txOrg}</span></p>
     <p><b>Sem origem · ${ps(sem.cad)}</b><span>${txSem}</span></p>
-    <p class="inv"><b>${esc(ORIGEM_STATUS.titulo)}</b><span>${esc(ORIGEM_STATUS.texto)}</span></p>
+    <p class="${stCls}"><b>${esc(stTit)}</b><span>${esc(stTxt)}</span></p>
   </div>`;
   return art(barra+tabela+obs+`<p class="legenda-f">${notas}</p>`);
 }
