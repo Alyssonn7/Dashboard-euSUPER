@@ -23,9 +23,16 @@ escuro / modo claro** no topo troca e guarda a escolha neste navegador (`v2:tema
 Formato de resumo: filtros num cartão que sobe sobre a faixa e, logo abaixo, o
 funil na largura toda, compacto (330px) para caber na primeira tela junto com os
 filtros (testado em 1440×900). Depois, os quatro números principais
-(investimento, cadastros, custo por cadastro, taxa de conversão) e quatro mini
-blocos numa linha, na ordem do funil (CPM, onboarding concluído, custo por
-onboarding e ativação D7). A explicação da escala logarítmica do funil fica no
+(investimento, **custo por ativação**, cadastros, custo por cadastro) e quatro
+mini blocos numa linha (taxa de conversão, onboarding concluído, custo por
+onboarding e ativação D7). O **custo por ativação** (investimento ÷ cadastros com
+o 1º agendamento em até 7 dias, o mesmo "por ativação" da última etapa do funil)
+é a métrica principal desde a Weekly de 03/11/26: fica em segundo, com borda azul.
+Enquanto houver cadastros dentro dos 7 dias, ele e a ativação D7 mostram
+"parcial" no lugar da seta, porque o custo ainda cai. O CPM saiu dos cartões e
+continua no funil ("por mil"). Embaixo do investimento aparece o **teto do mês**
+(R$ 15 a 18 mil, combinado na mesma Weekly, `TETO`): no mês em andamento ("Esse
+mês"), quanto o mês fecha no ritmo atual; no mês fechado, se ficou dentro. A explicação da escala logarítmica do funil fica no
 "i"; a legenda embaixo só aparece quando há campanha fora do funil. A **setinha**
 no canto do funil (ou um clique no título) minimiza e expande o bloco inteiro;
 a escolha fica guardada neste navegador (`v2:funilAberto`). O bloco **origem dos
@@ -215,8 +222,12 @@ hachurado; cores validadas para daltonismo) e uma tabela: cadastros, parcela
 ativação D7 por origem (a coluna aparece quando os cadastros do período fecham
 os 7 dias) e **custo real por cadastro** = investimento das campanhas de
 cadastro do canal ÷ cadastros que o banco registrou vindos dele. Passando o
-mouse no custo, aparece o que a plataforma diz ter trazido, para comparar. No
-celular, a tabela fica com origem, cadastros, parcela e custo real.
+mouse no custo, aparece o que a plataforma diz ter trazido, para comparar. A
+última coluna, em negrito, é o **custo por ativação** do canal = o mesmo
+investimento ÷ cadastros vindos dele que fizeram o 1º agendamento em até 7 dias
+("nenhuma" quando o canal gastou e ninguém ativou; parcial enquanto houver
+cadastros dentro dos 7 dias). No celular, a tabela fica com origem, cadastros,
+parcela e custo por ativação.
 
 Para a reunião, o bloco se explica sozinho: cada linha do orgânico e o "Sem
 origem" têm um mini-texto embaixo do nome (ex.: "Direto — digitou o site ou

@@ -200,6 +200,9 @@ button,select,input{font-family:inherit}
 .kpi-d .delta{border-radius:99px;padding:2px 9px}
 .kpi-d .delta.up{background:var(--bom-bg)} .kpi-d .delta.down{background:var(--ruim-bg)} .kpi-d .delta.flat{background:var(--neutro-bg)}
 .kpi-s{font-size:12.5px;color:var(--texto-2)}
+/* a métrica principal: borda azul (o alerta laranja continua valendo por cima) */
+.kpi.destaque:not(.alerta){border:2px solid var(--azul)}
+.teto-fora{font-weight:700;color:var(--alerta-v)}
 .kpi.mini{padding:14px 18px 13px;gap:6px}
 .kpi.mini header{align-items:flex-start}
 .kpi.mini .kpi-r{font-size:14px}
@@ -539,6 +542,7 @@ button,select,input{font-family:inherit}
 .org-obs b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
 .org-obs .inv{grid-column:1/-1;background:var(--bom-bg)} .org-obs .inv b{color:var(--bom)}
 .org-tab .so-cel{display:none}
+.org-tab td.c-ativ{font-weight:700}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:1180px){
@@ -1326,7 +1330,9 @@ const IC={
   ativ: svg40(`<polygon fill="#87B1DB" points="2,11 9.5,11 15,26 7.5,26"/><circle fill="#008CF5" cx="20" cy="24" r="5.5"/><polygon fill="#05B27C" points="30.5,11 38,11 32.5,26 25,26"/>`)
 };
 /* ícone de cada um dos quatro cartões principais, nos dois modos */
-const IC_KPI={inv:"inv", cad:"pessoas", cadC:"pessoas", cpa:"custo", cpaC:"custo", taxa:"taxa", taxaC:"taxa"};
+const IC_KPI={inv:"inv", custoAtiv:"ativ", cad:"pessoas", cadC:"pessoas", cpa:"custo", cpaC:"custo", taxa:"taxa", taxaC:"taxa"};
+/* teto de anúncios por mês, combinado na Weekly de 03/11/26 (vale de novembro em diante) */
+const TETO={min:15000, max:18000, desde:"2026-11"};
 const SELO_ALERTA=`<span class="atencao" title="Piorou 10% ou mais contra a comparação"><svg viewBox="0 0 20 26" aria-hidden="true"><polygon fill="currentColor" points="10,0 19,0 12,16 3,16"/><circle fill="currentColor" cx="5.5" cy="21.5" r="4"/></svg><span>atenção</span></span>`;
 
 /* ---------------------------------------------------------- formatação */
@@ -1763,6 +1769,9 @@ const M={
   taxa:    {r:"Taxa de conversão", f:v=>pct(v), dir:1, v:a=>div(a.cad,a.cli)!=null?div(a.cad,a.cli)*100:null},
   onb:     {r:"Onboarding concluído", f:num, dir:1, v:a=>a.onb},
   custoOnb:{r:"Custo por onboarding", f:brl, dir:-1, v:a=>div(a.inv,a.onb)},
+  /* métrica principal do marketing desde a Weekly de 03/11/26: o mesmo
+     "R$ por ativação" da última etapa do funil (investimento ÷ ativações D7) */
+  custoAtiv:{r:"Custo por ativação", f:brl, dir:-1, v:a=>div(a.inv,a.ativ)},
   cpm:     {r:"CPM", f:brl, dir:-1, v:a=>div(a.inv,a.imp)!=null?div(a.inv,a.imp)*1000:null},
   /* ativação D7 oficial: ativos ÷ TODOS os cadastros com 7 dias completos
      (o mesmo número do Metabase e do Oráculo). Taxa, e não contagem: compara
@@ -1785,6 +1794,7 @@ const FORMULA={
   inv:"Soma do gasto em anúncios", cad:"Conversões de Google, Meta e OpenAI somadas",
   cpa:"Investimento total ÷ cadastros atribuídos pelos canais", taxa:"Cadastros atribuídos ÷ cliques totais",
   onb:"Cadastros com onboarding concluído", custoOnb:"Investimento total ÷ onboardings",
+  custoAtiv:"Investimento total ÷ cadastros com 1º agendamento em até 7 dias. Métrica principal desde a Weekly de 03/11",
   cpm:"Investimento total ÷ impressões totais × 1.000",
   ativ:"Tiveram 1+ agendamento em até 7 dias ÷ cadastros do período (critério do painel euSUPER!)",
   cadC:"Conversões da plataforma", cpaC:"Investimento ÷ conversões", taxaC:"Conversões ÷ cliques",
@@ -1921,13 +1931,14 @@ const POR_CANAL={
   cpa:    {f:brl, v:c=>div(c.inv,c.cad), dir:-1},
   cad:    {f:num, v:c=>c.cad, dir:1, fatia:"cad"},
   taxa:   {f:v=>pct(v), v:c=>div(c.cad,c.cli)!=null?div(c.cad,c.cli)*100:null, dir:1},
-  onb:{so:true}, custoOnb:{so:true}, ativ:{so:true}
+  onb:{so:true}, custoOnb:{so:true}, ativ:{so:true},
+  custoAtiv:{so:true, msg:"Por canal: veja a coluna “Custo por ativação” no bloco de origem dos cadastros."}
 };
 function dicaCartao(k,a,b,ctx){
   const m=M[k], pc=ctx.rotulo==="todos"?POR_CANAL[k]:null;
   let h=`<b>${esc(m.r)}</b><p class="m">${FORMULA[k]||""}</p>`;
   if(!pc) return h;
-  if(pc.so) return h+`<p class="m">Sem abertura por canal.</p>`;
+  if(pc.so) return h+`<p class="m">${esc(pc.msg||"Sem abertura por canal.")}</p>`;
   const ks=CANAIS.filter(c=>a.canal[c]&&(a.canal[c].inv>0||a.canal[c].imp>0));
   if(!ks.length) return h;
   h+=`<div class="sep"></div>`+ks.map(c=>{
@@ -1939,19 +1950,33 @@ function dicaCartao(k,a,b,ctx){
   return h+`<div class="lin tot"><span>Geral</span><span>${m.f(m.v(a))}</span></div>`;
 }
 
+/* teto do mês: no mês fechado diz se ficou dentro; no mês em andamento
+   ("Esse mês") projeta o fim do mês pelo gasto por dia até ontem */
+function ritmoTeto(p,a){
+  const mes=p.de.slice(0,7);
+  if(mes<TETO.desde||p.de.slice(8)!=="01"||p.ate.slice(0,7)!==mes) return "";
+  const faixa=`Teto de R$ ${nf0.format(TETO.min/1000)} a ${nf0.format(TETO.max/1000)} mil`;
+  if(ehMes(p.de,p.ate)) return a.inv>TETO.max?`${faixa} · <b class="teto-fora">ficou ${reais(a.inv-TETO.max)} acima</b>`:`${faixa} · ficou dentro`;
+  if(p.ate!==ontem()) return "";
+  const d=D(p.ate), proj=a.inv/dias(p.de,p.ate)*fimDoMes(d.getFullYear(),d.getMonth());
+  return `${faixa} · no ritmo atual, fecha em `+(proj>TETO.max?`<b class="teto-fora">${reais(proj)}</b>`:reais(proj));
+}
 /* tipo: "principal" (os quatro grandes, com ícone), "mini" (três por linha)
    ou "quarto" (mini numa linha de quatro) */
-function kpi(tipo,k,a,b,t,tb,ctx,sub){
-  const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b?variacao(va,vb,m.dir):null;
+function kpi(tipo,k,a,b,t,tb,ctx,sub,opt){
+  opt=opt||{};
+  /* parcial: ainda há cadastros dentro dos 7 dias; a seta pareceria piora, então
+     no lugar dela aparece "parcial", como na última etapa do funil */
+  const m=M[k], va=m.v(a,t), vb=b?m.v(b,tb):null, vr=b&&!opt.parcial?variacao(va,vb,m.dir):null;
   const antes=b?`<span class="num">antes ${m.f(vb)}</span>`:"";
   const mini=tipo!=="principal", alerta=!!(vr&&vr.alerta);
   const ic=!mini&&IC_KPI[k]?`<span class="kpi-ic">${IC[IC_KPI[k]]}</span>`:"";
   /* a dica vale para o cartão inteiro; o "i" é a porta de entrada pelo teclado e pelo toque */
-  return `<article class="cx kpi${mini?" mini":""}${tipo==="quarto"?" quarto":""}${alerta?" alerta":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
+  return `<article class="cx kpi${mini?" mini":""}${tipo==="quarto"?" quarto":""}${alerta?" alerta":""}${opt.destaque?" destaque":""}" data-html data-dica="${esc(dicaCartao(k,a,b,ctx))}">
     <header>${ic}<span class="kpi-r">${m.r}${ctx.sufixo&&(k==="cadC")?` (${ctx.sufixo})`:""}</span>
       <span class="kpi-x">${alerta?SELO_ALERTA:""}<button type="button" class="info" aria-label="Detalhes de ${esc(m.r)}">i</button></span></header>
     <div class="kpi-v" title="${esc(m.f(va))}">${m.f(va)}</div>
-    <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:""}${antes}</div>
+    <div class="kpi-d">${vr?`<span class="delta ${vr.cls}">${vr.txt}</span>`:opt.parcial&&b?`<span class="delta flat">parcial</span>`:""}${antes}</div>
     ${sub?`<div class="kpi-s">${sub}</div>`:""}
   </article>`;
 }
@@ -2134,32 +2159,39 @@ function blocoOrigem(p,c){
   const comAtiv=true, parcialD7=tot.mad<tot.cad;
   const linha=(o,sub)=>{
     const x=r[o.k]||{cad:0,onb:0,mad:0,ativ:0}, sh=x.cad/tot.cad*100, pb=rb?parc(o.k,rb):null;
-    let custo="";
+    let custo="", cAtiv="";
     if(o.canal){
       const inv=m.canal[o.canal]?m.canal[o.canal].inv:0, plat=m.canal[o.canal]?m.canal[o.canal].cad:0;
       const d=`<b>${esc(o.n)}</b><div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div>`+
         `<div class="lin"><span>Cadastros no banco</span><span>${num(x.cad)}</span></div>`+
         `<div class="lin"><span>A plataforma diz</span><span>${num(plat)}</span></div>`;
       custo=`<span data-html data-dica="${esc(d)}">${x.cad?brl(inv/x.cad):inv>0?"nenhum":"—"}</span>`;
+      /* custo por ativação do canal: o mesmo investimento ÷ ativações D7 de quem veio dele */
+      const pend=x.cad-x.mad;
+      const da=`<b>${esc(o.n)}</b><div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div>`+
+        `<div class="lin"><span>Ativações D7</span><span>${num(x.ativ)}</span></div>`+
+        (pend>0?`<p class="m">Parcial: ${num(pend)} cadastros ainda dentro dos 7 dias, o custo ainda cai.</p>`:"");
+      cAtiv=`<span data-html data-dica="${esc(da)}">${x.ativ?brl(inv/x.ativ):inv>0?"nenhuma":"—"}</span>`;
     }
     const sw=sub?"":`<i class="sw${o.cor?"":" hach"}" style="${o.cor?`background:${o.cor}`:""}"></i>`;
     return `<tr${sub?' class="sub"':""}><th scope="row">${sw}<span data-dica="${esc(o.d)}">${esc(o.n)}</span>${o.m?`<small class="org-m${sw?" com-sw":""}">${esc(o.m)}</small>`:""}</th><td>${num(x.cad)}</td>`+
       `<td>${pct(sh)}${pb!=null?`<small>antes ${pct(pb)}</small>`:""}</td><td class="op">${x.cad?pct(x.onb/x.cad*100):"—"}</td>`+
-      (comAtiv?`<td class="op">${pct(taxaD7(x))}</td>`:"")+`<td>${custo}</td></tr>`;
+      (comAtiv?`<td class="op">${pct(taxaD7(x))}</td>`:"")+`<td class="op">${custo}</td><td class="c-ativ">${cAtiv}</td></tr>`;
   };
   const corpo=ORIGENS.map(o=>{
     if(o.k==="sem"&&!n("sem")) return "";
     return linha(o,false)+(o.sub?o.sub.filter(s=>n(s.k)>0).map(s=>linha(s,true)).join(""):"");
   }).join("");
   const tabela=`<div class="org-tab"><table>
-    <thead><tr><th scope="col">Origem</th><th scope="col">Cadastros</th><th scope="col">Parcela</th><th scope="col" class="op">Onboarding</th>${comAtiv?`<th scope="col" class="op">Ativação D7</th>`:""}<th scope="col"><span class="so-pc">Custo real por cadastro</span><span class="so-cel">Custo real</span></th></tr></thead>
+    <thead><tr><th scope="col">Origem</th><th scope="col">Cadastros</th><th scope="col">Parcela</th><th scope="col" class="op">Onboarding</th>${comAtiv?`<th scope="col" class="op">Ativação D7</th>`:""}<th scope="col" class="op">Custo real por cadastro</th><th scope="col" class="c-ativ">Custo por ativação</th></tr></thead>
     <tbody>${corpo}</tbody>
-    <tfoot><tr><th scope="row">Total</th><td>${num(tot.cad)}</td><td>100%</td><td class="op">${pct(tot.onb/tot.cad*100)}</td>${comAtiv?`<td class="op">${pct(taxaD7(tot))}</td>`:""}<td></td></tr></tfoot>
+    <tfoot><tr><th scope="row">Total</th><td>${num(tot.cad)}</td><td>100%</td><td class="op">${pct(tot.onb/tot.cad*100)}</td>${comAtiv?`<td class="op">${pct(taxaD7(tot))}</td>`:""}<td class="op"></td><td class="c-ativ"></td></tr></tfoot>
   </table></div>`;
   const notas=`Custo real = investimento do canal ÷ cadastros que o banco registrou vindos dele (passe o mouse para comparar com o que a plataforma diz). `+
+    `Custo por ativação = o mesmo investimento ÷ cadastros vindos do canal que fizeram o 1º agendamento em até 7 dias. `+
     (de0>p.de||antes?`Origem gravada desde ${curta(TRACK_INICIO)}, 8h59`+(de0>p.de?`: aqui entram ${dias(de0,p.ate)} de ${dias(p.de,p.ate)} dias do período`:"")+
       (antes?`; ${num(antes)} cadastro${antes>1?"s":""} de antes disso fica${antes>1?"m":""} de fora`:"")+". ":"")+
-    (parcialD7?`Ativação D7 parcial: ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias.`:"");
+    (parcialD7?`Ativação D7 e custo por ativação parciais: ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias, o custo ainda cai.`:"");
   /* observação: o orgânico e o sem origem em palavras, com o que está sendo investigado */
   const og=r.org, sem=r.sem||{cad:0,onb:0}, ps=v=>pct(v/tot.cad*100);
   const subs=ORIGENS.find(o=>o.k==="org").sub.map(s=>({n:s.n,v:n(s.k)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
@@ -2235,10 +2267,14 @@ function pintar(){
        3. depois do cadastro: onboarding (volume e custo) e ativação */
     /* cadastros, custo por cadastro e taxa de conversão só do tráfego pago:
        cadastros que Google, Meta e OpenAI atribuem a si */
-    cartoes=kpi("principal","inv",a,b,t,tb,ctx)+kpi("principal","cad",a,b,t,tb,ctx,"Atribuídos por Google, Meta e OpenAI")+
-      kpi("principal","cpa",a,b,t,tb,ctx)+kpi("principal","taxa",a,b,t,tb,ctx)+
-      kpi("quarto","cpm",a,b,t,tb,ctx)+kpi("quarto","onb",a,b,t,tb,ctx,sOnb)+
-      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",a,b,t,tb,ctx,sAtiv);
+    /* custo por ativação é a métrica principal (Weekly de 03/11/26): segundo
+       cartão, com destaque; o CPM saiu dos cartões e segue no funil ("por mil") */
+    const sCAtiv=`Métrica principal · ${num(a.ativ)} ativaç${a.ativ===1?"ão":"ões"}`+
+      (pend>0?` · parcial: ${num(pend)} cadastros ainda dentro dos 7 dias, o custo ainda cai`:"");
+    cartoes=kpi("principal","inv",a,b,t,tb,ctx,ritmoTeto(p,a))+kpi("principal","custoAtiv",a,b,t,tb,ctx,sCAtiv,{parcial:pend>0,destaque:true})+
+      kpi("principal","cad",a,b,t,tb,ctx,"Atribuídos por Google, Meta e OpenAI")+kpi("principal","cpa",a,b,t,tb,ctx)+
+      kpi("quarto","taxa",a,b,t,tb,ctx)+kpi("quarto","onb",a,b,t,tb,ctx,sOnb)+
+      kpi("quarto","custoOnb",a,b,t,tb,ctx)+kpi("quarto","ativ",a,b,t,tb,ctx,sAtiv,{parcial:pend>0});
     etapas=[
       {n:"Impressões",ic:"imp",v:a.imp,b:b&&b.imp,ref:"das impressões"},
       {n:"Cliques",ic:"cli",v:a.cli,b:b&&b.cli,u:"clique",ref:"dos cliques",nota:"Meta: só clique no link."},
