@@ -3,11 +3,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
+<meta name="color-scheme" content="only light">
 <script>
-/* o painel abre sempre no modo claro, já na primeira pintura, sem piscar;
-   o escuro só vale se a pessoa escolheu no botão (guardado neste navegador) */
-try{var t0=localStorage.getItem("v2:tema")}catch(e){}
-document.documentElement.setAttribute("data-theme",t0==="dark"?"dark":"light");
+/* só modo claro, a pedido (10/11/26): sem botão de tema e sem escuro do
+   sistema, do navegador ou do claude.ai. Apaga a escolha antiga guardada */
+document.documentElement.setAttribute("data-theme","light");
+try{localStorage.removeItem("v2:tema")}catch(e){}
 </script>
 
 <style>
@@ -17,18 +18,18 @@ document.documentElement.setAttribute("data-theme",t0==="dark"?"dark":"light");
    22,5° e o círculo laranja); filtros num cartão que sobe sobre a faixa;
    depois os quatro números principais, os seis mini blocos, o funil na
    largura toda e os gráficos por dia.
-   Dois temas. Claro: o do manual, fundo branco. Escuro: derivado do azul da
-   marca, com o cinza e o azul claro como cor de texto. Sem escolha, segue o
-   tema do claude.ai / do sistema; o botão no topo fixa a escolha.
+   Só o tema claro, o do manual, fundo branco (a pedido, 10/11/26): o escuro
+   foi retirado, junto com o botão de trocar.
    Fonte: Gilroy quando instalada; Outfit (Google Fonts) no lugar.
    ========================================================================= */
 :root{
   --fonte:"Gilroy","Outfit",-apple-system,"Segoe UI",sans-serif;
   --gut:clamp(16px,3vw,40px);
-  /* cores da marca: iguais nos dois temas */
+  /* "only light": o navegador não escurece a página sozinho */
+  color-scheme:only light;
+  /* cores da marca */
   --azul:#008CF5; --azul-2:#1760B9; --laranja:#F9902A; --verde:#05B27C;
   --cinza:#87B1DB; --azul-claro:#D7FFF7; --branco:#FEFEFE; --tinta:#0A1A30;
-  /* tema claro */
   --fundo:#FEFEFE; --painel:#FEFEFE; --campo:#FEFEFE;
   /* linhas reforçadas a pedido (21/10): cartões, campos, divisórias e grade */
   --borda:#A8C5E4; --borda-campo:#9DBDE0; --borda-forte:#7FA6D3; --grade:#D3E3F3;
@@ -45,38 +46,6 @@ document.documentElement.setAttribute("data-theme",t0==="dark"?"dark":"light");
   --sombra:0 2px 4px rgba(23,96,185,.06),0 18px 40px -18px rgba(23,96,185,.35);
   --foco:rgba(0,140,245,.28);
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234A76A8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --fundo:#0A1A30; --painel:#10243F; --campo:#0A1A30;
-    --borda:#30557F; --borda-campo:#3B6394; --borda-forte:#4C78AC; --grade:#24456B;
-    --texto:#FEFEFE; --texto-2:#87B1DB; --titulo:#D7FFF7;
-    --bom:#3FD9A4; --bom-bg:#0B3B33;
-    --ruim:#FFB067; --ruim-bg:#3A2614;
-    --neutro:#D7FFF7; --neutro-bg:#19385F;
-    --alerta-v:#FFB067; --alerta-borda:#F9902A;
-    --cad-barra:#008CF5;
-    --dica-bg:#0A1A30; --dica-borda:#3B6394; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
-    --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
-    --foco:rgba(0,140,245,.45);
-    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --fundo:#0A1A30; --painel:#10243F; --campo:#0A1A30;
-  --borda:#30557F; --borda-campo:#3B6394; --borda-forte:#4C78AC; --grade:#24456B;
-  --texto:#FEFEFE; --texto-2:#87B1DB; --titulo:#D7FFF7;
-  --bom:#3FD9A4; --bom-bg:#0B3B33;
-  --ruim:#FFB067; --ruim-bg:#3A2614;
-  --neutro:#D7FFF7; --neutro-bg:#19385F;
-  --alerta-v:#FFB067; --alerta-borda:#F9902A;
-  --cad-barra:#008CF5;
-  --dica-bg:#0A1A30; --dica-borda:#3B6394; --dica-texto:#FEFEFE; --dica-m:#87B1DB; --sombra-dica:0 14px 34px -12px rgba(0,0,0,.65); --veu:rgba(3,10,20,.5);
-  --sombra:0 2px 4px rgba(0,0,0,.25),0 18px 40px -18px rgba(0,0,0,.6);
-  --foco:rgba(0,140,245,.45);
-  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2387B1DB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--fundo);color:var(--texto);font-family:var(--fonte);
@@ -99,7 +68,7 @@ button,select,input{font-family:inherit}
 .marca svg{width:40px;height:40px;flex:none;display:block}
 .marca span{font-size:14px;font-weight:500;color:var(--azul-claro);letter-spacing:.02em}
 .atual{font-size:14px;color:var(--branco)}
-.btn,.bt-tema{font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;
+.btn{font-size:14px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;
   height:46px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
 .btn{color:var(--azul-2);background:var(--branco);border:none;padding:0 26px}
 .btn:hover{background:var(--azul-claro)}
@@ -109,11 +78,7 @@ button,select,input{font-family:inherit}
   border-radius:50%;animation:gira .8s linear infinite;display:none}
 .btn.indo .gira{display:block}
 @keyframes gira{to{transform:rotate(360deg)}}
-.bt-tema{color:var(--branco);background:transparent;border:1.5px solid rgba(254,254,254,.75);padding:0 18px 0 14px;gap:8px}
-.bt-tema:hover{background:rgba(254,254,254,.14);border-color:var(--branco)}
-.bt-tema svg{width:18px;height:18px;flex:none;display:block}
-.bt-tema .sol{display:none} .bt-tema.escuro .sol{display:block} .bt-tema.escuro .lua{display:none}
-.btn:focus-visible,.bt-tema:focus-visible{outline:2px solid var(--branco);outline-offset:3px}
+.btn:focus-visible{outline:2px solid var(--branco);outline-offset:3px}
 .topo-t{display:flex;flex-direction:column;gap:10px;max-width:760px}
 .topo-t h1{margin:0;font-size:clamp(40px,5vw,58px);line-height:.95;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
 .topo-t p{margin:0;font-size:clamp(15px,1.5vw,20px);max-width:52ch}
@@ -613,8 +578,6 @@ button,select,input{font-family:inherit}
   .marca svg{width:32px;height:32px}
   .marca span{display:none}
   .atual{order:5;flex-basis:100%;font-size:12.5px}
-  .bt-tema{width:44px;height:44px;padding:0;justify-content:center}
-  .bt-tema span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .btn{height:44px;padding:0 18px;font-size:13px}
   .filtro{padding:16px;gap:12px}
   .filtros,.datas{grid-template-columns:minmax(0,1fr);gap:12px}
@@ -646,11 +609,6 @@ button,select,input{font-family:inherit}
         <span>painel de tráfego · v2</span>
       </div>
       <span class="atual" id="atual" aria-live="polite">—</span>
-      <button class="bt-tema" type="button" id="btTema" aria-label="Mudar para o modo escuro">
-        <svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 1 1 9.4 4a6.6 6.6 0 0 0 10.6 10.6z"/></svg>
-        <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
-        <span id="txTema">modo escuro</span>
-      </button>
       <button class="btn" type="button" id="btAtualizar"><span class="gira" aria-hidden="true"></span><span id="txAtualizar">Atualizar</span></button>
     </div>
     <div class="topo-t">
@@ -2410,28 +2368,11 @@ fCanal.addEventListener("change",()=>{fCamp.value="";aoMudar()});
 fCamp.addEventListener("change",aoMudar);
 btAtualizar.addEventListener("click",()=>{ABA==="evo"?atualizarEvo():atualizar()});
 
-/* ------------------------------------------------- tema claro / escuro
-   o padrão é o modo claro, mesmo com o claude.ai ou o sistema no escuro;
-   o botão troca e guarda a escolha neste navegador */
-const TEMA="v2:tema", raiz=document.documentElement;
-const btTema=document.getElementById("btTema"), txTema=document.getElementById("txTema");
-let tema=raiz.getAttribute("data-theme")==="dark"?"dark":"light";
-function marcarTema(){
-  const escuro=tema==="dark";
-  btTema.classList.toggle("escuro",escuro);
-  txTema.textContent=escuro?"modo claro":"modo escuro";
-  btTema.setAttribute("aria-label",escuro?"Mudar para o modo claro":"Mudar para o modo escuro");
-}
-btTema.addEventListener("click",()=>{
-  tema=tema==="dark"?"light":"dark";
-  raiz.setAttribute("data-theme",tema);
-  try{localStorage.setItem(TEMA,tema)}catch(e){}
-  marcarTema();
-});
-/* se a página de fora trocar o tema, volta para o escolhido aqui */
-new MutationObserver(()=>{if(raiz.getAttribute("data-theme")!==tema) raiz.setAttribute("data-theme",tema)})
+/* ------------------------------------------------- só modo claro
+   se a página de fora (claude.ai) marcar o tema escuro, volta para o claro */
+const raiz=document.documentElement;
+new MutationObserver(()=>{if(raiz.getAttribute("data-theme")!=="light") raiz.setAttribute("data-theme","light")})
   .observe(raiz,{attributes:true,attributeFilter:["data-theme"]});
-marcarTema();
 
 /* =========================================================================
    ABA "EVOLUÇÃO MENSAL" — a base inteira mês a mês, últimos 12 meses.

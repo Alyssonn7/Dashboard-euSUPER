@@ -14,11 +14,11 @@ Segue o manual de identidade da euSUPER!: faixa azul no topo (degradê oficial,
 barra do "!" a 22,5° e o círculo laranja), títulos em minúsculas, botão em caixa
 alta e ícones da marca. Fonte Gilroy quando instalada, Outfit no lugar.
 
-**Tema claro e escuro.** O claro é o do manual (fundo branco). O escuro é
-derivado do azul da marca (fundo `#0A1A30`, cartões `#10243F`), com o cinza
-`#87B1DB` e o azul claro `#D7FFF7` como cor de texto. O painel abre sempre no
-**modo claro**, mesmo com o claude.ai ou o sistema no escuro; o botão **modo
-escuro / modo claro** no topo troca e guarda a escolha neste navegador (`v2:tema`).
+**Só modo claro.** O tema é o do manual (fundo branco), sempre. A pedido
+(10/11/26), o modo escuro e o botão de trocar foram retirados: a página declara
+`color-scheme: only light` (o navegador não escurece sozinho), mantém o claro
+mesmo se o claude.ai marcar o tema escuro e apaga a escolha antiga que ficou
+guardada (`v2:tema`).
 
 Formato de resumo: filtros num cartão que sobe sobre a faixa e, logo abaixo, o
 funil na largura toda, compacto (330px) para caber na primeira tela junto com os
