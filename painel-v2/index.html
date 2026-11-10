@@ -1282,7 +1282,7 @@ const COMUNICADOS=[
   {canal:"openai", desde:"2026-11-07", ate:null, atualizado:"10/11",
    titulo:"OpenAI Ads em turbulência",
    texto:"Desde 07/11 a OpenAI quase não entrega: caiu de cerca de 15 cadastros por dia para perto de zero. "+
-     "A OpenAI classificou a euSUPER! como serviço financeiro, que hoje não pode anunciar no Brasil, e por isso não conseguimos criar campanhas novas (só uma segue ativa). "+
+     "A OpenAI classificou a Mia como serviço financeiro, que hoje não pode anunciar no Brasil, e por isso não conseguimos criar campanhas novas (só uma segue ativa). "+
      "Já estamos falando com o suporte da OpenAI para resolver."}
 ];
 const comunicadosDe=(p,canal)=>!p?[]:COMUNICADOS.filter(x=>(canal==="todos"||canal===x.canal)&&p.ate>=x.desde&&(!x.ate||p.de<=x.ate));

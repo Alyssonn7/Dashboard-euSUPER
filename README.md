@@ -248,7 +248,7 @@ anúncio não ganha a origem dessa visita nova.
 laranja em cima do funil quando o período escolhido pega a data do aviso e o
 filtro é "todos os canais" ou o canal do aviso; no bloco de origem, a linha do
 canal ganha a marca **"em ajuste"** (passe o mouse para ler). Hoje: **OpenAI Ads
-em turbulência** desde 07/11. A OpenAI classificou a euSUPER! como serviço
+em turbulência** desde 07/11. A OpenAI classificou a Mia como serviço
 financeiro, que hoje não pode anunciar no Brasil, então não dá para criar
 campanhas novas (só uma segue ativa) e os cadastros caíram de cerca de 15 por dia
 para perto de zero; o Alysson está falando com o suporte da OpenAI. Quando
