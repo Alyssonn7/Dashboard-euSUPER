@@ -197,6 +197,27 @@ dentro dos 7 dias, a contagem vai subir: no lugar da seta de variação aparece
 centenas de milhares de impressões a dezenas de contas, com piso de 30% da
 primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
+**Mapa dos públicos** (logo acima da origem dos cadastros, mesmo período e mesma
+regra de origem): um cartão por canal de anúncio, como jogadores num ranking.
+- **Medalha (1º, 2º, 3º):** ranking pelo **custo por ativação** (investimento
+  das campanhas de cadastro ÷ ativações de quem veio do canal); 1º é o mais
+  barato. Embaixo, "antes R$ X" quando há comparação com origem gravada.
+- **Nível:** quanto do público ativa (1º agendamento em até 7 dias):
+  **Qualificado** com 15% ou mais, **Mediano** de 8 a 15%, **Pouco
+  qualificado** abaixo de 8% (`QUAL_NIVEIS`). O canal com a maior taxa ganha o
+  selo **Mais qualificado**.
+- **Trilha:** cadastro → onboarding → ativou → **cliente confirmou** (um cliente
+  confirmou agendamento pelo link em até 7 dias, o uso de verdade). O ponto de
+  cada etapa cresce com a parcela do público que chega até ali.
+- **⚡ Velocidade:** das ativações, quantas saíram na 1ª hora depois do cadastro.
+- Canal com comunicado ativo (ex.: OpenAI) ganha a marca "em ajuste". Setinha
+  para minimizar (`v2:qualAberto`).
+
+Para isso a consulta de origem passou a trazer, por dia e origem, também
+`clientes` (cliente confirmou em 7 dias) e `rapidos` (ativou na 1ª hora). A
+origem guardada no navegador antes disso é descartada e buscada de novo no
+próximo Atualizar.
+
 **Origem dos cadastros** (bloco abaixo do funil, só em "Todos os canais"): de
 onde veio cada cadastro segundo o **nosso banco**, não a plataforma de anúncio.
 O site grava a origem desde **23/10/26 às 8h59** (tabela `professional_tracking`:

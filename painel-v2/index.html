@@ -308,6 +308,43 @@ button,select,input{font-family:inherit}
 .origem-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
 .origem-corpo{display:flex;flex-direction:column;gap:16px}
 .origem-cx.fechado .ab-tog svg{transform:rotate(180deg)}
+/* mapa dos públicos: um cartão por canal, como jogadores num ranking */
+.qual-cx{grid-column:1/-1;padding:24px 28px 20px;display:flex;flex-direction:column;gap:16px}
+.qual-cx .cx-t{cursor:pointer} .qual-cx .cx-acoes{display:flex;align-items:center;gap:10px;flex:none}
+.qual-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
+.qual-cx.fechado .ab-tog svg{transform:rotate(180deg)}
+.qual-corpo{display:flex;flex-direction:column;gap:12px}
+.qual-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.qc{position:relative;display:flex;flex-direction:column;gap:14px;padding:18px 18px 14px;border:1px solid var(--borda);border-radius:12px;
+  background:var(--painel);overflow:hidden}
+.qc::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--nivel)}
+.qc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.medalha{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;
+  color:var(--tinta);box-shadow:inset 0 -3px 0 rgba(10,26,48,.16)}
+.medalha.m1{background:#F2C14E} .medalha.m2{background:#C9D3DE} .medalha.m3{background:#D9A066}
+.qc-nome{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--texto)}
+.qc-nivel,.qc-aj,.qc-selo{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.n-bom .qc-nivel{background:var(--bom-bg);color:var(--bom)}
+.n-medio .qc-nivel{background:var(--neutro-bg);color:var(--neutro)}
+.n-fraco .qc-nivel{background:var(--ruim-bg);color:var(--ruim)}
+.qc-aj{background:var(--laranja);color:var(--tinta);cursor:help}
+.qc-selo{background:var(--verde);color:var(--tinta)}
+.qc-v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.qc-v b{font-size:clamp(24px,2.2vw,30px);font-weight:700;letter-spacing:-.01em;color:var(--texto);font-variant-numeric:tabular-nums}
+.qc-v span{font-size:13px;color:var(--texto-2)} .qc-v small{flex-basis:100%;font-size:12px;color:var(--texto-2)}
+/* trilha: quatro checkpoints ligados por um caminho; a parte pintada vai até
+   a última etapa que o público alcançou */
+.trilha{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.trilha::before,.trilha::after{content:"";position:absolute;left:12.5%;top:11px;height:4px;border-radius:2px}
+.trilha::before{right:12.5%;background:var(--grade)}
+.trilha::after{width:calc(75% * var(--prog) / 100);background:var(--nivel)}
+.trilha li{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;min-width:0}
+.trilha li i{height:26px;display:grid;place-items:center;margin-bottom:3px}
+.trilha li u{width:var(--t);height:var(--t);border-radius:50%;background:var(--painel);border:3px solid var(--borda-forte)}
+.trilha li.on u{background:var(--nivel);border-color:var(--nivel);box-shadow:0 0 0 3px var(--painel)}
+.trilha b{font-size:15px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums}
+.trilha span{font-size:11.5px;color:var(--texto-2);line-height:1.2}
+.qc-rod{margin:0;display:flex;align-items:center;justify-content:space-between;gap:6px 10px;flex-wrap:wrap;font-size:12.5px;color:var(--texto-2)}
 #graficos .graf-cx .cx-t{cursor:pointer;align-items:flex-start;flex-wrap:nowrap}
 #graficos .graf-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
@@ -534,6 +571,7 @@ button,select,input{font-family:inherit}
   .filtros,.datas{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:820px){.dupla{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:1000px){.qual-g{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:700px){
   .funil{display:none} .funil-lista{display:flex}
   .org-tab table{min-width:0;font-size:13px}
@@ -593,7 +631,7 @@ button,select,input{font-family:inherit}
   /* no celular o selo de atenção fica só com o "!" */
   .atencao{padding:3px 5px}
   .atencao span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .funil-cx,.origem-cx{padding:20px 16px 16px} .graf-cx{padding:18px 16px 14px}
+  .funil-cx,.origem-cx,.qual-cx{padding:20px 16px 16px} .graf-cx{padding:18px 16px 14px}
   .graf,.graf-x{margin-left:42px}
 }
 @media (max-width:380px){
@@ -1444,7 +1482,8 @@ function pintarSemanas(){
 /* ------------------------------------------------- dados em memória
    DADOS.midia[canal] = {cob:[[de,ate]...], linhas:[{d,c,t,imp,cli,custo,cad,vis}]}
    DADOS.base         = {cob:[[de,ate]...], dias:{dia:[cad,onb,ativ,mad,ativOnb]}}
-   DADOS.origem       = {cob:[[de,ate]...], dias:{dia:{origem:[cad,onb,mad,ativ]}}}
+   DADOS.origem       = {cob:[[de,ate]...], dias:{dia:{origem:[cad,onb,mad,ativ,cli,rap]}}}
+     (cli = cliente confirmou agendamento em 7 dias; rap = ativou na 1ª hora)
    cob = intervalos de dias já consultados (dia sem linha = dia sem gasto) */
 function abrir(enc){
   const m={};
@@ -1454,7 +1493,9 @@ function abrir(enc){
       imp:r[2],cli:r[3],custo:r[4],cad:r[5],vis:r.length>6?r[6]:null}))};
   });
   const dd={}; (enc.base.l||[]).forEach(r=>{dd[r[0]]=r.slice(1)});
-  const od={}, eo=enc.origem||{cob:[],l:[]};
+  const od={}, eo0=enc.origem||{cob:[],l:[]};
+  /* origem gravada antes do mapa dos públicos não tem cli/rap: busca de novo */
+  const eo=eo0.l.some(r=>r.length<8)?{cob:[],l:[]}:eo0;
   eo.l.forEach(r=>{(od[r[0]]||(od[r[0]]={}))[r[1]]=r.slice(2)});
   return {puxadoEm:enc.puxadoEm, fonte:enc.fonte, midia:m, base:{cob:enc.base.cob.map(i=>i.slice()), dias:dd},
     origem:{cob:eo.cob.map(i=>i.slice()), dias:od}};
@@ -1592,6 +1633,14 @@ c AS (
     EXISTS (SELECT 1 FROM event_scheduled es
       WHERE es.professional_id = pr.id AND es.status <> 'DRAFT'
         AND es.created_at < pr.created_at + interval '7 days') AS ativo${comOrigem?`,
+    /* mapa dos públicos: um cliente confirmou agendamento pelo link em até 7
+       dias (uso de verdade) e o 1º agendamento saiu na 1ª hora (velocidade) */
+    EXISTS (SELECT 1 FROM event_client ec JOIN event_scheduled ecs ON ecs.id = ec.event_scheduled_id
+      WHERE ecs.professional_id = pr.id AND ec.created_by = 'CLIENT' AND ec.status = 'CONFIRMED'
+        AND ec.created_at < pr.created_at + interval '7 days') AS cliente,
+    EXISTS (SELECT 1 FROM event_scheduled es1
+      WHERE es1.professional_id = pr.id AND es1.status <> 'DRAFT'
+        AND es1.created_at < pr.created_at + interval '1 hour') AS rapido,
     CASE
       WHEN pr.created_at < (SELECT min(created_at) FROM professional_tracking) - interval '10 minutes' THEN 'antes'
       WHEN t.tem IS NULL THEN 'sem'
@@ -1634,7 +1683,9 @@ function sqlOrigem(de,ate){
 SELECT dia, origem, count(*) AS cadastros,
   count(*) FILTER (WHERE onboarding_step = 'FINISHED') AS onboarding,
   count(*) FILTER (WHERE maduro) AS maduros,
-  count(*) FILTER (WHERE ativo) AS ativados
+  count(*) FILTER (WHERE ativo) AS ativados,
+  count(*) FILTER (WHERE cliente) AS clientes,
+  count(*) FILTER (WHERE rapido) AS rapidos
 FROM c GROUP BY 1,2 ORDER BY 1,2`;
 }
 async function qBase(de,ate){
@@ -1645,7 +1696,7 @@ async function qBase(de,ate){
 async function qOrigem(de,ate){
   const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlOrigem(de,ate)});
   if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
-  return p.data.rows.map(r=>[String(r[0]).slice(0,10),String(r[1]),...[2,3,4,5].map(i=>+r[i]||0)]);
+  return p.data.rows.map(r=>[String(r[0]).slice(0,10),String(r[1]),...[2,3,4,5,6,7].map(i=>+r[i]||0)]);
 }
 
 let puxando=false, pendente=false;
@@ -1874,6 +1925,10 @@ const elResumo=document.getElementById("resumo"), elGraf=document.getElementById
 const FUNIL_ABERTO="v2:funilAberto";
 let funilAberto=true;
 try{funilAberto=localStorage.getItem(FUNIL_ABERTO)!=="0"}catch(e){}
+/* o mapa dos públicos funciona igual (v2:qualAberto) */
+const QUAL_ABERTO="v2:qualAberto";
+let qualAberto=true;
+try{qualAberto=localStorage.getItem(QUAL_ABERTO)!=="0"}catch(e){}
 /* o bloco de origem dos cadastros funciona igual (v2:origemAberto) */
 const ORIGEM_ABERTO="v2:origemAberto";
 let origemAberto=true;
@@ -1891,12 +1946,16 @@ function marcarBloco(id,corpoId,aberto,nome){
 function marcarFunil(){
   marcarBloco("funilCx","funilCorpo",funilAberto,"o funil");
   marcarBloco("origemCx","origemCorpo",origemAberto,"a origem dos cadastros");
+  marcarBloco("qualCx","qualCorpo",qualAberto,"o mapa dos públicos");
 }
 elResumo.addEventListener("click",e=>{
   if(e.target.closest(".info")) return;
   if(e.target.closest(".funil-cx .cx-t")){
     funilAberto=!funilAberto;
     try{localStorage.setItem(FUNIL_ABERTO,funilAberto?"1":"0")}catch(e){}
+  }else if(e.target.closest(".qual-cx .cx-t")){
+    qualAberto=!qualAberto;
+    try{localStorage.setItem(QUAL_ABERTO,qualAberto?"1":"0")}catch(e){}
   }else if(e.target.closest(".origem-cx .cx-t")){
     origemAberto=!origemAberto;
     try{localStorage.setItem(ORIGEM_ABERTO,origemAberto?"1":"0")}catch(e){}
@@ -2110,13 +2169,13 @@ function frase(cls,html){
 
 /* ------------------------------------------------- origem dos cadastros */
 function agregarOrigem(de,ate){
-  const zero=()=>({cad:0,onb:0,mad:0,ativ:0}), r={}, tot=zero(); let antes=0;
+  const zero=()=>({cad:0,onb:0,mad:0,ativ:0,cli:0,rap:0}), r={}, tot=zero(); let antes=0;
   Object.entries(DADOS.origem.dias).forEach(([d,ks])=>{
     if(d<de||d>ate) return;
     Object.entries(ks).forEach(([k,v])=>{
       if(k==="antes"){antes+=v[0];return}
       const o=r[k]||(r[k]=zero());
-      [o,tot].forEach(x=>{x.cad+=v[0];x.onb+=v[1];x.mad+=v[2];x.ativ+=v[3]});
+      [o,tot].forEach(x=>{x.cad+=v[0];x.onb+=v[1];x.mad+=v[2];x.ativ+=v[3];x.cli+=v[4]||0;x.rap+=v[5]||0});
     });
   });
   /* orgânico = soma das origens sem anúncio */
@@ -2126,6 +2185,66 @@ function agregarOrigem(de,ate){
   return {r,tot,antes};
 }
 const taxaD7=x=>x&&x.cad?cem(x.ativ,x.cad):null;
+/* ------------------------------------------------- mapa dos públicos
+   cada canal de anúncio é um "jogador": medalha = ranking pelo custo por
+   ativação (a métrica principal); nível = quanto do público ativa; trilha =
+   até onde o público chega (cadastro → onboarding → 1º agendamento em 7 dias →
+   cliente confirmou agendamento pelo link); ⚡ = das ativações, quantas saíram
+   na 1ª hora. Mesmos dados e mesmo período do bloco de origem */
+const QUAL_NIVEIS={bom:15, medio:8};
+const nivelDe=t=>t>=QUAL_NIVEIS.bom?{c:"n-bom",t:"Qualificado"}:t>=QUAL_NIVEIS.medio?{c:"n-medio",t:"Mediano"}:{c:"n-fraco",t:"Pouco qualificado"};
+const DICA_QUAL="Cada canal é um jogador. A medalha é o ranking pelo custo por ativação, a métrica principal: 1º é o mais barato. "+
+  `O nível diz quanto do público ativa (1º agendamento em até 7 dias): Qualificado com ${QUAL_NIVEIS.bom}% ou mais, Mediano de ${QUAL_NIVEIS.medio} a ${QUAL_NIVEIS.bom}%, Pouco qualificado abaixo de ${QUAL_NIVEIS.medio}%. `+
+  "A trilha mostra até onde o público chega: cadastro, onboarding, ativação e um cliente que confirmou agendamento pelo link (uso de verdade). "+
+  "O raio mostra a velocidade: das ativações, quantas aconteceram na 1ª hora depois do cadastro.";
+function blocoQualidade(p,c){
+  if(p.ate<TRACK_INICIO) return "";
+  const de0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
+  if(!cobre(DADOS.origem.cob,de0,p.ate)) return "";
+  const {r}=agregarOrigem(de0,p.ate), m=agregar(de0,p.ate,"todos","");
+  let rb=null, mb=null;
+  if(c&&c.de>=TRACK_INICIO&&cobre(DADOS.origem.cob,c.de,c.ate)){rb=agregarOrigem(c.de,c.ate).r; mb=agregar(c.de,c.ate,"todos","");}
+  const js=CANAIS.map(k=>{
+    const x=r[k]||{cad:0,onb:0,mad:0,ativ:0,cli:0,rap:0}, inv=m.canal[k]?m.canal[k].inv:0;
+    const xb=rb&&rb[k], invb=mb&&mb.canal[k]?mb.canal[k].inv:0;
+    return {k,x,inv,ca:x.ativ?inv/x.ativ:null, cab:xb&&xb.ativ?invb/xb.ativ:null, tx:x.cad?x.ativ/x.cad*100:0};
+  }).filter(j=>j.x.cad>0||j.inv>0);
+  if(!js.length) return "";
+  /* ranking: menor custo por ativação primeiro; quem não ativou ninguém fica por último */
+  js.sort((a,b)=>(a.ca==null)-(b.ca==null)||(a.ca||0)-(b.ca||0));
+  const melhorTx=Math.max(...js.map(j=>j.tx));
+  const pend=js.reduce((s,j)=>s+j.x.cad-j.x.mad,0);
+  const cards=js.map((j,i)=>{
+    const x=j.x, nv=nivelDe(j.tx), cor={"n-bom":"var(--verde)","n-medio":"var(--azul)","n-fraco":"var(--laranja)"}[nv.c];
+    /* o ponto de cada etapa cresce com a parcela do público que chega até ali */
+    const sh=v=>x.cad?v/x.cad:0, tam=f=>Math.round(10+14*Math.sqrt(f));
+    const et=[{v:num(x.cad),n:"cadastros",on:x.cad>0,t:tam(1)},
+      {v:x.cad?pct(x.onb/x.cad*100):"—",n:"onboarding",on:x.onb>0,t:tam(sh(x.onb))},
+      {v:x.cad?pct(x.ativ/x.cad*100):"—",n:"ativaram",on:x.ativ>0,t:tam(sh(x.ativ))},
+      {v:x.cad?pct(x.cli/x.cad*100):"—",n:"cliente confirmou",on:x.cli>0,t:tam(sh(x.cli))}];
+    const ult=et.reduce((u,e,ix)=>e.on?ix:u,0);
+    const aj=comunicadosDe(p,j.k)[0];
+    const selo=j.tx===melhorTx&&j.tx>0?`<em class="qc-selo">Mais qualificado</em>`:"";
+    return `<div class="qc ${nv.c}" style="--nivel:${cor}">
+      <div class="qc-top"><span class="medalha m${i+1}" title="${i+1}º no custo por ativação">${i+1}º</span>
+        <b class="qc-nome">${esc(NOME[j.k])}</b>${aj?`<em class="qc-aj" data-html data-dica="${esc(`<b>${esc(aj.titulo)}</b><p class="m">${esc(aj.texto)}</p>`)}">em ajuste</em>`:""}
+        <em class="qc-nivel">${nv.t}</em></div>
+      <div class="qc-v"><b>${j.ca!=null?brl(j.ca):j.inv>0?"nenhuma":"—"}</b><span>${j.ca!=null?"por ativação":j.inv>0?"ativação ainda":""}</span>
+        ${j.cab!=null?`<small>antes ${brl(j.cab)}</small>`:""}</div>
+      <ol class="trilha" style="--prog:${ult/3*100}" aria-label="${esc(et.map(e=>`${e.n}: ${e.v}`).join(", "))}">${et.map(e=>
+        `<li class="${e.on?"on":""}"><i><u style="--t:${e.t}px"></u></i><b>${e.v}</b><span>${e.n}</span></li>`).join("")}</ol>
+      <p class="qc-rod"><span>⚡ ${x.ativ?`${pct(x.rap/x.ativ*100)} ativam na 1ª hora`:"sem ativação ainda"}</span>${selo}</p>
+    </div>`;
+  }).join("");
+  const nota=`Investimento das campanhas de cadastro ÷ ativações de quem veio de cada canal, no mesmo período do bloco de origem.`+
+    (pend>0?` Parcial: ${num(pend)} cadastros ainda dentro dos 7 dias; como quase todo mundo ativa no 1º dia, muda pouco.`:"");
+  return `<article class="cx qual-cx" id="qualCx" aria-label="Mapa dos públicos">
+    <div class="cx-t"><div><h2>mapa dos públicos</h2><p>Qual canal traz gente que usa o sistema de verdade · ${curta(de0)} a ${curta(p.ate)}.</p></div>
+      <div class="cx-acoes"><button type="button" class="info" data-dica="${esc(DICA_QUAL)}" aria-label="Como ler o mapa">i</button>
+      <button type="button" class="ab-tog" aria-controls="qualCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div></div>
+    <div class="qual-corpo" id="qualCorpo"><div class="qual-g">${cards}</div><p class="legenda-f">${nota}</p></div>
+  </article>`;
+}
 const DICA_ORIGEM="Origem = de onde a pessoa veio quando se cadastrou, gravada pelo nosso site: link do anúncio (UTM), "+
   "identificador do clique (gclid no Google, fbclid no Meta) e site de onde veio. É o banco que diz, não a plataforma de anúncio.";
 function blocoOrigem(p,c){
@@ -2338,7 +2457,7 @@ function pintar(){
     ${funil(etapas,temComp,a.inv)}
     ${fora?`<p class="legenda-f">${fora.trim()}</p>`:""}
     </div>
-  </article>`+cartoes+(modoReal?blocoOrigem(p,temComp?c:null):"");
+  </article>`+cartoes+(modoReal?blocoQualidade(p,temComp?c:null)+blocoOrigem(p,temComp?c:null):"");
   marcarFunil();
 
   /* gráficos diários */
