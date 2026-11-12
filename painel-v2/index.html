@@ -317,34 +317,33 @@ button,select,input{font-family:inherit}
 .qual-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .qc{position:relative;display:flex;flex-direction:column;gap:14px;padding:18px 18px 14px;border:1px solid var(--borda);border-radius:12px;
   background:var(--painel);overflow:hidden}
-.qc::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--nivel)}
+.qc::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--dec)}
+.qc.d-sobe{--dec:var(--verde);--dec-bg:var(--bom-bg);--dec-tx:var(--bom)}
+.qc.d-mantem{--dec:var(--azul);--dec-bg:var(--neutro-bg);--dec-tx:var(--neutro)}
+.qc.d-desce{--dec:var(--laranja);--dec-bg:var(--ruim-bg);--dec-tx:var(--ruim)}
 .qc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .medalha{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;
   color:var(--tinta);box-shadow:inset 0 -3px 0 rgba(10,26,48,.16)}
 .medalha.m1{background:#F2C14E} .medalha.m2{background:#C9D3DE} .medalha.m3{background:#D9A066}
-.qc-nome{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--texto)}
-.qc-nivel,.qc-aj,.qc-selo{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
-.n-bom .qc-nivel{background:var(--bom-bg);color:var(--bom)}
-.n-medio .qc-nivel{background:var(--neutro-bg);color:var(--neutro)}
-.n-fraco .qc-nivel{background:var(--ruim-bg);color:var(--ruim)}
+.qc-nome{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--texto);white-space:nowrap}
+.qc-dec,.qc-aj{font-style:normal;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.qc-dec{background:var(--dec-bg);color:var(--dec-tx)}
 .qc-aj{background:var(--laranja);color:var(--tinta);cursor:help}
-.qc-selo{background:var(--verde);color:var(--tinta)}
 .qc-v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .qc-v b{font-size:clamp(24px,2.2vw,30px);font-weight:700;letter-spacing:-.01em;color:var(--texto);font-variant-numeric:tabular-nums}
 .qc-v span{font-size:13px;color:var(--texto-2)} .qc-v small{flex-basis:100%;font-size:12px;color:var(--texto-2)}
-/* trilha: quatro checkpoints ligados por um caminho; a parte pintada vai até
-   a última etapa que o público alcançou */
-.trilha{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
-.trilha::before,.trilha::after{content:"";position:absolute;left:12.5%;top:11px;height:4px;border-radius:2px}
-.trilha::before{right:12.5%;background:var(--grade)}
-.trilha::after{width:calc(75% * var(--prog) / 100);background:var(--nivel)}
-.trilha li{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;min-width:0}
-.trilha li i{height:26px;display:grid;place-items:center;margin-bottom:3px}
-.trilha li u{width:var(--t);height:var(--t);border-radius:50%;background:var(--painel);border:3px solid var(--borda-forte)}
-.trilha li.on u{background:var(--nivel);border-color:var(--nivel);box-shadow:0 0 0 3px var(--painel)}
-.trilha b{font-size:15px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums}
-.trilha span{font-size:11.5px;color:var(--texto-2);line-height:1.2}
-.qc-rod{margin:0;display:flex;align-items:center;justify-content:space-between;gap:6px 10px;flex-wrap:wrap;font-size:12.5px;color:var(--texto-2)}
+/* três números de marketing lado a lado */
+.qm-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.qm{display:flex;flex-direction:column;gap:2px;padding:10px 10px 9px;border-radius:10px;background:var(--neutro-bg);cursor:help;min-width:0}
+.qm b{font-size:18px;font-weight:700;color:var(--texto);font-variant-numeric:tabular-nums}
+.qm span{font-size:11.5px;line-height:1.25;color:var(--texto-2)}
+.qc-camp{margin:0;display:flex;flex-direction:column;gap:1px;font-size:13px;color:var(--texto)}
+.qc-camp b,.qc-passo b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.qc-camp span{overflow-wrap:anywhere}
+.qc-camp.rev b{color:var(--ruim)}
+.qc-passo{margin:auto 0 0;display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:10px;border-left:3px solid var(--dec);
+  background:var(--dec-bg);font-size:13px;line-height:1.45;color:var(--texto)}
+.qc-passo b{color:var(--dec-tx)}
 #graficos .graf-cx .cx-t{cursor:pointer;align-items:flex-start;flex-wrap:nowrap}
 #graficos .graf-cx.fechado .ab-tog svg{transform:rotate(180deg)}
 .placar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:16px;align-items:stretch}
@@ -1498,7 +1497,7 @@ function abrir(enc){
   const eo=eo0.l.some(r=>r.length<8)?{cob:[],l:[]}:eo0;
   eo.l.forEach(r=>{(od[r[0]]||(od[r[0]]={}))[r[1]]=r.slice(2)});
   return {puxadoEm:enc.puxadoEm, fonte:enc.fonte, midia:m, base:{cob:enc.base.cob.map(i=>i.slice()), dias:dd},
-    origem:{cob:eo.cob.map(i=>i.slice()), dias:od}};
+    origem:{cob:eo.cob.map(i=>i.slice()), dias:od}, perfil:enc.perfil||null};
 }
 function fechar(x){
   const midia={};
@@ -1512,7 +1511,8 @@ function fechar(x){
   });
   return {v:7, puxadoEm:x.puxadoEm, fonte:x.fonte, midia,
     base:{cob:x.base.cob, l:Object.keys(x.base.dias).sort().map(d=>[d,...x.base.dias[d]])},
-    origem:{cob:x.origem.cob, l:Object.keys(x.origem.dias).sort().flatMap(d=>Object.entries(x.origem.dias[d]).map(([k,v])=>[d,k,...v]))}};
+    origem:{cob:x.origem.cob, l:Object.keys(x.origem.dias).sort().flatMap(d=>Object.entries(x.origem.dias[d]).map(([k,v])=>[d,k,...v]))},
+    perfil:x.perfil||null};
 }
 function juntar(cob,de,ate){
   const t=[...cob,[de,ate]].sort((a,b)=>a[0]<b[0]?-1:1), r=[];
@@ -1619,10 +1619,22 @@ async function qOpenai(de,ate){
    utm_content=link_in_bio) · busca orgânica (pelo site de onde veio) ·
    redes sociais · direto (sem UTM e sem site de origem) · outros sites */
 const SQL_PAGO="('cpc','ppc','paid','paid_search','paid_social','paidsocial','ads','cpm','display')";
+/* grupo de profissão (mapa dos públicos): as categorias do cadastro e, em
+   "Outros", o texto que a pessoa escreveu. "nao" = parou antes de informar */
+const SQL_GRUPO=`CASE
+      WHEN pr.profession IS NULL OR pr.profession->>'category' IS NULL THEN 'nao'
+      WHEN pr.profession->>'category' IN ('MANICURIST','HAIRDRESSER','EYELASH_DESIGNER','EYEBROW_DESIGNER','BARBER','ESTHETICIAN','MASSAGE_THERAPIST') THEN 'beleza'
+      WHEN pr.profession->>'category' IN ('PSYCHOLOGIST','PSYCHOANALYST','NUTRITIONIST','PHYSIOTHERAPIST','DOCTOR','DENTIST','ACUPUNCTURIST') THEN 'saude'
+      WHEN pr.profession->>'category' <> 'OTHERS' THEN 'servicos'
+      WHEN lower(coalesce(pr.profession->>'display_name','')) ~ '(nail|unha|manicur|pedicur|lash|c[ií]lio|sobrancel|brow|cabel|tran[cç]|est[eé]tic|maqui|depila|massag|massot|barb|sal[aã]o|beleza|podolog|micropig|bronze|alisament|escova|spa|epila)' THEN 'beleza'
+      WHEN lower(coalesce(pr.profession->>'display_name','')) ~ '(psic|terap|nutri|fisio|enferm|m[eé]dic|dent|acupunt|sa[uú]de|personal)' THEN 'saude'
+      WHEN lower(coalesce(pr.profession->>'display_name','')) ~ '(vend|loja|roupa|moda|lingerie|consultor|mary kay|hinode|doce|salgad|lanch|comerci|multimarca|distribuidora|presente|artes|costur|floricult|cama mesa|perfume|catal|emprend|empreend)' THEN 'vendas'
+      ELSE 'servicos'
+    END`;
 function cteCadastros(de,ate,comOrigem){
   return `WITH interno AS (SELECT id FROM professional WHERE email ILIKE '%bitboundaire%'),
 pr AS (
-  SELECT p.id, p.created_at, p.onboarding_step,
+  SELECT p.id, p.created_at, p.onboarding_step, p.profession,
     (p.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date AS dia
   FROM professional p
   WHERE p.id NOT IN (SELECT id FROM interno)
@@ -1641,6 +1653,7 @@ c AS (
     EXISTS (SELECT 1 FROM event_scheduled es1
       WHERE es1.professional_id = pr.id AND es1.status <> 'DRAFT'
         AND es1.created_at < pr.created_at + interval '1 hour') AS rapido,
+    ${SQL_GRUPO} AS grupo, replace(coalesce(t.camp,''),'+',' ') AS campanha,
     CASE
       WHEN pr.created_at < (SELECT min(created_at) FROM professional_tracking) - interval '10 minutes' THEN 'antes'
       WHEN t.tem IS NULL THEN 'sem'
@@ -1687,6 +1700,21 @@ SELECT dia, origem, count(*) AS cadastros,
   count(*) FILTER (WHERE cliente) AS clientes,
   count(*) FILTER (WHERE rapido) AS rapidos
 FROM c GROUP BY 1,2 ORDER BY 1,2`;
+}
+/* mapa dos públicos: por canal, os grupos de profissão e as campanhas
+   (utm_campaign), com cadastros e ativações; vale para o período inteiro */
+function sqlPerfil(de,ate){
+  return cteCadastros(de,ate,true)+`
+SELECT origem, 'g' AS d, grupo AS k, count(*) AS cadastros, count(*) FILTER (WHERE ativo) AS ativados
+FROM c WHERE origem IN ('google','meta','openai') GROUP BY 1,3
+UNION ALL
+SELECT origem, 'c', campanha, count(*), count(*) FILTER (WHERE ativo)
+FROM c WHERE origem IN ('google','meta','openai') GROUP BY 1,3`;
+}
+async function qPerfil(de,ate){
+  const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlPerfil(de,ate)});
+  if(!p||!p.data||!Array.isArray(p.data.rows)) throw {code:"tool_error",message:"resposta sem linhas"};
+  return p.data.rows.map(r=>[String(r[0]),String(r[1]),String(r[2]==null?"":r[2]),+r[3]||0,+r[4]||0]);
 }
 async function qBase(de,ate){
   const p=await chamar("Metabase","execute_sql",{database_id:CONTAS.metabaseDb,sql:sqlBase(de,ate)});
@@ -1741,10 +1769,29 @@ async function atualizar(){
       }catch(e){ FALHAS.origem=`Origem dos cadastros: ${msgErro(e,serv.base)}`; }
     })()
   ]));
+  /* perfil do mapa dos públicos: só o período escolhido */
+  if(p.ate>=TRACK_INICIO){
+    const d0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
+    try{ DADOS.perfil={de:d0,ate:p.ate,l:await qPerfil(d0,p.ate)}; algum=true; }
+    catch(e){ FALHAS.perfil=`Mapa dos públicos: ${msgErro(e,serv.base)}`; }
+  }
   if(algum){ DADOS.puxadoEm=Date.now(); DADOS.fonte="vivo"; guardar(); }
   puxando=false;
   pintar();
   if(pendente){ pendente=false; aoMudar(); }
+}
+/* perfil do período: quando só ele falta, busca só ele */
+const perfilDe=p=>{const d0=p.de<TRACK_INICIO?TRACK_INICIO:p.de, x=DADOS.perfil;
+  return x&&x.de===d0&&x.ate===p.ate?x:null;};
+const faltaPerfil=p=>p.ate>=TRACK_INICIO&&!perfilDe(p);
+let puxandoPerfil=false;
+async function atualizarPerfil(p){
+  if(!MCP||puxando||puxandoPerfil) return;
+  puxandoPerfil=true;
+  const d0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
+  try{ DADOS.perfil={de:d0,ate:p.ate,l:await qPerfil(d0,p.ate)}; guardar(); delete FALHAS.perfil; }
+  catch(e){ FALHAS.perfil=`Mapa dos públicos: ${msgErro(e,"Metabase")}`; }
+  puxandoPerfil=false; pintar();
 }
 
 /* ------------------------------------------------- agregação */
@@ -2186,17 +2233,23 @@ function agregarOrigem(de,ate){
 }
 const taxaD7=x=>x&&x.cad?cem(x.ativ,x.cad):null;
 /* ------------------------------------------------- mapa dos públicos
-   cada canal de anúncio é um "jogador": medalha = ranking pelo custo por
-   ativação (a métrica principal); nível = quanto do público ativa; trilha =
-   até onde o público chega (cadastro → onboarding → 1º agendamento em 7 dias →
-   cliente confirmou agendamento pelo link); ⚡ = das ativações, quantas saíram
-   na 1ª hora. Mesmos dados e mesmo período do bloco de origem */
-const QUAL_NIVEIS={bom:15, medio:8};
-const nivelDe=t=>t>=QUAL_NIVEIS.bom?{c:"n-bom",t:"Qualificado"}:t>=QUAL_NIVEIS.medio?{c:"n-medio",t:"Mediano"}:{c:"n-fraco",t:"Pouco qualificado"};
-const DICA_QUAL="Cada canal é um jogador. A medalha é o ranking pelo custo por ativação, a métrica principal: 1º é o mais barato. "+
-  `O nível diz quanto do público ativa (1º agendamento em até 7 dias): Qualificado com ${QUAL_NIVEIS.bom}% ou mais, Mediano de ${QUAL_NIVEIS.medio} a ${QUAL_NIVEIS.bom}%, Pouco qualificado abaixo de ${QUAL_NIVEIS.medio}%. `+
-  "A trilha mostra até onde o público chega: cadastro, onboarding, ativação e um cliente que confirmou agendamento pelo link (uso de verdade). "+
-  "O raio mostra a velocidade: das ativações, quantas aconteceram na 1ª hora depois do cadastro.";
+   cada canal de anúncio é um "jogador", lido com olhos de marketing:
+   · medalha = ranking pelo custo por ativação (a métrica principal);
+   · decisão = custo por ativação contra a média dos 3 canais: abaixo da média,
+     aumentar a verba; até 1,5× a média, manter e testar; acima, reduzir e
+     ajustar a mira (DECISAO_FAIXA);
+   · ativações a cada R$ 1 mil, cliques para 1 ativação (intenção do clique) e
+     quanto do público é de beleza (a mira do anúncio);
+   · melhor campanha e campanha a revisar (utm_campaign do cadastro);
+   · próximo passo escrito a partir desses números.
+   Mesmo período e mesma regra de origem do bloco de origem */
+const DECISAO_FAIXA=1.5;
+const GRUPOS={beleza:"Beleza e estética",saude:"Saúde e terapias",vendas:"Vendas e comércio",servicos:"Outros serviços"};
+const DICA_QUAL="Cada canal de anúncio é um jogador. A medalha é o ranking pelo custo por ativação (1º = mais barato). "+
+  "A decisão compara o custo por ativação com a média dos 3 canais: abaixo da média, aumentar a verba; até 1,5 vez a média, manter e testar criativos; acima disso, reduzir e ajustar a mira. "+
+  "Ativações a cada R$ 1 mil = quantos usuários ativos cada mil reais traz. Cliques para 1 ativação = quantos cliques o anúncio precisa para gerar um usuário ativo (mede a intenção de quem clica). "+
+  "Público de beleza = parte de quem informou a profissão no cadastro que é de beleza e estética, o público principal da Mia.";
+const ICO_DEC={sobe:"▲",mantem:"●",desce:"▼"};
 function blocoQualidade(p,c){
   if(p.ate<TRACK_INICIO) return "";
   const de0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
@@ -2204,42 +2257,76 @@ function blocoQualidade(p,c){
   const {r}=agregarOrigem(de0,p.ate), m=agregar(de0,p.ate,"todos","");
   let rb=null, mb=null;
   if(c&&c.de>=TRACK_INICIO&&cobre(DADOS.origem.cob,c.de,c.ate)){rb=agregarOrigem(c.de,c.ate).r; mb=agregar(c.de,c.ate,"todos","");}
+  const pf=perfilDe(p);
   const js=CANAIS.map(k=>{
-    const x=r[k]||{cad:0,onb:0,mad:0,ativ:0,cli:0,rap:0}, inv=m.canal[k]?m.canal[k].inv:0;
+    const x=r[k]||{cad:0,ativ:0,mad:0}, mc=m.canal[k]||{inv:0,cli:0}, inv=mc.inv;
     const xb=rb&&rb[k], invb=mb&&mb.canal[k]?mb.canal[k].inv:0;
-    return {k,x,inv,ca:x.ativ?inv/x.ativ:null, cab:xb&&xb.ativ?invb/xb.ativ:null, tx:x.cad?x.ativ/x.cad*100:0};
+    /* perfil: grupos de profissão (sem quem não informou) e campanhas */
+    let gr=null, camp=[];
+    if(pf){
+      const ls=pf.l.filter(l=>l[0]===k);
+      const g=ls.filter(l=>l[1]==="g"&&l[2]!=="nao"), inf=g.reduce((s,l)=>s+l[3],0);
+      const de=key=>{const l=g.find(l=>l[2]===key)||[0,0,key,0,0]; return {cad:l[3],ativ:l[4]};};
+      if(inf) gr={inf, beleza:de("beleza"), vendas:de("vendas"), fora:inf-de("beleza").cad};
+      camp=ls.filter(l=>l[1]==="c"&&l[2]&&!/\{\{/.test(l[2])).map(l=>({n:l[2],cad:l[3],ativ:l[4]}));
+    }
+    return {k,x,inv,cli:mc.cli,ca:x.ativ?inv/x.ativ:null,cab:xb&&xb.ativ?invb/xb.ativ:null,gr,camp};
   }).filter(j=>j.x.cad>0||j.inv>0);
   if(!js.length) return "";
-  /* ranking: menor custo por ativação primeiro; quem não ativou ninguém fica por último */
   js.sort((a,b)=>(a.ca==null)-(b.ca==null)||(a.ca||0)-(b.ca||0));
-  const melhorTx=Math.max(...js.map(j=>j.tx));
+  const invT=js.reduce((s,j)=>s+j.inv,0), atT=js.reduce((s,j)=>s+j.x.ativ,0), media=atT?invT/atT:null;
   const pend=js.reduce((s,j)=>s+j.x.cad-j.x.mad,0);
   const cards=js.map((j,i)=>{
-    const x=j.x, nv=nivelDe(j.tx), cor={"n-bom":"var(--verde)","n-medio":"var(--azul)","n-fraco":"var(--laranja)"}[nv.c];
-    /* o ponto de cada etapa cresce com a parcela do público que chega até ali */
-    const sh=v=>x.cad?v/x.cad:0, tam=f=>Math.round(10+14*Math.sqrt(f));
-    const et=[{v:num(x.cad),n:"cadastros",on:x.cad>0,t:tam(1)},
-      {v:x.cad?pct(x.onb/x.cad*100):"—",n:"onboarding",on:x.onb>0,t:tam(sh(x.onb))},
-      {v:x.cad?pct(x.ativ/x.cad*100):"—",n:"ativaram",on:x.ativ>0,t:tam(sh(x.ativ))},
-      {v:x.cad?pct(x.cli/x.cad*100):"—",n:"cliente confirmou",on:x.cli>0,t:tam(sh(x.cli))}];
-    const ult=et.reduce((u,e,ix)=>e.on?ix:u,0);
     const aj=comunicadosDe(p,j.k)[0];
-    const selo=j.tx===melhorTx&&j.tx>0?`<em class="qc-selo">Mais qualificado</em>`:"";
-    return `<div class="qc ${nv.c}" style="--nivel:${cor}">
+    /* decisão pelo custo por ativação contra a média dos canais */
+    const q=j.ca!=null&&media?j.ca/media:null;
+    const dec=j.ca==null?(j.inv>0?"desce":"mantem"):q<=1?"sobe":q<=DECISAO_FAIXA?"mantem":"desce";
+    const decTxt={sobe:aj?"Aumentar quando liberar":"Aumentar verba",mantem:"Manter e testar",desce:"Reduzir e ajustar"}[dec];
+    /* métricas de marketing */
+    const porMil=j.inv>0?j.x.ativ/j.inv*1000:null, cpa1=j.x.ativ?j.cli/j.x.ativ:null;
+    const fit=j.gr?j.gr.beleza.cad/j.gr.inf*100:null;
+    const tile=(v,rot,dica)=>`<div class="qm" data-dica="${esc(dica)}"><b>${v}</b><span>${rot}</span></div>`;
+    const tiles=tile(porMil!=null?num1(porMil):"—","ativações a cada R$ 1 mil","Ativações ÷ investimento × 1.000. Quanto maior, melhor.")+
+      tile(cpa1!=null?num(Math.round(cpa1)):"—","cliques para 1 ativação",`Cliques no anúncio ÷ ativações${j.k==="meta"?" (Meta: clique no link)":""}. Quanto menor, mais intenção tem quem clica.`)+
+      tile(fit!=null?pct(fit):"—","do público é de beleza",j.gr?`${num(j.gr.beleza.cad)} de ${num(j.gr.inf)} que informaram a profissão são de beleza e estética.`:"Aparece depois de clicar em Atualizar.");
+    /* campanhas: a que mais ativou e a que trouxe cadastro sem ativação */
+    const melhor=j.camp.filter(x=>x.ativ>0).sort((a,b)=>b.ativ-a.ativ||b.ativ/b.cad-a.ativ/a.cad)[0];
+    const revisar=j.camp.filter(x=>x.cad>=10&&x.ativ===0).sort((a,b)=>b.cad-a.cad)[0];
+    const campHtml=(melhor?`<p class="qc-camp"><b>Melhor campanha</b><span>${esc(melhor.n)} · ${num(melhor.ativ)} ativaç${melhor.ativ===1?"ão":"ões"}</span></p>`:"")+
+      (revisar?`<p class="qc-camp rev"><b>Revisar</b><span>${esc(revisar.n)} · ${num(revisar.cad)} cadastros e nenhuma ativação</span></p>`:"");
+    /* próximo passo, a partir dos números */
+    let passo;
+    const mediaTxt=media?brl(media):"";
+    if(dec==="sobe"){
+      passo=aj?`${i===0?"É a ativação mais barata":"Custa menos que a média por ativação"}${fit!=null?` e ${pct(fit)} do público é de beleza`:""}. Assim que a conta liberar, subir a verba e abrir campanhas por profissão.`:
+        `Custa ${pct((1-q)*100)} menos que a média por ativação (${mediaTxt}). Subir a verba aos poucos, uns 20% por semana${melhor?`, reforçando “${melhor.n}”`:""}; se o custo por ativação passar da média, segurar.`;
+    }else if(dec==="mantem"){
+      passo=`Perto da média (${mediaTxt} por ativação). Manter a verba e testar novos criativos${melhor?` a partir de “${melhor.n}”`:""}; só subir quando o custo por ativação cair abaixo da média.`;
+    }else{
+      const g=j.gr, tb=g&&g.beleza.cad?g.beleza.ativ/g.beleza.cad*100:null, vend=g?g.vendas.cad/g.inf*100:0;
+      passo=(q!=null?`Custa ${num1(q)} vezes a média por ativação. `:"Gastou e ninguém ativou. ")+
+        (g&&fit<65?`Só ${pct(fit)} do público é de beleza${vend>=10?` e ${pct(vend)} é de vendas e comércio, que quase não ativa`:""}. `+
+          (tb!=null?`Quem é de beleza ativa ${pct(tb)}: o problema é a mira, não o canal. `:"")+
+          `Reduzir a verba e voltar os criativos e a segmentação para profissionais de beleza (manicure, cabelo, estética), excluindo interesses de revenda e vendas.`:
+         `O clique é barato, mas traz pouca gente que usa. Reduzir a verba e testar criativos que mostrem a agenda e o cliente marcando horário.`);
+    }
+    return `<div class="qc d-${dec}">
       <div class="qc-top"><span class="medalha m${i+1}" title="${i+1}º no custo por ativação">${i+1}º</span>
         <b class="qc-nome">${esc(NOME[j.k])}</b>${aj?`<em class="qc-aj" data-html data-dica="${esc(`<b>${esc(aj.titulo)}</b><p class="m">${esc(aj.texto)}</p>`)}">em ajuste</em>`:""}
-        <em class="qc-nivel">${nv.t}</em></div>
+        <em class="qc-dec">${ICO_DEC[dec]} ${decTxt}</em></div>
       <div class="qc-v"><b>${j.ca!=null?brl(j.ca):j.inv>0?"nenhuma":"—"}</b><span>${j.ca!=null?"por ativação":j.inv>0?"ativação ainda":""}</span>
         ${j.cab!=null?`<small>antes ${brl(j.cab)}</small>`:""}</div>
-      <ol class="trilha" style="--prog:${ult/3*100}" aria-label="${esc(et.map(e=>`${e.n}: ${e.v}`).join(", "))}">${et.map(e=>
-        `<li class="${e.on?"on":""}"><i><u style="--t:${e.t}px"></u></i><b>${e.v}</b><span>${e.n}</span></li>`).join("")}</ol>
-      <p class="qc-rod"><span>⚡ ${x.ativ?`${pct(x.rap/x.ativ*100)} ativam na 1ª hora`:"sem ativação ainda"}</span>${selo}</p>
+      <div class="qm-g">${tiles}</div>
+      ${campHtml}
+      <p class="qc-passo"><b>Próximo passo</b><span>${esc(passo)}</span></p>
     </div>`;
   }).join("");
-  const nota=`Investimento das campanhas de cadastro ÷ ativações de quem veio de cada canal, no mesmo período do bloco de origem.`+
+  const nota=(media?`Média dos 3 canais: ${brl(media)} por ativação. `:"")+
+    `Público de beleza: entre quem informou a profissão no cadastro.`+
+    (pf?"":` Perfil e campanhas aparecem depois de clicar em Atualizar.`)+
     (pend>0?` Parcial: ${num(pend)} cadastros ainda dentro dos 7 dias; como quase todo mundo ativa no 1º dia, muda pouco.`:"");
   return `<article class="cx qual-cx" id="qualCx" aria-label="Mapa dos públicos">
-    <div class="cx-t"><div><h2>mapa dos públicos</h2><p>Qual canal traz gente que usa o sistema de verdade · ${curta(de0)} a ${curta(p.ate)}.</p></div>
+    <div class="cx-t"><div><h2>mapa dos públicos</h2><p>O que fazer em cada canal de anúncio, com base em quem vira usuário · ${curta(de0)} a ${curta(p.ate)}.</p></div>
       <div class="cx-acoes"><button type="button" class="info" data-dica="${esc(DICA_QUAL)}" aria-label="Como ler o mapa">i</button>
       <button type="button" class="ab-tog" aria-controls="qualCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div></div>
     <div class="qual-corpo" id="qualCorpo"><div class="qual-g">${cards}</div><p class="legenda-f">${nota}</p></div>
@@ -2510,6 +2597,7 @@ function aoMudar(){
   const p=periodo(); if(!p||!MCP) return;
   const c=comparacao(p);
   if(faltando(p,"todos").length||(c&&faltando(c,"todos").length)||faltaOrigem(p)||(c&&faltaOrigem(c))) atualizar();
+  else if(faltaPerfil(p)) atualizarPerfil(p);
 }
 fPeriodo.addEventListener("change",()=>{
   if(fPeriodo.value==="custom"){const p0=periodo(); if(p0){dDe.value=p0.de;dAte.value=p0.ate}}

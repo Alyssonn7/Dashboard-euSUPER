@@ -198,25 +198,30 @@ centenas de milhares de impressões a dezenas de contas, com piso de 30% da
 primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
 **Mapa dos públicos** (logo acima da origem dos cadastros, mesmo período e mesma
-regra de origem): um cartão por canal de anúncio, como jogadores num ranking.
-- **Medalha (1º, 2º, 3º):** ranking pelo **custo por ativação** (investimento
-  das campanhas de cadastro ÷ ativações de quem veio do canal); 1º é o mais
-  barato. Embaixo, "antes R$ X" quando há comparação com origem gravada.
-- **Nível:** quanto do público ativa (1º agendamento em até 7 dias):
-  **Qualificado** com 15% ou mais, **Mediano** de 8 a 15%, **Pouco
-  qualificado** abaixo de 8% (`QUAL_NIVEIS`). O canal com a maior taxa ganha o
-  selo **Mais qualificado**.
-- **Trilha:** cadastro → onboarding → ativou → **cliente confirmou** (um cliente
-  confirmou agendamento pelo link em até 7 dias, o uso de verdade). O ponto de
-  cada etapa cresce com a parcela do público que chega até ali.
-- **⚡ Velocidade:** das ativações, quantas saíram na 1ª hora depois do cadastro.
-- Canal com comunicado ativo (ex.: OpenAI) ganha a marca "em ajuste". Setinha
-  para minimizar (`v2:qualAberto`).
+regra de origem): um cartão por canal de anúncio, lido com olhos de marketing, para
+decidir verba, campanhas e comunicação. Sem números de funil (esses já estão no
+resto do painel).
+- **Medalha (1º, 2º, 3º):** ranking pelo **custo por ativação**; embaixo, "antes
+  R$ X" quando há comparação com origem gravada.
+- **Decisão:** o custo por ativação do canal contra a **média dos 3 canais**.
+  Abaixo da média, **▲ Aumentar verba** (com comunicado ativo, "Aumentar quando
+  liberar"); até 1,5 vez a média (`DECISAO_FAIXA`), **● Manter e testar**; acima
+  disso, ou gastou sem ativar ninguém, **▼ Reduzir e ajustar**.
+- **Três números de marketing:** ativações a cada R$ 1 mil investidos; cliques
+  para 1 ativação (a intenção de quem clica); e quanto do público é de **beleza e
+  estética** (a mira do anúncio), entre quem informou a profissão no cadastro.
+- **Campanhas** (pelo `utm_campaign` do cadastro): a que mais ativou e, quando
+  existe, a que trouxe 10 ou mais cadastros sem nenhuma ativação ("Revisar").
+- **Próximo passo:** uma frase escrita a partir desses números (quanto acima ou
+  abaixo da média, o perfil do público, a campanha a reforçar).
 
-Para isso a consulta de origem passou a trazer, por dia e origem, também
-`clientes` (cliente confirmou em 7 dias) e `rapidos` (ativou na 1ª hora). A
-origem guardada no navegador antes disso é descartada e buscada de novo no
-próximo Atualizar.
+Os grupos de profissão saem da categoria do cadastro e, em "Outros", do texto que
+a pessoa escreveu (`SQL_GRUPO`): beleza e estética, saúde e terapias, vendas e
+comércio, outros serviços e "não informou" (parou antes). O perfil vale para o
+período escolhido inteiro (`DADOS.perfil`): vem no Atualizar e, ao trocar de
+período, é buscado sozinho quando só ele falta. A consulta de origem também traz,
+por dia, `clientes` (cliente confirmou em 7 dias) e `rapidos` (ativou na 1ª hora);
+a origem guardada antes disso é buscada de novo.
 
 **Origem dos cadastros** (bloco abaixo do funil, só em "Todos os canais"): de
 onde veio cada cadastro segundo o **nosso banco**, não a plataforma de anúncio.
