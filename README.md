@@ -214,6 +214,11 @@ resto do painel).
   existe, a que trouxe 10 ou mais cadastros sem nenhuma ativação ("Revisar").
 - **Próximo passo:** uma frase escrita a partir desses números (quanto acima ou
   abaixo da média, o perfil do público, a campanha a reforçar).
+- **Responsivo:** no computador, três cartões lado a lado; no tablet (até
+  1180 px), um cartão por linha, com os números à esquerda e o que fazer à
+  direita; no celular (até 700 px), tudo numa coluna. O nome do canal e o selo
+  "em ajuste" ficam na mesma linha (sem espaço, o selo desce, nunca por cima do
+  nome) e a decisão tem linha própria.
 
 Os grupos de profissão saem da categoria do cadastro e, em "Outros", do texto que
 a pessoa escreveu (`SQL_GRUPO`): beleza e estética, saúde e terapias, vendas e
