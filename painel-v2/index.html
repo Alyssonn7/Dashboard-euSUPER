@@ -609,12 +609,12 @@ button,select,input{font-family:inherit}
 .org-tab [data-dica]{cursor:help}
 .org-tab small.org-m{display:block;margin-top:1px;font-size:12px;font-weight:400;color:var(--texto-2);white-space:normal;letter-spacing:0}
 .org-tab small.org-m.com-sw{margin-left:19px}
-.org-obs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.org-obs p{margin:0;display:flex;flex-direction:column;gap:4px;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);
+/* resumo embaixo da tabela: um bloco só, com uma linha por assunto */
+.org-res{margin:0;padding:12px 16px;border-radius:10px;background:var(--neutro-bg);list-style:none;display:flex;flex-direction:column;gap:5px;
   font-size:13.5px;line-height:1.45;color:var(--texto)}
-.org-obs b{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--neutro)}
-.org-obs .inv{grid-column:1/-1;background:var(--bom-bg)} .org-obs .inv b{color:var(--bom)}
-.org-obs .inv.fora{background:color-mix(in srgb,var(--laranja) 12%,var(--painel))} .org-obs .inv.fora b{color:var(--alerta-v)}
+.org-res b{font-weight:700;color:var(--neutro)}
+.org-res [data-dica]{cursor:help;text-decoration:underline dotted;text-underline-offset:3px}
+.org-res li.fora{color:var(--alerta-v)} .org-res li.fora b{color:var(--alerta-v)}
 .org-tab .so-cel{display:none}
 .org-tab td.c-ativ{font-weight:700}
 
@@ -649,7 +649,6 @@ button,select,input{font-family:inherit}
   .org-tab .op{display:none}
   .org-tab td small{display:block;margin:2px 0 0}
   .org-tab small.org-m{font-size:11px}
-  .org-obs{grid-template-columns:minmax(0,1fr)}
   .topo{padding-block:20px 96px}
   .topo-in{gap:28px}
   .topo-arte .ex{right:40px;top:70px;width:60px;height:260px}
@@ -2363,7 +2362,9 @@ function blocoQualidade(p,c){
   </article>`;
 }
 const DICA_ORIGEM="Origem = de onde a pessoa veio quando se cadastrou, gravada pelo nosso site: link do anúncio (UTM), "+
-  "identificador do clique (gclid no Google, fbclid no Meta) e site de onde veio. É o banco que diz, não a plataforma de anúncio.";
+  "identificador do clique (gclid no Google, fbclid no Meta) e site de onde veio. É o banco que diz, não a plataforma de anúncio. "+
+  "Custo real por cadastro = investimento do canal ÷ cadastros que o banco registrou vindos dele (passe o mouse no custo para comparar com o que a plataforma diz). "+
+  "Custo por ativação = o mesmo investimento ÷ cadastros vindos do canal que fizeram o 1º agendamento em até 7 dias.";
 function blocoOrigem(p,c){
   const de0=p.de<TRACK_INICIO?TRACK_INICIO:p.de;
   const sub=`De onde veio cada cadastro, segundo o nosso banco (Metabase)`+
@@ -2424,42 +2425,33 @@ function blocoOrigem(p,c){
     <tbody>${corpo}</tbody>
     <tfoot><tr><th scope="row">Total</th><td>${num(tot.cad)}</td><td>100%</td><td class="op">${pct(tot.onb/tot.cad*100)}</td>${comAtiv?`<td class="op">${pct(taxaD7(tot))}</td>`:""}<td class="op"></td><td class="c-ativ"></td></tr></tfoot>
   </table></div>`;
-  const notas=`Custo real = investimento do canal ÷ cadastros que o banco registrou vindos dele (passe o mouse para comparar com o que a plataforma diz). `+
-    `Custo por ativação = o mesmo investimento ÷ cadastros vindos do canal que fizeram o 1º agendamento em até 7 dias. `+
-    (de0>p.de||antes?`Origem gravada desde ${curta(TRACK_INICIO)}, 8h59`+(de0>p.de?`: aqui entram ${dias(de0,p.ate)} de ${dias(p.de,p.ate)} dias do período`:"")+
-      (antes?`; ${num(antes)} cadastro${antes>1?"s":""} de antes disso fica${antes>1?"m":""} de fora`:"")+". ":"")+
-    (parcialD7?`Ativação D7 e custo por ativação parciais: ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias, o custo ainda cai.`:"");
-  /* observação: o orgânico e o sem origem em palavras, com o que está sendo investigado */
-  const og=r.org, sem=r.sem||{cad:0,onb:0}, ps=v=>pct(v/tot.cad*100);
+  /* resumo embaixo da tabela, num bloco só: orgânico, sem origem e parcial
+     (as definições de custo ficam no "i" do bloco) */
+  const og=r.org, sem=r.sem||{cad:0}, ps=v=>pct(v/tot.cad*100);
   const subs=ORIGENS.find(o=>o.k==="org").sub.map(s=>({n:s.n,v:n(s.k)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
-  const txOrg=og.cad?`${num(og.cad)} cadastro${og.cad>1?"s chegaram":" chegou"} sem anúncio. O maior grupo é ${subs[0].n} (${num(subs[0].v)}). `+
-    `Direto também inclui links de WhatsApp e e-mail, que não dizem de onde a pessoa veio.`:"Nenhum cadastro chegou sem anúncio neste período.";
-  const parou=sem.cad-sem.onb;
-  const txSem=sem.cad?`${num(sem.cad)} cadastro${sem.cad>1?"s":""} sem registro de onde ${sem.cad>1?"vieram":"veio"}; ${num(parou)} de ${num(sem.cad)} não ${parou===1?"terminou":"terminaram"} o onboarding. `+
-    (de0>ORIGEM_FIX?`Desde 06/11 isso não deveria acontecer: vale avisar o time de desenvolvimento.`:
-      `Motivo: até 06/11 o site anotava a origem uns 30 segundos depois do cadastro, e quem saía antes ficava sem.`):"Todos os cadastros do período tiveram a origem registrada.";
-  /* acompanhamento do sem origem: antes e depois da correção, neste período */
-  const fs=semPorFase(de0,p.ate), dp=fs.depois, an=fs.antes, pa=an.n?` Antes da correção, neste período: ${num(an.s)} de ${num(an.n)} (${pct(an.s/an.n*100)}).`:"";
-  let stTit, stTxt, stCls="inv";
+  const itens=[];
+  itens.push(og.cad?`<b>Orgânico:</b> ${num(og.cad)} cadastro${og.cad>1?"s":""} sem anúncio (${ps(og.cad)}), a maioria ${esc(subs[0].n)} (${num(subs[0].v)}).`:
+    `<b>Orgânico:</b> nenhum cadastro sem anúncio neste período.`);
+  /* sem origem: antes e depois da correção de 06/11; o detalhe fica no mouse */
+  const fs=semPorFase(de0,p.ate), dp=fs.depois, an=fs.antes;
+  let semTxt, semFora=false;
   if(dp.n){
-    const tx=dp.s/dp.n*100, ub=teto95(dp.s,dp.n), acima=tx>SEM_LIMITE;
-    stTit=acima?"⚠️ Sem origem acima do esperado":"✅ Sem origem: corrigido em 06/11";
-    stTxt=`Depois da correção (de 07/11 em diante): ${num(dp.s)} de ${num(dp.n)} cadastros sem origem (${pct(tx)}). `+
-      (dp.n>=30?`Chance de um cadastro ficar sem origem: menos de ${num(Math.max(1,Math.ceil(ub)))}%. `:"")+
-      (acima?`O esperado é no máximo 1 em cada 100: vale avisar o time de desenvolvimento.`:
-        `O esperado é perto de zero. Algum caso raro pode acontecer (internet que cai na hora do cadastro, bloqueador de anúncio); acima de 1 em cada 100, avisar os devs.`)+pa;
-    if(acima) stCls="inv fora";
+    const tx=dp.s/dp.n*100, ub=teto95(dp.s,dp.n); semFora=tx>SEM_LIMITE;
+    const dica=(dp.n>=30?`Chance de um cadastro ficar sem origem: menos de ${num(Math.max(1,Math.ceil(ub)))}%. `:"")+
+      `Desde 06/11 o site grava a origem junto com o cadastro; algum caso raro pode acontecer (internet que cai na hora, bloqueador de anúncio). Acima de 1 em cada 100, avisar o time de desenvolvimento.`;
+    semTxt=`<b>Sem origem:</b> <span data-dica="${esc(dica)}">${num(dp.s)} de ${num(dp.n)} desde a correção de 06/11 (${pct(tx)})</span>`+
+      (semFora?`, acima do esperado: avisar o time de desenvolvimento.`:`, dentro do esperado.`)+
+      (an.n?` Antes dela, ${num(an.s)} de ${num(an.n)} (${pct(an.s/an.n*100)}).`:"");
   }else{
-    stTit="✅ Resolvido em 06/11";
-    stTxt=`Neste período a correção ainda não existia: ${num(an.s)} de ${num(an.n)} cadastros ficaram sem origem (${pct(an.n?an.s/an.n*100:0)}). `+
-      `Desde 06/11, por volta de 12h40, o site grava a origem junto com o cadastro, em cerca de 1 segundo; daqui para a frente, o esperado é perto de zero.`;
+    semTxt=`<b>Sem origem:</b> ${num(an.s)} de ${num(an.n)} (${pct(an.n?an.s/an.n*100:0)}), antes da correção de 06/11. Desde então o esperado é perto de zero.`;
   }
-  const obs=`<div class="org-obs">
-    <p><b>Orgânico · ${ps(og.cad)}</b><span>${txOrg}</span></p>
-    <p><b>Sem origem · ${ps(sem.cad)}</b><span>${txSem}</span></p>
-    <p class="${stCls}"><b>${esc(stTit)}</b><span>${esc(stTxt)}</span></p>
-  </div>`;
-  return art(barra+tabela+obs+`<p class="legenda-f">${notas}</p>`);
+  itens.push(semFora?{c:"fora",t:semTxt}:semTxt);
+  if(parcialD7) itens.push(`<b>Parcial:</b> ${num(tot.cad-tot.mad)} cadastros ainda dentro dos 7 dias; a ativação ainda sobe e o custo por ativação ainda cai.`);
+  if(de0>p.de||antes) itens.push(`<b>Período:</b> a origem é gravada desde ${curta(TRACK_INICIO)}, 8h59`+
+    (de0>p.de?`; aqui entram ${dias(de0,p.ate)} de ${dias(p.de,p.ate)} dias`:"")+
+    (antes?`; ${num(antes)} cadastro${antes>1?"s":""} de antes disso fica${antes>1?"m":""} de fora`:"")+".");
+  const obs=`<ul class="org-res">${itens.map(x=>typeof x==="string"?`<li>${x}</li>`:`<li class="${x.c}">${x.t}</li>`).join("")}</ul>`;
+  return art(barra+tabela+obs);
 }
 
 function pintar(){
