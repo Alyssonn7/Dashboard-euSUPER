@@ -288,6 +288,7 @@ button,select,input{font-family:inherit}
 #dica .sep{border-top:1px solid var(--dica-borda);margin:9px 0 6px}
 #dica .lin{display:flex;justify-content:space-between;gap:16px;font-variant-numeric:tabular-nums}
 #dica .lin+.lin{margin-top:2px}
+#dica .lin.nw>span:last-child{white-space:nowrap}
 #dica .lin.tot{border-top:1px solid var(--dica-borda);margin-top:5px;padding-top:5px;font-weight:600}
 #dica .lin .delta{font-size:11.5px;margin-left:4px}
 .kpi[data-dica]{cursor:help}
@@ -2105,7 +2106,34 @@ const POR_CANAL={
   onb:{so:true}, custoOnb:{so:true}, ativ:{so:true},
   custoAtiv:{so:true, msg:"Por canal: veja a coluna “Custo por ativação” no bloco de origem dos cadastros."}
 };
+/* custo por ativação, em todos os canais e com comparação: a leitura simples
+   ao passar o mouse. Uma frase (mais barata ou mais cara; o público ativa
+   igual, mais ou menos; e o onboarding quando muda 5 pontos ou mais) e três
+   linhas "agora · antes". Ativação e onboarding sobre todos os cadastros,
+   como os cartões */
+function dicaAtivacao(a,b){
+  const ca=div(a.inv,a.ativ), cb=div(b.inv,b.ativ);
+  const ta=a.cadReal?a.ativ/a.cadReal*100:null, tb=b.cadReal?b.ativ/b.cadReal*100:null;
+  const oa=a.cadReal?a.onb/a.cadReal*100:null, ob=b.cadReal?b.onb/b.cadReal*100:null;
+  const r=v=>v==null?"—":num(Math.round(v));
+  const partes=[];
+  if(ca!=null&&cb!=null){const q=ca/cb; partes.push(q<.95?"Cada ativação ficou mais barata":q>1.05?"Cada ativação ficou mais cara":"O custo por ativação ficou igual");}
+  if(ta!=null&&tb!=null){const d=ta-tb; partes.push(Math.abs(d)<2?"o público ativa igual":d>0?"o público ativa mais":"o público ativa menos");}
+  let frase=partes.length?partes.join(" e ")+".":"";
+  if(oa!=null&&ob!=null){const d=oa-ob;
+    if(d<=-5) frase+=" Atenção: menos gente está terminando o onboarding.";
+    else if(d>=5) frase+=" Mais gente está terminando o onboarding.";}
+  const pend=a.cadReal-a.mad;
+  const rs=v=>v==null?"—":"R$&nbsp;"+nf0.format(v);
+  const lin=(rot,v,vb)=>`<div class="lin nw"><span>${rot}</span><span><b>${v}</b> <span class="m">antes ${vb}</span></span></div>`;
+  return `<b>Custo por ativação</b>${frase?`<p>${esc(frase.trim())}</p>`:""}<div class="sep"></div>`+
+    lin("Cada ativação",rs(ca),rs(cb))+
+    lin("Ativam, a cada 100",r(ta),r(tb))+
+    lin("Onboarding, a cada 100",r(oa),r(ob))+
+    (pend>0?`<p class="m">Parcial: ${num(pend)} cadastros ainda podem ativar.</p>`:"");
+}
 function dicaCartao(k,a,b,ctx){
+  if(k==="custoAtiv"&&b&&ctx.rotulo==="todos"&&a.cadReal!=null&&b.cadReal!=null) return dicaAtivacao(a,b);
   const m=M[k], pc=ctx.rotulo==="todos"?POR_CANAL[k]:null;
   let h=`<b>${esc(m.r)}</b><p class="m">${FORMULA[k]||""}</p>`;
   if(!pc) return h;

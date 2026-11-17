@@ -29,7 +29,12 @@ onboarding e ativação D7). O **custo por ativação** (investimento ÷ cadastr
 o 1º agendamento em até 7 dias, o mesmo "por ativação" da última etapa do funil)
 é a métrica principal desde a Weekly de 03/11/26: fica em segundo, com borda azul.
 Enquanto houver cadastros dentro dos 7 dias, ele e a ativação D7 mostram
-"parcial" no lugar da seta, porque o custo ainda cai. O CPM saiu dos cartões e
+"parcial" no lugar da seta, porque o custo ainda cai. Passando o mouse no cartão do
+custo por ativação (em "Todos os canais", com comparação), aparece a **leitura
+simples**: uma frase (cada ativação ficou mais barata ou mais cara; o público ativa
+igual, mais ou menos; e um aviso se o onboarding mudou 5 pontos ou mais) e três
+linhas com agora e antes: custo de cada ativação, quantos ativam a cada 100
+cadastros e quantos terminam o onboarding a cada 100. O CPM saiu dos cartões e
 continua no funil ("por mil"). Embaixo do investimento aparece o **teto do mês**
 (R$ 15 a 18 mil, combinado na mesma Weekly, `TETO`): no mês em andamento ("Esse
 mês"), quanto o mês fecha no ritmo atual; no mês fechado, se ficou dentro. A explicação da escala logarítmica do funil fica no
