@@ -415,29 +415,68 @@ button,select,input{font-family:inherit}
 .tl-r{font-style:normal;font-size:12.5px;font-weight:700;white-space:nowrap;border-radius:99px;padding:4px 11px;
   background:var(--neutro-bg);color:var(--neutro)}
 .tl-i.vence .tl-r{background:var(--bom-bg);color:var(--bom)}
-/* embaixo: o que aprendemos (lista numerada) e os próximos testes (com selo) */
-.ab-duo2{align-items:start}
-.ab-apr ol{list-style:none;margin:0;padding:0;counter-reset:apr;display:flex;flex-direction:column}
-.ab-apr li{counter-increment:apr;position:relative;padding:11px 0 11px 40px;display:flex;flex-direction:column;gap:2px}
-.ab-apr li+li{border-top:1px solid var(--borda)}
-.ab-apr li::before{content:counter(apr);position:absolute;left:0;top:11px;width:28px;height:28px;border-radius:50%;
+/* as partes do bloco de testes, uma embaixo da outra; cada uma abre e fecha
+   (lista suspensa). Fechada, mostra um resumo de uma linha */
+.ab-pilha{display:flex;flex-direction:column;gap:12px}
+.ab-sec{border:1px solid var(--borda);border-radius:12px;background:var(--painel);min-width:0}
+.ab-sec.res{background:var(--bom-bg);border:1.5px solid var(--verde)}
+.ab-sec-h{width:100%;display:flex;align-items:center;gap:14px;padding:14px 20px;border:0;border-radius:12px;
+  background:none;cursor:pointer;font:inherit;color:var(--texto);text-align:left}
+.ab-sec-h:focus-visible{outline:none;box-shadow:0 0 0 3px var(--foco)}
+.ab-sec-n{flex:none;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--texto-2)}
+.ab-sec.res .ab-sec-n{color:var(--bom)}
+.ab-sec-r{flex:1;min-width:0;font-size:13.5px;color:var(--texto-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ab-sec:not(.fechada) .ab-sec-r{visibility:hidden}
+.ab-sec-s{flex:none;margin-left:auto;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--borda-campo);background:var(--campo);
+  display:grid;place-items:center;color:var(--texto-2)}
+.ab-sec-s svg{width:16px;height:16px;display:block;transition:transform .2s}
+.ab-sec.fechada .ab-sec-s svg{transform:rotate(180deg)}
+.ab-sec-h:hover .ab-sec-s{border-color:var(--cinza);color:var(--texto)}
+.ab-sec-c{padding:0 20px 18px}
+.ab-sec-c .tl::before{top:calc(50% / var(--n,4));bottom:calc(50% / var(--n,4))}
+/* resultado do último teste: nome · comparação · veredito, alinhados */
+.res-t{display:flex;align-items:flex-start;gap:10px;margin-bottom:4px}
+.res-t .info{margin-top:4px}
+.res-t h3{margin:0;font-size:clamp(18px,1.6vw,22px);font-weight:700;line-height:1.2;color:var(--texto)}
+.res-t small{display:block;margin-top:4px;font-size:12.5px;color:var(--texto-2)}
+.rl{list-style:none;margin:0;padding:0}
+.rl li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) 124px;align-items:center;gap:4px 18px;padding:11px 0}
+.rl li+li{border-top:1px solid color-mix(in srgb,var(--verde) 30%,transparent)}
+.rl b{font-size:15.5px;font-weight:700;color:var(--texto)}
+.rl span{font-size:14px;color:var(--texto-2);font-variant-numeric:tabular-nums}
+.rl .wl-v{justify-self:end}
+.res-d{margin:10px 0 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--verde) 16%,transparent);
+  display:flex;flex-direction:column;gap:3px;font-size:14.5px;line-height:1.4;font-weight:600;color:var(--texto)}
+.res-d b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bom)}
+/* o que aprendemos: duas colunas numeradas */
+.ab-apr ol{list-style:none;margin:0;padding:0;counter-reset:apr;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px}
+.ab-apr li{counter-increment:apr;position:relative;padding:12px 0 12px 40px;display:flex;flex-direction:column;gap:2px}
+.ab-apr li:nth-child(n+3){border-top:1px solid var(--borda)}
+.ab-apr li::before{content:counter(apr);position:absolute;left:0;top:12px;width:28px;height:28px;border-radius:50%;
   display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--bom-bg);color:var(--bom)}
 .ab-apr b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
 .ab-apr span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
-.ab-prox ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.ab-prox li{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 0}
+/* próximos testes: teste · o que muda · selo, alinhados */
+.ab-prox ul{list-style:none;margin:0;padding:0}
+.ab-prox li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) 140px;align-items:center;gap:6px 20px;padding:12px 0}
 .ab-prox li+li{border-top:1px solid var(--borda)}
-.ab-prox li div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.px-t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ab-prox b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
 .ab-prox small{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
 .ab-prox span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
+.ab-prox .st{justify-self:end}
 .st{flex:none;font-style:normal;font-size:12.5px;font-weight:700;border-radius:99px;padding:4px 11px;white-space:nowrap}
 .st.ok{background:var(--verde);color:var(--tinta)}
 .st.conf{background:color-mix(in srgb,var(--laranja) 16%,var(--painel));color:var(--alerta-v)}
 .st.sem{background:var(--neutro-bg);color:var(--neutro)}
-.prox-r{margin:4px 0 0;padding:10px 14px;border-radius:10px;background:var(--neutro-bg);font-size:13.5px;font-weight:600;
+.prox-r{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:var(--neutro-bg);font-size:13.5px;font-weight:600;
   line-height:1.4;color:var(--texto)}
-@media (max-width:560px){.ab-prox li{flex-direction:column;gap:6px}}
+@media (max-width:760px){
+  .ab-sec-h{padding:13px 14px;gap:10px} .ab-sec-c{padding:0 14px 14px}
+  .ab-sec-r{display:none}
+  .rl li{grid-template-columns:minmax(0,1fr) auto} .rl b,.rl span{grid-column:1} .rl .wl-v{grid-column:2;grid-row:1/span 2}
+  .ab-apr ol{grid-template-columns:minmax(0,1fr)} .ab-apr li:nth-child(n+2){border-top:1px solid var(--borda)}
+  .ab-prox li{grid-template-columns:minmax(0,1fr)} .ab-prox .st{justify-self:start}}
 /* a página que segue */
 .ab-win{background:var(--bom-bg);border:1.5px solid var(--verde)}
 .win-q{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bom)}
@@ -2891,41 +2930,61 @@ const PROXIMOS={
   ],
   regra:"A LP6 vira a principal se ativar mais barato sem perder o onboarding mais alto da LP5. Decidimos pelo custo por ativação, não pelo custo por cadastro. Resultado na terça, 24/11."
 };
+/* cada parte do bloco abre e fecha sozinha (lista suspensa); a escolha fica
+   guardada neste navegador. Começam abertas */
+const AB_SECOES="v2:abSecoes";
+let abSecoes={};
+try{abSecoes=JSON.parse(localStorage.getItem(AB_SECOES)||"{}")||{}}catch(e){abSecoes={}}
+const CHEV_AB=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>`;
 function pintarAB(){
   const el=document.getElementById("testeAB"), H=TESTES_HIST, U=TESTE_ULTIMO, A=APRENDEMOS, P=PROXIMOS;
   if(!H||!H.length){ el.hidden=true; return; }
-  /* esquerda: os testes, um por linha (o traço liga o 1º número ao último) */
-  const esquerda=`<div class="ab-lista"><p class="ab-sub">Os ${H.length} testes</p>
-    <ol class="tl" style="--n:${H.length}">${H.map((t,i)=>`<li class="tl-i${t.vence?" vence":""}">
-      <span class="tl-n">${i+1}</span>
-      <div class="tl-c"><small>${esc(t.n)} · ${esc(t.quando)}</small><b>${esc(t.duelo)}</b><span>${esc(t.licao)}</span></div>
-      <em class="tl-r">${esc(t.res)}</em></li>`).join("")}</ol></div>`;
-  /* direita: o último teste, uma linha por resultado com o veredito */
-  const VER={gan:"Ganhou",emp:"Quase empate",per:"Perdeu"};
   /* "R$ 100" nunca quebra entre o símbolo e o número */
   const nb=t=>esc(t).replace(/R\$ /g,()=>"R$&nbsp;");
-  const direita=!U?"":`<div class="ab-win"><div class="vsl-h"><span class="win-q">${esc(U.rotulo)}</span>
-        <button type="button" class="info" data-dica="${esc(U.dica)}" aria-label="Números do teste">i</button></div>
-      <h3>${esc(U.titulo)}</h3><small class="win-u">${esc(U.url)} · ${esc(U.periodo)}</small>
-      <p class="wl-cap">LP5 contra a principal</p>
-      <ul class="wl">${U.linhas.map(l=>`<li class="wl-i"><div><b>${esc(l.n)}</b><small>${nb(l.t)}</small></div>
-        <em class="wl-v ${l.v}">${VER[l.v]}</em></li>`).join("")}</ul>
-      <p class="win-p"><b>Decisão</b>${nb(U.decisao)}</p></div>`;
-  /* embaixo: o que aprendemos e os próximos testes */
-  const aprendemos=!A?"":`<div class="ab-lista ab-apr"><p class="ab-sub">O que aprendemos</p>
-    <ol>${A.map(a=>`<li><b>${esc(a.t)}</b><span>${nb(a.d)}</span></li>`).join("")}</ol></div>`;
-  const proximos=!P?"":`<div class="ab-lista ab-prox"><p class="ab-sub">${esc(P.titulo)}</p>
-    <ul>${P.itens.map(x=>`<li><div><b>${esc(x.t)}</b><small>${esc(x.onde)}</small><span>${nb(x.d)}</span></div>
-      <em class="st ${x.s}">${esc(x.st)}</em></li>`).join("")}</ul>
-    ${P.regra?`<p class="prox-r">${esc(P.regra)}</p>`:""}</div>`;
+  const VER={gan:"Ganhou",emp:"Quase empate",per:"Perdeu"};
+  /* uma parte: cabeçalho clicável (nome, resumo de uma linha quando fechada e
+     a setinha) e o conteúdo */
+  const parte=(id,cls,nome,resumo,corpo)=>{
+    const aberta=abSecoes[id]!==false;
+    return `<section class="ab-sec${cls?" "+cls:""}${aberta?"":" fechada"}" data-sec="${id}">
+      <button type="button" class="ab-sec-h" aria-expanded="${aberta}" aria-controls="abSec-${id}" title="${aberta?"Minimizar":"Expandir"}">
+        <span class="ab-sec-n">${esc(nome)}</span><span class="ab-sec-r">${resumo}</span>
+        <span class="ab-sec-s">${CHEV_AB}</span></button>
+      <div class="ab-sec-c" id="abSec-${id}"${aberta?"":" hidden"}>${corpo}</div></section>`;
+  };
+  const ult=H[H.length-1];
+  const hist=parte("hist","",`Os ${H.length} testes`,
+    `Do ${esc(H[0].n)} ao ${esc(ult.n)} · último: ${esc(ult.res)}`,
+    `<ol class="tl" style="--n:${H.length}">${H.map((t,i)=>`<li class="tl-i${t.vence?" vence":""}">
+      <span class="tl-n">${i+1}</span>
+      <div class="tl-c"><small>${esc(t.n)} · ${esc(t.quando)}</small><b>${esc(t.duelo)}</b><span>${esc(t.licao)}</span></div>
+      <em class="tl-r">${esc(t.res)}</em></li>`).join("")}</ol>`);
+  const res=!U?"":parte("res","res",U.rotulo,`${esc(U.titulo)} · ${esc(U.periodo)}`,
+    `<div class="res-t"><div><h3>${esc(U.titulo)}</h3><small>${esc(U.url)} · ${esc(U.periodo)} · LP5 contra a principal</small></div>
+      <button type="button" class="info" data-dica="${esc(U.dica)}" aria-label="Números do teste">i</button></div>
+    <ul class="rl">${U.linhas.map(l=>`<li><b>${esc(l.n)}</b><span>${nb(l.t)}</span><em class="wl-v ${l.v}">${VER[l.v]}</em></li>`).join("")}</ul>
+    <p class="res-d"><b>Decisão</b>${nb(U.decisao)}</p>`);
+  const apr=!A?"":parte("apr","ab-apr","O que aprendemos",A.map(a=>esc(a.t)).join(" · "),
+    `<ol>${A.map(a=>`<li><b>${esc(a.t)}</b><span>${nb(a.d)}</span></li>`).join("")}</ol>`);
+  const prox=!P?"":parte("prox","ab-prox",P.titulo,`${esc(P.itens[0].t)} · ${esc(P.itens[0].st)}`,
+    `<ul>${P.itens.map(x=>`<li><div class="px-t"><b>${esc(x.t)}</b><small>${esc(x.onde)}</small></div>
+      <span>${nb(x.d)}</span><em class="st ${x.s}">${esc(x.st)}</em></li>`).join("")}</ul>
+    ${P.regra?`<p class="prox-r">${esc(P.regra)}</p>`:""}`);
   el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${esc(HIST_SUB)}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
-    <div class="ab-corpo" id="abCorpo">
-      <div class="ab-duo">${esquerda}${direita}</div>
-      ${aprendemos||proximos?`<div class="ab-duo ab-duo2">${aprendemos}${proximos}</div>`:""}
-    </div>`;
+    <div class="ab-corpo" id="abCorpo"><div class="ab-pilha">${hist}${res}${apr}${prox}</div></div>`;
   marcarAB();
 }
+/* abrir/fechar uma parte (não mexe no bloco inteiro) */
+document.getElementById("testeAB").addEventListener("click",e=>{
+  const h=e.target.closest(".ab-sec-h"); if(!h) return;
+  const sec=h.closest(".ab-sec"), id=sec.dataset.sec, abrir=sec.classList.contains("fechada");
+  sec.classList.toggle("fechada",!abrir);
+  h.setAttribute("aria-expanded",String(abrir)); h.title=abrir?"Minimizar":"Expandir";
+  const c=document.getElementById("abSec-"+id); if(c) c.hidden=!abrir;
+  abSecoes[id]=abrir;
+  try{localStorage.setItem(AB_SECOES,JSON.stringify(abSecoes))}catch(e){}
+});
 /* minimizar/expandir o teste A/B: a escolha fica guardada neste navegador */
 const AB_ABERTO="v2:abAberto";
 let abAberto=true;

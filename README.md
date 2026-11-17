@@ -91,11 +91,15 @@ duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
 **Testes A/B** (bloco de teste A/B): feito para a reunião de terça com os
-founders. Não segue os filtros. São **duas linhas de dois cartões**:
-- **Os testes** (esquerda, em cima): uma linha do tempo com os 5 testes de página
+founders. Não segue os filtros. São **quatro partes, uma embaixo da outra**, e
+cada uma é uma **lista suspensa**: a setinha (ou um clique no cabeçalho) abre e
+fecha só aquela parte. Fechada, a parte mostra um resumo de uma linha (no
+celular, só o nome). A escolha de cada parte fica guardada neste navegador
+(`v2:abSecoes`); começam abertas.
+- **Os testes**: uma linha do tempo com os 5 testes de página
   (duelo, lição em poucas palavras e resultado). O traço liga o 1º número ao
   último para qualquer quantidade de testes (`--n`).
-- **Resultado do último teste** (direita, em cima, cartão verde): Teste 05, LP5
+- **Resultado do último teste** (cartão verde): Teste 05, LP5
   (botão só no fim e vídeo novo de 30s) contra a principal, 08 a 15/11. Uma linha
   por resultado com o veredito da LP5 (**Ganhou**, **Quase empate** ou
   **Perdeu**): cadastros no Google (14% contra 19% dos cliques), cadastros no Meta
@@ -104,8 +108,8 @@ founders. Não segue os filtros. São **duas linhas de dois cartões**:
   vídeo visto até o fim (16 contra 7 em cada 100 visitas). Embaixo, a **decisão**:
   a LP5 vira a base. Os números exatos (bases, ativações, sessões do Clarity)
   ficam no "i".
-- **O que aprendemos** (esquerda, embaixo): 4 frases curtas com o dado de cada uma.
-- **Próximos testes até 24/11** (direita, embaixo): **Teste 06, LP6 × principal**
+- **O que aprendemos**: 4 frases curtas com o dado de cada uma, em duas colunas.
+- **Próximos testes até 24/11**: **Teste 06, LP6 × principal**
   no Google e no Meta (decisão de 17/11). A LP6 é a LP5 mais curta: sem "O que sai
   da sua rotina" e "O que a Mia é", as duas seções menos lidas, com o botão logo
   depois de "Antes de mandar o link" e o vídeo de 30s. Antes dele, a principal troca
@@ -125,8 +129,9 @@ Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson) e histórico do Lova
 Tudo fica em `TESTES_HIST`, `TESTE_ULTIMO`, `APRENDEMOS` e `PROXIMOS`; para a
 próxima semana, basta trocar esses quatro. A **setinha** no canto do título (ou um
 clique no próprio título) minimiza e expande o bloco; a escolha fica guardada
-neste navegador (`v2:abAberto`). No celular, os cartões ficam um embaixo do outro
-e os selos descem para baixo do texto.
+neste navegador (`v2:abAberto`). No resultado e nos próximos testes, cada linha
+é alinhada em três colunas (nome, o que diz, selo); no celular, o selo desce para
+baixo do texto.
 
 **Comparativo semanal** (opção do "Período de visualização"): semanas de
 **terça a segunda**, porque a reunião com os fundadores é na terça: no dia da
