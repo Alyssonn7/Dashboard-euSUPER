@@ -430,36 +430,40 @@ button,select,input{font-family:inherit}
 .ab-sec-h:hover .ab-sec-s{border-color:var(--cinza);color:var(--texto)}
 .ab-sec-c{padding:0 20px 18px}
 .ab-sec-c .tl::before{top:calc(50% / var(--n,4));bottom:calc(50% / var(--n,4))}
-/* resultado do último teste: nome · comparação · veredito, alinhados */
+/* resultado do último teste: um placar, LP5 × principal, o melhor em verde */
 .res-t{display:flex;align-items:flex-start;gap:10px;margin-bottom:4px}
 .res-t .info{margin-top:4px}
 .res-t h3{margin:0;font-size:clamp(18px,1.6vw,22px);font-weight:700;line-height:1.2;color:var(--texto)}
 .res-t small{display:block;margin-top:4px;font-size:12.5px;color:var(--texto-2)}
-.rl{list-style:none;margin:0;padding:0}
-.rl li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) 124px;align-items:center;gap:4px 18px;padding:11px 0}
-.rl li+li{border-top:1px solid color-mix(in srgb,var(--verde) 30%,transparent)}
-.rl b{font-size:15.5px;font-weight:700;color:var(--texto)}
-.rl span{font-size:14px;color:var(--texto-2);font-variant-numeric:tabular-nums}
-.rl .wl-v{justify-self:end}
-.res-d{margin:10px 0 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--verde) 16%,transparent);
+.res-s{margin:6px 0 10px;font-size:15px;font-weight:600;line-height:1.4;color:var(--texto)}
+.pl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.pl caption{caption-side:top;text-align:right;font-size:12px;color:var(--texto-2);padding-bottom:6px}
+.pl .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.pl thead th{width:130px;padding:0 4px 8px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.pl thead th:first-child{width:auto}
+.pl tbody tr{border-top:1px solid color-mix(in srgb,var(--verde) 30%,transparent)}
+.pl tbody th{text-align:left;padding:11px 12px 11px 0;font-weight:400}
+.pl tbody th b{display:block;font-size:15.5px;font-weight:700;color:var(--texto)}
+.pl tbody th small{display:block;margin-top:1px;font-size:12.5px;line-height:1.35;color:var(--texto-2)}
+.pl td{text-align:center;padding:9px 4px}
+.pl td span{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:84px;padding:6px 12px;border-radius:99px;
+  font-size:18px;font-weight:700;color:var(--texto-2)}
+.pl td.win span{background:var(--verde);color:var(--tinta)}
+.pl td.win span::after{content:"✓";font-size:13px}
+.res-d{margin:12px 0 0;padding:12px 16px;border-radius:10px;background:color-mix(in srgb,var(--verde) 16%,transparent);
   display:flex;flex-direction:column;gap:3px;font-size:14.5px;line-height:1.4;font-weight:600;color:var(--texto)}
 .res-d b{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bom)}
-/* o que aprendemos: duas colunas numeradas */
-.ab-apr ol{list-style:none;margin:0;padding:0;counter-reset:apr;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:36px}
-.ab-apr li{counter-increment:apr;position:relative;padding:12px 0 12px 40px;display:flex;flex-direction:column;gap:2px}
-.ab-apr li:nth-child(n+3){border-top:1px solid var(--borda)}
-.ab-apr li::before{content:counter(apr);position:absolute;left:0;top:12px;width:28px;height:28px;border-radius:50%;
-  display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--bom-bg);color:var(--bom)}
-.ab-apr b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
-.ab-apr span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
-/* próximos testes: teste · o que muda · selo, alinhados */
+/* o que aprendemos: uma frase por linha, com um check; o dado fica no mouse */
+.ab-apr ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 36px}
+.ab-apr li{position:relative;padding-left:28px;font-size:15px;font-weight:600;line-height:1.4;color:var(--texto);cursor:help}
+.ab-apr li::before{content:"";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;background:var(--verde)}
+.ab-apr li::after{content:"";position:absolute;left:6px;top:5px;width:4px;height:8px;border:solid var(--tinta);border-width:0 2px 2px 0;transform:rotate(45deg)}
+/* próximos testes: nome · o que muda · selo, uma linha cada */
 .ab-prox ul{list-style:none;margin:0;padding:0}
-.ab-prox li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) 140px;align-items:center;gap:6px 20px;padding:12px 0}
+.ab-prox li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) 140px;align-items:center;gap:4px 20px;padding:11px 0}
 .ab-prox li+li{border-top:1px solid var(--borda)}
-.px-t{display:flex;flex-direction:column;gap:2px;min-width:0}
-.ab-prox b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
-.ab-prox small{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
-.ab-prox span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
+.ab-prox b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3;cursor:help;justify-self:start}
+.ab-prox span{font-size:14px;color:var(--texto-2);line-height:1.4}
 .ab-prox .st{justify-self:end}
 .st{flex:none;font-style:normal;font-size:12.5px;font-weight:700;border-radius:99px;padding:4px 11px;white-space:nowrap}
 .st.ok{background:var(--verde);color:var(--tinta)}
@@ -470,8 +474,8 @@ button,select,input{font-family:inherit}
 @media (max-width:760px){
   .ab-sec-h{padding:13px 14px;gap:10px} .ab-sec-c{padding:0 14px 14px}
   .ab-sec-r{display:none}
-  .rl li{grid-template-columns:minmax(0,1fr) auto} .rl b,.rl span{grid-column:1} .rl .wl-v{grid-column:2;grid-row:1/span 2}
-  .ab-apr ol{grid-template-columns:minmax(0,1fr)} .ab-apr li:nth-child(n+2){border-top:1px solid var(--borda)}
+  .pl thead th{width:76px} .pl td span{min-width:64px;padding:5px 8px;font-size:16px} .pl caption{text-align:left}
+  .ab-apr ul{grid-template-columns:minmax(0,1fr)}
   .ab-prox li{grid-template-columns:minmax(0,1fr)} .ab-prox .st{justify-self:start}}
 /* a página que segue */
 .ab-win{background:var(--bom-bg);border:1.5px solid var(--verde)}
@@ -2846,48 +2850,52 @@ const TESTES_HIST=[
   {n:"Teste 04", quando:"20/10 a 02/11", duelo:"Principal × principal com vídeo", licao:"Vídeo ajuda quem já procura", res:"Vídeo ganhou no Google", vence:true},
   {n:"Teste 05", quando:"07 a 16/11", duelo:"Principal × LP5 (botão só no fim)", licao:"Ler mais qualifica, mas perde cadastro", res:"LP5 vira a base", vence:true}
 ];
-/* o último teste em palavras: uma linha por resultado, LP5 contra a
-   principal, com o veredito da LP5 (gan = ganhou, emp = quase empate,
-   per = perdeu). Os números exatos ficam no "i". */
+/* o último teste como um placar: LP5 e principal lado a lado, cada linha em
+   palavras simples ("de cada 100…"), e o melhor de cada linha em verde.
+   melhor: "a" = 1ª coluna, "b" = 2ª. Os números exatos ficam no "i". */
 const TESTE_ULTIMO={
   rotulo:"Teste 05 · resultado", titulo:"LP5: botão só no fim e vídeo novo de 30s",
-  url:"lp5.miaapp.com.br", periodo:"08 a 15/11",
+  url:"lp5.miaapp.com.br", periodo:"08 a 15/11 · números do Google (o vídeo, de todas as visitas)",
+  resumo:"A LP5 traz gente mais preparada, mas menos cadastros. Por isso, cada ativação saiu mais cara.",
+  colunas:["LP5","Principal"],
   linhas:[
-    {n:"Cadastros no Google", t:"14% contra 19% dos cliques", v:"per"},
-    {n:"Cadastros no Meta", t:"17% contra 18% das visitas", v:"emp"},
-    {n:"Terminam o onboarding", t:"70% contra 61% no Google · 54% contra 38% no Meta", v:"gan"},
-    {n:"Custo por ativação no Google", t:"R$ 100 contra R$ 73", v:"per"},
-    {n:"Veem o vídeo até o fim", t:"16 contra 7 em cada 100 visitas", v:"gan"}
+    {n:"Se cadastram", s:"de cada 100 pessoas que clicam no anúncio", a:"14", b:"19", melhor:"b"},
+    {n:"Terminam o onboarding", s:"de cada 100 que se cadastram", a:"70", b:"61", melhor:"a"},
+    {n:"Custo por ativação", s:"quanto custou cada pessoa que começou a usar", a:"R$ 100", b:"R$ 73", melhor:"b"},
+    {n:"Veem o vídeo até o fim", s:"de cada 100 visitas na página", a:"16", b:"7", melhor:"a"}
   ],
-  dica:"LP5 contra a principal, 08 a 15/11. Cadastros ÷ cliques no Google: 13,7% (27 de 197) contra 18,8% (51 de 271). "+
-    "Cadastros ÷ visitas na página no Meta: 16,9% (39 de 231) contra 17,5% (41 de 234). "+
-    "Terminaram o onboarding (banco): Google 19 de 27 contra 35 de 57; Meta 22 de 41 contra 14 de 37. "+
-    "Custo por ativação no Google: R$ 100,26 (8 ativações) contra R$ 73,22 (14). "+
+  dica:"Google, 08 a 15/11. Se cadastram: 13,7% dos cliques na LP5 (27 de 197) contra 18,8% na principal (51 de 271). "+
+    "Terminam o onboarding (banco): 19 de 27 contra 35 de 57. Custo por ativação: R$ 100,26 (8 ativações) contra R$ 73,22 (14). "+
+    "No Meta, cadastros quase empatados (16,9% contra 17,5% das visitas) e onboarding 54% contra 38%. "+
     "Vídeo até o fim (Clarity, 08 a 16/11): 84 de 511 sessões na LP5 (vídeo de 30s) contra 109 de 1.616 na principal (vídeo de 42s). "+
-    "Na LP5, quem viu a metade do vídeo clicou no cadastro em 38% das sessões; quem não viu, em 15%. "+
     "Além do botão, o vídeo também mudou: parte do resultado pode ser dele.",
-  decisao:"A LP5 vira a base dos próximos testes. Agora é recuperar os cadastros que ela perde, sem perder a qualidade."
+  decisao:"A LP5 vira a base. Agora é recuperar os cadastros que ela perde."
 };
-/* o que aprendemos: uma frase curta e o dado que a sustenta */
+/* o que aprendemos: uma frase curta; o dado fica no mouse */
 const APRENDEMOS=[
-  {t:"Ler mais qualifica", d:"Na LP5, mais gente termina o onboarding: 70% contra 61% no Google."},
-  {t:"Botão só no fim perde gente pronta", d:"38 em cada 100 saem no topo sem achar o botão. No Google, a ativação sai a R$ 100, contra R$ 73."},
-  {t:"O vídeo de 30s prende mais", d:"16 em cada 100 veem até o fim (na principal, 7). Quem vê a metade clica 2,5 vezes mais no cadastro."},
-  {t:"A dúvida é dinheiro", d:"Metade das perguntas abertas na página é sobre mensalidade, taxa e se o dinheiro passa pela Mia."}
+  {t:"Quando a pessoa lê mais, ela chega mais preparada.", dica:"Na LP5, 70 de cada 100 cadastros terminaram o onboarding; na principal, 61 (Google)."},
+  {t:"Com o botão só no fim, perdemos quem já queria se cadastrar.", dica:"38 de cada 100 visitas saíram do topo da LP5 sem achar o botão de cadastro."},
+  {t:"O vídeo de 30s prende mais que o de 42s.", dica:"16 de cada 100 visitas viram o vídeo da LP5 até o fim; na principal, 7. Quem vê a metade clica 2,5 vezes mais no cadastro."},
+  {t:"A maior dúvida de quem lê a página é sobre dinheiro.", dica:"Metade das perguntas abertas na página é sobre mensalidade, taxa e se o dinheiro passa pela Mia."}
 ];
-/* próximos testes (Marketing Daily de 16/11, decisão de 17/11: Teste 06 contra
-   a principal; a página só com vídeo fica para depois). s = situação do selo:
-   ok = começa esta semana, conf = a confirmar ou aguardando, sem = sem teste */
+/* próximos testes (Marketing Daily de 16/11, decisão de 17/11): uma linha
+   cada; o detalhe fica no mouse. s = selo: ok = esta semana, conf =
+   aguardando, sem = depois / sem teste */
 const PROXIMOS={
   titulo:"Próximos testes · até 24/11",
   itens:[
-    {t:"Teste 06 · LP6 × principal", onde:"Google e Meta", d:"A LP5 mais curta: sem “O que sai da sua rotina” e “O que a Mia é”, com o botão logo depois de “Antes de mandar o link” e o vídeo de 30s.", s:"ok", st:"Esta semana"},
-    {t:"Vídeo de 30s na principal", onde:"Todos os canais", d:"Antes do Teste 06, a principal troca o vídeo de 42s pelo de 30s. Assim as duas páginas rodam com o mesmo vídeo e o teste mede só a página.", s:"ok", st:"Esta semana"},
-    {t:"Teste C · só o vídeo", onde:"Meta", d:"Página só com o vídeo e o botão aos 24s. Entra depois do Teste 06, porque no Meta o problema é qualidade, não volume.", s:"sem", st:"Depois"},
-    {t:"Meta · criativo novo", onde:"Meta", d:"Vídeo novo com verba baixa. Continua se o custo por ativação cair para perto de R$ 30.", s:"conf", st:"Aguarda o vídeo"},
-    {t:"OpenAI · mais verba na principal", onde:"OpenAI", d:"Campanha nova aprovada em 16/11. Segue com a principal e mais verba, sem teste A/B por enquanto.", s:"sem", st:"Sem teste"}
+    {t:"Teste 06: LP6 contra a principal", d:"A LP5 mais curta, com o botão no meio da página.", s:"ok", st:"Esta semana",
+     dica:"No Google e no Meta. A LP6 é a LP5 sem “O que sai da sua rotina” e “O que a Mia é”, com o botão logo depois de “Antes de mandar o link” e o vídeo de 30s."},
+    {t:"Vídeo de 30s na principal", d:"Troca o vídeo de 42s pelo de 30s, que prende mais.", s:"ok", st:"Esta semana",
+     dica:"Antes do Teste 06: assim as duas páginas rodam com o mesmo vídeo e o teste mede só a página."},
+    {t:"Página só com o vídeo", d:"O botão de cadastro aparece aos 24s do vídeo.", s:"sem", st:"Depois",
+     dica:"Entra depois do Teste 06, de preferência só no Meta, onde o problema é qualidade, não volume."},
+    {t:"Criativo novo no Meta", d:"Vídeo novo, com pouca verba.", s:"conf", st:"Aguarda o vídeo",
+     dica:"Continua se o custo por ativação cair para perto de R$ 30."},
+    {t:"OpenAI", d:"Mais verba na principal, sem teste.", s:"sem", st:"Sem teste",
+     dica:"Campanha nova aprovada em 16/11. Sem teste A/B por enquanto."}
   ],
-  regra:"A LP6 vira a principal se ativar mais barato sem perder o onboarding mais alto da LP5. Decidimos pelo custo por ativação, não pelo custo por cadastro. Resultado na terça, 24/11."
+  regra:"Vamos decidir pelo custo por ativação. Resultado na terça, 24/11."
 };
 /* cada parte do bloco abre e fecha sozinha (lista suspensa); a escolha fica
    guardada neste navegador. Começam abertas */
@@ -2900,7 +2908,6 @@ function pintarAB(){
   if(!H||!H.length){ el.hidden=true; return; }
   /* "R$ 100" nunca quebra entre o símbolo e o número */
   const nb=t=>esc(t).replace(/R\$ /g,()=>"R$&nbsp;");
-  const VER={gan:"Ganhou",emp:"Quase empate",per:"Perdeu"};
   /* uma parte: cabeçalho clicável (nome, resumo de uma linha quando fechada e
      a setinha) e o conteúdo */
   const parte=(id,cls,nome,resumo,corpo)=>{
@@ -2918,16 +2925,19 @@ function pintarAB(){
       <span class="tl-n">${i+1}</span>
       <div class="tl-c"><small>${esc(t.n)} · ${esc(t.quando)}</small><b>${esc(t.duelo)}</b><span>${esc(t.licao)}</span></div>
       <em class="tl-r">${esc(t.res)}</em></li>`).join("")}</ol>`);
-  const res=!U?"":parte("res","res",U.rotulo,`${esc(U.titulo)} · ${esc(U.periodo)}`,
-    `<div class="res-t"><div><h3>${esc(U.titulo)}</h3><small>${esc(U.url)} · ${esc(U.periodo)} · LP5 contra a principal</small></div>
+  const res=!U?"":parte("res","res",U.rotulo,`${esc(U.titulo)}`,
+    `<div class="res-t"><div><h3>${esc(U.titulo)}</h3><small>${esc(U.url)} · ${esc(U.periodo)}</small></div>
       <button type="button" class="info" data-dica="${esc(U.dica)}" aria-label="Números do teste">i</button></div>
-    <ul class="rl">${U.linhas.map(l=>`<li><b>${esc(l.n)}</b><span>${nb(l.t)}</span><em class="wl-v ${l.v}">${VER[l.v]}</em></li>`).join("")}</ul>
+    <p class="res-s">${esc(U.resumo)}</p>
+    <table class="pl"><caption>Em verde, quem foi melhor em cada linha</caption>
+      <thead><tr><th scope="col"><span class="sr">Resultado</span></th>${U.colunas.map(c=>`<th scope="col">${esc(c)}</th>`).join("")}</tr></thead>
+      <tbody>${U.linhas.map(l=>`<tr><th scope="row"><b>${esc(l.n)}</b><small>${esc(l.s)}</small></th>`+
+        ["a","b"].map(k=>`<td${l.melhor===k?' class="win"':""}><span>${nb(l[k])}</span></td>`).join("")+`</tr>`).join("")}</tbody></table>
     <p class="res-d"><b>Decisão</b>${nb(U.decisao)}</p>`);
-  const apr=!A?"":parte("apr","ab-apr","O que aprendemos",A.map(a=>esc(a.t)).join(" · "),
-    `<ol>${A.map(a=>`<li><b>${esc(a.t)}</b><span>${nb(a.d)}</span></li>`).join("")}</ol>`);
+  const apr=!A?"":parte("apr","ab-apr","O que aprendemos",A.map(a=>esc(a.t)).join(" "),
+    `<ul>${A.map(a=>`<li data-dica="${esc(a.dica)}">${esc(a.t)}</li>`).join("")}</ul>`);
   const prox=!P?"":parte("prox","ab-prox",P.titulo,`${esc(P.itens[0].t)} · ${esc(P.itens[0].st)}`,
-    `<ul>${P.itens.map(x=>`<li><div class="px-t"><b>${esc(x.t)}</b><small>${esc(x.onde)}</small></div>
-      <span>${nb(x.d)}</span><em class="st ${x.s}">${esc(x.st)}</em></li>`).join("")}</ul>
+    `<ul>${P.itens.map(x=>`<li><b data-dica="${esc(x.dica||"")}">${esc(x.t)}</b><span>${nb(x.d)}</span><em class="st ${x.s}">${esc(x.st)}</em></li>`).join("")}</ul>
     ${P.regra?`<p class="prox-r">${esc(P.regra)}</p>`:""}`);
   el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${esc(HIST_SUB)}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>

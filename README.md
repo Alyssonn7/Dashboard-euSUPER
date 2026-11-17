@@ -103,27 +103,22 @@ celular, só o nome). A escolha de cada parte fica guardada neste navegador
 - **Os testes**: uma linha do tempo com os 5 testes de página
   (duelo, lição em poucas palavras e resultado). O traço liga o 1º número ao
   último para qualquer quantidade de testes (`--n`).
-- **Resultado do último teste** (cartão verde): Teste 05, LP5
-  (botão só no fim e vídeo novo de 30s) contra a principal, 08 a 15/11. Uma linha
-  por resultado com o veredito da LP5 (**Ganhou**, **Quase empate** ou
-  **Perdeu**): cadastros no Google (14% contra 19% dos cliques), cadastros no Meta
-  (17% contra 18% das visitas), terminam o onboarding (70% contra 61% no Google;
-  54% contra 38% no Meta), custo por ativação no Google (R$ 100 contra R$ 73) e
-  vídeo visto até o fim (16 contra 7 em cada 100 visitas). Embaixo, a **decisão**:
-  a LP5 vira a base. Os números exatos (bases, ativações, sessões do Clarity)
-  ficam no "i".
-- **O que aprendemos**: 4 frases curtas com o dado de cada uma, em duas colunas.
-- **Próximos testes até 24/11**: **Teste 06, LP6 × principal**
-  no Google e no Meta (decisão de 17/11). A LP6 é a LP5 mais curta: sem "O que sai
-  da sua rotina" e "O que a Mia é", as duas seções menos lidas, com o botão logo
-  depois de "Antes de mandar o link" e o vídeo de 30s. Antes dele, a principal troca
-  o vídeo de 42s pelo de 30s, para o teste medir só a página. Depois vêm o Teste C
-  (página só com o vídeo e o botão aos 24s, **depois do Teste 06**, de preferência
-  só no Meta), o criativo novo no Meta (aguarda o vídeo) e a OpenAI com mais verba
-  na principal, sem teste. Cada um tem um selo (**Esta semana**, **Depois**,
-  **Aguarda o vídeo**, **Sem teste**). No fim, a regra: a LP6 vira a principal se
-  ativar mais barato sem perder o onboarding mais alto da LP5; decisão pelo custo
-  por ativação, resultado na terça, 24/11.
+- **Resultado do último teste** (cartão verde): Teste 05, LP5 (botão só no fim e
+  vídeo novo de 30s) contra a principal, 08 a 15/11, como um **placar** simples:
+  uma frase com o resultado, as colunas **LP5** e **Principal** e quatro linhas em
+  palavras ("de cada 100 pessoas que clicam no anúncio"): se cadastram (14 × 19),
+  terminam o onboarding (70 × 61), custo por ativação (R$ 100 × R$ 73) e veem o
+  vídeo até o fim (16 × 7). O melhor de cada linha fica em verde, com ✓. Os números
+  são do Google (o do vídeo, de todas as visitas). Embaixo, a **decisão**: a LP5
+  vira a base. Os números exatos e o Meta ficam no "i".
+- **O que aprendemos**: 4 frases curtas, sem número, com um check; o dado de cada
+  uma aparece passando o mouse.
+- **Próximos testes até 24/11**: uma linha por item (nome, o que muda em poucas
+  palavras e um selo): Teste 06, LP6 contra a principal (esta semana); vídeo de 30s
+  na principal (esta semana); página só com o vídeo (depois); criativo novo no Meta
+  (aguarda o vídeo); OpenAI com mais verba na principal (sem teste). O detalhe de
+  cada um aparece passando o mouse no nome. No fim: decidir pelo custo por
+  ativação, resultado na terça, 24/11.
 
 Fontes do Teste 05: taxas das plataformas (Windsor, 08 a 15/11; Google = cadastros
 ÷ cliques, Meta = cadastros ÷ visitas na página); onboarding e ativação no banco,
@@ -133,9 +128,8 @@ Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson) e histórico do Lova
 Tudo fica em `TESTES_HIST`, `TESTE_ULTIMO`, `APRENDEMOS` e `PROXIMOS`; para a
 próxima semana, basta trocar esses quatro. A **setinha** no canto do título (ou um
 clique no próprio título) minimiza e expande o bloco; a escolha fica guardada
-neste navegador (`v2:abAberto`). No resultado e nos próximos testes, cada linha
-é alinhada em três colunas (nome, o que diz, selo); no celular, o selo desce para
-baixo do texto.
+neste navegador (`v2:abAberto`). Nos próximos testes, cada linha é alinhada em
+três colunas (nome, o que muda, selo); no celular, o selo desce para baixo do texto.
 
 **Comparativo semanal** (opção do "Período de visualização"): semanas de
 **terça a segunda**, porque a reunião com os fundadores é na terça: no dia da
