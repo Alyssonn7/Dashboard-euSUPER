@@ -105,13 +105,17 @@ founders. Não segue os filtros. São **duas linhas de dois cartões**:
   a LP5 vira a base. Os números exatos (bases, ativações, sessões do Clarity)
   ficam no "i".
 - **O que aprendemos** (esquerda, embaixo): 4 frases curtas com o dado de cada uma.
-- **Próximos testes até 24/11** (direita, embaixo): Teste 06 (LP6 × LP5 no Google
-  e no Meta: botão no meio da página, vídeo de 30s, sem "O que sai da sua
-  rotina"), vídeo de 30s na principal, Teste C (página só com o vídeo, botão aos
-  24s, **a confirmar**), criativo novo no Meta (aguarda o vídeo) e OpenAI com mais
-  verba na principal, sem teste. Cada um com um selo (**Esta semana**, **A
-  confirmar**, **Aguarda o vídeo**, **Sem teste**) e, no fim, a regra: decidir pelo
-  custo por ativação, resultado na terça, 24/11.
+- **Próximos testes até 24/11** (direita, embaixo): **Teste 06, LP6 × principal**
+  no Google e no Meta (decisão de 17/11). A LP6 é a LP5 mais curta: sem "O que sai
+  da sua rotina" e "O que a Mia é", as duas seções menos lidas, com o botão logo
+  depois de "Antes de mandar o link" e o vídeo de 30s. Antes dele, a principal troca
+  o vídeo de 42s pelo de 30s, para o teste medir só a página. Depois vêm o Teste C
+  (página só com o vídeo e o botão aos 24s, **depois do Teste 06**, de preferência
+  só no Meta), o criativo novo no Meta (aguarda o vídeo) e a OpenAI com mais verba
+  na principal, sem teste. Cada um tem um selo (**Esta semana**, **Depois**,
+  **Aguarda o vídeo**, **Sem teste**). No fim, a regra: a LP6 vira a principal se
+  ativar mais barato sem perder o onboarding mais alto da LP5; decisão pelo custo
+  por ativação, resultado na terça, 24/11.
 
 Fontes do Teste 05: taxas das plataformas (Windsor, 08 a 15/11; Google = cadastros
 ÷ cliques, Meta = cadastros ÷ visitas na página); onboarding e ativação no banco,

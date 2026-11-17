@@ -2877,18 +2877,19 @@ const APRENDEMOS=[
   {t:"O vídeo de 30s prende mais", d:"16 em cada 100 veem até o fim (na principal, 7). Quem vê a metade clica 2,5 vezes mais no cadastro."},
   {t:"A dúvida é dinheiro", d:"Metade das perguntas abertas na página é sobre mensalidade, taxa e se o dinheiro passa pela Mia."}
 ];
-/* próximos testes (Marketing Daily de 16/11). s = situação do selo:
-   ok = começa esta semana, conf = a confirmar, sem = sem teste */
+/* próximos testes (Marketing Daily de 16/11, decisão de 17/11: Teste 06 contra
+   a principal; a página só com vídeo fica para depois). s = situação do selo:
+   ok = começa esta semana, conf = a confirmar ou aguardando, sem = sem teste */
 const PROXIMOS={
   titulo:"Próximos testes · até 24/11",
   itens:[
-    {t:"Teste 06 · LP6 × LP5", onde:"Google e Meta", d:"A LP5 como base, com o botão no meio da página, o vídeo de 30s e sem a seção “O que sai da sua rotina”.", s:"ok", st:"Esta semana"},
-    {t:"Vídeo de 30s na principal", onde:"Todos os canais", d:"A principal troca o vídeo de 42s pelo de 30s, que prendeu mais.", s:"ok", st:"Esta semana"},
-    {t:"Teste C · só o vídeo", onde:"Google e Meta", d:"Página só com o vídeo. O botão de cadastro aparece aos 24s, quando o vídeo já disse que é R$ 0 por mês.", s:"conf", st:"A confirmar"},
+    {t:"Teste 06 · LP6 × principal", onde:"Google e Meta", d:"A LP5 mais curta: sem “O que sai da sua rotina” e “O que a Mia é”, com o botão logo depois de “Antes de mandar o link” e o vídeo de 30s.", s:"ok", st:"Esta semana"},
+    {t:"Vídeo de 30s na principal", onde:"Todos os canais", d:"Antes do Teste 06, a principal troca o vídeo de 42s pelo de 30s. Assim as duas páginas rodam com o mesmo vídeo e o teste mede só a página.", s:"ok", st:"Esta semana"},
+    {t:"Teste C · só o vídeo", onde:"Meta", d:"Página só com o vídeo e o botão aos 24s. Entra depois do Teste 06, porque no Meta o problema é qualidade, não volume.", s:"sem", st:"Depois"},
     {t:"Meta · criativo novo", onde:"Meta", d:"Vídeo novo com verba baixa. Continua se o custo por ativação cair para perto de R$ 30.", s:"conf", st:"Aguarda o vídeo"},
     {t:"OpenAI · mais verba na principal", onde:"OpenAI", d:"Campanha nova aprovada em 16/11. Segue com a principal e mais verba, sem teste A/B por enquanto.", s:"sem", st:"Sem teste"}
   ],
-  regra:"Decidimos pelo custo por ativação, não pelo custo por cadastro. Resultado na terça, 24/11."
+  regra:"A LP6 vira a principal se ativar mais barato sem perder o onboarding mais alto da LP5. Decidimos pelo custo por ativação, não pelo custo por cadastro. Resultado na terça, 24/11."
 };
 function pintarAB(){
   const el=document.getElementById("testeAB"), H=TESTES_HIST, U=TESTE_ULTIMO, A=APRENDEMOS, P=PROXIMOS;
