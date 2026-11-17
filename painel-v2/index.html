@@ -400,8 +400,9 @@ button,select,input{font-family:inherit}
 .ab-lista .ab-sub{margin:0}
 /* linha do tempo: número à esquerda ligado por um traço, resultado à direita */
 .tl{position:relative;flex:1;list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-/* um traço só, do centro do 1º número ao centro do último (4 linhas iguais) */
-.tl::before{content:"";position:absolute;left:13px;top:12.5%;bottom:12.5%;border-left:2px solid var(--borda-forte)}
+/* um traço só, do centro do 1º número ao centro do último (--n linhas iguais) */
+.tl::before{content:"";position:absolute;left:13px;top:calc(50% / var(--n,4));bottom:calc(50% / var(--n,4));
+  border-left:2px solid var(--borda-forte)}
 .tl-i{flex:1;position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 0}
 .tl-i+.tl-i{border-top:1px solid var(--borda)}
 .tl-n{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
@@ -414,6 +415,29 @@ button,select,input{font-family:inherit}
 .tl-r{font-style:normal;font-size:12.5px;font-weight:700;white-space:nowrap;border-radius:99px;padding:4px 11px;
   background:var(--neutro-bg);color:var(--neutro)}
 .tl-i.vence .tl-r{background:var(--bom-bg);color:var(--bom)}
+/* embaixo: o que aprendemos (lista numerada) e os próximos testes (com selo) */
+.ab-duo2{align-items:start}
+.ab-apr ol{list-style:none;margin:0;padding:0;counter-reset:apr;display:flex;flex-direction:column}
+.ab-apr li{counter-increment:apr;position:relative;padding:11px 0 11px 40px;display:flex;flex-direction:column;gap:2px}
+.ab-apr li+li{border-top:1px solid var(--borda)}
+.ab-apr li::before{content:counter(apr);position:absolute;left:0;top:11px;width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--bom-bg);color:var(--bom)}
+.ab-apr b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
+.ab-apr span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
+.ab-prox ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ab-prox li{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 0}
+.ab-prox li+li{border-top:1px solid var(--borda)}
+.ab-prox li div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ab-prox b{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3}
+.ab-prox small{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-2)}
+.ab-prox span{font-size:13.5px;color:var(--texto-2);line-height:1.4}
+.st{flex:none;font-style:normal;font-size:12.5px;font-weight:700;border-radius:99px;padding:4px 11px;white-space:nowrap}
+.st.ok{background:var(--verde);color:var(--tinta)}
+.st.conf{background:color-mix(in srgb,var(--laranja) 16%,var(--painel));color:var(--alerta-v)}
+.st.sem{background:var(--neutro-bg);color:var(--neutro)}
+.prox-r{margin:4px 0 0;padding:10px 14px;border-radius:10px;background:var(--neutro-bg);font-size:13.5px;font-weight:600;
+  line-height:1.4;color:var(--texto)}
+@media (max-width:560px){.ab-prox li{flex-direction:column;gap:6px}}
 /* a página que segue */
 .ab-win{background:var(--bom-bg);border:1.5px solid var(--verde)}
 .win-q{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bom)}
@@ -1324,13 +1348,9 @@ const ORIGENS=[
    escolhido pega a data e o filtro é "todos os canais" ou o canal do aviso; no
    bloco de origem, a linha do canal ganha a marca "em ajuste". Quando resolver,
    preencher "ate" (o aviso some dos períodos depois dessa data) */
-const COMUNICADOS=[
-  {canal:"openai", desde:"2026-11-07", ate:null, atualizado:"10/11",
-   titulo:"OpenAI Ads em turbulência",
-   texto:"Desde 07/11 a OpenAI quase não entrega: caiu de cerca de 15 cadastros por dia para perto de zero. "+
-     "A OpenAI classificou a Mia como serviço financeiro, que hoje não pode anunciar no Brasil, e por isso não conseguimos criar campanhas novas (só uma segue ativa). "+
-     "Já estamos falando com o suporte da OpenAI para resolver."}
-];
+/* histórico: "OpenAI Ads em turbulência" (07/11 a 16/11) saiu em 17/11, depois
+   que a OpenAI aprovou uma campanha nova em 16/11 */
+const COMUNICADOS=[];
 const comunicadosDe=(p,canal)=>!p?[]:COMUNICADOS.filter(x=>(canal==="todos"||canal===x.canal)&&p.ate>=x.desde&&(!x.ate||p.de<=x.ate));
 const ORIGEM_FIX="2026-11-06";
 /* acompanhamento do "sem origem" depois da correção: conta só os dias inteiros
@@ -2804,203 +2824,104 @@ function pintarEvo(){
 
 
 /* =========================================================================
-   TESTES A/B DE OUTUBRO — a história dos testes de página, para a reunião
-   com os founders: o que aprendemos, a decisão do mês e um cartão por teste.
-   Fontes: Testes 01 a 03 do Painel Tráfego Pago (taxas lidas nos gerenciadores
-   pelo Alysson; o 03 com a leitura final de 06 a 20/10); o que mudou em cada
-   página, do histórico do Lovable ("SEM Mockup" = sem o celular do topo,
-   28/09; "Copy--SEM Mockup" com o texto da principal, 07/10; LP4 com vídeo em
-   21/10 e play automático com som em 28/10). O Teste 04 aparece em detalhe
-   logo abaixo, com os números de TESTE_AB.
+   TESTES A/B — a história dos testes de página, para a reunião de terça com
+   os founders. Em cima: os testes numa linha do tempo e o resultado do último
+   em palavras. Embaixo: o que aprendemos e os próximos testes até a terça
+   seguinte. O bloco não segue os filtros.
+   Fontes dos Testes 01 a 04: Painel Tráfego Pago (taxas lidas nos
+   gerenciadores pelo Alysson), histórico do Lovable, Windsor e Clarity (ver
+   README). Teste 05 (LP5 × principal), lido em 16/11: taxas das plataformas
+   (Windsor, 08 a 15/11; Google = cadastros ÷ cliques, Meta = cadastros ÷
+   visitas na página); onboarding e ativação no banco, pelos cadastros de 08 a
+   15/11 de cada campanha (Google "pesquisa_principal" × "pesquisa_principal_
+   lp5_vsl2"; Meta "Page principal" + "[CAMPANHA DE VENDA]" × os dois "TESTE
+   A/B (LP5)"); vídeo e rolagem no Microsoft Clarity (08 a 16/11). Próximos
+   testes: Marketing Daily de 16/11.
    ========================================================================= */
-const HIST_SUB="Outubro: o que testamos e a página que segue em novembro";
+const HIST_SUB="O que já testamos e o que vem até terça, 24/11";
 /* um teste por linha: o duelo, a lição e quem ganhou.
    "Principal" = a página do Luy, que virou a principal no Teste 01 */
 const TESTES_HIST=[
   {n:"Teste 01", quando:"22 a 28/09", duelo:"Mia antiga × Luy", licao:"Página direta converte mais", res:"Luy 3 × 0"},
   {n:"Teste 02", quando:"29/09 a 06/10", duelo:"Principal × Mia sem o celular", licao:"Sem o produto no topo, perde", res:"Principal 3 × 0"},
   {n:"Teste 03", quando:"06 a 20/10", duelo:"Principal × Mia com texto novo", licao:"Só trocar o texto não basta", res:"Principal 3 × 0"},
-  {n:"Teste 04", quando:"20/10 a 02/11", duelo:"Principal × principal com vídeo", licao:"Vídeo ajuda quem já procura", res:"Vídeo ganhou no Google", vence:true}
+  {n:"Teste 04", quando:"20/10 a 02/11", duelo:"Principal × principal com vídeo", licao:"Vídeo ajuda quem já procura", res:"Vídeo ganhou no Google", vence:true},
+  {n:"Teste 05", quando:"07 a 16/11", duelo:"Principal × LP5 (botão só no fim)", licao:"Ler mais qualifica, mas perde cadastro", res:"LP5 vira a base", vence:true}
 ];
-/* o bloco da direita: a página que segue. Os números vêm de TESTE_AB
-   (b = LP4, a = principal) */
-const DECISAO_LP={
-  rotulo:"Principal de novembro", titulo:"LP4 · a principal com vídeo no topo", url:"lp4.miaapp.com.br",
-  proximos:"Acompanhar Meta e OpenAI por 2 semanas e colocar legenda no vídeo."
-};
-
-/* =========================================================================
-   TESTE A/B DAS PÁGINAS — bloco fixo, não segue os filtros: mostra o teste
-   do período dele, em palavras: o resultado de cada canal, o que deu certo,
-   por que converteu mais e o próximo passo. Os números ficam guardados aqui e
-   aparecem só na dica de cada canal (passar o mouse).
-   Para trocar de teste, basta substituir TESTE_AB.
-   a = página A (controle), b = página B (desafiante).
-   ========================================================================= */
-const TESTE_AB={
-  nome:"Teste A/B 04",
-  de:"2026-10-20", ate:"2026-11-02",
-  paginas:{a:{url:"miaapp.com.br", desc:"página principal"},
-           b:{url:"lp4.miaapp.com.br", desc:"a mesma página, com vídeo no topo"}},
-  /* sem troféu: o resultado ficou dividido entre os canais */
-  vencedora:null,
-  /* taxa de conversão (%) e custo por cadastro, calculados em 03/11 com os
-     dados das plataformas (Windsor), teste estendido até 02/11: Google =
-     cadastros ÷ cliques (22/10 a 02/11, a campanha da B começou em 22/10);
-     Meta = cadastros ÷ visitas na página (21/10 a 02/11); OpenAI = cadastros ÷
-     cliques (21/10 a 01/11, o 02/11 ainda não fechou na OpenAI). Campanha →
-     página conferida no banco: Google "pesquisa_miaapp" → A, "pesquisa_lp4_vsl"
-     → B; Meta "Page principal" e "[CAMPANHA DE VENDA]" → A, "TESTE A/B 1" e
-     "TESTE A/B 2" (LP4 VSL) → B; OpenAI "[CAMPANHA DE SIGNUP]"
-     ("signup_miaapp") → A, as duas "(Lp4 - VSL)" ("signup_lp4_vsl") → B.
-     Quem tem a taxa maior vence a rodada, como os dados mostram. */
-  canais:[
-    {n:"Google Ads", a:21.37, b:25.87, custo:{a:16.93, b:15.05}, base:{a:"100 de 468 cliques", b:"111 de 429 cliques"}},
-    {n:"Meta Ads",   a:18.20, b:17.21, custo:{a:12.37, b:12.54}, base:{a:"105 de 577 visitas", b:"116 de 674 visitas"}},
-    {n:"OpenAI Ads", a:16.27, b:14.06, custo:{a:6.89, b:14.81}, base:{a:"81 de 498 cliques", b:"53 de 377 cliques"}}
+/* o último teste em palavras: uma linha por resultado, LP5 contra a
+   principal, com o veredito da LP5 (gan = ganhou, emp = quase empate,
+   per = perdeu). Os números exatos ficam no "i". */
+const TESTE_ULTIMO={
+  rotulo:"Teste 05 · resultado", titulo:"LP5: botão só no fim e vídeo novo de 30s",
+  url:"lp5.miaapp.com.br", periodo:"08 a 15/11",
+  linhas:[
+    {n:"Cadastros no Google", t:"14% contra 19% dos cliques", v:"per"},
+    {n:"Cadastros no Meta", t:"17% contra 18% das visitas", v:"emp"},
+    {n:"Terminam o onboarding", t:"70% contra 61% no Google · 54% contra 38% no Meta", v:"gan"},
+    {n:"Custo por ativação no Google", t:"R$ 100 contra R$ 73", v:"per"},
+    {n:"Veem o vídeo até o fim", t:"16 contra 7 em cada 100 visitas", v:"gan"}
   ],
-  /* o que acontece dentro da página (Microsoft Clarity, 20/10 a 02/11),
-     lido pelo Claude no navegador em 03/11. menor:true = quanto menor, melhor */
-  pagina:{
-    itens:[
-      {n:"clicou em “Criar meu link grátis”", a:17.10, b:20.20},
-      {n:"saiu na hora (voltou rápido)", a:9.65, b:7.10, menor:true}
-    ],
-    video:[
-      {v:"32%", t:"das visitas viram o vídeo começar", s:"442 de 1.381"},
-      {v:"407", t:"ouviram com som", s:"29% das visitas"},
-      {v:"29%", t:"de quem ouviu chegou na metade", s:"117 de 407"},
-      {v:"18%", t:"de quem ouviu viu até o fim", s:"73 de 407 · 5% das visitas"}
-    ],
-    obs:"Clarity, 20/10 a 02/11. Na A, 19% dos toques são em “Entrar” (clientes fazendo login), o que puxa a taxa de clique dela para baixo. O vídeo sem som não registra até onde foi visto, e o play automático com som entrou em 28/10.",
-    /* o vídeo da LP4, simples para os founders: duas barras e quatro motivos
-       sem número (os números ficam na tabela acima e no "i").
-       Clarity, 20/10 a 02/11, eventos do vsl.js: "ouviram" = vsl_play, que
-       conta o play automático com som (desde 28/10) e o toque que liga o som;
-       "metade" = vsl_progress_50 (117); "fim" = vsl_progress_100 (73). */
-    vsl:{
-      visitas:1381, ouviram:407, metade:117, fim:73,
-      positivos:[
-        "Mais cadastros no Google, e mais baratos",
-        "Mais cliques em “Criar meu link grátis”",
-        "Menos gente saindo na hora",
-        "Explica o produto logo no topo, onde todo mundo olha"
-      ],
-      /* a leitura das barras em uma frase (o celular começa o vídeo mudo:
-         das 442 vezes que ele começou sozinho, 319 foram sem som) */
-      insight:"O vídeo ajuda, mas hoje só 3 em cada 10 ouvem. O próximo passo é colocar legenda para os outros 7 entenderem sem som."
-    }
-  },
-  /* uma linha cada: os founders leem o placar, não o texto.
-     No Meta, 62% dos cliques viram visita na B, contra 72% na A. */
-  porque:"No Google a B converte mais e custa menos. No Meta é quase empate, e a B perde mais gente antes de abrir (o vídeo pesa). Na OpenAI a A foi melhor, mas a campanha da B ficou 5 dias sem cadastro no início.",
-  proximo:"A LP4 vira a principal em novembro. Acompanhar Meta e OpenAI nas 2 primeiras semanas e deixar o vídeo mais leve, para a página abrir mais rápido.",
-  obs:"Google de 22/10 a 02/11 (a B começou em 22/10). Meta de 21/10 a 02/11. OpenAI de 21/10 a 01/11 (o dia 02/11 ainda não fechou na OpenAI)."
+  dica:"LP5 contra a principal, 08 a 15/11. Cadastros ÷ cliques no Google: 13,7% (27 de 197) contra 18,8% (51 de 271). "+
+    "Cadastros ÷ visitas na página no Meta: 16,9% (39 de 231) contra 17,5% (41 de 234). "+
+    "Terminaram o onboarding (banco): Google 19 de 27 contra 35 de 57; Meta 22 de 41 contra 14 de 37. "+
+    "Custo por ativação no Google: R$ 100,26 (8 ativações) contra R$ 73,22 (14). "+
+    "Vídeo até o fim (Clarity, 08 a 16/11): 84 de 511 sessões na LP5 (vídeo de 30s) contra 109 de 1.616 na principal (vídeo de 42s). "+
+    "Na LP5, quem viu a metade do vídeo clicou no cadastro em 38% das sessões; quem não viu, em 15%. "+
+    "Além do botão, o vídeo também mudou: parte do resultado pode ser dele.",
+  decisao:"A LP5 vira a base dos próximos testes. Agora é recuperar os cadastros que ela perde, sem perder a qualidade."
 };
-/* placar de jogo: as páginas são os times, cada canal é uma rodada e vence
-   quem teve a taxa de conversão maior (igual = empate). Vitória por menos de
-   2 p.p. leva a marca "por pouco"; a partir daí, "com folga". O "cabo de
-   guerra" puxa para o lado de quem converteu mais (escala de ±8 p.p.); os
-   números ficam na dica de cada rodada. */
-const FOLGA_PP=2;
-const ppTxt=v=>nf2.format(v)+" p.p.";
-const TROFEU=`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3h10v4a5 5 0 0 1-10 0V3z"/><path fill="none" stroke="currentColor" stroke-width="2" d="M7 5H4v1a4 4 0 0 0 4 4M17 5h3v1a4 4 0 0 1-4 4"/><path fill="currentColor" d="M10.5 12h3v4h-3zM8 17h8v3H8z"/></svg>`;
+/* o que aprendemos: uma frase curta e o dado que a sustenta */
+const APRENDEMOS=[
+  {t:"Ler mais qualifica", d:"Na LP5, mais gente termina o onboarding: 70% contra 61% no Google."},
+  {t:"Botão só no fim perde gente pronta", d:"38 em cada 100 saem no topo sem achar o botão. No Google, a ativação sai a R$ 100, contra R$ 73."},
+  {t:"O vídeo de 30s prende mais", d:"16 em cada 100 veem até o fim (na principal, 7). Quem vê a metade clica 2,5 vezes mais no cadastro."},
+  {t:"A dúvida é dinheiro", d:"Metade das perguntas abertas na página é sobre mensalidade, taxa e se o dinheiro passa pela Mia."}
+];
+/* próximos testes (Marketing Daily de 16/11). s = situação do selo:
+   ok = começa esta semana, conf = a confirmar, sem = sem teste */
+const PROXIMOS={
+  titulo:"Próximos testes · até 24/11",
+  itens:[
+    {t:"Teste 06 · LP6 × LP5", onde:"Google e Meta", d:"A LP5 como base, com o botão no meio da página, o vídeo de 30s e sem a seção “O que sai da sua rotina”.", s:"ok", st:"Esta semana"},
+    {t:"Vídeo de 30s na principal", onde:"Todos os canais", d:"A principal troca o vídeo de 42s pelo de 30s, que prendeu mais.", s:"ok", st:"Esta semana"},
+    {t:"Teste C · só o vídeo", onde:"Google e Meta", d:"Página só com o vídeo. O botão de cadastro aparece aos 24s, quando o vídeo já disse que é R$ 0 por mês.", s:"conf", st:"A confirmar"},
+    {t:"Meta · criativo novo", onde:"Meta", d:"Vídeo novo com verba baixa. Continua se o custo por ativação cair para perto de R$ 30.", s:"conf", st:"Aguarda o vídeo"},
+    {t:"OpenAI · mais verba na principal", onde:"OpenAI", d:"Campanha nova aprovada em 16/11. Segue com a principal e mais verba, sem teste A/B por enquanto.", s:"sem", st:"Sem teste"}
+  ],
+  regra:"Decidimos pelo custo por ativação, não pelo custo por cadastro. Resultado na terça, 24/11."
+};
 function pintarAB(){
-  const el=document.getElementById("testeAB"), T=TESTE_AB;
-  if(!T){ el.hidden=true; return; }
-  const P=T.paginas;
-  const rod=T.canais.map(c=>{
-    const lider=c.a===c.b?null:c.b>c.a?"b":"a";
-    return {...c, ganha:lider, folga:Math.abs(c.a-c.b)>=FOLGA_PP};
-  });
-  const pts={a:rod.filter(r=>r.ganha==="a").length, b:rod.filter(r=>r.ganha==="b").length};
-  const emp=rod.filter(r=>!r.ganha).length;
-  const time=k=>{const vence=T.vencedora===k;
-    return `<div class="time ${k}${vence?" vence":""}">
-      ${vence?`<em class="trofeu">${TROFEU}venceu</em>`:""}
-      <span class="ab-l">${k.toUpperCase()}</span>
-      <div><b>${esc(P[k].url).replace(/^([^.]+\.)(?=.*\..*\.)/,"$1<wbr>")}</b><small>${esc(P[k].desc)}</small></div></div>`;};
-  const rodadas=rod.map(r=>{
-    const dif=r.a-r.b, pos=50-Math.max(-1,Math.min(1,dif/8))*44;
-    const res=r.ganha?`${r.ganha.toUpperCase()} venceu <small>${r.folga?"com folga":"por pouco"}</small>`:"empate";
-    const d=`<b>${esc(r.n)}</b><p class="m">Taxa de conversão</p>`+
-      `<div class="lin"><span>A · ${esc(P.a.url)}</span><span>${pct(r.a,2)}</span></div>`+
-      `<div class="lin"><span>B · ${esc(P.b.url)}</span><span>${pct(r.b,2)}</span></div>`+
-      (r.base?`<p class="m">A: ${esc(r.base.a)} · B: ${esc(r.base.b)}</p>`:"")+
-      (r.custo?`<p class="m" style="margin-top:6px">Custo por cadastro</p>`+
-        `<div class="lin"><span>A</span><span>${brl(r.custo.a)}</span></div><div class="lin"><span>B</span><span>${brl(r.custo.b)}</span></div>`:"")+
-      (r.ganha?`<p class="m">Diferença: ${ppTxt(Math.abs(dif))} para ${r.ganha.toUpperCase()}</p>`:"");
-    return `<li class="rod${r.ganha?" vence":""}${r.ganha&&!r.folga?" pouco":""}" tabindex="0" data-html data-dica="${esc(d)}">
-      <div class="rod-t"><b>${esc(r.n.replace(" Ads",""))}</b><span>${res}</span></div>
-      <div class="cabo"><i style="left:${pos.toFixed(1)}%"></i></div>
-      <div class="cabo-l"><span class="${r.ganha==="a"?"lid":""}"><small>A</small>${pct(r.a,2)}</span>
-        <em>taxa de conversão</em><span class="${r.ganha==="b"?"lid":""}">${pct(r.b,2)}<small>B</small></span></div></li>`;
-  }).join("");
-  /* dentro da página (Clarity): a mesma leitura das rodadas, A à esquerda e
-     B à direita, a melhor em verde; e o vídeo da B em quatro números */
-  const C=T.pagina;
-  const pagina=!C?"":`<div class="ab-pag">
-      <p class="ab-sub">Na página · Microsoft Clarity</p>
-      <div class="ab-cmp">${C.itens.map(it=>{
-        const bMelhor=it.menor?it.b<it.a:it.b>it.a;
-        return `<div class="cmp cabo-l"><span class="${bMelhor?"":"lid"}"><small>A</small>${pct(it.a)}</span>
-          <em>${esc(it.n)}</em><span class="${bMelhor?"lid":""}">${pct(it.b)}<small>B</small></span></div>`;}).join("")}</div>
-      ${C.video?`<p class="ab-sub">O vídeo da B</p>
-      <div class="ab-vid">${C.video.map(v=>`<div class="vt"><b>${esc(v.v)}</b><span>${esc(v.t)}</span><small>${esc(v.s)}</small></div>`).join("")}</div>`:""}
-      ${C.obs?`<p class="legenda-f">${esc(C.obs)}</p>`:""}
-    </div>`;
-  /* a história dos testes (um cartão por teste) e a decisão do mês, em cima;
-     o último teste em detalhe, embaixo */
-  const H=TESTES_HIST, DEC=DECISAO_LP;
-  /* esquerda: os testes, um por linha */
-  const esquerda=!H?"":`<div class="ab-lista"><p class="ab-sub">Os 4 testes</p>
-    <ol class="tl">${H.map((t,i)=>`<li class="tl-i${t.vence?" vence":""}">
+  const el=document.getElementById("testeAB"), H=TESTES_HIST, U=TESTE_ULTIMO, A=APRENDEMOS, P=PROXIMOS;
+  if(!H||!H.length){ el.hidden=true; return; }
+  /* esquerda: os testes, um por linha (o traço liga o 1º número ao último) */
+  const esquerda=`<div class="ab-lista"><p class="ab-sub">Os ${H.length} testes</p>
+    <ol class="tl" style="--n:${H.length}">${H.map((t,i)=>`<li class="tl-i${t.vence?" vence":""}">
       <span class="tl-n">${i+1}</span>
       <div class="tl-c"><small>${esc(t.n)} · ${esc(t.quando)}</small><b>${esc(t.duelo)}</b><span>${esc(t.licao)}</span></div>
       <em class="tl-r">${esc(t.res)}</em></li>`).join("")}</ol></div>`;
-  /* direita: a página que segue. Uma linha por canal, com o veredito da
-     LP4 (ganhou / quase empate / perdeu, pela regra dos 2 p.p.) e a taxa de
-     conversão arredondada; custo por cadastro e Clarity ficam só no "i". */
-  const r0=v=>Math.round(v)+"%";
-  const canaisLP=T.canais.map(c=>{const d=c.b-c.a;
-      const v=Math.abs(d)<FOLGA_PP?{c:"emp",t:"Quase empate"}:d>0?{c:"gan",t:"Ganhou"}:{c:"per",t:"Perdeu"};
-      const barato=c.custo&&c.custo.b<c.custo.a?" · mais barato":"";
-      return `<li class="wl-i"><div><b>${esc(c.n.replace(" Ads",""))}</b><small>${r0(c.b)} contra ${r0(c.a)}${barato}</small></div>
-        <em class="wl-v ${v.c}">${v.t}</em></li>`;}).join("");
-  const dicaLP="Taxa de conversão (cadastros ÷ cliques; no Meta, ÷ visitas na página) e custo por cadastro, LP4 contra principal. "+
-    T.canais.map(c=>`${c.n.replace(" Ads","")}: ${pct(c.b)} contra ${pct(c.a)}`+(c.custo?` (${brl(c.custo.b)} contra ${brl(c.custo.a)})`:"")).join("; ")+"."+
-    (C?" Clarity: "+C.itens.map(it=>`${it.n} ${pct(it.b)} contra ${pct(it.a)}`).join("; ")+".":"");
-  /* o vídeo da LP4, embaixo dos dois cartões: duas barras (quem ouviu e
-     até onde viu) e por que foi bom ter o vídeo. Os números de pessoas
-     ficam só no "i", para não carregar o bloco. */
-  const V=C&&C.vsl?C.vsl:null;
-  const barra=(e,d)=>`<div class="vsl-bar" role="img" aria-label="${e.p}% ${esc(e.n)}, ${d.p}% ${esc(d.n)}">
-      <i class="${e.c}" style="width:${e.p}%"></i><i class="${d.c}" style="width:${d.p}%"></i></div>
-    <div class="vsl-lab"><span class="${e.c}"><b>${e.p}%</b>${esc(e.n)}</span><span class="${d.c}"><b>${d.p}%</b>${esc(d.n)}</span></div>`;
-  let vsl="";
-  if(V){
-    const pO=Math.round(V.ouviram/V.visitas*100), pM=Math.round(V.metade/V.ouviram*100);
-    const dica=`Microsoft Clarity, 20/10 a 02/11. ${num(V.ouviram)} de ${num(V.visitas)} visitas ouviram com som (conta o play automático com som, que entrou em 28/10). Desses ${num(V.ouviram)}: ${num(V.ouviram-V.metade)} viram até 50%, ${num(V.metade)} passaram de 50% e ${num(V.fim)} viram até o fim. Sem som, o vídeo não registra até onde foi visto.`;
-    vsl=`<div class="vsl"><div class="vsl-h"><span class="win-q">Vídeo no topo da LP4</span>
-        <button type="button" class="info" data-dica="${esc(dica)}" aria-label="Números do vídeo">i</button></div>
-      <div class="vsl-g">
-        <div class="vsl-c"><p class="vsl-p">Quem ouviu o vídeo?</p>${barra({c:"sim",p:pO,n:"ouviram com som"},{c:"nao",p:100-pO,n:"não ouviram"})}</div>
-        <div class="vsl-c"><p class="vsl-p">Até onde assistiram?</p>${barra({c:"nao",p:100-pM,n:"viram de 0 a 50%"},{c:"sim",p:pM,n:"viram de 50 a 100%"})}</div>
-        ${V.insight?`<p class="vsl-ins"><b>O que isso mostra</b>${esc(V.insight)}</p>`:""}
-        <div class="vsl-c vsl-pos"><p class="vsl-p">Por que foi bom ter o vídeo?</p>
-          <ul>${V.positivos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>
-      </div></div>`;
-  }
-  const direita=!DEC?"":`<div class="ab-win"><div class="vsl-h"><span class="win-q">${esc(DEC.rotulo)}</span>
-        <button type="button" class="info" data-dica="${esc(dicaLP)}" aria-label="Números da LP4">i</button></div>
-      <h3>${esc(DEC.titulo)}</h3><small class="win-u">${esc(DEC.url)} · teste de ${dataCurta(T.de).slice(0,5)} a ${dataCurta(T.ate).slice(0,5)}</small>
-      <p class="wl-cap">Conversão nos anúncios · LP4 contra principal</p>
-      <ul class="wl">${canaisLP}</ul>
-      <p class="win-p"><b>Próximos dias</b>${esc(DEC.proximos)}</p></div>`;
-  el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${H?esc(HIST_SUB):`${esc(T.nome)} · ${dataCurta(T.de)} a ${dataCurta(T.ate)}`}</p></div>
+  /* direita: o último teste, uma linha por resultado com o veredito */
+  const VER={gan:"Ganhou",emp:"Quase empate",per:"Perdeu"};
+  /* "R$ 100" nunca quebra entre o símbolo e o número */
+  const nb=t=>esc(t).replace(/R\$ /g,()=>"R$&nbsp;");
+  const direita=!U?"":`<div class="ab-win"><div class="vsl-h"><span class="win-q">${esc(U.rotulo)}</span>
+        <button type="button" class="info" data-dica="${esc(U.dica)}" aria-label="Números do teste">i</button></div>
+      <h3>${esc(U.titulo)}</h3><small class="win-u">${esc(U.url)} · ${esc(U.periodo)}</small>
+      <p class="wl-cap">LP5 contra a principal</p>
+      <ul class="wl">${U.linhas.map(l=>`<li class="wl-i"><div><b>${esc(l.n)}</b><small>${nb(l.t)}</small></div>
+        <em class="wl-v ${l.v}">${VER[l.v]}</em></li>`).join("")}</ul>
+      <p class="win-p"><b>Decisão</b>${nb(U.decisao)}</p></div>`;
+  /* embaixo: o que aprendemos e os próximos testes */
+  const aprendemos=!A?"":`<div class="ab-lista ab-apr"><p class="ab-sub">O que aprendemos</p>
+    <ol>${A.map(a=>`<li><b>${esc(a.t)}</b><span>${nb(a.d)}</span></li>`).join("")}</ol></div>`;
+  const proximos=!P?"":`<div class="ab-lista ab-prox"><p class="ab-sub">${esc(P.titulo)}</p>
+    <ul>${P.itens.map(x=>`<li><div><b>${esc(x.t)}</b><small>${esc(x.onde)}</small><span>${nb(x.d)}</span></div>
+      <em class="st ${x.s}">${esc(x.st)}</em></li>`).join("")}</ul>
+    ${P.regra?`<p class="prox-r">${esc(P.regra)}</p>`:""}</div>`;
+  el.innerHTML=`<div class="cx-t"><div><h2>testes a/b</h2><p>${esc(HIST_SUB)}</p></div>
       <button type="button" class="ab-tog" aria-controls="abCorpo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button></div>
     <div class="ab-corpo" id="abCorpo">
-    ${H?`<div class="ab-duo">${esquerda}${direita}${vsl}</div>`:detalhe}
+      <div class="ab-duo">${esquerda}${direita}</div>
+      ${aprendemos||proximos?`<div class="ab-duo ab-duo2">${aprendemos}${proximos}</div>`:""}
     </div>`;
   marcarAB();
 }

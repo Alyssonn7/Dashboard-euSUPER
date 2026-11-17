@@ -90,51 +90,39 @@ Com essa regra, agosto perde R$ 1.673 (nove campanhas de tráfego no Meta e
 duas de vídeo no Google: investimento de R$ 7.040,06 para R$ 5.366,76) e
 setembro perde a "YT - Motion Horizontal" (R$ 237,75).
 
-**Testes A/B de outubro** (bloco de teste A/B): feito para apresentar rápido aos
-founders. São **dois blocos lado a lado**: à esquerda, **os 4 testes** numa
-linha do tempo (cada um com o duelo, a lição em poucas palavras e quem ganhou);
-à direita, **a principal de novembro (LP4, a principal com vídeo no topo)** com
-uma linha por canal (Google, Meta, OpenAI): a taxa de conversão arredondada, LP4
-contra principal, e o veredito da LP4 (**Ganhou**, **Quase empate** ou
-**Perdeu**, pela regra dos 2 p.p.), mais o que acompanhar nos próximos dias. O
-custo por cadastro e os números da Clarity ficam só no "i" do cartão. Embaixo dos dois,
-na largura toda, **o vídeo da LP4**, feito para ler em segundos: uma barra de
-quem ouviu com som (29%) e quem não ouviu (71%), outra de até onde assistiram
-(71% de 0 a 50%, 29% de 50 a 100%), embaixo delas uma frase com **o que isso
-mostra** (só 3 em cada 10 ouvem; o próximo passo é legenda no vídeo, porque o
-celular começa o vídeo mudo) e 4 motivos curtos, sem número, de por que foi bom
-ter o vídeo. Os números de pessoas (407 de 1.381 visitas, 117 passaram
-da metade, 73 até o fim) ficam só no "i" (`TESTE_AB.pagina.vsl`). Os números da tabela saem de `TESTE_AB`. As taxas dos Testes 01 a 03 vêm do
-Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson); o que mudou em cada
-página, do histórico do Lovable ("SEM Mockup" = sem o celular do topo; "Copy--SEM
-Mockup" com o texto da principal; LP4 com vídeo em 21/10 e play automático com
-som em 28/10). Os passos ficam em `TESTES_HIST` e `DECISAO_LP`.
+**Testes A/B** (bloco de teste A/B): feito para a reunião de terça com os
+founders. Não segue os filtros. São **duas linhas de dois cartões**:
+- **Os testes** (esquerda, em cima): uma linha do tempo com os 5 testes de página
+  (duelo, lição em poucas palavras e resultado). O traço liga o 1º número ao
+  último para qualquer quantidade de testes (`--n`).
+- **Resultado do último teste** (direita, em cima, cartão verde): Teste 05, LP5
+  (botão só no fim e vídeo novo de 30s) contra a principal, 08 a 15/11. Uma linha
+  por resultado com o veredito da LP5 (**Ganhou**, **Quase empate** ou
+  **Perdeu**): cadastros no Google (14% contra 19% dos cliques), cadastros no Meta
+  (17% contra 18% das visitas), terminam o onboarding (70% contra 61% no Google;
+  54% contra 38% no Meta), custo por ativação no Google (R$ 100 contra R$ 73) e
+  vídeo visto até o fim (16 contra 7 em cada 100 visitas). Embaixo, a **decisão**:
+  a LP5 vira a base. Os números exatos (bases, ativações, sessões do Clarity)
+  ficam no "i".
+- **O que aprendemos** (esquerda, embaixo): 4 frases curtas com o dado de cada uma.
+- **Próximos testes até 24/11** (direita, embaixo): Teste 06 (LP6 × LP5 no Google
+  e no Meta: botão no meio da página, vídeo de 30s, sem "O que sai da sua
+  rotina"), vídeo de 30s na principal, Teste C (página só com o vídeo, botão aos
+  24s, **a confirmar**), criativo novo no Meta (aguarda o vídeo) e OpenAI com mais
+  verba na principal, sem teste. Cada um com um selo (**Esta semana**, **A
+  confirmar**, **Aguarda o vídeo**, **Sem teste**) e, no fim, a regra: decidir pelo
+  custo por ativação, resultado na terça, 24/11.
 
-**Teste A/B** (abaixo dos gráficos por dia): um **placar de jogo**, feito para
-a reunião semanal. As duas páginas são os times (a vencedora ganha o selo
-"venceu"), o placar fica no meio e cada canal é uma rodada com um "cabo de
-guerra" puxado para quem converteu mais. Cada rodada vence quem teve a **taxa
-de conversão maior**, exatamente como os dados lidos nos gerenciadores mostram;
-a marca diz a margem: **por pouco** (menos de 2 p.p.) ou **com folga** (2 p.p.
-ou mais). Embaixo, só duas linhas: **por quê** e **próximo**. As taxas ficam em
-`TESTE_AB` e aparecem ao passar o mouse em cada rodada. A **setinha** no canto do
-título (ou um clique no próprio título) minimiza e expande o bloco; a escolha
-fica guardada neste navegador (`v2:abAberto`). O bloco **não segue os
-filtros**: mostra o período do próprio teste. Hoje: Teste A/B 04 estendido
-(20/10 a 02/11), A = miaapp.com.br contra B = lp4.miaapp.com.br (a mesma página
-com vídeo no topo): A 2 × 1 B, sem troféu, porque o resultado ficou dividido.
-B com folga no Google (25,9% contra 21,4% dos cliques, 22/10 a 02/11, e custo por
-cadastro menor); A por pouco no Meta (18,2% contra 17,2% das visitas na página)
-e com folga na OpenAI (16,3% contra 14,1% dos cliques, 21/10 a 01/11; a campanha
-da B ficou 5 dias sem cadastro no início). As taxas saem dos dados das
-plataformas (Windsor) e a ligação campanha → página foi conferida no banco
-(origem gravada; na OpenAI pelo `utm_campaign`). Abaixo das rodadas, **"Na
-página"** compara as duas páginas com dados do Microsoft Clarity (clique no
-botão de cadastro e saída rápida, lidos à mão pelo Claude no navegador) e **"O
-vídeo da B"** mostra quantos viram o vídeo começar, ouviram com som, chegaram na
-metade e viram até o fim (`TESTE_AB.pagina`). Cada rodada mostra as duas taxas de conversão nas pontas do cabo (a da vencedora em verde). A dica de cada rodada mostra também a base (cadastros ÷
-cliques ou visitas) e o custo por cadastro de cada página; `obs` mostra a nota
-embaixo das rodadas.
+Fontes do Teste 05: taxas das plataformas (Windsor, 08 a 15/11; Google = cadastros
+÷ cliques, Meta = cadastros ÷ visitas na página); onboarding e ativação no banco,
+pelos cadastros de cada campanha; vídeo e rolagem no Microsoft Clarity (08 a
+16/11). Os próximos testes saem da Marketing Daily de 16/11. Dos Testes 01 a 04:
+Painel Tráfego Pago (lidas nos gerenciadores pelo Alysson) e histórico do Lovable.
+Tudo fica em `TESTES_HIST`, `TESTE_ULTIMO`, `APRENDEMOS` e `PROXIMOS`; para a
+próxima semana, basta trocar esses quatro. A **setinha** no canto do título (ou um
+clique no próprio título) minimiza e expande o bloco; a escolha fica guardada
+neste navegador (`v2:abAberto`). No celular, os cartões ficam um embaixo do outro
+e os selos descem para baixo do texto.
 
 **Comparativo semanal** (opção do "Período de visualização"): semanas de
 **terça a segunda**, porque a reunião com os fundadores é na terça: no dia da
@@ -284,12 +272,12 @@ anúncio não ganha a origem dessa visita nova.
 **Comunicados para os founders** (`COMUNICADOS`, no topo do código): uma caixa
 laranja em cima do funil quando o período escolhido pega a data do aviso e o
 filtro é "todos os canais" ou o canal do aviso; no bloco de origem, a linha do
-canal ganha a marca **"em ajuste"** (passe o mouse para ler). Hoje: **OpenAI Ads
-em turbulência** desde 07/11. A OpenAI classificou a Mia como serviço
-financeiro, que hoje não pode anunciar no Brasil, então não dá para criar
-campanhas novas (só uma segue ativa) e os cadastros caíram de cerca de 15 por dia
-para perto de zero; o Alysson está falando com o suporte da OpenAI. Quando
-resolver, preencher `ate` com a data: o aviso some dos períodos depois dela.
+canal ganha a marca **"em ajuste"** (passe o mouse para ler). Hoje: **nenhum**.
+O último, "OpenAI Ads em turbulência" (07/11 a 16/11: a OpenAI classificou a Mia
+como serviço financeiro e não aprovava campanhas novas), saiu em 17/11, depois que
+uma campanha nova foi aprovada em 16/11. Para um aviso novo, acrescentar um item
+com `canal`, `desde`, `titulo` e `texto`; quando resolver, preencher `ate` com a
+data, e o aviso some dos períodos depois dela.
 
 **Selo laranja de atenção** = a métrica piorou 10% ou mais contra a comparação
 (custo que subiu, taxa que caiu); o número e a borda do cartão também ficam
