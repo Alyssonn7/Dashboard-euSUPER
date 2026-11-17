@@ -39,6 +39,10 @@ a escolha fica guardada neste navegador (`v2:funilAberto`). O bloco **origem dos
 cadastros** tem a mesma setinha, independente da do funil (`v2:origemAberto`).
 Os **gráficos por dia** (investimento e cadastros) também têm a setinha; os dois
 abrem e fecham juntos, pela seta ou pelo título de qualquer um (`v2:grafAberto`).
+Em cima de cada gráfico fica a **média por dia dos últimos 7 dias** do período
+escolhido (investimento em R$ por dia; cadastros por dia, com uma casa decimal),
+com as datas embaixo. Sai dos mesmos dados das barras, então segue o canal e a
+campanha do filtro. Em período com menos de 7 dias, a média é dos dias que houver.
 
 **Os quatro principais são só do tráfego pago.** Cadastros = conversões que
 Google, Meta e OpenAI atribuem a si (somadas); custo por cadastro =

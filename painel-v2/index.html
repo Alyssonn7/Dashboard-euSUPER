@@ -251,7 +251,13 @@ button,select,input{font-family:inherit}
 .graf-cx .cx-t{align-items:flex-end;flex-wrap:wrap}
 .graf-cx .cx-t h2{font-size:clamp(20px,1.8vw,24px)}
 .graf-cx .cx-t p{margin-top:2px}
+/* média por dia dos últimos 7 dias, em cima do gráfico */
+.g-media{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin-top:12px}
+.g-media b{font-size:clamp(22px,2vw,27px);font-weight:700;letter-spacing:-.01em;line-height:1.15;color:var(--texto);font-variant-numeric:tabular-nums}
+.g-media span{font-size:14px;font-weight:600;color:var(--texto)}
+.g-media small{flex-basis:100%;font-size:12.5px;color:var(--texto-2)}
 .leg{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--texto-2);margin-top:10px}
+.leg-esp{visibility:hidden}
 .leg span{display:inline-flex;align-items:center;gap:6px}
 .leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .graf{position:relative;height:190px;margin:16px 0 0 48px}
@@ -626,7 +632,7 @@ button,select,input{font-family:inherit}
   .fc{padding:0 10px}
   .filtros,.datas{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media (max-width:820px){.dupla{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:820px){.dupla{grid-template-columns:minmax(0,1fr)} .leg-esp{display:none}}
 /* tablet: um cartão por linha, com o canal e o custo à esquerda e os três números à direita */
 @media (max-width:1180px){.qual-g{grid-template-columns:minmax(0,1fr)}
   .qc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:0 24px;align-items:center}}
@@ -2586,12 +2592,22 @@ function pintar(){
         (modoReal?`<div class="lin"><span>Atribuídos pelos canais</span><span>${num(atr)}</span></div>`:"")+
         `<div class="lin"><span>Investimento</span><span>${brl(inv)}</span></div><div class="lin"><span>Custo por cadastro</span><span>${brl(div(inv,atr))}</span></div>`});
   const longo=dias(p.de,p.ate)>62?"por semana":"por dia";
-  /* os dois gráficos abrem e fecham juntos: a setinha de qualquer um deles */
+  /* em cima de cada gráfico, a média por dia dos últimos 7 dias do período
+     (o mesmo dado das barras), para não precisar somar passando o mouse */
+  const n7=Math.min(7,dias(p.de,p.ate)), de7=soma(p.ate,-(n7-1));
+  const dias7=Array.from({length:n7},(_,i)=>soma(de7,i));
+  const invMedia=dias7.reduce((s,d)=>s+sCanais.reduce((x,c)=>x+((a.dia[d]&&a.dia[d].inv[c.k])||0),0),0)/n7;
+  const cadMedia=dias7.reduce((s,d)=>s+((a.dia[d]&&(modoReal?a.dia[d].real:a.dia[d].cad))||0),0)/n7;
+  const faixa7=n7>1?`${curta(de7)} a ${curta(p.ate)}`:curta(p.ate);
+  const media=(v,rot)=>`<div class="g-media"><b>${v}</b><span>${rot}</span><small>média ${n7===7?"dos últimos 7 dias":n7>1?`dos ${n7} dias`:"do dia"} · ${faixa7}</small></div>`;
+  /* os dois gráficos abrem e fecham juntos: a setinha de qualquer um deles.
+     O de cadastros ganha uma linha vazia no lugar da legenda, para as barras
+     dos dois começarem na mesma altura */
   const tog=id=>`<button type="button" class="ab-tog" aria-controls="${id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button>`;
   elGraf.innerHTML=`<article class="cx graf-cx" id="grafInv"><div class="cx-t"><div><h2>investimento ${longo}</h2><p>${sCanais.length>1?"Empilhado por canal.":NOME[sCanais[0]?sCanais[0].k:canal]}</p></div>${tog("grafInvCorpo")}</div>
-      <div id="grafInvCorpo">${leg}${gInv}</div></article>
+      <div id="grafInvCorpo">${media(brl(invMedia),"por dia")}${leg}${gInv}</div></article>
     <article class="cx graf-cx" id="grafCad"><div class="cx-t"><div><h2>cadastros ${longo}</h2><p>${modoReal?"Metabase: todos os cadastros, com ou sem anúncio.":`Reportados pelo ${NOME[canal]}.`}</p></div>${tog("grafCadCorpo")}</div>
-      <div id="grafCadCorpo">${gCad}</div></article>`;
+      <div id="grafCadCorpo">${media(nf1.format(cadMedia),"cadastros por dia")}${leg?`<div class="leg leg-esp" aria-hidden="true"><span>&nbsp;</span></div>`:""}${gCad}</div></article>`;
   marcarGraf();
 
   elRod.innerHTML=`<b>De onde vem cada número.</b> Anúncios: Windsor.ai (Google Ads ${CONTAS.google}, Meta Ads ${CONTAS.meta}, OpenAI Ads). `+
