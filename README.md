@@ -195,27 +195,23 @@ centenas de milhares de impressões a dezenas de contas, com piso de 30% da
 primeira faixa, para o % e as duas linhas de texto caberem nas etapas finais.
 
 **Mapa dos públicos** (logo acima da origem dos cadastros, mesmo período e mesma
-regra de origem): um cartão por canal de anúncio, lido com olhos de marketing, para
-decidir verba, campanhas e comunicação. Sem números de funil (esses já estão no
-resto do painel).
-- **Medalha (1º, 2º, 3º):** ranking pelo **custo por ativação**; embaixo, "antes
-  R$ X" quando há comparação com origem gravada.
-- **Decisão:** o custo por ativação do canal contra a **média dos 3 canais**.
-  Abaixo da média, **▲ Aumentar verba** (com comunicado ativo, "Aumentar quando
-  liberar"); até 1,5 vez a média (`DECISAO_FAIXA`), **● Manter e testar**; acima
-  disso, ou gastou sem ativar ninguém, **▼ Reduzir e ajustar**.
-- **Três números de marketing:** ativações a cada R$ 1 mil investidos; cliques
-  para 1 ativação (a intenção de quem clica); e quanto do público é de **beleza e
-  estética** (a mira do anúncio), entre quem informou a profissão no cadastro.
-- **Campanhas** (pelo `utm_campaign` do cadastro): a que mais ativou e, quando
-  existe, a que trouxe 10 ou mais cadastros sem nenhuma ativação ("Revisar").
-- **Próximo passo:** uma frase escrita a partir desses números (quanto acima ou
-  abaixo da média, o perfil do público, a campanha a reforçar).
+regra de origem): um cartão compacto por canal de anúncio, só com o que importa
+para marketing. Sem números de funil, que já estão no resto do painel.
+- **Topo:** medalha (1º, 2º, 3º, ranking pelo **custo por ativação**), o nome do
+  canal e, à direita e em destaque, o **custo por ativação** (embaixo, "antes R$ X"
+  quando há comparação com origem gravada). A faixa de cima tem a cor do canal, a
+  mesma da barra de origem.
+- **Três números:** ativações a cada R$ 1 mil investidos; cliques para 1 ativação
+  (a intenção de quem clica); e o **tipo de público**, o maior grupo de profissão
+  entre quem informou a profissão no cadastro (passe o mouse para ver todos os
+  grupos).
+- **Retirados em 17/11, a pedido:** o selo de decisão (aumentar verba / manter e
+  testar / reduzir e ajustar), as campanhas (melhor e a revisar) e o próximo passo.
 - **Responsivo:** no computador, três cartões lado a lado; no tablet (até
-  1180 px), um cartão por linha, com os números à esquerda e o que fazer à
-  direita; no celular (até 700 px), tudo numa coluna. O nome do canal e o selo
-  "em ajuste" ficam na mesma linha (sem espaço, o selo desce, nunca por cima do
-  nome) e a decisão tem linha própria.
+  1180 px), um cartão por linha, com o canal e o custo à esquerda e os três números
+  à direita; no celular (até 700 px), tudo numa coluna. O nome do canal e o selo
+  "em ajuste" (quando há comunicado) ficam na mesma linha; sem espaço, o selo desce,
+  nunca por cima do nome.
 
 Os grupos de profissão saem da categoria do cadastro e, em "Outros", do texto que
 a pessoa escreveu (`SQL_GRUPO`): beleza e estética, saúde e terapias, vendas e
